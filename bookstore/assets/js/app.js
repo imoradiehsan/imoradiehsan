@@ -24,8 +24,9 @@ const FORMAT_NOTE = { Hardcover: t('fmtnote.ship'), Paperback: t('fmtnote.ship')
 const fmtName = f => t('fmt.' + f);
 function priceFor(b, fmt = b.formats[0]) {
   const ratio = FORMAT_MULT[fmt] / FORMAT_MULT[b.formats[0]];
-  const p = +(b.price * ratio).toFixed(2);
-  const o = b.old ? +(b.old * ratio).toFixed(2) : null;
+  const r5k = v => Math.round(v / 5000) * 5000;
+  const p = r5k(b.price * ratio);
+  const o = b.old ? r5k(b.old * ratio) : null;
   return { price: p, old: o };
 }
 const discountPct = b => b.old ? Math.round((1 - b.price / b.old) * 100) : 0;
@@ -139,7 +140,7 @@ function starsHTML(rating) {
   return out + '</span>';
 }
 const ratingHTML = b => `<span class="rating">${starsHTML(b.rating)}<strong>${fmtRating(b.rating)}</strong><span>(${fmtNum(b.reviews)})</span><span class="sr-only">${t('rating.sr', { r: fmtRating(b.rating), n: b.reviews })}</span></span>`;
-const priceHTML = (b, fmt) => { const p = priceFor(b, fmt); return `<span class="price"><span class="price__now">${money(p.price)}</span>${p.old ? `<span class="price__old">${money(p.old)}</span>` : ''}</span>`; };
+const priceHTML = (b, fmt) => { const p = priceFor(b, fmt); return `<span class="price">${p.old ? `<span class="price__old">${moneyNum(p.old)}</span>` : ''}<span class="price__now">${moneyNum(p.price)} <small class="price__cur">${CURRENCY[LANG]}</small></span></span>`; };
 
 function badgesHTML(b) {
   const out = [];
@@ -219,7 +220,7 @@ function renderHeader() {
   $('#site-header').outerHTML = `
   <a href="#main" class="skip-link">${t('skip')}</a>
   <div class="announce"><div class="container">
-    <span>${icon('truck', 'width="15" height="15" style="display:inline;vertical-align:-3px;margin-inline-end:6px"')}${t('announce.ship', { amt: moneyInt(35) })}<span class="hide-mobile">${t('announce.ebooks')}</span></span>
+    <span>${icon('truck', 'width="15" height="15" style="display:inline;vertical-align:-3px;margin-inline-end:6px"')}${t('announce.ship', { amt: money(SITE_CONFIG.freeShippingThreshold) })}<span class="hide-mobile">${t('announce.ebooks')}</span></span>
     <div class="announce__links"><a href="account.html#orders">${t('announce.track')}</a><a href="#">${t('announce.help')}</a><a href="#">${t('announce.gift')}</a></div>
   </div></div>
   <header class="header" id="header">
@@ -502,9 +503,14 @@ function initThemePicker() {
   sync();
 }
 
+/* Static text can reference shop amounts: <span data-amount="freeShippingThreshold"> or a literal number */
+function fillAmounts(root = document) {
+  $$('[data-amount]', root).forEach(el => { const k = el.dataset.amount; el.textContent = money(SITE_CONFIG[k] ?? Number(k)); });
+}
+
 /* ---------- Boot ---------- */
 function boot() {
-  applyI18n(); renderHeader(); renderFooter();
+  applyI18n(); fillAmounts(); renderHeader(); renderFooter();
   $$('[data-search]').forEach(initSearch);
   const header = $('#header'); const onScroll = () => header.classList.toggle('is-scrolled', scrollY > 8);
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
