@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Folio &amp; Co. — Discover Your Next Favorite Book</title>
+  <title data-i18n="title.home">Folio &amp; Co. — Discover Your Next Favorite Book</title>
   <meta name="description" content="Folio & Co. is a premium online bookstore for physical books, eBooks and audiobooks. Discover bestsellers, new arrivals and personalised recommendations.">
-  <meta name="theme-color" content="#0f1c36">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <meta name="theme-color" content="#0F7C82">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F7C82'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23F4B323' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/i18n-static.js"></script>
 </head>
 <body data-page="home">
   <div id="site-header"></div>
@@ -20,52 +22,52 @@
     <section class="hero" aria-labelledby="hero-title">
       <div class="container hero__inner">
         <div>
-          <span class="hero__pill"><span class="badge badge--gold">New</span> Summer Reading Festival — up to 30% off</span>
-          <h1 id="hero-title">Discover Your Next <em>Favorite<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9C50 3 150 2 198 7" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg></em> Book</h1>
-          <p class="hero__lead">Explore thousands of books from bestselling authors and new voices — in hardcover, paperback, eBook and audio, delivered fast.</p>
+          <span class="hero__pill"><span class="badge badge--gold" data-i18n="badge.new">New</span> <span data-i18n="h.pill">Summer Reading Festival — up to 30% off</span></span>
+          <h1 id="hero-title" data-i18n="h.title">Discover Your Next <em>Favorite<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M2 9C50 3 150 2 198 7" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg></em> Book</h1>
+          <p class="hero__lead" data-i18n="h.lead">Explore thousands of books from bestselling authors and new voices — in hardcover, paperback, eBook and audio, delivered fast.</p>
           <div class="hero__ctas">
-            <a href="books.html" class="btn btn--lg">Browse Books <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a href="#categories" class="btn btn--outline btn--lg">Explore Categories</a>
+            <a href="books.html" class="btn btn--lg"><span data-i18n="h.browse">Browse Books</span> <svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a href="#categories" class="btn btn--outline btn--lg" data-i18n="h.explore">Explore Categories</a>
           </div>
           <div class="hero__stats">
-            <div class="hero__stat"><strong>120K+</strong><span>Titles in stock</span></div>
-            <div class="hero__stat"><strong>4.9 ★</strong><span>Average store rating</span></div>
+            <div class="hero__stat"><strong data-i18n="h.stat1">120K+</strong><span data-i18n="h.stat1l">Titles in stock</span></div>
+            <div class="hero__stat"><strong data-i18n="h.stat2">4.9 ★</strong><span data-i18n="h.stat2l">Average store rating</span></div>
             <div class="hero__stat">
-              <div class="avatars" aria-hidden="true"><span class="avatar" style="background:#8a2f6e">HL</span><span class="avatar" style="background:#20345f">DK</span><span class="avatar" style="background:#9a4a1c">AN</span><span class="avatar" style="background:#2f8a5b">+</span></div>
-              <span>Loved by 2M readers</span>
+              <div class="avatars" aria-hidden="true"><span class="avatar" style="background:#8a2f6e">HL</span><span class="avatar" style="background:#0F7C82">DK</span><span class="avatar" style="background:#9a4a1c">AN</span><span class="avatar" style="background:#68A936">+</span></div>
+              <span data-i18n="h.stat3l">Loved by 2M readers</span>
             </div>
           </div>
         </div>
 
         <div class="hero__visual" aria-hidden="true">
           <div class="hero__blob">
-            <!-- reader lifestyle illustration: armchair, lamp, reading figure -->
+            <!-- reader lifestyle illustration: shelves, lamp, armchair -->
             <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
-              <defs><radialGradient id="lamp" cx="30%" cy="18%" r="60%"><stop offset="0" stop-color="#f2cf85" stop-opacity=".45"/><stop offset="1" stop-color="#f2cf85" stop-opacity="0"/></radialGradient></defs>
+              <defs><radialGradient id="lamp" cx="30%" cy="18%" r="60%"><stop offset="0" stop-color="#F4B323" stop-opacity=".4"/><stop offset="1" stop-color="#F4B323" stop-opacity="0"/></radialGradient></defs>
               <rect width="400" height="400" fill="url(#lamp)"/>
-              <g opacity=".14" fill="#f8f2e7">
+              <g opacity=".16" fill="#F7F8F2">
                 <rect x="250" y="40" width="14" height="70" rx="2"/><rect x="266" y="50" width="12" height="60" rx="2"/><rect x="280" y="36" width="16" height="74" rx="2"/><rect x="298" y="56" width="10" height="54" rx="2"/><rect x="310" y="44" width="14" height="66" rx="2"/><rect x="240" y="112" width="100" height="5" rx="2"/>
                 <rect x="250" y="128" width="12" height="62" rx="2"/><rect x="264" y="140" width="16" height="50" rx="2"/><rect x="282" y="124" width="12" height="66" rx="2"/><rect x="296" y="136" width="18" height="54" rx="2"/><rect x="240" y="192" width="100" height="5" rx="2"/>
               </g>
-              <path d="M70 60 l40 0 l-12 34 h-16Z" fill="#e9b75a" opacity=".9"/><rect x="88" y="94" width="4" height="220" fill="#e9b75a" opacity=".35"/>
-              <path d="M40 360 q0-60 50-70 h70 q40 10 40 70Z" fill="#f8f2e7" opacity=".08"/>
+              <path d="M70 60 l40 0 l-12 34 h-16Z" fill="#F4B323" opacity=".9"/><rect x="88" y="94" width="4" height="220" fill="#F4B323" opacity=".35"/>
+              <path d="M40 360 q0-60 50-70 h70 q40 10 40 70Z" fill="#68A936" opacity=".25"/>
             </svg>
           </div>
           <div class="hero__stack" id="hero-stack"></div>
           <div class="float-card float-card--a" id="float-a"></div>
-          <div class="float-card float-card--b"><span class="float-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span><div><small>eBooks &amp; audiobooks</small><strong>Delivered instantly</strong></div></div>
-          <div class="float-card float-card--c"><span class="float-card__icon" style="background:var(--navy-50);color:var(--navy-700)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 13.8 8.2 19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg></span><div><small>Picked for you</small><strong>98% match</strong></div></div>
+          <div class="float-card float-card--b"><span class="float-card__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></span><div><small data-i18n="h.fbS">eBooks &amp; audiobooks</small><strong data-i18n="h.fbT">Delivered instantly</strong></div></div>
+          <div class="float-card float-card--c"><span class="float-card__icon" style="background:var(--primary-50);color:var(--primary-700)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 13.8 8.2 19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg></span><div><small data-i18n="h.fcS">Picked for you</small><strong data-i18n="h.fcT">98% match</strong></div></div>
         </div>
       </div>
     </section>
 
     <!-- Trust strip -->
-    <section class="trust" aria-label="Why shop with us">
+    <section class="trust" data-i18n-attr="aria-label:h.trustAria" aria-label="Why shop with us">
       <div class="container">
-        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></span><div><strong>Free shipping</strong><span>On orders over $35</span></div></div>
-        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M11 18h2"/></svg></span><div><strong>Instant eBooks</strong><span>Read in seconds</span></div></div>
-        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4"/></svg></span><div><strong>30-day returns</strong><span>No questions asked</span></div></div>
-        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><strong>Secure payments</strong><span>256-bit encryption</span></div></div>
+        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></span><div><strong data-i18n="h.t1">Free shipping</strong><span data-i18n="h.t1s">On orders over $35</span></div></div>
+        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M11 18h2"/></svg></span><div><strong data-i18n="h.t2">Instant eBooks</strong><span data-i18n="h.t2s">Read in seconds</span></div></div>
+        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4"/></svg></span><div><strong data-i18n="h.t3">30-day returns</strong><span data-i18n="h.t3s">No questions asked</span></div></div>
+        <div class="trust__item"><span class="trust__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><div><strong data-i18n="h.t4">Secure payments</strong><span data-i18n="h.t4s">256-bit encryption</span></div></div>
       </div>
     </section>
 
@@ -73,8 +75,8 @@
     <section class="section" id="categories" aria-labelledby="cat-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Browse by genre</span><h2 id="cat-title">Featured Categories</h2><p>From page-turning fiction to ideas that change how you work and live.</p></div>
-          <a class="link" href="books.html">All categories <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.catEy">Browse by genre</span><h2 id="cat-title" data-i18n="h.catT">Featured Categories</h2><p data-i18n="h.catP">From page-turning fiction to ideas that change how you work and live.</p></div>
+          <a class="link" href="books.html"><span data-i18n="h.catAll">All categories</span> <svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
         <div class="cat-grid reveal" id="cat-grid"></div>
       </div>
@@ -84,11 +86,11 @@
     <section class="section section--alt" aria-labelledby="feat-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Staff picks</span><h2 id="feat-title">Featured Books</h2><p>Hand-selected by our booksellers this month.</p></div>
-          <div class="tabs" role="tablist" aria-label="Filter featured books" id="featured-tabs"></div>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.featEy">Staff picks</span><h2 id="feat-title" data-i18n="h.featT">Featured Books</h2><p data-i18n="h.featP">Hand-selected by our booksellers this month.</p></div>
+          <div class="tabs" role="tablist" data-i18n-attr="aria-label:h.featT" aria-label="Filter featured books" id="featured-tabs"></div>
         </div>
         <div class="grid grid--books reveal" id="featured-grid"></div>
-        <div class="center mt-8"><a class="btn btn--outline btn--lg" href="books.html">View all books</a></div>
+        <div class="center mt-8"><a class="btn btn--outline btn--lg" href="books.html" data-i18n="h.viewAll">View all books</a></div>
       </div>
     </section>
 
@@ -96,13 +98,13 @@
     <section class="section" aria-labelledby="best-title">
       <div class="container carousel">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Top 10 this week</span><h2 id="best-title">Best Selling Books</h2><p>What readers everywhere can't stop talking about.</p></div>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.bestEy">Top 10 this week</span><h2 id="best-title" data-i18n="h.bestT">Best Selling Books</h2><p data-i18n="h.bestP">What readers everywhere can't stop talking about.</p></div>
           <div class="carousel__nav">
-            <button class="carousel__btn" data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
-            <button class="carousel__btn" data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
+            <button class="carousel__btn" data-prev data-i18n-attr="aria-label:prev" aria-label="Previous"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button class="carousel__btn" data-next data-i18n-attr="aria-label:next" aria-label="Next"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
           </div>
         </div>
-        <div class="carousel__track" id="best-track" tabindex="0" aria-label="Best sellers, swipe or scroll horizontally"></div>
+        <div class="carousel__track" id="best-track" tabindex="0" data-i18n-attr="aria-label:h.bestT" aria-label="Best sellers"></div>
         <div class="carousel__progress" aria-hidden="true"><span></span></div>
       </div>
     </section>
@@ -111,8 +113,8 @@
     <section class="section section--warm" aria-labelledby="new-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Just landed</span><h2 id="new-title">New Arrivals</h2><p>Fresh from the press and ready to ship today.</p></div>
-          <a class="link" href="books.html?collection=new">See all new books <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.newEy">Just landed</span><h2 id="new-title" data-i18n="h.newT">New Arrivals</h2><p data-i18n="h.newP">Fresh from the press and ready to ship today.</p></div>
+          <a class="link" href="books.html?collection=new"><span data-i18n="h.newAll">See all new books</span> <svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
         <div class="arrivals reveal">
           <article class="arrival-hero" id="arrival-hero" style="background:#fff"></article>
@@ -125,21 +127,21 @@
     <section class="section" aria-labelledby="offer-title">
       <div class="container">
         <div class="offer reveal">
-          <div class="offer__bg" aria-hidden="true"><svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice"><circle cx="1000" cy="200" r="260" fill="#16274a"/><circle cx="1000" cy="200" r="190" fill="none" stroke="#e9b75a" stroke-opacity=".18" stroke-width="2" stroke-dasharray="4 10"/><circle cx="120" cy="420" r="160" fill="#20345f" opacity=".6"/></svg></div>
+          <div class="offer__bg" aria-hidden="true"><svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice"><circle cx="1000" cy="200" r="260" fill="#0c666b"/><circle cx="1000" cy="200" r="190" fill="none" stroke="#F4B323" stroke-opacity=".25" stroke-width="2" stroke-dasharray="4 10"/><circle cx="120" cy="420" r="160" fill="#68A936" opacity=".25"/></svg></div>
           <div class="offer__content">
-            <span class="eyebrow">Limited time · Ends soon</span>
-            <h2 id="offer-title">Summer Reading <em>Festival</em></h2>
-            <p>Up to 30% discount on selected books. Stock up on beach reads, big ideas and bedtime stories before the season ends.</p>
-            <div class="countdown" data-countdown role="timer" aria-label="Time remaining in offer">
-              <div class="countdown__unit"><strong data-unit="d">03</strong><span>Days</span></div>
-              <div class="countdown__unit"><strong data-unit="h">14</strong><span>Hours</span></div>
-              <div class="countdown__unit"><strong data-unit="m">27</strong><span>Mins</span></div>
-              <div class="countdown__unit"><strong data-unit="s">00</strong><span>Secs</span></div>
+            <span class="eyebrow" data-i18n="h.offEy">Limited time · Ends soon</span>
+            <h2 id="offer-title" data-i18n="h.offT">Summer Reading <em>Festival</em></h2>
+            <p data-i18n="h.offP">Up to 30% discount on selected books. Stock up on beach reads, big ideas and bedtime stories before the season ends.</p>
+            <div class="countdown" data-countdown role="timer" data-i18n-attr="aria-label:h.cdAria" aria-label="Time remaining in offer">
+              <div class="countdown__unit"><strong data-unit="d">03</strong><span data-i18n="h.days">Days</span></div>
+              <div class="countdown__unit"><strong data-unit="h">14</strong><span data-i18n="h.hours">Hours</span></div>
+              <div class="countdown__unit"><strong data-unit="m">27</strong><span data-i18n="h.mins">Mins</span></div>
+              <div class="countdown__unit"><strong data-unit="s">00</strong><span data-i18n="h.secs">Secs</span></div>
             </div>
-            <div class="row"><a class="btn btn--accent btn--lg" href="books.html?collection=offer">Shop the Sale</a><span class="small" style="color:rgba(255,255,255,.7)">Use code <strong style="color:var(--gold-300)">SUMMER30</strong> at checkout</span></div>
+            <div class="row"><a class="btn btn--accent btn--lg" href="books.html?collection=offer" data-i18n="h.shopSale">Shop the Sale</a><span class="small" style="color:rgba(255,255,255,.75)" data-i18n="h.useCode">Use code <strong style="color:var(--gold-300)">SUMMER30</strong> at checkout</span></div>
           </div>
           <div class="offer__books" id="offer-books" aria-hidden="true"></div>
-          <div class="offer__tag" aria-hidden="true"><div><strong>30%</strong><span>Off</span></div></div>
+          <div class="offer__tag" aria-hidden="true"><div data-i18n="h.tag"><strong>30%</strong><span>Off</span></div></div>
         </div>
       </div>
     </section>
@@ -148,19 +150,19 @@
     <section class="section section--alt" aria-labelledby="reco-title">
       <div class="container reco">
         <aside class="reco__panel reveal">
-          <span class="reco__ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 13.8 8.2 19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg> AI-powered</span>
-          <h3>Picked just for you, Jane</h3>
-          <p>Our recommendation engine learns from what you read and love. Choose a signal to see why each book was picked.</p>
+          <span class="reco__ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 13.8 8.2 19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"/></svg> <span data-i18n="h.ai">AI-powered</span></span>
+          <h3 data-i18n="h.recoH">Picked just for you, Jane</h3>
+          <p data-i18n="h.recoP">Our recommendation engine learns from what you read and love. Choose a signal to see why each book was picked.</p>
           <div class="reco__signals" id="reco-signals">
-            <button class="reco__signal" data-reco="purchases" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Previous purchases</button>
-            <button class="reco__signal" data-reco="interests" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.4 3.6 4 7 4c2 0 3.3 1 5 3 1.7-2 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8C19.5 15.4 12 20 12 20Z"/></svg>Reading interests</button>
-            <button class="reco__signal" data-reco="categories" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Favorite categories</button>
+            <button class="reco__signal" data-reco="purchases" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span data-i18n="h.sig1">Previous purchases</span></button>
+            <button class="reco__signal" data-reco="interests" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.4 3.6 4 7 4c2 0 3.3 1 5 3 1.7-2 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8C19.5 15.4 12 20 12 20Z"/></svg><span data-i18n="h.sig2">Reading interests</span></button>
+            <button class="reco__signal" data-reco="categories" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span data-i18n="h.sig3">Favorite categories</span></button>
           </div>
-          <div class="reco__interests"><span>Literary fiction</span><span>Psychology</span><span>Space &amp; science</span><span>Habits</span></div>
-          <a class="btn btn--outline-light btn--sm mt-6" href="account.html#preferences">Tune my preferences</a>
+          <div class="reco__interests" data-i18n="h.interests"><span>Literary fiction</span><span>Psychology</span><span>Space &amp; science</span><span>Habits</span></div>
+          <a class="btn btn--outline-light btn--sm mt-6" href="account.html#preferences" data-i18n="h.tune">Tune my preferences</a>
         </aside>
         <div>
-          <div class="section-head" style="margin-bottom:12px"><div class="section-head__text"><span class="eyebrow">For you</span><h2 id="reco-title">Books You May Like</h2></div></div>
+          <div class="section-head" style="margin-bottom:12px"><div class="section-head__text"><span class="eyebrow" data-i18n="h.forYou">For you</span><h2 id="reco-title" data-i18n="h.recoT">Books You May Like</h2></div></div>
           <p class="reco__because" id="reco-because" aria-live="polite"></p>
           <div class="grid grid--books" id="reco-grid"></div>
         </div>
@@ -171,8 +173,8 @@
     <section class="section" aria-labelledby="authors-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Meet the voices</span><h2 id="authors-title">Popular Authors</h2><p>The storytellers and thinkers our readers follow most.</p></div>
-          <a class="link" href="books.html">All authors <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.authEy">Meet the voices</span><h2 id="authors-title" data-i18n="h.authT">Popular Authors</h2><p data-i18n="h.authP">The storytellers and thinkers our readers follow most.</p></div>
+          <a class="link" href="books.html"><span data-i18n="h.authAll">All authors</span> <svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
         <div class="grid grid--4 reveal" id="author-grid"></div>
       </div>
@@ -182,8 +184,8 @@
     <section class="section section--warm" aria-labelledby="testi-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">Reader stories</span><h2 id="testi-title">What Our Customers Say</h2></div>
-          <div class="testi-summary"><strong>4.9</strong><div><span class="stars" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg></span><br><span>from 48,210 reviews</span></div></div>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.testEy">Reader stories</span><h2 id="testi-title" data-i18n="h.testT">What Our Customers Say</h2></div>
+          <div class="testi-summary"><strong data-i18n="h.score">4.9</strong><div><span class="stars" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg><svg viewBox="0 0 24 24"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9L12 3Z" fill="currentColor"/></svg></span><br><span data-i18n="h.from">from 48,210 reviews</span></div></div>
         </div>
         <div class="testi-grid reveal" id="testi-grid"></div>
       </div>
@@ -193,8 +195,8 @@
     <section class="section" id="blog" aria-labelledby="blog-title">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-head__text"><span class="eyebrow">The Folio Journal</span><h2 id="blog-title">From Our Blog</h2><p>Book reviews, reading guides and conversations with authors.</p></div>
-          <a class="link" href="#blog">All articles <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="h.blogEy">The Folio Journal</span><h2 id="blog-title" data-i18n="h.blogT">From Our Blog</h2><p data-i18n="h.blogP">Book reviews, reading guides and conversations with authors.</p></div>
+          <a class="link" href="#blog"><span data-i18n="h.blogAll">All articles</span> <svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
         <div class="grid grid--3 reveal" id="blog-grid"></div>
       </div>
@@ -205,21 +207,21 @@
       <div class="container">
         <div class="newsletter reveal">
           <div>
-            <span class="eyebrow">The Friday Letter</span>
-            <h2 id="nl-title">Stay updated with new books and special offers</h2>
-            <p>One thoughtful email a week: new releases, staff picks and members-only deals. Get 10% off your first order.</p>
+            <span class="eyebrow" data-i18n="h.nlEy">The Friday Letter</span>
+            <h2 id="nl-title" data-i18n="h.nlT">Stay updated with new books and special offers</h2>
+            <p data-i18n="h.nlP">One thoughtful email a week: new releases, staff picks and members-only deals. Get 10% off your first order.</p>
           </div>
           <div>
             <form class="newsletter__form" data-newsletter novalidate>
-              <label for="nl-email" class="sr-only">Email address</label>
-              <input id="nl-email" class="input" type="email" placeholder="Enter your email address" autocomplete="email" required>
-              <button class="btn btn--lg" type="submit">Subscribe</button>
+              <label for="nl-email" class="sr-only" data-i18n="h.nlLabel">Email address</label>
+              <input id="nl-email" class="input" type="email" data-i18n-attr="placeholder:h.nlPh" placeholder="Enter your email address" autocomplete="email" required>
+              <button class="btn btn--lg" type="submit" data-i18n="h.nlBtn">Subscribe</button>
             </form>
-            <p class="newsletter__note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> No spam, ever. Unsubscribe in one click.</p>
+            <p class="newsletter__note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> <span data-i18n="h.nlNote">No spam, ever. Unsubscribe in one click.</span></p>
             <div class="newsletter__perks">
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Early access</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Exclusive deals</span>
-              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg>Author events</span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg><span data-i18n="h.perk1">Early access</span></span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg><span data-i18n="h.perk2">Exclusive deals</span></span>
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5L20 7"/></svg><span data-i18n="h.perk3">Author events</span></span>
             </div>
           </div>
         </div>

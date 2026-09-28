@@ -3,34 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shopping Cart — Folio &amp; Co.</title>
-  <meta name="theme-color" content="#0f1c36">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <title data-i18n="title.cart">Shopping Cart — Folio &amp; Co.</title>
+  <meta name="theme-color" content="#0F7C82">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F7C82'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23F4B323' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/i18n-static.js"></script>
 </head>
 <body data-page="cart">
   <div id="site-header"></div>
 
   <main id="main">
     <div class="container">
-      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Shopping cart</span></nav>
-      <h1 style="font-size:var(--fs-3xl);margin-bottom:24px">Shopping Cart</h1>
+      <nav class="breadcrumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumb.aria"><a href="index.html" data-i18n="crumb.home">Home</a><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page" data-i18n="c.crumb">Shopping cart</span></nav>
+      <h1 style="font-size:var(--fs-3xl);margin-bottom:24px" data-i18n="c.title">Shopping Cart</h1>
       <div id="cart-root" aria-live="polite"></div>
     </div>
 
     <section class="section section--alt" aria-labelledby="upsell-title">
       <div class="container carousel">
         <div class="section-head">
-          <div class="section-head__text"><span class="eyebrow">Complete your stack</span><h2 id="upsell-title">You might also like</h2></div>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="c.upEy">Complete your stack</span><h2 id="upsell-title" data-i18n="c.upT">You might also like</h2></div>
           <div class="carousel__nav">
-            <button class="carousel__btn" data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
-            <button class="carousel__btn" data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
+            <button class="carousel__btn" data-prev aria-label="Previous" data-i18n-attr="aria-label:prev"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button class="carousel__btn" data-next aria-label="Next" data-i18n-attr="aria-label:next"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
           </div>
         </div>
-        <div class="carousel__track" id="upsell-track" tabindex="0" aria-label="Recommended books"></div>
+        <div class="carousel__track" id="upsell-track" tabindex="0" aria-label="Recommended books" data-i18n-attr="aria-label:c.upT"></div>
         <div class="carousel__progress" aria-hidden="true"><span></span></div>
       </div>
     </section>
