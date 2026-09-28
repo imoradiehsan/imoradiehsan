@@ -108,6 +108,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
 }
 .foot button:hover { border-color: var(--ink); }
 .export { display: grid; gap: 8px; }
+.export .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .export button {
   font: inherit;
   font-weight: 500;
@@ -184,7 +185,10 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
       <button type="button" id="reset">بازگشت به پیش‌فرض</button>
     </div>
     <div class="export">
-      <button type="button" id="export">دانلود فایل SVG</button>
+      <div class="btns">
+        <button type="button" id="export-lottie">دانلود Lottie (JSON)</button>
+        <button type="button" id="export-svg">دانلود SVG</button>
+      </div>
       <p id="exportNote">فایل با همین تنظیمات، داخل دایره و با اطراف شفاف ساخته می‌شود.</p>
     </div>
   </form>
@@ -300,6 +304,109 @@ function simplify(times, vals, tol) {
   return keep;
 }
 
+const LOGO_SCALE = 250 * 0.8 / RO;
+
+// Static Lottie bezier path for a sector (arcs split into cubic pieces).
+function lottiePath(a, b, tipped) {
+  const oa = a + oOff, ia = a + iOff;
+  const ob = b - (tipped ? obOff : oOff), ib = b - (tipped ? ibOff : iOff);
+  const v = [], ins = [], outs = [];
+  const r2 = x => +x.toFixed(2);
+  const add = (p, i = [0, 0], o = [0, 0]) => { v.push(p.map(r2)); ins.push(i.map(r2)); outs.push(o.map(r2)); };
+  const tan = th => { const f = toRad(th - 90); return [-Math.sin(f), Math.cos(f)]; };
+  // Arc from th0 to th1 (either direction) as cubic pieces of at most 60 degrees.
+  const arc = (r, th0, th1) => {
+    const n = Math.max(1, Math.ceil(Math.abs(th1 - th0) / 60)), step = (th1 - th0) / n;
+    const h = 4 / 3 * Math.tan(toRad(Math.abs(step)) / 4) * r * Math.sign(step);
+    for (let k = 0; k < n; k++) {
+      const s = th0 + k * step, e = s + step, ts = tan(s), te = tan(e);
+      outs[outs.length - 1] = [ts[0] * h, ts[1] * h].map(r2);
+      add(pt(r, e), [-te[0] * h, -te[1] * h]);
+    }
+  };
+  add(pt(ro, oa));
+  arc(ro, oa, ob);
+  if (tipped) add(pt(rt, b - tOff));
+  add(pt(ri, ib));
+  arc(ri, ib, ia);
+  return { c: true, v, i: ins, o: outs };
+}
+
+// Easing handles with x at 1/3 and 2/3 make the curve an exact cubic in time, so the
+// arc's ease-in/out and the dots' overshoot need a single keyframe each.
+const EASE = {
+  lin: [[0, 0], [1, 1]],
+  in3: [[1 / 3, 0], [2 / 3, 0]],
+  out3: [[1 / 3, 1], [2 / 3, 1]],
+  back: [[1 / 3, (3 * 2.7 - 2 * 1.7) / 3], [2 / 3, 1]],
+};
+
+function buildLottie() {
+  const CYCLE = cycle(), FR = 60, OP = Math.round(CYCLE * FR);
+  const rgb = hex => [1, 3, 5].map(i => +(parseInt(hex.slice(i, i + 2), 16) / 255).toFixed(4)).concat(1);
+  const r3 = x => +x.toFixed(3);
+  // keys: [{t: seconds, v: number, ease: name of the easing to the next key, or "hold"}]
+  const animated = (keys, dims = 1, toVal = v => [r3(v)]) => {
+    keys = keys.filter((k, j) => j === keys.length - 1 || keys[j + 1].t > k.t);
+    if (keys.every(k => r3(k.v) === r3(keys[0].v))) return { a: 0, k: dims === 1 ? r3(keys[0].v) : toVal(keys[0].v) };
+    const rep = x => Array(dims).fill(+x.toFixed(4));
+    return { a: 1, k: keys.map((k, j) => {
+      const kf = { t: r3(k.t * FR), s: toVal(k.v) };
+      if (j < keys.length - 1) {
+        if (k.ease === "hold") kf.h = 1;
+        else { const [p1, p2] = EASE[k.ease]; kf.o = { x: rep(p1[0]), y: rep(p1[1]) }; kf.i = { x: rep(p2[0]), y: rep(p2[1]) }; }
+      }
+      return kf;
+    }) };
+  };
+  const st = v => ({ a: 0, k: v });
+  const tr = (extra = {}) => ({ ty: "tr", p: st([0, 0]), a: st([0, 0]), s: st([100, 100]), r: st(0), o: st(100), ...extra });
+  const fillStroke = color => [
+    { ty: "st", c: st(rgb(color)), o: st(100), w: st(2 * CR), lc: 2, lj: 2 },
+    { ty: "fl", c: st(rgb(color)), o: st(100), r: 1 },
+  ];
+  const layer = (ind, nm, ks, shapes) => ({ ddd: 0, ind, ty: 4, nm, sr: 1, ks, ao: 0, shapes, ip: 0, op: OP, st: 0, bm: 0 });
+  const ks = (p, a, s, r = st(0), o = st(100)) => ({ o, r, p: st([...p, 0]), a: st([...a, 0]), s });
+
+  // Each end of the arc is its own layer: a fixed cap plus a fixed 180-degree body that
+  // rotates with it. The two bodies overlap enough to cover the arc at its longest.
+  const CAP = 45, BODY_A = BLUE[0] + 22, BODY_B = BLUE[1] - 26, s = cfg.spin;
+  const body = start => ({ ty: "gr", nm: "body", it: [
+    { ty: "el", d: 1, p: st([C, C]), s: st([RO + RI, RO + RI]) },
+    { ty: "tm", s: st(0), e: st(50), o: st(start), m: 1 },
+    { ty: "st", c: st(rgb(colors.blue)), o: st(100), w: st(T), lc: 1, lj: 1 },
+    tr()] });
+  const cap = (a, b, tipped) => ({ ty: "gr", nm: "cap", it: [{ ty: "sh", ks: st(lottiePath(a, b, tipped)) }, ...fillStroke(colors.blue), tr()] });
+  const S = +(LOGO_SCALE * 100).toFixed(3);
+  const headRot = animated([
+    { t: 0, v: 0, ease: "in3" }, { t: 0.45 * s, v: 180, ease: "out3" }, { t: 0.9 * s, v: 360, ease: "hold" }, { t: CYCLE, v: 360 }]);
+  const tailRot = animated([
+    { t: 0, v: 0, ease: "hold" }, { t: 0.1 * s, v: 0, ease: "in3" }, { t: 0.55 * s, v: 180, ease: "out3" }, { t: s, v: 360, ease: "hold" }, { t: CYCLE, v: 360 }]);
+  const layers = [
+    layer(1, "arc head", ks([C, C], [C, C], st([S, S, 100]), headRot), [cap(BLUE[1] - CAP, BLUE[1], true), body(BODY_B - 180)]),
+    layer(2, "arc tail", ks([C, C], [C, C], st([S, S, 100]), tailRot), [cap(BLUE[0], BLUE[0] + CAP, false), body(BODY_A)]),
+  ];
+
+  SEGS.forEach(([a, b], i) => {
+    const [cx, cy] = segCenter(i);
+    // Swallowed while the head sweeps 30 degrees past the dot's leading edge.
+    const off = a - BLUE[1], ds = dotStart(i), pe = ds + cfg.pop;
+    const ts = 0.9 * invInOut(off / 360) * s, te = swallowedAt(i);
+    const scale = animated([
+      { t: 0, v: S, ease: "hold" }, { t: ts, v: S, ease: "in3" }, { t: te, v: 0.45 * S, ease: "hold" },
+      { t: ds, v: 0.45 * S, ease: "back" }, { t: pe, v: S, ease: "hold" }, { t: CYCLE, v: S }], 3, v => [r3(v), r3(v), 100]);
+    const opacity = animated([
+      { t: 0, v: 100, ease: "hold" }, { t: ts, v: 100, ease: "in3" }, { t: te, v: 0, ease: "hold" },
+      { t: ds, v: 0, ease: "lin" }, { t: ds + cfg.pop / 1.8, v: 100, ease: "hold" }, { t: CYCLE, v: 100 }]);
+    const pos = [C + (cx - C) * LOGO_SCALE, C + (cy - C) * LOGO_SCALE].map(r3);
+    layers.push(layer(3 + i, "dot " + (i + 1), ks(pos, [cx, cy], scale, st(0), opacity),
+      [{ ty: "gr", it: [{ ty: "sh", ks: st(lottiePath(a, b, false)) }, ...fillStroke(colors.gray), tr()] }]));
+  });
+  layers.push(layer(6, "disc", ks([0, 0], [0, 0], st([100, 100, 100])),
+    [{ ty: "gr", it: [{ ty: "el", d: 1, p: st([C, C]), s: st([500, 500]) }, { ty: "fl", c: st(rgb(colors.bg)), o: st(100), r: 1 }, tr()] }]));
+  return JSON.stringify({ v: "5.7.4", fr: FR, ip: 0, op: OP, w: 500, h: 500, nm: "Logo Loader", ddd: 0, assets: [], layers });
+}
+
 // Standalone SMIL animation: white disc, transparent surround, no script, scales cleanly.
 function buildSvg() {
   const CYCLE = cycle(), N = Math.round(CYCLE * 60);
@@ -329,7 +436,7 @@ function buildSvg() {
       `<path transform="translate(${-cx} ${-cy})" d="${shapeD(sectorShape(a, b, false), 1)}"/></g></g>`;
   }).join("");
 
-  const scale = +(250 * 0.8 / RO).toFixed(4);
+  const scale = +(LOGO_SCALE).toFixed(4);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="Loading">` +
     `<circle cx="${C}" cy="${C}" r="250" fill="${colors.bg}"/>` +
     `<g transform="translate(${C} ${C}) scale(${scale}) translate(${-C} ${-C})" stroke-width="${2 * CR}" stroke-linejoin="round">` +
@@ -400,10 +507,10 @@ $("reset").addEventListener("click", () => {
 $("panel").addEventListener("submit", e => e.preventDefault());
 
 // Also records the exported settings so Claude can rebuild the same file.
-$("export").addEventListener("click", async () => {
-  const btn = $("export"), note = $("exportNote");
+const exportFile = async (btn, filename, build) => {
+  const note = $("exportNote");
   btn.disabled = true;
-  const svg = buildSvg();
+  const data = build();
   const db = await window.claude?.use?.("db");
   if (db) {
     try { await db.doc("exports/latest").set({ timing: { ...cfg }, colors: { ...colors }, savedAt: new Date().toISOString() }); } catch (e) {}
@@ -415,13 +522,15 @@ $("export").addEventListener("click", async () => {
     return;
   }
   try {
-    await downloads.save({ filename: "logo-loader.svg", data: svg });
-    note.textContent = `ذخیره شد: logo-loader.svg (${(svg.length / 1024).toFixed(1)} KB)`;
+    await downloads.save({ filename, data });
+    note.textContent = `ذخیره شد: ${filename} (${(data.length / 1024).toFixed(1)} KB)`;
   } catch (e) {
     note.textContent = e && e.code === "declined" ? "دانلود لغو شد." : "دانلود انجام نشد؛ دوباره امتحان کنید.";
   }
   btn.disabled = false;
-});
+};
+$("export-svg").addEventListener("click", e => exportFile(e.currentTarget, "logo-loader.svg", buildSvg));
+$("export-lottie").addEventListener("click", e => exportFile(e.currentTarget, "logo-loader.json", buildLottie));
 syncUI();
 
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
