@@ -116,22 +116,22 @@ const inCubic = x => x * x * x;
 const $ = id => document.getElementById(id);
 const blue = $("blue");
 const segEls = [$("s0"), $("s1"), $("s2")];
-const SEG_IN = [[0.64, 0.78], [0.70, 0.84], [0.76, 0.90]];
+const SEG_IN = [[0.62, 0.74], [0.67, 0.79], [0.72, 0.84]];
 const MID_R = (RO + RI) / 2;
 
 // p in [0,1): the full logo at p=0 and p→1 makes the loop seamless.
 function render(p) {
   // Head leads the tail, so the arc stretches over the segments while it turns.
-  const t = span(p, 0.10, 0.60);
+  const t = span(p, 0, 0.70);
   const headRot = 360 * inOut(clamp(t / 0.9));
   const tailRot = 360 * inOut(clamp((t - 0.1) / 0.9));
   blue.setAttribute("d", sector(BLUE[0] + tailRot, BLUE[1] + headRot));
 
   SEGS.forEach(([a, b], i) => {
-    const swallowed = p > 0.10 ? span(headRot, a - BLUE[1] - 2, a - BLUE[1] + 30) : 0;
+    const swallowed = span(headRot, a - BLUE[1], a - BLUE[1] + 30);
     const inP = span(p, ...SEG_IN[i]);
     let sc, o;
-    if (p < 0.62) { const e = inCubic(swallowed); sc = 1 - 0.55 * e; o = 1 - e; }
+    if (p < 0.5) { const e = inCubic(swallowed); sc = 1 - 0.55 * e; o = 1 - e; }
     else { sc = 0.45 + 0.55 * outBack(inP); o = clamp(inP * 1.8); }
     const [cx, cy] = P(MID_R, (a + b) / 2).split(" ");
     const el = segEls[i];
