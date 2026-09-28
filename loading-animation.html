@@ -1,16 +1,24 @@
 <title>Logo Loader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #1e1e1e;
-  --ink: #8a8f98;
-  color-scheme: dark;
+  --bg: #ffffff;
+  --blue: #0b57a4;
+  --gray: #a6a9ae;
+  --ink: #5a6372;
+  --line: #e3e7ee;
+  --ui: #0b57a4;
+  color-scheme: light;
 }
+
 html, body { height: 100%; }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 12px ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-family: "Vazirmatn", system-ui, sans-serif;
   display: grid;
   place-items: center;
   padding-inline: 16px;
@@ -19,30 +27,415 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 48px;
+  gap: 56px;
 }
-.hero { width: min(280px, 70vw); height: auto; }
-.sizes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 32px;
+#logo {
+  width: min(260px, 64vw);
+  height: auto;
+  overflow: visible;
 }
-figure {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
+.p { stroke-width: 32; stroke-linejoin: round; }
+.b { fill: var(--blue); stroke: var(--blue); }
+.g { fill: var(--gray); stroke: var(--gray); }
+
+.panel {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  font-size: 13px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+.row {
+  display: grid;
+  grid-template-columns: 1fr 130px 4.5em;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+.row.key label { color: var(--ui); font-weight: 500; }
+.row input { accent-color: var(--ui); width: 100%; margin: 0; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outline-offset: 3px; }
+.section {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.75;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.row.color { grid-template-columns: 1fr 34px 6.5em; }
+.row.color input[type="color"] {
+  width: 34px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: none;
+  cursor: pointer;
+}
+.row.color input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.row.color input[type="color"]::-webkit-color-swatch { border: none; border-radius: 5px; }
+.row.color input[type="text"] {
+  font: 13px ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  text-transform: lowercase;
+}
+.row.color input[aria-invalid="true"] { border-color: #c2412d; }
+.row output { font-variant-numeric: tabular-nums; text-align: left; }
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.foot button {
+  font: inherit;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 14px;
+  cursor: pointer;
+}
+.foot button:hover { border-color: var(--ink); }
+.export { display: grid; gap: 8px; }
+.export button {
+  font: inherit;
+  font-weight: 500;
+  color: #ffffff;
+  background: var(--ui);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.export button:hover { filter: brightness(1.1); }
+.export button:disabled { opacity: 0.6; cursor: default; }
+.export p { margin: 0; font-size: 12px; line-height: 1.7; }
+@media (max-width: 420px) {
+  .row:not(.color) { grid-template-columns: 1fr 4.5em; }
+  .row:not(.color) input { grid-column: 1 / -1; grid-row: 2; }
 }
 </style>
 
 <main>
-  <img class="hero" src="logo-loader.svg" alt="Loading">
-  <div class="sizes">
-    <figure><img src="logo-loader.svg" width="24" height="24" alt=""><figcaption>24px</figcaption></figure>
-    <figure><img src="logo-loader.svg" width="48" height="48" alt=""><figcaption>48px</figcaption></figure>
-    <figure><img src="logo-loader.svg" width="96" height="96" alt=""><figcaption>96px</figcaption></figure>
-  </div>
+  <svg id="logo" viewBox="0 0 500 500" role="img" aria-label="در حال بارگذاری">
+    <g id="all">
+      <path id="s0" class="p g"></path>
+      <path id="s1" class="p g"></path>
+      <path id="s2" class="p g"></path>
+      <path id="blue" class="p b"></path>
+    </g>
+  </svg>
+
+  <form class="panel" id="panel" dir="rtl">
+    <div class="row">
+      <label for="spin">مدت چرخش قوس</label>
+      <input id="spin" type="range" min="0.8" max="4" step="0.05">
+      <output for="spin"></output>
+    </div>
+    <div class="row key">
+      <label for="delay">مکث بعد از چرخش تا آمدن نقطه‌ها</label>
+      <input id="delay" type="range" min="-1.5" max="1.5" step="0.05">
+      <output for="delay"></output>
+    </div>
+    <div class="row">
+      <label for="stagger">فاصله بین نقطه‌ها</label>
+      <input id="stagger" type="range" min="0" max="0.6" step="0.01">
+      <output for="stagger"></output>
+    </div>
+    <div class="row">
+      <label for="pop">مدت ظاهر شدن هر نقطه</label>
+      <input id="pop" type="range" min="0.1" max="0.8" step="0.01">
+      <output for="pop"></output>
+    </div>
+    <div class="row">
+      <label for="hold">مکث قبل از چرخش بعدی</label>
+      <input id="hold" type="range" min="0" max="2" step="0.05">
+      <output for="hold"></output>
+    </div>
+    <div class="section">رنگ‌ها</div>
+    <div class="row color">
+      <label for="c-blue">رنگ قوس</label>
+      <input id="c-blue" type="color" aria-label="انتخاب رنگ قوس">
+      <input id="h-blue" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ قوس">
+    </div>
+    <div class="row color">
+      <label for="c-gray">رنگ نقطه‌ها</label>
+      <input id="c-gray" type="color" aria-label="انتخاب رنگ نقطه‌ها">
+      <input id="h-gray" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ نقطه‌ها">
+    </div>
+    <div class="row color">
+      <label for="c-bg">رنگ دایره و پس‌زمینه</label>
+      <input id="c-bg" type="color" aria-label="انتخاب رنگ دایره و پس‌زمینه">
+      <input id="h-bg" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ دایره و پس‌زمینه">
+    </div>
+    <div class="foot">
+      <span id="total"></span>
+      <button type="button" id="reset">بازگشت به پیش‌فرض</button>
+    </div>
+    <div class="export">
+      <button type="button" id="export">دانلود فایل SVG</button>
+      <p id="exportNote">فایل با همین تنظیمات، داخل دایره و با اطراف شفاف ساخته می‌شود.</p>
+    </div>
+  </form>
 </main>
+
+<script>
+const C = 250, RO = 194, RI = 120, CR = 16, GAP = 24;
+const D = GAP / 2 + CR, ro = RO - CR, ri = RI + CR;
+const toRad = d => d * Math.PI / 180, toDeg = r => r * 180 / Math.PI;
+const oOff = toDeg(Math.asin(D / ro)), iOff = toDeg(Math.asin(D / ri));
+
+const BLUE = [125, 353];
+const SEGS = [[353, 397], [397, 441], [441, 485]];
+
+const pt = (r, a) => [C + r * Math.cos(toRad(a - 90)), C + r * Math.sin(toRad(a - 90))];
+
+// The tipped head end comes to an arrow-like point as in the logo.
+const T = RO - RI;
+const rt = RO - 0.42 * T;
+const headOff = (r, extra) => toDeg(Math.asin((D + extra) / r));
+const tOff = headOff(rt, 0), obOff = headOff(ro, 0.36 * T), ibOff = headOff(ri, 0.14 * T);
+
+// Annular sector between two cut lines; constant-width gaps and rounded corners
+// come from insetting by D and stroking with a round join of width 2*CR.
+// Returned as numbers + flags so the SVG export can morph between frames.
+function sectorShape(a, b, tipped) {
+  const oa = a + oOff, ia = a + iOff;
+  const ob = b - (tipped ? obOff : oOff), ib = b - (tipped ? ibOff : iOff);
+  const n = [...pt(ro, oa), ...pt(ro, ob)];
+  if (tipped) n.push(...pt(rt, b - tOff));
+  n.push(...pt(ri, ib), ...pt(ri, ia));
+  return { n, tipped, lo: ob - oa > 180 ? 1 : 0, li: ib - ia > 180 ? 1 : 0 };
+}
+function shapeD({ n, tipped, lo, li }, dp = 2) {
+  let i = 0;
+  const p = () => `${+n[i++].toFixed(dp)} ${+n[i++].toFixed(dp)}`;
+  let d = `M${p()}A${ro} ${ro} 0 ${lo} 1 ${p()}`;
+  if (tipped) d += `L${p()}`;
+  return d + `L${p()}A${ri} ${ri} 0 ${li} 0 ${p()}Z`;
+}
+
+const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const span = (t, a, b) => clamp((t - a) / (b - a));
+const inOut = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outBack = x => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const inCubic = x => x * x * x;
+
+const $ = id => document.getElementById(id);
+const blue = $("blue");
+const segEls = [$("s0"), $("s1"), $("s2")];
+const MID_R = (RO + RI) / 2;
+
+const DEFAULTS = { spin: 2.4, delay: 0, stagger: 0.17, pop: 0.4, hold: 0.5 };
+const cfg = { ...DEFAULTS };
+try { Object.assign(cfg, JSON.parse(localStorage.getItem("logo-loader") || "{}")); } catch (e) {}
+
+// The head reaches home at 90% of the spin; the dots are timed from that moment.
+const headHome = () => 0.9 * cfg.spin;
+const invInOut = y => y < 0.5 ? Math.cbrt(y / 4) : 1 - Math.cbrt(2 * (1 - y)) / 2;
+// With a negative pause a dot may not return before the arc's head has swallowed it.
+const swallowedAt = i => 0.9 * invInOut((SEGS[i][0] - BLUE[1] + 30) / 360) * cfg.spin;
+const dotStart = i => Math.max(headHome() + cfg.delay + i * cfg.stagger, swallowedAt(i));
+const cycle = () => Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold;
+
+// time in seconds within one cycle; the full logo at 0 and at the cycle end keeps the loop seamless.
+function state(time) {
+  // Head leads the tail, so the arc stretches over the segments while it turns.
+  const t = clamp(time / cfg.spin);
+  const headRot = 360 * inOut(clamp(t / 0.9));
+  const tailRot = 360 * inOut(clamp((t - 0.1) / 0.9));
+  const segs = SEGS.map(([a], i) => {
+    if (time < dotStart(i)) {
+      const e = inCubic(span(headRot, a - BLUE[1], a - BLUE[1] + 30));
+      return { sc: 1 - 0.55 * e, o: 1 - e };
+    }
+    const inP = cfg.pop > 0 ? clamp((time - dotStart(i)) / cfg.pop) : 1;
+    return { sc: 0.45 + 0.55 * outBack(inP), o: clamp(inP * 1.8) };
+  });
+  return { headRot, tailRot, segs };
+}
+
+const segCenter = i => pt(MID_R, (SEGS[i][0] + SEGS[i][1]) / 2).map(v => +v.toFixed(2));
+SEGS.forEach(([a, b], i) => segEls[i].setAttribute("d", shapeD(sectorShape(a, b, false))));
+
+function render(time) {
+  const s = state(time);
+  blue.setAttribute("d", shapeD(sectorShape(BLUE[0] + s.tailRot, BLUE[1] + s.headRot, true)));
+  s.segs.forEach(({ sc, o }, i) => {
+    const [cx, cy] = segCenter(i);
+    segEls[i].setAttribute("transform", `translate(${cx} ${cy}) scale(${sc.toFixed(4)}) translate(${-cx} ${-cy})`);
+    segEls[i].style.opacity = o;
+  });
+}
+
+// Keep only the keyframes needed to stay within `tol` of the full 60fps track.
+function simplify(times, vals, tol) {
+  const keep = [0];
+  let i = 0;
+  while (i < vals.length - 1) {
+    let j = i + 1;
+    for (let k = i + 2; k < vals.length; k++) {
+      let ok = true;
+      for (let m = i + 1; m < k && ok; m++) {
+        const f = (times[m] - times[i]) / (times[k] - times[i]);
+        ok = vals[m].every((v, q) => Math.abs(vals[i][q] + (vals[k][q] - vals[i][q]) * f - v) <= tol);
+      }
+      if (!ok) break;
+      j = k;
+    }
+    keep.push(j);
+    i = j;
+  }
+  return keep;
+}
+
+// Standalone SMIL animation: white disc, transparent surround, no script, scales cleanly.
+function buildSvg() {
+  const CYCLE = cycle(), N = Math.round(CYCLE * 60);
+  const times = Array.from({ length: N + 1 }, (_, k) => (k / N) * CYCLE);
+  const frames = times.map(state);
+  const dur = `${+CYCLE.toFixed(3)}s`;
+  const anim = (tag, attrs, keys, values) =>
+    `<${tag} ${attrs} dur="${dur}" repeatCount="indefinite" keyTimes="${keys.map(k => +(times[k] / CYCLE).toFixed(4)).join(";")}" values="${values}"/>`;
+
+  // The rotation carries the tail; a path morph carries only the stretch.
+  const rot = frames.map(f => [f.tailRot]);
+  const rk = simplify(times, rot, 0.15);
+  const shapes = frames.map(f => sectorShape(BLUE[0], BLUE[1] + f.headRot - f.tailRot, true));
+  const dk = simplify(times, shapes.map(s => s.n), 0.25);
+  const blueSvg = `<g fill="${colors.blue}" stroke="${colors.blue}">` +
+    anim("animateTransform", `attributeName="transform" type="rotate"`, rk, rk.map(k => `${+rot[k][0].toFixed(1)} ${C} ${C}`).join(";")) +
+    `<path d="${shapeD(shapes[0], 1)}">` +
+    anim("animate", `attributeName="d"`, dk, dk.map(k => shapeD(shapes[k], 1)).join(";")) + `</path></g>`;
+
+  const segSvg = SEGS.map(([a, b], i) => {
+    const [cx, cy] = segCenter(i);
+    const sc = frames.map(f => [f.segs[i].sc]), op = frames.map(f => [f.segs[i].o]);
+    const sk = simplify(times, sc, 0.004), ok = simplify(times, op, 0.004);
+    return `<g transform="translate(${cx} ${cy})"><g>` +
+      anim("animateTransform", `attributeName="transform" type="scale"`, sk, sk.map(k => +sc[k][0].toFixed(3)).join(";")) +
+      anim("animate", `attributeName="opacity"`, ok, ok.map(k => +op[k][0].toFixed(3)).join(";")) +
+      `<path transform="translate(${-cx} ${-cy})" d="${shapeD(sectorShape(a, b, false), 1)}"/></g></g>`;
+  }).join("");
+
+  const scale = +(250 * 0.8 / RO).toFixed(4);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" role="img" aria-label="Loading">` +
+    `<circle cx="${C}" cy="${C}" r="250" fill="${colors.bg}"/>` +
+    `<g transform="translate(${C} ${C}) scale(${scale}) translate(${-C} ${-C})" stroke-width="${2 * CR}" stroke-linejoin="round">` +
+    `<g fill="${colors.gray}" stroke="${colors.gray}">${segSvg}</g>${blueSvg}</g></svg>\n`;
+}
+
+const fa = n => {
+  const s = Math.abs(n).toFixed(2).replace(/\.?0+$/, "").replace(".", "٫").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+  return (n < 0 && s !== "۰" ? "⁦−" + s + "⁩" : s) + " ثانیه";
+};
+const keys = Object.keys(DEFAULTS);
+
+function syncUI() {
+  keys.forEach(k => {
+    const input = $(k);
+    input.value = cfg[k];
+    input.nextElementSibling.textContent = fa(cfg[k]);
+  });
+  $("total").textContent = "هر دور: " + fa(cycle());
+}
+keys.forEach(k => $(k).addEventListener("input", e => {
+  cfg[k] = parseFloat(e.target.value);
+  syncUI();
+  try { localStorage.setItem("logo-loader", JSON.stringify(cfg)); } catch (err) {}
+}));
+const COLOR_DEFAULTS = { blue: "#0b57a4", gray: "#a6a9ae", bg: "#ffffff" };
+const colors = { ...COLOR_DEFAULTS };
+try { Object.assign(colors, JSON.parse(localStorage.getItem("logo-loader-colors") || "{}")); } catch (e) {}
+
+const normHex = v => {
+  const m = v.trim().replace(/^#/, "").toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(m)) return "#" + m;
+  if (/^[0-9a-f]{3}$/.test(m)) return "#" + m.split("").map(c => c + c).join("");
+  return null;
+};
+function applyColors() {
+  Object.keys(colors).forEach(k => {
+    document.documentElement.style.setProperty("--" + k, colors[k]);
+    $("c-" + k).value = colors[k];
+    const h = $("h-" + k);
+    if (document.activeElement !== h) { h.value = colors[k]; h.removeAttribute("aria-invalid"); }
+  });
+}
+function setColor(k, v) {
+  colors[k] = v;
+  applyColors();
+  try { localStorage.setItem("logo-loader-colors", JSON.stringify(colors)); } catch (err) {}
+}
+Object.keys(colors).forEach(k => {
+  $("c-" + k).addEventListener("input", e => { $("h-" + k).value = e.target.value; setColor(k, e.target.value); });
+  const h = $("h-" + k);
+  h.addEventListener("input", () => {
+    const v = normHex(h.value);
+    h.setAttribute("aria-invalid", v ? "false" : "true");
+    if (v) setColor(k, v);
+  });
+  h.addEventListener("blur", () => { h.value = colors[k]; h.removeAttribute("aria-invalid"); });
+});
+applyColors();
+
+$("reset").addEventListener("click", () => {
+  Object.assign(cfg, DEFAULTS);
+  Object.assign(colors, COLOR_DEFAULTS);
+  syncUI();
+  applyColors();
+  try { localStorage.removeItem("logo-loader"); localStorage.removeItem("logo-loader-colors"); } catch (err) {}
+});
+$("panel").addEventListener("submit", e => e.preventDefault());
+
+// Also records the exported settings so Claude can rebuild the same file.
+$("export").addEventListener("click", async () => {
+  const btn = $("export"), note = $("exportNote");
+  btn.disabled = true;
+  const svg = buildSvg();
+  const db = await window.claude?.use?.("db");
+  if (db) {
+    try { await db.doc("exports/latest").set({ timing: { ...cfg }, colors: { ...colors }, savedAt: new Date().toISOString() }); } catch (e) {}
+  }
+  const downloads = await window.claude?.use?.("downloads");
+  if (!downloads) {
+    note.textContent = "دانلود در این صفحه در دسترس نیست؛ تنظیمات برای Claude ذخیره شد.";
+    btn.disabled = false;
+    return;
+  }
+  try {
+    await downloads.save({ filename: "logo-loader.svg", data: svg });
+    note.textContent = `ذخیره شد: logo-loader.svg (${(svg.length / 1024).toFixed(1)} KB)`;
+  } catch (e) {
+    note.textContent = e && e.code === "declined" ? "دانلود لغو شد." : "دانلود انجام نشد؛ دوباره امتحان کنید.";
+  }
+  btn.disabled = false;
+});
+syncUI();
+
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduce) {
+  render(0);
+} else {
+  let time = 0, last = null;
+  const frame = now => {
+    if (last !== null) time = (time + Math.min(now - last, 100) / 1000) % cycle();
+    last = now;
+    render(time);
+    requestAnimationFrame(frame);
+  };
+  render(0);
+  requestAnimationFrame(frame);
+}
+</script>
