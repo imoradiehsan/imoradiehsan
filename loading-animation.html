@@ -9,6 +9,7 @@
   --gray: #a6a9ae;
   --ink: #5a6372;
   --line: #e3e7ee;
+  --ui: #0b57a4;
   color-scheme: light;
 }
 
@@ -53,9 +54,40 @@ main {
   align-items: center;
   gap: 12px;
 }
-.row.key label { color: var(--blue); font-weight: 500; }
-.row input { accent-color: var(--blue); width: 100%; margin: 0; }
-input:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+.row.key label { color: var(--ui); font-weight: 500; }
+.row input { accent-color: var(--ui); width: 100%; margin: 0; }
+input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outline-offset: 3px; }
+.section {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  opacity: 0.75;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.row.color { grid-template-columns: 1fr 34px 6.5em; }
+.row.color input[type="color"] {
+  width: 34px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: none;
+  cursor: pointer;
+}
+.row.color input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.row.color input[type="color"]::-webkit-color-swatch { border: none; border-radius: 5px; }
+.row.color input[type="text"] {
+  font: 13px ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color: var(--ink);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  text-transform: lowercase;
+}
+.row.color input[aria-invalid="true"] { border-color: #c2412d; }
 .row output { font-variant-numeric: tabular-nums; text-align: left; }
 .foot {
   display: flex;
@@ -76,8 +108,8 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outl
 }
 .foot button:hover { border-color: var(--ink); }
 @media (max-width: 420px) {
-  .row { grid-template-columns: 1fr 4.5em; }
-  .row input { grid-column: 1 / -1; grid-row: 2; }
+  .row:not(.color) { grid-template-columns: 1fr 4.5em; }
+  .row:not(.color) input { grid-column: 1 / -1; grid-row: 2; }
 }
 </style>
 
@@ -93,7 +125,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outl
 
   <form class="panel" id="panel" dir="rtl">
     <div class="row">
-      <label for="spin">مدت چرخش قوس آبی</label>
+      <label for="spin">مدت چرخش قوس</label>
       <input id="spin" type="range" min="0.8" max="4" step="0.05">
       <output for="spin"></output>
     </div>
@@ -116,6 +148,22 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--blue); outl
       <label for="hold">مکث قبل از چرخش بعدی</label>
       <input id="hold" type="range" min="0" max="2" step="0.05">
       <output for="hold"></output>
+    </div>
+    <div class="section">رنگ‌ها</div>
+    <div class="row color">
+      <label for="c-blue">رنگ قوس</label>
+      <input id="c-blue" type="color" aria-label="انتخاب رنگ قوس">
+      <input id="h-blue" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ قوس">
+    </div>
+    <div class="row color">
+      <label for="c-gray">رنگ نقطه‌ها</label>
+      <input id="c-gray" type="color" aria-label="انتخاب رنگ نقطه‌ها">
+      <input id="h-gray" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ نقطه‌ها">
+    </div>
+    <div class="row color">
+      <label for="c-bg">رنگ پس‌زمینه</label>
+      <input id="c-bg" type="color" aria-label="انتخاب رنگ پس‌زمینه">
+      <input id="h-bg" type="text" dir="ltr" maxlength="7" spellcheck="false" aria-label="کد رنگ پس‌زمینه">
     </div>
     <div class="foot">
       <span id="total"></span>
@@ -208,10 +256,47 @@ keys.forEach(k => $(k).addEventListener("input", e => {
   syncUI();
   try { localStorage.setItem("logo-loader", JSON.stringify(cfg)); } catch (err) {}
 }));
+const COLOR_DEFAULTS = { blue: "#0b57a4", gray: "#a6a9ae", bg: "#ffffff" };
+const colors = { ...COLOR_DEFAULTS };
+try { Object.assign(colors, JSON.parse(localStorage.getItem("logo-loader-colors") || "{}")); } catch (e) {}
+
+const normHex = v => {
+  const m = v.trim().replace(/^#/, "").toLowerCase();
+  if (/^[0-9a-f]{6}$/.test(m)) return "#" + m;
+  if (/^[0-9a-f]{3}$/.test(m)) return "#" + m.split("").map(c => c + c).join("");
+  return null;
+};
+function applyColors() {
+  Object.keys(colors).forEach(k => {
+    document.documentElement.style.setProperty("--" + k, colors[k]);
+    $("c-" + k).value = colors[k];
+    const h = $("h-" + k);
+    if (document.activeElement !== h) { h.value = colors[k]; h.removeAttribute("aria-invalid"); }
+  });
+}
+function setColor(k, v) {
+  colors[k] = v;
+  applyColors();
+  try { localStorage.setItem("logo-loader-colors", JSON.stringify(colors)); } catch (err) {}
+}
+Object.keys(colors).forEach(k => {
+  $("c-" + k).addEventListener("input", e => { $("h-" + k).value = e.target.value; setColor(k, e.target.value); });
+  const h = $("h-" + k);
+  h.addEventListener("input", () => {
+    const v = normHex(h.value);
+    h.setAttribute("aria-invalid", v ? "false" : "true");
+    if (v) setColor(k, v);
+  });
+  h.addEventListener("blur", () => { h.value = colors[k]; h.removeAttribute("aria-invalid"); });
+});
+applyColors();
+
 $("reset").addEventListener("click", () => {
   Object.assign(cfg, DEFAULTS);
+  Object.assign(colors, COLOR_DEFAULTS);
   syncUI();
-  try { localStorage.removeItem("logo-loader"); } catch (err) {}
+  applyColors();
+  try { localStorage.removeItem("logo-loader"); localStorage.removeItem("logo-loader-colors"); } catch (err) {}
 });
 $("panel").addEventListener("submit", e => e.preventDefault());
 syncUI();
