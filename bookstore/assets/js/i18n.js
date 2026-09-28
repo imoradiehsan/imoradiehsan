@@ -1,4 +1,4 @@
-/* Folio & Co. — language layer (English / فارسی).
+/* Saba & Bahar Publishing — language layer (English / فارسی).
    Loaded in <head> so <html lang/dir> is correct before first paint.
    - t(key, vars): UI strings used by JS (STR.en is the fallback).
    - [data-i18n="key"] elements: static page text; English lives in the HTML, Persian in STR.fa.
@@ -56,7 +56,7 @@ function applyI18n(root = document) {
 
 const STR = {
   en: {
-    'skip': 'Skip to content', 'brand.aria': 'Folio & Co. home', 'brand.tag': 'Booksellers · Est. 2014',
+    'skip': 'Skip to content', 'brand.aria': 'Saba & Bahar Publishing — home', 'brand.name': 'Saba & Bahar Publishing',
     'lang.switch': 'Change language', 'lang.to': 'فارسی',
     'announce.ship': 'Free shipping on orders over <strong>{amt}</strong>', 'announce.ebooks': ' · eBooks delivered instantly',
     'announce.track': 'Track order', 'announce.help': 'Help center', 'announce.gift': 'Gift cards',
@@ -69,12 +69,12 @@ const STR = {
     'search.books': 'Books', 'search.authors': 'Authors', 'search.cats': 'Categories', 'search.nBooks': '{n} books', 'search.authorMeta': '{n} books · {g}',
     'search.none': 'No matches for “{q}”. Press Enter to search the full catalogue.',
     'search.trend': 'Atomic Rituals|Elena Marsh|Psychology|The Hidden Cosmos',
-    'foot.about': 'An independent bookstore for the curious — carefully curated physical books, eBooks and audiobooks, delivered with care since 2014.',
+    'foot.about': 'Saba & Bahar Publishing publishes for children, teens and young adults, with a focus on philosophy, social sciences, law, parenting, psychology and literature.',
     'foot.social': 'Social media', 'foot.service': 'Customer Service', 'foot.info': 'Information', 'foot.cats': 'Categories', 'foot.contact': 'Get in touch',
     'foot.contactUs': 'Contact us', 'foot.faq': 'FAQ', 'foot.shipping': 'Shipping', 'foot.returns': 'Returns', 'foot.track': 'Track order',
     'foot.aboutUs': 'About us', 'foot.privacy': 'Privacy Policy', 'foot.terms': 'Terms & Conditions', 'foot.a11y': 'Accessibility', 'foot.ds': 'Design system',
-    'foot.kids': "Children's books", 'foot.allCats': 'All categories', 'foot.address': '21 Paper Lane, Boston',
-    'foot.copy': '© 2026 Folio & Co. Booksellers. All rights reserved.', 'pay.aria': 'Accepted payment methods',
+    'foot.kids': "Children's books", 'foot.allCats': 'All categories', 'foot.whatsapp': 'WhatsApp', 'foot.telegram': 'Telegram', 'foot.instagram': 'Instagram',
+    'foot.copy': '© 2026 Saba & Bahar Publishing. All rights reserved.', 'pay.aria': 'Accepted payment methods',
     'cover.aria': 'Cover of {t} by {a}', 'rating.sr': 'Rated {r} out of 5 from {n} reviews',
     'badge.new': 'New', 'badge.best': 'Bestseller', 'badge.no1': '#1 Bestseller', 'badge.newWeek': 'New this week', 'badge.default': 'Default',
     'card.wishAdd': 'Add to wishlist', 'card.wishRemove': 'Remove from wishlist', 'card.quick': 'Quick view', 'card.match': '{p}% match', 'card.addAria': 'Add {t} to cart',
@@ -105,7 +105,7 @@ const STR = {
     'list.allT': 'All Books', 'list.allS': 'Browse our full catalogue of physical books, eBooks and audiobooks.',
     'list.andUp': '&amp; up', 'list.any': 'Any rating', 'list.showing': 'Showing <strong>{a}–{b}</strong> of <strong>{n}</strong> books',
     'list.emptyT': 'No books match those filters', 'list.emptyP': 'Try removing a filter or widening the price range — there is a great read in here somewhere.', 'list.clear': 'Clear all filters', 'list.clearAll': 'Clear all',
-    'list.starsUp': '{r}★ & up', 'list.prevPage': 'Previous page', 'list.nextPage': 'Next page', 'title.suffix': ' — Folio & Co.',
+    'list.starsUp': '{r}★ & up', 'list.prevPage': 'Previous page', 'list.nextPage': 'Next page', 'title.suffix': ' — Saba & Bahar Publishing',
     /* product */
     'pdp.back': 'Back cover', 'pdp.front': 'Front cover', 'pdp.first': 'First page', 'pdp.contents': 'Contents', 'pdp.quote': '“Unforgettable.”',
     'pdp.chapter': 'Chapter One', 'pdp.sample': 'The morning it began, the light came in sideways, the way it only does at the edge of the sea, and every object in the room seemed to be waiting for someone to name it.', 'pdp.sample2': 'She had not meant to stay. Nobody ever does.',
@@ -160,7 +160,7 @@ const STR = {
   },
 
   fa: {
-    'skip': 'رفتن به محتوای اصلی', 'brand.aria': 'صفحه اصلی کتاب‌سرای فولیو', 'brand.tag': 'کتاب‌فروشی آنلاین · از ۱۳۹۳',
+    'skip': 'رفتن به محتوای اصلی', 'brand.aria': 'صفحه اصلی انتشارات صبا و بهار', 'brand.name': 'انتشارات صبا و بهار',
     'lang.switch': 'تغییر زبان', 'lang.to': 'English',
     'announce.ship': 'ارسال رایگان برای سفارش‌های بالای <strong>{amt}</strong>', 'announce.ebooks': ' · تحویل فوری کتاب‌های الکترونیکی',
     'announce.track': 'پیگیری سفارش', 'announce.help': 'مرکز پشتیبانی', 'announce.gift': 'کارت هدیه',
@@ -173,12 +173,12 @@ const STR = {
     'search.books': 'کتاب‌ها', 'search.authors': 'نویسندگان', 'search.cats': 'دسته‌بندی‌ها', 'search.nBooks': '{n} کتاب', 'search.authorMeta': '{n} کتاب · {g}',
     'search.none': 'نتیجه‌ای برای «{q}» پیدا نشد. برای جستجو در کل فروشگاه Enter بزنید.',
     'search.trend': 'عادت‌های اتمی|النا مارش|روان‌شناسی|کیهان پنهان',
-    'foot.about': 'کتاب‌فروشی مستقلی برای آدم‌های کنجکاو؛ کتاب چاپی، الکترونیکی و صوتی، با دقت انتخاب شده و با حوصله ارسال شده، از سال ۱۳۹۳.',
+    'foot.about': 'نشر صبا و بهار در زمینه پرورش نسل کودک، نوجوان و جوان فعالیت می‌کند؛ با تمرکز بر فلسفه، علوم اجتماعی، حقوق، پرورش، روان‌شناسی و ادبیات.',
     'foot.social': 'شبکه‌های اجتماعی', 'foot.service': 'خدمات مشتریان', 'foot.info': 'اطلاعات', 'foot.cats': 'دسته‌بندی‌ها', 'foot.contact': 'تماس با ما',
     'foot.contactUs': 'ارتباط با ما', 'foot.faq': 'سؤالات متداول', 'foot.shipping': 'شیوه ارسال', 'foot.returns': 'بازگشت کالا', 'foot.track': 'پیگیری سفارش',
     'foot.aboutUs': 'درباره ما', 'foot.privacy': 'حریم خصوصی', 'foot.terms': 'قوانین و مقررات', 'foot.a11y': 'دسترس‌پذیری', 'foot.ds': 'سیستم طراحی',
-    'foot.kids': 'کتاب کودک', 'foot.allCats': 'همه دسته‌بندی‌ها', 'foot.address': 'بوستون، خیابان کاغذ، پلاک ۲۱',
-    'foot.copy': '© ۱۴۰۵ کتاب‌سرای فولیو. همه حقوق محفوظ است.', 'pay.aria': 'روش‌های پرداخت',
+    'foot.kids': 'کتاب کودک', 'foot.allCats': 'همه دسته‌بندی‌ها', 'foot.whatsapp': 'واتس‌اپ', 'foot.telegram': 'تلگرام', 'foot.instagram': 'اینستاگرام',
+    'foot.copy': '© ۱۴۰۵ انتشارات صبا و بهار. همه حقوق محفوظ است.', 'pay.aria': 'روش‌های پرداخت',
     'cover.aria': 'جلد کتاب {t} اثر {a}', 'rating.sr': 'امتیاز {r} از ۵ بر اساس {n} نظر',
     'badge.new': 'جدید', 'badge.best': 'پرفروش', 'badge.no1': 'پرفروش شماره ۱', 'badge.newWeek': 'تازه این هفته', 'badge.default': 'پیش‌فرض',
     'card.wishAdd': 'افزودن به علاقه‌مندی‌ها', 'card.wishRemove': 'حذف از علاقه‌مندی‌ها', 'card.quick': 'نگاه سریع', 'card.match': '{p}٪ هم‌خوانی', 'card.addAria': 'افزودن {t} به سبد خرید',
@@ -207,7 +207,7 @@ const STR = {
     'list.allT': 'همه کتاب‌ها', 'list.allS': 'کل فهرست کتاب‌های چاپی، الکترونیکی و صوتی ما را مرور کنید.',
     'list.andUp': 'و بالاتر', 'list.any': 'همه امتیازها', 'list.showing': 'نمایش <strong>{a} تا {b}</strong> از <strong>{n}</strong> کتاب',
     'list.emptyT': 'کتابی با این فیلترها پیدا نشد', 'list.emptyP': 'یکی از فیلترها را بردارید یا بازه قیمت را بازتر کنید؛ حتماً کتاب خوبی این‌جا هست.', 'list.clear': 'حذف همه فیلترها', 'list.clearAll': 'حذف همه',
-    'list.starsUp': '{r} ستاره و بالاتر', 'list.prevPage': 'صفحه قبل', 'list.nextPage': 'صفحه بعد', 'title.suffix': ' — کتاب‌سرای فولیو',
+    'list.starsUp': '{r} ستاره و بالاتر', 'list.prevPage': 'صفحه قبل', 'list.nextPage': 'صفحه بعد', 'title.suffix': ' — انتشارات صبا و بهار',
     'pdp.back': 'پشت جلد', 'pdp.front': 'روی جلد', 'pdp.first': 'صفحه اول', 'pdp.contents': 'فهرست', 'pdp.quote': '«فراموش‌نشدنی.»',
     'pdp.chapter': 'فصل یکم', 'pdp.sample': 'صبح آن روز، نور از پهلو به اتاق می‌تابید؛ همان‌طور که فقط در لبه دریا می‌تابد، و هر چیزی در اتاق انگار منتظر بود کسی اسمش را صدا بزند.', 'pdp.sample2': 'قصد ماندن نداشت. هیچ‌کس ندارد.',
     'pdp.toc': 'پیش‌درآمد|نخستین نقشه|خط جزر و مد|قطب‌نمای امانتی|شمالِ ناکجا|آخرین صفحه',

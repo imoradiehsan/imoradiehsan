@@ -1,4 +1,4 @@
-/* Folio & Co. — color templates.
+/* Saba & Bahar Publishing — color templates.
    Each template gives three brand colors; every shade the UI uses (buttons, tints, dark surfaces…)
    is derived from them and written as CSS custom properties on <html>. Loaded in <head> so there is no flash.
    The visitor's pick is remembered in localStorage; everyone else sees SITE_CONFIG.defaultTheme. */

@@ -1,4 +1,4 @@
-/* Folio & Co. — demo catalog data + icon set.
+/* Saba & Bahar Publishing — demo catalog data + icon set.
    Covers are generated (see coverHTML in app.js) so the UI ships with no image dependencies. */
 
 const ICONS = {
@@ -62,6 +62,8 @@ const ICONS = {
   quill: '<path d="M4 20 14 10M18 3c-6 1-10 6-11 13l3-1c1-2 4-3 5-5 1 0-1-2 0-3 2 0 2-2 3-4Z"/>',
   cpu: '<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
   // socials (simple generic marks)
+  whatsapp: '<path d="M3.5 20.5 5 16a8.5 8.5 0 1 1 3 3l-4.5 1.5Z"/><path d="M9.2 8.3c-.4 3.3 3.2 6.9 6.5 6.5l.9-1.4-2-1-1 .8a4.6 4.6 0 0 1-2.3-2.3l.8-1-1-2-1.9.4"/>',
+  telegram: '<path d="m21 4-18 7.2 6 2 2 6.3 3.3-4.2 5.2 4L21 4Z"/><path d="m9 13.2 8.5-6.4"/>',
   socialA: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/>',
   socialB: '<path d="M4 4l16 16M20 4 4 20"/>',
   socialC: '<path d="M14 21v-8h3l.5-3.5H14V7.5c0-1 .4-1.8 1.8-1.8H18V2.6C17.6 2.5 16.4 2.4 15 2.4c-3 0-4.6 1.7-4.6 4.8v2.3H7.5V13h2.9v8"/>',

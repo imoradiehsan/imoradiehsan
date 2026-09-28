@@ -1,8 +1,10 @@
-# Folio & Co. — Online Bookstore UI
+# Saba & Bahar Publishing (انتشارات صبا و بهار) — Online Bookstore UI
 
 A premium, responsive bookstore front end for selling physical books, eBooks and audiobooks. It is built with plain HTML, CSS and JavaScript, and has no build step or dependencies.
 
-**Open `index.html` in a browser** (or serve the folder with `npx serve bookstore`).
+**Serve the folder over HTTP** (e.g. `npx serve bookstore`, or GitHub Pages). Opening `index.html` directly as a file mostly works, but the logo will not show, because browsers block CSS masks on `file://` pages.
+
+**Logo:** `assets/brand/logo.png` is a transparent version of the calligraphic logo. It is used as a CSS mask, so it takes the active template's color in the header and turns white in the footer. To replace it, upload a new transparent PNG with the same name and update `aspect-ratio` on `.logo__img` in `styles.css` if the proportions change.
 
 ## Pages
 
