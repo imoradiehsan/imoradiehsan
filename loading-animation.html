@@ -1,77 +1,192 @@
 <title>Logo Loader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #edf1f7;
-  --blue: #1a5daa;
-  --seg-1: #7a8a9e;
-  --seg-2: #969fae;
-  --seg-3: #b0b8c4;
+  --bg: #f2f4f8;
+  --blue: #0b57a4;
+  --gray: #a6a9ae;
+  --track: #0b57a4;
+  --track-o: 0.06;
+  --ink: #5a6372;
+  --line: #dce1e9;
 }
-
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0c1220;
-    --blue: #2e7fd4;
-    --seg-1: #6e7f95;
-    --seg-2: #8a99ad;
-    --seg-3: #a6b1be;
+    --bg: #0d121b;
+    --blue: #3a86d6;
+    --gray: #858c97;
+    --track: #8fb3dc;
+    --track-o: 0.07;
+    --ink: #9aa3b1;
+    --line: #232b38;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0c1220;
-  --blue: #2e7fd4;
-  --seg-1: #6e7f95;
-  --seg-2: #8a99ad;
-  --seg-3: #a6b1be;
+  --bg: #0d121b;
+  --blue: #3a86d6;
+  --gray: #858c97;
+  --track: #8fb3dc;
+  --track-o: 0.07;
+  --ink: #9aa3b1;
+  --line: #232b38;
   color-scheme: dark;
 }
 
+html, body { height: 100%; }
 body {
+  margin: 0;
   background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Vazirmatn", system-ui, sans-serif;
+  display: grid;
+  place-items: center;
   padding-inline: 16px;
 }
-
-.spinner {
-  width: 180px;
-  height: 180px;
-  animation: spin 1.5s linear infinite;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 56px;
 }
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
+#logo {
+  width: min(260px, 64vw);
+  height: auto;
+  overflow: visible;
 }
+.p { stroke-width: 32; stroke-linejoin: round; }
+.b { fill: var(--blue); stroke: var(--blue); }
+.g { fill: var(--gray); stroke: var(--gray); }
+.t { fill: var(--track); stroke: var(--track); opacity: var(--track-o); }
 
-.seg-1 { animation: pulse 1.5s ease-in-out infinite; }
-.seg-2 { animation: pulse 1.5s ease-in-out 0.14s infinite; }
-.seg-3 { animation: pulse 1.5s ease-in-out 0.28s infinite; }
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+.ctrl {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .spinner { animation-duration: 6s; }
-  .seg-1, .seg-2, .seg-3 { animation: none; opacity: 0.7; }
-}
+.ctrl input { accent-color: var(--blue); width: 140px; }
+.ctrl input:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+.ctrl output { font-variant-numeric: tabular-nums; min-width: 4.5em; }
 </style>
 
-<svg class="spinner" viewBox="0 0 200 200">
-  <!-- Blue C-arc: ~250deg visible, ~110deg gap -->
-  <circle cx="100" cy="100" r="70" fill="none"
-    stroke="var(--blue)" stroke-width="22" stroke-linecap="round"
-    stroke-dasharray="305 135" stroke-dashoffset="18"/>
+<main>
+  <svg id="logo" viewBox="0 0 500 500" role="img" aria-label="در حال بارگذاری">
+    <g id="track"></g>
+    <g id="all">
+      <path id="blue" class="p b"></path>
+      <path id="s0" class="p g"></path>
+      <path id="s1" class="p g"></path>
+      <path id="s2" class="p g"></path>
+    </g>
+  </svg>
 
-  <!-- Three gray segments in the gap -->
-  <rect class="seg-1" x="156" y="89" width="18" height="22" rx="6"
-    fill="var(--seg-1)" transform="rotate(255, 100, 100)"/>
-  <rect class="seg-2" x="156" y="89" width="18" height="22" rx="6"
-    fill="var(--seg-2)" transform="rotate(290, 100, 100)"/>
-  <rect class="seg-3" x="156" y="89" width="18" height="22" rx="6"
-    fill="var(--seg-3)" transform="rotate(322, 100, 100)"/>
-</svg>
+  <div class="ctrl" dir="rtl">
+    <label for="dur">مدت هر دور</label>
+    <input id="dur" type="range" min="2" max="6" step="0.1" value="3.4">
+    <output id="durOut" for="dur">۳٫۴ ثانیه</output>
+  </div>
+</main>
+
+<script>
+const C = 250, RO = 194, RI = 120, CR = 16, GAP = 24;
+const D = GAP / 2 + CR, ro = RO - CR, ri = RI + CR;
+const toRad = d => d * Math.PI / 180, toDeg = r => r * 180 / Math.PI;
+const oOff = toDeg(Math.asin(D / ro)), iOff = toDeg(Math.asin(D / ri));
+const MIN = 2 * iOff + 1;
+
+const BLUE = [125, 353];
+const SEGS = [[353, 397], [397, 441], [441, 485]];
+
+const P = (r, a) => {
+  const t = toRad(a - 90);
+  return (C + r * Math.cos(t)).toFixed(2) + " " + (C + r * Math.sin(t)).toFixed(2);
+};
+
+// Annular sector between two cut lines; constant-width gaps and rounded corners
+// come from insetting by D and stroking with a round join of width 2*CR.
+function sector(a, b) {
+  const oa = a + oOff, ob = b - oOff, ia = a + iOff, ib = b - iOff;
+  const lo = ob - oa > 180 ? 1 : 0, li = ib - ia > 180 ? 1 : 0;
+  return `M${P(ro, oa)}A${ro} ${ro} 0 ${lo} 1 ${P(ro, ob)}L${P(ri, ib)}A${ri} ${ri} 0 ${li} 0 ${P(ri, ia)}Z`;
+}
+
+const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
+const span = (t, a, b) => clamp((t - a) / (b - a));
+const inOut = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outBack = x => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const inCubic = x => x * x * x;
+
+const $ = id => document.getElementById(id);
+const blue = $("blue"), all = $("all");
+const segEls = [$("s0"), $("s1"), $("s2")];
+const SEG_IN = [[0.22, 0.40], [0.28, 0.46], [0.34, 0.52]];
+const SEG_OUT = [[0.80, 0.90], [0.85, 0.95], [0.90, 1.00]];
+const MID_R = (RO + RI) / 2;
+
+const track = $("track");
+[BLUE, ...SEGS].forEach(([a, b]) => {
+  const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  el.setAttribute("class", "p t");
+  el.setAttribute("d", sector(a, b));
+  track.appendChild(el);
+});
+
+// p in [0,1): identical, empty frame at p=0 and p→1 makes the loop seamless.
+function render(p) {
+  const grow = inOut(span(p, 0, 0.32));
+  const erase = inOut(span(p, 0.64, 0.90));
+  const len = BLUE[1] - BLUE[0];
+  let head = BLUE[0] + len * grow, tail = BLUE[0] + len * erase;
+  let op = 1;
+  if (head - tail < MIN) {
+    op = (head - tail) / MIN;
+    if (erase > 0) tail = head - MIN; else head = tail + MIN;
+  }
+  blue.setAttribute("d", op > 0.001 ? sector(tail, head) : "");
+  blue.style.opacity = op;
+
+  SEGS.forEach(([a, b], i) => {
+    const inP = span(p, ...SEG_IN[i]), outP = span(p, ...SEG_OUT[i]);
+    let sc, o;
+    if (outP > 0) { const e = inCubic(outP); sc = 1 - 0.55 * e; o = 1 - e; }
+    else { sc = 0.45 + 0.55 * outBack(inP); o = clamp(inP * 1.8); }
+    const [cx, cy] = P(MID_R, (a + b) / 2).split(" ");
+    const el = segEls[i];
+    el.setAttribute("d", sector(a, b));
+    el.setAttribute("transform", `translate(${cx} ${cy}) scale(${sc.toFixed(4)}) translate(${-cx} ${-cy})`);
+    el.style.opacity = o;
+  });
+
+  const breathe = 1 + 0.035 * Math.sin(Math.PI * span(p, 0.50, 0.68));
+  all.setAttribute("transform", `translate(${C} ${C}) scale(${breathe.toFixed(4)}) translate(${-C} ${-C})`);
+}
+
+const durInput = $("dur"), durOut = $("durOut");
+const fa = n => n.toFixed(1).replace(".", "٫").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+let duration = parseFloat(durInput.value);
+durInput.addEventListener("input", () => {
+  duration = parseFloat(durInput.value);
+  durOut.textContent = fa(duration) + " ثانیه";
+});
+
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduce) {
+  render(0.58);
+} else {
+  let phase = 0, last = null;
+  const frame = now => {
+    if (last !== null) phase = (phase + Math.min(now - last, 100) / 1000 / duration) % 1;
+    last = now;
+    render(phase);
+    requestAnimationFrame(frame);
+  };
+  render(0);
+  requestAnimationFrame(frame);
+}
+</script>
