@@ -263,6 +263,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .price { display: inline-flex; align-items: baseline; gap: 8px; font-weight: 700; color: var(--text); }
 .price__now { font-size: var(--fs-md); }
 .price__old { font-size: var(--fs-sm); font-weight: 500; color: var(--text-soft); text-decoration: line-through; }
+.price__cur { font-size: .72em; font-weight: 600; color: var(--text-muted); }
+.book-card__foot .price, .rank-card__foot .price { flex-wrap: wrap; row-gap: 0; column-gap: 6px; }
 
 /* Forms */
 .field { display: grid; gap: 6px; }
@@ -946,9 +948,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .gallery__zoom { position: absolute; inset-inline-end: 16px; bottom: 16px; background: #fff; box-shadow: var(--shadow-sm); }
 .gallery__thumbs { display: grid; gap: 12px; align-content: start; }
 .gallery__thumb { padding: 10px 14px; border-radius: var(--r-md); background: var(--sand-100); border: 2px solid transparent; transition: border-color var(--dur); }
+/* Thumbnails show page previews as ruled lines instead of real text, so a browser minimum
+   font size can never blow them up (it used to stretch the gallery). */
+.gallery__thumb .page-art > * { display: none !important; }
+.gallery__thumb .page-art { padding: 18% 14%; background-clip: content-box, padding-box; background-image: repeating-linear-gradient(to bottom, rgba(38,50,56,.22) 0 1.5px, transparent 1.5px 6px), none; }
+.gallery__thumb .back-art { background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,.4) 0 1.5px, transparent 1.5px 6px), none; }
+.gallery__thumb { overflow: hidden; }
 .gallery__thumb[aria-selected="true"] { border-color: var(--primary); }
 .gallery__thumb:hover { border-color: var(--primary-100); }
-.page-art { aspect-ratio: 2 / 3; width: 100%; background: #fffdf8; border-radius: 3px; box-shadow: var(--shadow-cover); padding: 12% 11%; display: flex; flex-direction: column; gap: 5%; container-type: inline-size; }
+.page-art { overflow: hidden; aspect-ratio: 2 / 3; width: 100%; background: #fffdf8; border-radius: 3px; box-shadow: var(--shadow-cover); padding: 12% 11%; display: flex; flex-direction: column; gap: 5%; container-type: inline-size; }
 .page-art h5 { font-family: var(--font-display); font-size: clamp(6px, 7cqi, 20px); color: var(--text); }
 .page-art p { font-family: var(--font-display); font-size: clamp(3px, 3.6cqi, 11px); line-height: 1.55; color: var(--gray-700); text-align: justify; }
 .page-art .dropcap::first-letter { float: inline-start; font-size: 3.2em; line-height: .85; padding-inline-end: 4px; color: var(--secondary-700); }

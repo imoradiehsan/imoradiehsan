@@ -27,8 +27,10 @@ function setLang(l) {
 
 /* ---------- Formatting ---------- */
 const fmtNum = n => Number(n).toLocaleString(LOC);
-const money = n => new Intl.NumberFormat(LOC, { style: 'currency', currency: 'USD' }).format(n);
-const moneyInt = n => new Intl.NumberFormat(LOC, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+const CURRENCY = { fa: 'تومان', en: 'Toman' };
+const money = n => `${Math.round(n).toLocaleString(LOC)} ${CURRENCY[LANG]}`;
+const moneyNum = n => Math.round(n).toLocaleString(LOC); // amount without the unit (e.g. struck-through old prices)
+const moneyInt = money;
 const pad2 = n => Number(n).toLocaleString(LOC, { minimumIntegerDigits: 2 });
 const fmtDate = iso => new Date(iso + 'T12:00:00').toLocaleDateString(LOC, { year: 'numeric', month: 'short', day: 'numeric' });
 const fmtRating = r => Number(r).toLocaleString(LOC, { minimumFractionDigits: 1, maximumFractionDigits: 1 });

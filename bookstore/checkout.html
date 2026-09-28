@@ -52,8 +52,8 @@
                 </div>
                 <p class="label mt-6" data-i18n="k.method">Delivery method</p>
                 <div class="ship-opts">
-                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="standard" checked><span><strong data-i18n="k.std">Standard delivery</strong><small data-i18n="k.stdD">3–5 business days</small></span></span><strong data-i18n="k.stdP">Free over $35</strong></label>
-                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="express"><span><strong data-i18n="k.exp">Express delivery</strong><small data-i18n="k.expD">1–2 business days</small></span></span><strong data-i18n="k.expP">$9.99</strong></label>
+                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="standard" checked><span><strong data-i18n="k.std">Standard delivery</strong><small data-i18n="k.stdD">3–5 business days · free over <span data-amount="freeShippingThreshold"></span></small></span></span><strong data-i18n="k.stdP"><span data-amount="shippingStandard"></span></strong></label>
+                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="express"><span><strong data-i18n="k.exp">Express delivery</strong><small data-i18n="k.expD">1–2 business days</small></span></span><strong data-i18n="k.expP"><span data-amount="shippingExpress"></span></strong></label>
                 </div>
               </div>
               <div class="checkout__nav"><a class="btn btn--ghost" href="cart.html" data-i18n="k.backCart">← Back to cart</a><button class="btn btn--lg" data-next="1" data-i18n="k.toPay">Continue to payment</button></div>

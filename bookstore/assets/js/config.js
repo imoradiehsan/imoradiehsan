@@ -35,6 +35,11 @@ const SITE_CONFIG = {
     }
   ],
 
+  /* فروشگاه — همه مبالغ به تومان. Shop settings — all amounts in Toman. */
+  freeShippingThreshold: 1000000, // ارسال رایگان برای سفارش‌های بالای این مبلغ
+  shippingStandard: 90000,        // هزینه ارسال عادی
+  shippingExpress: 150000,        // هزینه ارسال سریع
+
   /* هر چند میلی‌ثانیه بنر عوض شود — autoplay interval in ms (0 = off) */
   bannerInterval: 5000
 };

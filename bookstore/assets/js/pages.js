@@ -11,19 +11,20 @@ const PROMOS = {
 };
 function orderTotals(shipMethod = 'standard') {
   const sub = Store.cartSubtotal(); const code = Store.read('promo', null); const promo = PROMOS[code];
-  const discount = promo ? +promo.calc(sub).toFixed(2) : 0;
+  const discount = promo ? Math.round(promo.calc(sub) / 1000) * 1000 : 0;
   const physical = Store.cart.some(l => ['Hardcover', 'Paperback'].includes(l.fmt));
   let ship = 0;
-  if (physical) ship = shipMethod === 'express' ? 9.99 : (sub - discount >= 35 ? 0 : 4.99);
+  const C = SITE_CONFIG;
+  if (physical) ship = shipMethod === 'express' ? C.shippingExpress : (sub - discount >= C.freeShippingThreshold ? 0 : C.shippingStandard);
   if (promo?.freeShip) ship = 0;
-  const tax = +((sub - discount) * 0.08).toFixed(2);
+  const tax = 0; // books are VAT-exempt in Iran
   return { sub, discount, ship, tax, total: Math.max(0, sub - discount + ship + tax), code, promo, physical };
 }
 function summaryRows(o) {
   return `<div class="summary__row"><span>${t('sum.subtotal', { n: Store.cartCount() })}</span><strong>${money(o.sub)}</strong></div>
     ${o.discount ? `<div class="summary__row summary__row--discount"><span>${t('sum.discount', { c: o.code })}</span><strong>−${money(o.discount)}</strong></div>` : ''}
     <div class="summary__row"><span>${t('sum.shipping')}</span><strong>${!o.physical ? t('sum.digital') : o.ship ? money(o.ship) : t('sum.free')}</strong></div>
-    <div class="summary__row"><span>${t('sum.tax')}</span><strong>${money(o.tax)}</strong></div>
+    ${o.tax ? `<div class="summary__row"><span>${t('sum.tax')}</span><strong>${money(o.tax)}</strong></div>` : ''}
     <div class="summary__total"><span>${t('sum.total')}</span><strong>${money(o.total)}</strong></div>`;
 }
 const emptyState = (ic, title, text, cta) => `<div class="empty"><div class="empty__icon">${icon(ic)}</div><h2 style="font-size:1.6rem">${title}</h2><p>${text}</p>${cta}</div>`;
@@ -161,7 +162,8 @@ Pages.home = () => {
 Pages.books = () => {
   const PER_PAGE = 9;
   const COLLECTIONS = { bestseller: [t('list.bestT'), t('list.bestS')], new: [t('list.newT'), t('list.newS')], offer: [t('list.offerT'), t('list.offerS')] };
-  const priceMax = Math.ceil(Math.max(...BOOKS.map(b => b.price)));
+  const PRICE_STEP = 10000;
+  const priceMax = Math.ceil(Math.max(...BOOKS.map(b => b.price)) / 50000) * 50000;
   const S = {
     q: params.get('q') || '', collection: params.get('collection') || '',
     cats: params.get('cat') ? [params.get('cat')] : [], authors: params.get('author') ? [params.get('author')] : [],
@@ -185,7 +187,7 @@ Pages.books = () => {
   $('#f-rating').innerHTML = [4.5, 4, 3.5, 0].map(r => `<label class="check"><input type="radio" name="rating" value="${r}" ${S.rating === r ? 'checked' : ''}><span class="rating-opt">${r ? starsHTML(r) + ` <span class="small">${t('list.andUp')}</span>` : t('list.any')}</span></label>`).join('');
   $('#f-format').innerHTML = ['Hardcover', 'Paperback', 'eBook', 'Audiobook'].map(f => `<button type="button" class="chip" data-format="${f}" aria-pressed="false">${icon(FORMAT_ICON[f])}${fmtName(f)}</button>`).join('');
   const rMin = $('#r-min'), rMax = $('#r-max');
-  rMin.max = rMax.max = priceMax; rMax.value = priceMax;
+  rMin.max = rMax.max = priceMax; rMin.step = rMax.step = PRICE_STEP; rMax.value = priceMax;
 
   $('#f-author-search').addEventListener('input', e => { const q = e.target.value.toLowerCase(); $$('#f-author .check').forEach(l => l.hidden = !l.textContent.toLowerCase().includes(q)); });
   $$('.acc__head').forEach(h => h.addEventListener('click', () => { const a = h.closest('.acc'); const open = a.dataset.open !== 'false'; a.dataset.open = !open; h.setAttribute('aria-expanded', !open); }));
@@ -196,7 +198,7 @@ Pages.books = () => {
     S.langs = $$('input[name=lang]:checked').map(i => i.value);
     S.rating = Number($('input[name=rating]:checked')?.value || 0);
     S.formats = $$('[data-format][aria-pressed=true]').map(c => c.dataset.format);
-    let lo = Number(rMin.value), hi = Number(rMax.value); if (lo > hi - 2) [lo, hi] = [Math.min(lo, hi - 2), Math.max(hi, lo + 2)];
+    let lo = Number(rMin.value), hi = Number(rMax.value); if (lo > hi - 2 * PRICE_STEP) [lo, hi] = [Math.min(lo, hi - 2 * PRICE_STEP), Math.max(hi, lo + 2 * PRICE_STEP)];
     S.min = lo; S.max = hi; S.page = 1; render();
   };
   $('#filters').addEventListener('change', sync);
@@ -312,7 +314,7 @@ Pages.book = () => {
       <button class="icon-btn" style="border:1.5px solid var(--border);width:54px;height:54px" data-wish="${b.id}" aria-label="${t('card.wishAdd')}">${icon('heart')}</button>
     </div>
     <div class="pdp__assure">
-      <div>${icon('truck')} ${t('pdp.a1', { amt: moneyInt(35) })}</div><div>${icon('refresh')} ${t('pdp.a2')}</div>
+      <div>${icon('truck')} ${t('pdp.a1', { amt: money(SITE_CONFIG.freeShippingThreshold) })}</div><div>${icon('refresh')} ${t('pdp.a2')}</div>
       <div>${icon('shield')} ${t('pdp.a3')}</div><div>${icon('gift')} ${t('pdp.a4')}</div>
     </div>`;
   renderPrice();
@@ -358,7 +360,7 @@ Pages.cart = () => {
       $('#cart-root').innerHTML = emptyState('bag', t('cart.emptyT'), t('cart.emptyP'), `<a class="btn btn--lg" href="books.html">${t('cart.browse')}</a>`);
       return;
     }
-    const o = orderTotals(); const need = Math.max(0, 35 - (o.sub - o.discount));
+    const o = orderTotals(); const FREE = SITE_CONFIG.freeShippingThreshold; const need = Math.max(0, FREE - (o.sub - o.discount));
     $('#cart-root').innerHTML = `<div class="cart-layout">
       <section aria-label="${t('cart.items')}">
         <div class="cart-list">
@@ -381,7 +383,7 @@ Pages.cart = () => {
       </section>
       <aside class="summary" aria-label="${t('cart.summary')}">
         <h2>${t('cart.summary')}</h2>
-        ${o.physical ? `<div class="ship-progress">${need ? t('cart.away', { x: money(need) }) : `${icon('check', 'width="16" height="16" style="display:inline;color:var(--success);vertical-align:-3px"')} ${t('cart.unlocked')}`}<div class="ship-progress__bar"><span style="width:${Math.min(100, (o.sub - o.discount) / 35 * 100)}%"></span></div></div>` : ''}
+        ${o.physical ? `<div class="ship-progress">${need ? t('cart.away', { x: money(need) }) : `${icon('check', 'width="16" height="16" style="display:inline;color:var(--success);vertical-align:-3px"')} ${t('cart.unlocked')}`}<div class="ship-progress__bar"><span style="width:${Math.min(100, (o.sub - o.discount) / FREE * 100)}%"></span></div></div>` : ''}
         ${summaryRows(o)}
         <form class="promo" data-promo><label for="promo" class="sr-only">${t('cart.promoPh')}</label><input id="promo" class="input" placeholder="${t('cart.promoPh')}" value="${o.code || ''}" autocomplete="off" dir="ltr"><button class="btn btn--outline" type="submit">${o.code ? t('cart.removeCode') : t('cart.apply')}</button></form>
         <p class="promo-msg ${o.code ? 'ok' : ''}" id="promo-msg">${o.promo ? `✓ ${t('promo.' + o.code)}` : t('cart.try')}</p>
@@ -475,10 +477,10 @@ Pages.checkout = () => {
 /* ======================= ACCOUNT ======================= */
 Pages.account = () => {
   const ORDERS = [
-    { no: 'FC-482913', date: '2026-09-24', total: 58.47, status: 'processing', ids: [1, 6, 11] },
-    { no: 'FC-471208', date: '2026-09-08', total: 34.99, status: 'transit', ids: [2, 20] },
-    { no: 'FC-455630', date: '2026-08-17', total: 72.10, status: 'delivered', ids: [5, 14, 3, 9] },
-    { no: 'FC-439011', date: '2026-07-29', total: 18.00, status: 'delivered', ids: [13] }
+    { no: 'FC-482913', date: '2026-09-24', total: 1755000, status: 'processing', ids: [1, 6, 11] },
+    { no: 'FC-471208', date: '2026-09-08', total: 1050000, status: 'transit', ids: [2, 20] },
+    { no: 'FC-455630', date: '2026-08-17', total: 2165000, status: 'delivered', ids: [5, 14, 3, 9] },
+    { no: 'FC-439011', date: '2026-07-29', total: 540000, status: 'delivered', ids: [13] }
   ];
   const payCard = (bg, chip, logo, num, exp, actions) => `<div><div class="pay-card" style="background:${bg}" dir="ltr"><div class="row between"><span class="pay-card__chip" ${chip}></span><span class="pay" style="height:26px">${logo}</span></div><div class="pay-card__num">•••• •••• •••• ${num}</div><div class="pay-card__row"><div><span>${t('acc.holder')}</span>${t('acc.holderV')}</div><div><span>${t('acc.expires')}</span>${exp}</div></div></div><div class="tile__actions">${actions}</div></div>`;
   const panels = {
