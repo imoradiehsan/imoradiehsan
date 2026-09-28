@@ -194,6 +194,17 @@ function sector(a, b) {
   return `M${P(ro, oa)}A${ro} ${ro} 0 ${lo} 1 ${P(ro, ob)}L${P(ri, ib)}A${ri} ${ri} 0 ${li} 0 ${P(ri, ia)}Z`;
 }
 
+// Same as sector(), but the head end comes to an arrow-like point as in the logo.
+const T = RO - RI;
+const rt = RO - 0.42 * T;
+const headOff = (r, extra) => toDeg(Math.asin((D + extra) / r));
+const tOff = headOff(rt, 0), obOff = headOff(ro, 0.36 * T), ibOff = headOff(ri, 0.14 * T);
+function tippedSector(a, b) {
+  const oa = a + oOff, ia = a + iOff, ob = b - obOff, ib = b - ibOff;
+  const lo = ob - oa > 180 ? 1 : 0, li = ib - ia > 180 ? 1 : 0;
+  return `M${P(ro, oa)}A${ro} ${ro} 0 ${lo} 1 ${P(ro, ob)}L${P(rt, b - tOff)}L${P(ri, ib)}A${ri} ${ri} 0 ${li} 0 ${P(ri, ia)}Z`;
+}
+
 const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const span = (t, a, b) => clamp((t - a) / (b - a));
 const inOut = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
@@ -223,7 +234,7 @@ function render(time) {
   const t = clamp(time / cfg.spin);
   const headRot = 360 * inOut(clamp(t / 0.9));
   const tailRot = 360 * inOut(clamp((t - 0.1) / 0.9));
-  blue.setAttribute("d", sector(BLUE[0] + tailRot, BLUE[1] + headRot));
+  blue.setAttribute("d", tippedSector(BLUE[0] + tailRot, BLUE[1] + headRot));
 
   SEGS.forEach(([a, b], i) => {
     let sc, o;
