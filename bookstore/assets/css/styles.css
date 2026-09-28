@@ -1287,6 +1287,44 @@ ul { margin: 0; padding: 0; list-style: none; }
 .theme-panel__note { margin-top: 12px; padding: 10px 12px; border-radius: var(--r-sm); background: var(--gray-50); font-size: var(--fs-xs); color: var(--text-muted); }
 .theme-panel__note code { direction: ltr; unicode-bidi: embed; color: var(--text); font-weight: 700; }
 
+/* Playful layer — only active with templates marked `playful` in theme.js (e.g. "joy").
+   Brighter tinted sections, pastel category cards, rounder shapes, bolder headings, bouncy motion. */
+html[data-style="playful"] { --r-md: 18px; --r-lg: 26px; --r-xl: 34px; --ease: cubic-bezier(.34, 1.56, .64, 1); }
+html[data-style="playful"] .section--alt { background: linear-gradient(160deg, var(--primary-50) 0%, #fff 55%, var(--secondary-50) 100%); }
+html[data-style="playful"] .section--warm { background: linear-gradient(160deg, #fff8e1 0%, var(--secondary-50) 100%); }
+html[data-style="playful"] .trust { background: linear-gradient(90deg, var(--primary-50), var(--secondary-50)); border: 0; }
+html[data-style="playful"] .trust__item + .trust__item { border-color: rgba(0,0,0,.05); }
+html[data-style="playful"] .trust__icon { background: #fff; color: var(--primary-700); box-shadow: var(--shadow-sm); border-radius: 14px; }
+html[data-style="playful"] .section-head h2 { font-size: calc(var(--fs-2xl) * 1.12); font-weight: 900; }
+html[data-style="playful"] .eyebrow { background: var(--secondary-100); color: var(--secondary-800); padding: 5px 12px; border-radius: var(--r-pill); }
+html[data-style="playful"] .eyebrow::before { content: "✦"; width: auto; height: auto; background: none; font-size: .9em; }
+/* pastel category cards, each in its own color */
+html[data-style="playful"] .cat-card { background: var(--tint); border-color: transparent; }
+html[data-style="playful"] .cat-card .cat-card__icon { background: #fff; box-shadow: var(--shadow-sm); }
+html[data-style="playful"] .cat-card:hover { transform: translateY(-6px) rotate(-1deg); }
+html[data-style="playful"] .cat-card--feature { background: linear-gradient(150deg, var(--primary-700), var(--secondary-500)); }
+html[data-style="playful"] .cat-card--feature .cat-card__icon { background: rgba(255,255,255,.18); box-shadow: none; }
+/* book cards: rotating pastel stages and a bouncy lift */
+html[data-style="playful"] .book-card__media { background: var(--primary-50); }
+html[data-style="playful"] .book-card:nth-child(3n+2) .book-card__media { background: var(--secondary-50); }
+html[data-style="playful"] .book-card:nth-child(3n+3) .book-card__media { background: #fff6dc; }
+html[data-style="playful"] .book-card:hover { transform: translateY(-4px); }
+html[data-style="playful"] .book-card { transition: transform .35s var(--ease); }
+html[data-style="playful"] .book-card__add { background: linear-gradient(135deg, var(--primary-700), var(--secondary-500)); }
+html[data-style="playful"] .book-card__add:hover { transform: scale(1.12) rotate(-8deg); }
+/* buttons and badges */
+html[data-style="playful"] .btn { font-weight: 700; }
+html[data-style="playful"] .btn:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 22px -10px var(--primary-700); }
+html[data-style="playful"] .btn--accent:hover { box-shadow: 0 10px 22px -10px var(--gold-600); }
+html[data-style="playful"] .badge { border-radius: 8px; }
+/* promo banner, reco panel and newsletter get brand gradients */
+html[data-style="playful"] .offer { background: linear-gradient(120deg, var(--primary-900), var(--primary-700) 55%, var(--secondary-500)); }
+html[data-style="playful"] .reco__panel { background: linear-gradient(165deg, var(--primary-700), var(--secondary-500)); }
+html[data-style="playful"] .newsletter { background: linear-gradient(135deg, var(--primary-100), var(--secondary-100)); }
+html[data-style="playful"] .icon-btn.bump { animation: wiggle .6s var(--ease); }
+@keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg) scale(1.1); } 60% { transform: rotate(10deg); } }
+@media (prefers-reduced-motion: reduce) { html[data-style="playful"] .icon-btn.bump { animation: none; } }
+
 /* ---------- 9. Right-to-left (Persian) ---------- */
 [lang="fa"] { --font-display: "Vazirmatn", Tahoma, sans-serif; --font-body: "Vazirmatn", Tahoma, sans-serif; }
 [lang="fa"] body { line-height: 1.85; }

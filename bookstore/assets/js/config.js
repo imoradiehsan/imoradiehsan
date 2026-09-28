@@ -3,7 +3,7 @@
    ============================================================ */
 const SITE_CONFIG = {
   /* قالب رنگی پیش‌فرض برای همه بازدیدکنندگان.
-     Default color template for every visitor: teal | startup | crimson | navy | violet | orange | forest */
+     Default color template for every visitor: teal | startup | joy | crimson | navy | violet | orange | forest */
   defaultTheme: 'teal',
 
   /* دکمه انتخاب قالب رنگ (گوشه پایین صفحه). بعد از انتخاب قالب نهایی، false کنید.

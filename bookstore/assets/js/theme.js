@@ -6,6 +6,7 @@
 const THEMES = {
   teal:    { fa: 'سبزآبی',  en: 'Teal',        primary: '#0F7C82', secondary: '#68A936', accent: '#F4B323', surface: '#F7F8F2' },
   startup: { fa: 'استارتاپی', en: 'Startup',     primary: '#006D77', secondary: '#E76F51', accent: '#FFB703' },
+  joy:     { fa: 'شاد',     en: 'Joyful',      primary: '#6C4BFF', secondary: '#FF6B8B', accent: '#FFC83D', playful: true },
   crimson: { fa: 'قرمز',    en: 'Crimson',     primary: '#D6293E', secondary: '#0E9AA7', accent: '#FFB400' },
   navy:    { fa: 'سرمه‌ای', en: 'Navy & Gold', primary: '#1C2F5E', secondary: '#2F8A5B', accent: '#D99A2B' },
   violet:  { fa: 'بنفش',    en: 'Violet',      primary: '#5B3FC4', secondary: '#D6457B', accent: '#FFC247' },
@@ -42,6 +43,7 @@ const Theme = (() => {
     const root = document.documentElement;
     Object.entries(vars(th)).forEach(([k, v]) => root.style.setProperty(k, v));
     root.dataset.theme = id;
+    if (th.playful) root.dataset.style = 'playful'; else delete root.dataset.style; // extra visual layer, see styles.css
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', th.primary);
     const icon = document.querySelector('link[rel="icon"]');
     if (icon) icon.href = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="${th.primary}"/><path d="M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15" fill="none" stroke="${th.accent}" stroke-width="2" stroke-linejoin="round"/></svg>`);
