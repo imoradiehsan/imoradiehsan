@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book — Folio &amp; Co.</title>
+  <meta name="description" content="Book details, formats, reviews and related titles.">
+  <meta name="theme-color" content="#0f1c36">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="book">
+  <div id="site-header"></div>
+
+  <main id="main">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Breadcrumb" id="crumbs"></nav>
+
+      <div class="pdp">
+        <!-- Left: gallery -->
+        <div class="gallery">
+          <div class="gallery__thumbs" id="gallery-thumbs" role="tablist" aria-label="Book images"></div>
+          <div class="gallery__main" id="gallery-main"></div>
+        </div>
+        <!-- Right: purchase info -->
+        <div class="pdp__info" id="pdp-info"></div>
+      </div>
+    </div>
+
+    <!-- Details / author / reviews -->
+    <section class="section--alt" style="padding-block:24px 8px" id="pdp-tabs">
+      <div class="container pdp-tabs">
+        <div class="tabs tabs--line" role="tablist" id="pdp-tabs-list" aria-label="Book information">
+          <button class="tab" role="tab" id="ptab-details" data-ptab="details" aria-controls="tab-panel">Book details</button>
+          <button class="tab" role="tab" id="ptab-author" data-ptab="author" aria-controls="tab-panel">About the author</button>
+          <button class="tab" role="tab" id="ptab-reviews" data-ptab="reviews" aria-controls="tab-panel">Customer reviews</button>
+        </div>
+        <div class="pdp-tabs__panel" id="tab-panel" role="tabpanel"></div>
+      </div>
+    </section>
+
+    <!-- Related books -->
+    <section class="section" aria-labelledby="related-title">
+      <div class="container carousel">
+        <div class="section-head">
+          <div class="section-head__text"><span class="eyebrow">Keep exploring</span><h2 id="related-title">Related Books</h2><p>Readers who loved this also enjoyed…</p></div>
+          <div class="carousel__nav">
+            <button class="carousel__btn" data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button class="carousel__btn" data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+        </div>
+        <div class="carousel__track" id="related-track" tabindex="0" aria-label="Related books"></div>
+        <div class="carousel__progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- Mobile sticky purchase bar -->
+    <div class="sticky-buy" id="sticky-buy" aria-label="Quick purchase">
+      <div style="min-width:0"><div class="small muted" id="sticky-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw"></div><div id="sticky-price"></div></div>
+      <button class="btn btn--accent" id="sticky-add">Add to cart</button>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages.js"></script>
+</body>
+</html>
