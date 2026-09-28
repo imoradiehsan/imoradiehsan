@@ -508,6 +508,41 @@ function fillAmounts(root = document) {
   $$('[data-amount]', root).forEach(el => { const k = el.dataset.amount; el.textContent = money(SITE_CONFIG[k] ?? Number(k)); });
 }
 
+/* ---------- Playful background shapes (visible only with playful templates, see styles.css) ---------- */
+function initFunLayer() {
+  const shapes = [ // [shape, top%, left%, size, color, opacity, seconds, mobile size]
+    ['star', 12, 4, 54, '--gold-400', .75, 13, 34], ['cloud', 22, 86, 120, '--primary-100', .95, 18, 70],
+    ['heart', 58, 92, 44, '--secondary-500', .45, 15, 30], ['sparkle', 70, 6, 46, '--primary-600', .35, 12, 30],
+    ['flower', 40, 48, 60, '--secondary-100', .9, 17, 36], ['ring', 84, 70, 70, '--gold-400', .35, 20, 40],
+    ['moon', 8, 60, 50, '--gold-300', .6, 16, 30], ['blob', 88, 24, 140, '--primary-50', .9, 22, 80],
+    ['tri', 48, 18, 44, '--primary-600', .25, 14, 28], ['squiggle', 30, 30, 90, '--secondary-500', .3, 19, 50]
+  ];
+  const layer = document.createElement('div'); layer.className = 'fun-layer'; layer.setAttribute('aria-hidden', 'true');
+  layer.innerHTML = shapes.map(([m, top, left, size, c, o, d, sm], i) =>
+    `<i style="top:${top}%;left:${left}%;--s:${size}px;--sm:${sm}px;--c:var(${c});--o:${o};--d:${d}s;--dl:-${i * 1.7}s;--m:var(--shape-${m})"></i>`).join('');
+  document.body.prepend(layer);
+}
+
+/* ---------- Cards pop in one after another as they scroll into view ---------- */
+const POP_SELECTOR = '.book-card, .cat-card, .rank-card, .post, .testi, .author-card, .arrival-row, .wish-item, .order, .tile, .trust__item, .cart-item, .review';
+function initPopIn() {
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = e.target, sibs = [...el.parentElement.children].filter(x => x.classList.contains('anim-pop') && !x.classList.contains('is-shown'));
+    const delay = Math.min(sibs.indexOf(el), 6) * 70;
+    el.style.setProperty('--delay', delay + 'ms');
+    el.classList.add('is-shown'); io.unobserve(el);
+    // hand the element back to its normal hover styles once the entrance is done
+    setTimeout(() => { el.classList.remove('anim-pop', 'is-shown'); el.style.removeProperty('--delay'); }, delay + 800);
+  }), { rootMargin: '0px 0px -40px 0px', threshold: .08 });
+  const seen = new WeakSet(); // animate each element only once, even if its container is re-scanned
+  const watch = root => $$(POP_SELECTOR, root).forEach(el => { if (!seen.has(el)) { seen.add(el); el.classList.add('anim-pop'); io.observe(el); } });
+  watch(document);
+  new MutationObserver(muts => muts.forEach(m => m.addedNodes.forEach(n => { if (n.nodeType === 1) { if (n.matches(POP_SELECTOR)) watch(n.parentElement); else watch(n); } })))
+    .observe(document.body, { childList: true, subtree: true });
+}
+
 /* ---------- Boot ---------- */
 function boot() {
   applyI18n(); fillAmounts(); renderHeader(); renderFooter();
@@ -518,7 +553,7 @@ function boot() {
   if (window.Pages && Pages[page]) Pages[page]();
   $$('.carousel').forEach(initCarousel);
   $$('[data-countdown]').forEach(initCountdown);
-  updateCounts(); initReveal(); initThemePicker();
+  updateCounts(); initReveal(); initThemePicker(); initFunLayer(); initPopIn();
 }
 window.Pages = window.Pages || {};
 document.addEventListener('DOMContentLoaded', boot);

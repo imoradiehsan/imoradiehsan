@@ -1325,6 +1325,93 @@ html[data-style="playful"] .icon-btn.bump { animation: wiggle .6s var(--ease); }
 @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg) scale(1.1); } 60% { transform: rotate(10deg); } }
 @media (prefers-reduced-motion: reduce) { html[data-style="playful"] .icon-btn.bump { animation: none; } }
 
+/* ================= Playful layer, part 2: shapes, patterns, glass, motion =================
+   Shapes are SVG masks painted with the template colors, so they recolor with any playful template. */
+html[data-style="playful"] {
+  --shape-star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 4l13 29 32 3-24 21 7 32-28-17-28 17 7-32L5 36l32-3z'/%3E%3C/svg%3E");
+  --shape-sparkle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 0C54 36 64 46 100 50 64 54 54 64 50 100 46 64 36 54 0 50 36 46 46 36 50 0z'/%3E%3C/svg%3E");
+  --shape-blob: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M72 10c15 8 24 27 20 44s-19 32-36 35-35-3-43-18S7 36 18 23 57 2 72 10z'/%3E%3C/svg%3E");
+  --shape-cloud: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M27 80h48a19 19 0 0 0 3-38 25 25 0 0 0-48-7 21 21 0 0 0-3 45z'/%3E%3C/svg%3E");
+  --shape-heart: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 88S8 62 8 34c0-13 10-24 23-24 9 0 15 5 19 12 4-7 10-12 19-12 13 0 23 11 23 24 0 28-42 54-42 54z'/%3E%3C/svg%3E");
+  --shape-flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg%3E%3Ccircle cx='50' cy='22' r='20'/%3E%3Ccircle cx='78' cy='42' r='20'/%3E%3Ccircle cx='67' cy='75' r='20'/%3E%3Ccircle cx='33' cy='75' r='20'/%3E%3Ccircle cx='22' cy='42' r='20'/%3E%3C/g%3E%3C/svg%3E");
+  --shape-ring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='36' fill='none' stroke='black' stroke-width='13'/%3E%3C/svg%3E");
+  --shape-squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M4 50q11-26 23 0t23 0 23 0 23 0' fill='none' stroke='black' stroke-width='11' stroke-linecap='round'/%3E%3C/svg%3E");
+  --shape-tri: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 8l42 76H8z' fill='none' stroke='black' stroke-width='11' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --shape-moon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M64 6a44 44 0 1 0 30 70A36 36 0 1 1 64 6z'/%3E%3C/svg%3E");
+  --doodles: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg fill='black'%3E%3Cpath d='M30 14c1 8 3 10 11 11-8 1-10 3-11 11-1-8-3-10-11-11 8-1 10-3 11-11z'/%3E%3Ccircle cx='120' cy='30' r='4'/%3E%3Ccircle cx='185' cy='95' r='3'/%3E%3Ccircle cx='60' cy='150' r='3.5'/%3E%3Cpath d='M150 150c1 7 3 9 10 10-7 1-9 3-10 10-1-7-3-9-10-10 7-1 9-3 10-10z'/%3E%3C/g%3E%3Cg fill='none' stroke='black' stroke-width='3' stroke-linecap='round'%3E%3Ccircle cx='90' cy='95' r='7'/%3E%3Cpath d='M165 25l8 8m0-8-8 8'/%3E%3Cpath d='M15 95q6-7 12 0t12 0'/%3E%3Cpath d='M100 175l6-10 6 10z' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+  --glass: rgba(255,255,255,.62);
+  --glass-strong: rgba(255,255,255,.78);
+  --glass-border: rgba(255,255,255,.75);
+  --glass-shadow: 0 12px 34px -14px rgba(60, 40, 140, .28);
+}
+
+/* Fixed layer of floating shapes behind every page (injected by app.js) */
+.fun-layer { display: none; }
+html[data-style="playful"] body { isolation: isolate; }
+html[data-style="playful"] .fun-layer { display: block; position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.fun-layer i { position: absolute; display: block; width: var(--s); height: var(--s); background: var(--c); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; opacity: var(--o, .55); animation: funFloat var(--d, 14s) ease-in-out infinite alternate; animation-delay: var(--dl, 0s); }
+.fun-layer::before { content: ""; position: absolute; inset: 0; background: var(--primary-600); -webkit-mask: var(--doodles) 0 0 / 220px repeat; mask: var(--doodles) 0 0 / 220px repeat; opacity: .06; }
+@keyframes funFloat { 0% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(12px, -22px) rotate(12deg); } 100% { transform: translate(-10px, 14px) rotate(-10deg); } }
+@media (max-width: 760px) { .fun-layer i { --s: calc(var(--sm, 40px)) !important; } .fun-layer i:nth-child(n+7) { display: none; } }
+
+/* Sections become translucent so the shapes show through; each gets a doodle pattern and a corner shape */
+html[data-style="playful"] .section--alt { background: linear-gradient(160deg, color-mix(in srgb, var(--primary-50) 85%, transparent), color-mix(in srgb, #fff 55%, transparent) 55%, color-mix(in srgb, var(--secondary-50) 85%, transparent)); }
+html[data-style="playful"] .section--warm { background: linear-gradient(160deg, color-mix(in srgb, #fff8e1 85%, transparent), color-mix(in srgb, var(--secondary-50) 85%, transparent)); }
+html[data-style="playful"] .section, html[data-style="playful"] .page-hero { position: relative; overflow: clip; }
+html[data-style="playful"] .section > .container, html[data-style="playful"] .page-hero > .container { position: relative; z-index: 1; }
+html[data-style="playful"] .section::before, html[data-style="playful"] .section::after, html[data-style="playful"] .page-hero::after { content: ""; position: absolute; pointer-events: none; z-index: 0; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; animation: funFloat 16s ease-in-out infinite alternate; }
+html[data-style="playful"] .section:nth-of-type(3n+1)::before { width: 90px; height: 90px; inset-inline-end: 3%; top: 40px; background: var(--gold-400); -webkit-mask-image: var(--shape-star); mask-image: var(--shape-star); opacity: .7; }
+html[data-style="playful"] .section:nth-of-type(3n+2)::before { width: 120px; height: 60px; inset-inline-start: 4%; top: 36px; background: var(--secondary-500); -webkit-mask-image: var(--shape-squiggle); mask-image: var(--shape-squiggle); opacity: .45; }
+html[data-style="playful"] .section:nth-of-type(3n+3)::before { width: 110px; height: 110px; inset-inline-end: 5%; top: 30px; background: var(--primary-100); -webkit-mask-image: var(--shape-cloud); mask-image: var(--shape-cloud); opacity: .9; }
+html[data-style="playful"] .section:nth-of-type(odd)::after { width: 70px; height: 70px; inset-inline-start: 2%; bottom: 36px; background: var(--primary-600); -webkit-mask-image: var(--shape-ring); mask-image: var(--shape-ring); opacity: .22; animation-duration: 20s; }
+html[data-style="playful"] .section:nth-of-type(even)::after { width: 64px; height: 64px; inset-inline-end: 3%; bottom: 40px; background: var(--secondary-500); -webkit-mask-image: var(--shape-flower); mask-image: var(--shape-flower); opacity: .35; animation-duration: 19s; }
+html[data-style="playful"] .page-hero::after { width: 100px; height: 100px; inset-inline-end: 6%; top: 20px; background: var(--gold-400); -webkit-mask-image: var(--shape-sparkle); mask-image: var(--shape-sparkle); opacity: .75; }
+
+/* A hand-drawn squiggle under section titles */
+html[data-style="playful"] .section-head h2 { position: relative; padding-bottom: 14px; }
+html[data-style="playful"] .section-head h2::after { content: ""; position: absolute; inset-inline-start: 0; bottom: 0; width: 92px; height: 14px; background: linear-gradient(90deg, var(--gold-500), var(--secondary-500)); -webkit-mask: var(--shape-squiggle) left center / 100% 100% no-repeat; mask: var(--shape-squiggle) left center / 100% 100% no-repeat; }
+
+/* Glassmorphism: frosted header, panels and cards over the colorful background */
+html[data-style="playful"] .header { background: color-mix(in srgb, #fff 62%, transparent); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); border-bottom: 1px solid var(--glass-border); }
+html[data-style="playful"] .header__nav { border-top-color: rgba(255,255,255,.6); }
+html[data-style="playful"] .search__input { background: color-mix(in srgb, var(--primary-50) 75%, transparent); border-color: var(--primary-100); }
+html[data-style="playful"] :is(.testi, .author-card, .post, .arrival-row, .rank-card, .summary, .card, .acc-side, .order, .tile, .wish-item, .review-summary, .trust__item, .cat-card:not(.cat-card--feature)) {
+  background-color: var(--glass); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+}
+html[data-style="playful"] .cat-card:not(.cat-card--feature) { background-color: color-mix(in srgb, var(--tint) 70%, transparent); }
+html[data-style="playful"] .trust { background: transparent; }
+html[data-style="playful"] .trust .container { gap: 14px; padding-block: 18px; }
+html[data-style="playful"] .trust__item { border-radius: var(--r-lg); }
+html[data-style="playful"] .trust__item + .trust__item { border-inline-start: 1px solid var(--glass-border); }
+html[data-style="playful"] :is(.dropdown__menu, .search__panel, .theme-panel, .drawer__panel, .modal__dialog) { background: var(--glass-strong); backdrop-filter: blur(22px) saturate(1.6); -webkit-backdrop-filter: blur(22px) saturate(1.6); border: 1px solid var(--glass-border); }
+html[data-style="playful"] .theme-fab { background: var(--glass-strong); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+html[data-style="playful"] .toast { background: color-mix(in srgb, var(--primary-900) 78%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+html[data-style="playful"] .newsletter__form { background: var(--glass-strong); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+html[data-style="playful"] .banner__dots { background: rgba(255,255,255,.35); backdrop-filter: blur(8px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fun-layer i, html[data-style="playful"] .section::before, html[data-style="playful"] .section::after, html[data-style="playful"] .page-hero::after { animation: none !important; }
+}
+
+/* ================= Smooth motion (all templates) ================= */
+/* Page entrance and cross-page transitions (browsers without View Transitions just skip them) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vtOut .28s ease both; }
+::view-transition-new(root) { animation: vtIn .42s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes vtOut { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes vtIn { from { opacity: 0; transform: translateY(12px); } }
+main { animation: pageIn .6s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(14px); } }
+/* Cards pop in one after another as they scroll into view (classes added by app.js) */
+.anim-pop { opacity: 0; transform: translateY(22px) scale(.97); }
+.anim-pop.is-shown { opacity: 1; transform: none; transition: opacity .6s cubic-bezier(.2, .7, .2, 1), transform .7s var(--ease); transition-delay: var(--delay, 0ms); }
+html[data-style="playful"] .anim-pop { transform: translateY(26px) scale(.92) rotate(-1.5deg); }
+@media (prefers-reduced-motion: reduce) {
+  main, ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+  .anim-pop { opacity: 1 !important; transform: none !important; }
+}
+
 /* ---------- 9. Right-to-left (Persian) ---------- */
 [lang="fa"] { --font-display: "Vazirmatn", Tahoma, sans-serif; --font-body: "Vazirmatn", Tahoma, sans-serif; }
 [lang="fa"] body { line-height: 1.85; }
