@@ -79,10 +79,10 @@ main {
   <svg id="logo" viewBox="0 0 500 500" role="img" aria-label="در حال بارگذاری">
     <g id="track"></g>
     <g id="all">
-      <path id="blue" class="p b"></path>
       <path id="s0" class="p g"></path>
       <path id="s1" class="p g"></path>
       <path id="s2" class="p g"></path>
+      <path id="blue" class="p b"></path>
     </g>
   </svg>
 
@@ -98,7 +98,6 @@ const C = 250, RO = 194, RI = 120, CR = 16, GAP = 24;
 const D = GAP / 2 + CR, ro = RO - CR, ri = RI + CR;
 const toRad = d => d * Math.PI / 180, toDeg = r => r * 180 / Math.PI;
 const oOff = toDeg(Math.asin(D / ro)), iOff = toDeg(Math.asin(D / ri));
-const MIN = 2 * iOff + 1;
 
 const BLUE = [125, 353];
 const SEGS = [[353, 397], [397, 441], [441, 485]];
@@ -125,8 +124,7 @@ const inCubic = x => x * x * x;
 const $ = id => document.getElementById(id);
 const blue = $("blue"), all = $("all");
 const segEls = [$("s0"), $("s1"), $("s2")];
-const SEG_IN = [[0.22, 0.40], [0.28, 0.46], [0.34, 0.52]];
-const SEG_OUT = [[0.80, 0.90], [0.85, 0.95], [0.90, 1.00]];
+const SEG_IN = [[0.64, 0.78], [0.70, 0.84], [0.76, 0.90]];
 const MID_R = (RO + RI) / 2;
 
 const track = $("track");
@@ -137,24 +135,16 @@ const track = $("track");
   track.appendChild(el);
 });
 
-// p in [0,1): identical, empty frame at p=0 and p→1 makes the loop seamless.
+// p in [0,1): the full logo at p=0 and p→1 makes the loop seamless.
 function render(p) {
-  const grow = inOut(span(p, 0, 0.32));
-  const erase = inOut(span(p, 0.64, 0.90));
-  const len = BLUE[1] - BLUE[0];
-  let head = BLUE[0] + len * grow, tail = BLUE[0] + len * erase;
-  let op = 1;
-  if (head - tail < MIN) {
-    op = (head - tail) / MIN;
-    if (erase > 0) tail = head - MIN; else head = tail + MIN;
-  }
-  blue.setAttribute("d", op > 0.001 ? sector(tail, head) : "");
-  blue.style.opacity = op;
+  const rot = 360 * inOut(span(p, 0.10, 0.60));
+  blue.setAttribute("d", sector(BLUE[0] + rot, BLUE[1] + rot));
 
   SEGS.forEach(([a, b], i) => {
-    const inP = span(p, ...SEG_IN[i]), outP = span(p, ...SEG_OUT[i]);
+    const swallowed = p > 0.10 ? span(rot, a - BLUE[1] - 2, a - BLUE[1] + 30) : 0;
+    const inP = span(p, ...SEG_IN[i]);
     let sc, o;
-    if (outP > 0) { const e = inCubic(outP); sc = 1 - 0.55 * e; o = 1 - e; }
+    if (p < 0.62) { const e = inCubic(swallowed); sc = 1 - 0.55 * e; o = 1 - e; }
     else { sc = 0.45 + 0.55 * outBack(inP); o = clamp(inP * 1.8); }
     const [cx, cy] = P(MID_R, (a + b) / 2).split(" ");
     const el = segEls[i];
@@ -163,7 +153,7 @@ function render(p) {
     el.style.opacity = o;
   });
 
-  const breathe = 1 + 0.035 * Math.sin(Math.PI * span(p, 0.50, 0.68));
+  const breathe = 1 + 0.035 * Math.sin(Math.PI * span(p, 0.86, 1));
   all.setAttribute("transform", `translate(${C} ${C}) scale(${breathe.toFixed(4)}) translate(${-C} ${-C})`);
 }
 
