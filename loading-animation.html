@@ -7,8 +7,6 @@
   --bg: #f2f4f8;
   --blue: #0b57a4;
   --gray: #a6a9ae;
-  --track: #0b57a4;
-  --track-o: 0.06;
   --ink: #5a6372;
   --line: #dce1e9;
 }
@@ -17,8 +15,6 @@
     --bg: #0d121b;
     --blue: #3a86d6;
     --gray: #858c97;
-    --track: #8fb3dc;
-    --track-o: 0.07;
     --ink: #9aa3b1;
     --line: #232b38;
     color-scheme: dark;
@@ -28,8 +24,6 @@
   --bg: #0d121b;
   --blue: #3a86d6;
   --gray: #858c97;
-  --track: #8fb3dc;
-  --track-o: 0.07;
   --ink: #9aa3b1;
   --line: #232b38;
   color-scheme: dark;
@@ -59,7 +53,6 @@ main {
 .p { stroke-width: 32; stroke-linejoin: round; }
 .b { fill: var(--blue); stroke: var(--blue); }
 .g { fill: var(--gray); stroke: var(--gray); }
-.t { fill: var(--track); stroke: var(--track); opacity: var(--track-o); }
 
 .ctrl {
   display: flex;
@@ -77,7 +70,6 @@ main {
 
 <main>
   <svg id="logo" viewBox="0 0 500 500" role="img" aria-label="در حال بارگذاری">
-    <g id="track"></g>
     <g id="all">
       <path id="s0" class="p g"></path>
       <path id="s1" class="p g"></path>
@@ -127,21 +119,16 @@ const segEls = [$("s0"), $("s1"), $("s2")];
 const SEG_IN = [[0.64, 0.78], [0.70, 0.84], [0.76, 0.90]];
 const MID_R = (RO + RI) / 2;
 
-const track = $("track");
-[BLUE, ...SEGS].forEach(([a, b]) => {
-  const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  el.setAttribute("class", "p t");
-  el.setAttribute("d", sector(a, b));
-  track.appendChild(el);
-});
-
 // p in [0,1): the full logo at p=0 and p→1 makes the loop seamless.
 function render(p) {
-  const rot = 360 * inOut(span(p, 0.10, 0.60));
-  blue.setAttribute("d", sector(BLUE[0] + rot, BLUE[1] + rot));
+  // Head leads the tail, so the arc stretches over the segments while it turns.
+  const t = span(p, 0.10, 0.60);
+  const headRot = 360 * inOut(clamp(t / 0.9));
+  const tailRot = 360 * inOut(clamp((t - 0.1) / 0.9));
+  blue.setAttribute("d", sector(BLUE[0] + tailRot, BLUE[1] + headRot));
 
   SEGS.forEach(([a, b], i) => {
-    const swallowed = p > 0.10 ? span(rot, a - BLUE[1] - 2, a - BLUE[1] + 30) : 0;
+    const swallowed = p > 0.10 ? span(headRot, a - BLUE[1] - 2, a - BLUE[1] + 30) : 0;
     const inP = span(p, ...SEG_IN[i]);
     let sc, o;
     if (p < 0.62) { const e = inCubic(swallowed); sc = 1 - 0.55 * e; o = 1 - e; }
