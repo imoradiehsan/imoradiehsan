@@ -17,21 +17,18 @@ const SITE_CONFIG = {
   banners: [
     {
       image: 'assets/banners/banner-1.jpg',
-      mobileImage: 'assets/banners/banner-1-mobile.jpg',
-      link: 'books.html?collection=offer',
-      alt: { fa: 'جشنواره کتاب‌خوانی — تا ۳۰٪ تخفیف', en: 'Reading festival — up to 30% off' }
+      link: 'books.html',
+      alt: { fa: 'بابای دخترها، مامان دخترها — راهنمایی صمیمی برای درک بهتر رابطه پدر و مادر با دختران', en: 'Daddy of Girls, Mommy of Girls — a warm guide to parenting daughters' }
     },
     {
       image: 'assets/banners/banner-2.jpg',
-      mobileImage: 'assets/banners/banner-2-mobile.jpg',
-      link: 'books.html?collection=new',
-      alt: { fa: 'تازه‌های نشر', en: 'New releases' }
+      link: 'books.html',
+      alt: { fa: 'انسان خردگریز — سفری فلسفی برای شناخت انسان، انتخاب و معنای زندگی', en: 'Irrational Man — a philosophical journey into choice and the meaning of life' }
     },
     {
       image: 'assets/banners/banner-3.jpg',
-      mobileImage: 'assets/banners/banner-3-mobile.jpg',
-      link: 'books.html',
-      alt: { fa: 'کتاب الکترونیکی و صوتی — تحویل فوری', en: 'eBooks and audiobooks — instant delivery' }
+      link: 'books.html?collection=offer',
+      alt: { fa: 'جشنواره کتاب‌خوانی — تا ۳۰٪ تخفیف', en: 'Reading festival — up to 30% off' }
     }
   ],
 
