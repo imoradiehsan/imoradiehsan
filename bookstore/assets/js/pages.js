@@ -1,4 +1,4 @@
-/* Folio & Co. — page controllers. Each key matches <body data-page="…">. All copy goes through t() (i18n.js). */
+/* Saba & Bahar Publishing — page controllers. Each key matches <body data-page="…">. All copy goes through t() (i18n.js). */
 
 const FORMAT_ICON = { Hardcover: 'book', Paperback: 'bookOpen', eBook: 'tablet', Audiobook: 'headphones' };
 const listJoin = arr => arr.join(LANG === 'fa' ? '، ' : ', ');

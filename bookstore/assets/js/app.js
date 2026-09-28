@@ -1,4 +1,4 @@
-/* Folio & Co. — shared UI: store, generated art, header/footer, components, interactions. */
+/* Saba & Bahar Publishing — shared UI: store, generated art, header/footer, components, interactions. */
 
 /* ---------- Helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -189,9 +189,12 @@ const NAV = [
   [t('nav.best'), 'books.html?collection=bestseller', 'bestseller'], [t('nav.new'), 'books.html?collection=new', 'new'],
   [t('nav.offers'), 'books.html?collection=offer', 'offer'], [t('nav.blog'), 'index.html#blog', 'blog']
 ];
-const LOGO = `<a href="index.html" class="logo" aria-label="${t('brand.aria')}">
-  <span class="logo__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2Z"/><path d="M12 6.5v13"/></svg></span>
-  <span><span class="logo__text">${LANG === 'fa' ? 'کتاب‌سرای <em>فولیو</em>' : 'Folio <em>&amp;</em> Co.'}</span><span class="logo__tag">${t('brand.tag')}</span></span></a>`;
+const LOGO = `<a href="index.html" class="logo" aria-label="${t('brand.aria')}"><span class="logo__img" role="img" aria-label="${t('brand.name')}"></span></a>`;
+const SOCIAL = [
+  ['whatsapp', 'https://wa.me/989912816073', 'foot.whatsapp', '0991 281 6073'],
+  ['telegram', 'https://t.me/sabaobahar', 'foot.telegram', '@sabaobahar'],
+  ['socialA', 'https://instagram.com/sabaobahar', 'foot.instagram', '@sabaobahar']
+];
 const otherLang = LANG === 'fa' ? 'en' : 'fa';
 const langBtn = (cls = '') => `<button class="lang-btn ${cls}" data-set-lang="${otherLang}" lang="${otherLang}" aria-label="${t('lang.switch')}: ${LANGS[otherLang].label}">${icon('globe')}<span>${LANGS[otherLang].short}</span></button>`;
 
@@ -276,15 +279,14 @@ function renderFooter() {
           ${LOGO}
           <p>${t('foot.about')}</p>
           <div class="social" aria-label="${t('foot.social')}">
-            <a href="#" aria-label="Photos">${icon('socialA')}</a><a href="#" aria-label="Microblog">${icon('socialB')}</a>
-            <a href="#" aria-label="Community">${icon('socialC')}</a><a href="#" aria-label="Video">${icon('socialD')}</a><a href="#" aria-label="Pins">${icon('socialE')}</a>
+            ${SOCIAL.map(([ic, href, key]) => `<a href="${href}" target="_blank" rel="noopener" aria-label="${t(key)}">${icon(ic)}</a>`).join('')}
           </div>
         </div>
         ${col(t('foot.service'), [[t('foot.contactUs')], [t('foot.faq')], [t('foot.shipping')], [t('foot.returns')], [t('foot.track'), 'account.html#orders']])}
         ${col(t('foot.info'), [[t('foot.aboutUs')], [t('foot.privacy')], [t('foot.terms')], [t('foot.a11y')], [t('foot.ds'), 'design-system.html']])}
         ${col(t('foot.cats'), [[catBySlug('fiction').name, 'books.html?cat=fiction'], [catBySlug('business').name, 'books.html?cat=business'], [catBySlug('psychology').name, 'books.html?cat=psychology'], [t('foot.kids'), 'books.html?cat=children'], [t('foot.allCats'), 'index.html#categories']])}
         <div><h4>${t('foot.contact')}</h4><div class="footer__contact">
-          <span>${icon('phone')} <span class="ltr" dir="ltr">+1 (555) 012-3456</span></span><span>${icon('mail')} hello@folio.example</span><span>${icon('pin')} ${t('foot.address')}</span>
+          ${SOCIAL.map(([ic, href, key, label]) => `<a href="${href}" target="_blank" rel="noopener">${icon(ic)} <span dir="ltr">${label}</span></a>`).join('')}
         </div></div>
       </div>
       <div class="footer__bottom">

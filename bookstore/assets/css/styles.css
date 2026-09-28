@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Folio & Co. — Bookstore Design System
+   Saba & Bahar Publishing — Bookstore Design System
    Tokens → Base → Layout → Components → Sections → Pages → Utilities
    ========================================================================== */
 
@@ -565,6 +565,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 .logo { display: inline-flex; align-items: center; gap: 10px; flex: none; }
 .logo__mark { width: 40px; height: 40px; border-radius: 12px; background: var(--primary); display: grid; place-items: center; color: var(--gold-400); }
 .logo__mark svg { width: 24px; height: 24px; }
+.logo__img { display: block; height: 58px; aspect-ratio: 569 / 318; background: var(--primary-800); -webkit-mask: url("../brand/logo.png") center / contain no-repeat; mask: url("../brand/logo.png") center / contain no-repeat; transition: background var(--dur); }
+.logo:hover .logo__img { background: var(--primary-700); }
+.footer .logo__img { background: #fff; height: 72px; }
+.drawer__head .logo__img { height: 46px; }
+.footer__contact a { display: inline-flex; gap: 8px; align-items: center; }
+.footer__contact a:hover { color: var(--gold-300); }
 .logo__text { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; color: var(--text); letter-spacing: -0.02em; line-height: 1; }
 .logo__text em { font-style: italic; color: var(--secondary-700); font-weight: 500; }
 .logo__tag { display: block; font-family: var(--font-body); font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--text-soft); margin-top: 4px; font-weight: 600; }
@@ -594,6 +600,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .header__menu-btn, .header__search-btn { display: inline-grid; }
   .header.search-open .header__mobile-search { display: block; }
   .logo__tag { display: none; }
+  .logo__img { height: 44px; }
   .logo__mark { width: 36px; height: 36px; border-radius: 10px; }
   .logo__text { font-size: 1.25rem; }
   .header__main { gap: 8px; }
