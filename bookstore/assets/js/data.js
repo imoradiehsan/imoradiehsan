@@ -130,9 +130,9 @@ const TESTIMONIALS = [
 ];
 
 const POSTS = [
-  { title: 'Why "The Quiet Cartographer" is the novel of the season', cat: 'Book Review', mins: 6, date: '2026-09-22', excerpt: 'Elena Marsh returns with her most ambitious — and most tender — book yet. Here is why readers cannot put it down.', art: ['#0F7C82', '#F4B323', '#F7F8F2'] },
-  { title: 'How to read 50 books a year without rushing', cat: 'Reading Guide', mins: 8, date: '2026-09-15', excerpt: 'Forget speed-reading. Five gentle systems that make more reading feel effortless — tested by our staff.', art: ['#e2f0d6', '#68A936', '#0a5256'] },
-  { title: 'In conversation with Priya Raman on building calmly', cat: 'Author Interview', mins: 11, date: '2026-09-04', excerpt: 'The Lean Founder author on burnout, boredom and why the best companies feel a little dull from the inside.', art: ['#F4B323', '#0a5256', '#fff'] }
+  { title: 'Why "The Quiet Cartographer" is the novel of the season', cat: 'Book Review', mins: 6, date: '2026-09-22', excerpt: 'Elena Marsh returns with her most ambitious — and most tender — book yet. Here is why readers cannot put it down.', art: ['var(--primary-700)', 'var(--gold-500)', 'var(--bg-alt)'] },
+  { title: 'How to read 50 books a year without rushing', cat: 'Reading Guide', mins: 8, date: '2026-09-15', excerpt: 'Forget speed-reading. Five gentle systems that make more reading feel effortless — tested by our staff.', art: ['var(--secondary-100)', 'var(--secondary-500)', 'var(--primary-900)'] },
+  { title: 'In conversation with Priya Raman on building calmly', cat: 'Author Interview', mins: 11, date: '2026-09-04', excerpt: 'The Lean Founder author on burnout, boredom and why the best companies feel a little dull from the inside.', art: ['var(--gold-500)', 'var(--primary-900)', '#fff'] }
 ];
 
 const REVIEWS = [
