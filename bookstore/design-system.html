@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design System — Folio &amp; Co.</title>
+  <meta name="description" content="Folio & Co. bookstore UI design system: tokens, typography, components and patterns.">
+  <meta name="theme-color" content="#0f1c36">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="ds">
+  <div id="site-header"></div>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container page-hero__inner" style="padding-top:40px;padding-bottom:48px">
+        <span class="eyebrow">Folio &amp; Co. · v1.0</span>
+        <h1>Design System</h1>
+        <p style="max-width:62ch">The foundations and components behind the bookstore: a deep-navy palette for trust, warm cream for the bookshop feel, and gold accents reserved for the actions that matter. Every value lives as a CSS custom property in <code>assets/css/styles.css</code>.</p>
+      </div>
+    </section>
+
+    <nav class="ds-nav" aria-label="Design system sections"><div class="container">
+      <a class="chip" href="#colors">Color</a><a class="chip" href="#type">Typography</a><a class="chip" href="#spacing">Spacing &amp; radius</a><a class="chip" href="#buttons">Buttons</a><a class="chip" href="#forms">Forms &amp; search</a><a class="chip" href="#cards">Cards</a><a class="chip" href="#nav">Navigation</a><a class="chip" href="#feedback">Feedback &amp; modals</a><a class="chip" href="#principles">UX principles</a>
+    </div></nav>
+
+    <section class="ds-section" id="colors"><div class="container">
+      <h2>Color</h2>
+      <p>Navy communicates trust and knowledge and carries text, primary buttons and dark surfaces. Cream warms section backgrounds and product stages. Gold is the accent for high-intent actions (Buy now, Checkout, Sale) — use it sparingly so it keeps its pull. All text pairs meet WCAG AA contrast.</p>
+      <div id="ds-colors"></div>
+    </div></section>
+
+    <section class="ds-section" id="type"><div class="container">
+      <h2>Typography</h2>
+      <p><strong>Fraunces</strong> (display serif) gives headings a literary, editorial voice. <strong>Inter</strong> handles body and UI for maximum legibility. Headings scale fluidly with <code>clamp()</code>; body text stays at 16px with a 1.6 line-height for comfortable reading.</p>
+      <div class="type-row"><code>Display · fs-4xl · 600</code><h1 style="font-size:var(--fs-4xl)">Discover your next book</h1></div>
+      <div class="type-row"><code>H2 · fs-3xl · 600</code><h2 style="font-size:var(--fs-3xl)">Best Selling Books</h2></div>
+      <div class="type-row"><code>H3 · fs-xl · 600</code><h3>The Quiet Cartographer</h3></div>
+      <div class="type-row"><code>Eyebrow · 12px · 600 · caps</code><span class="eyebrow" style="margin:0">Staff picks</span></div>
+      <div class="type-row"><code>Body · 16px / 1.6 · 400</code><p style="max-width:60ch">When a reclusive mapmaker inherits her grandmother's unfinished atlas, she follows its hand-drawn coastlines across three countries.</p></div>
+      <div class="type-row"><code>Small · 14px · muted</code><p class="small muted">Free shipping on orders over $35 · 30-day returns</p></div>
+    </div></section>
+
+    <section class="ds-section" id="spacing"><div class="container">
+      <h2>Spacing, radius &amp; elevation</h2>
+      <p>A 4px spacing scale keeps rhythm consistent. Rounded corners soften the interface; shadows are subtle and navy-tinted so cards lift gently without looking heavy.</p>
+      <p class="ds-label">Radius</p>
+      <div class="row" style="gap:20px">
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-xs)"></div><code class="small">xs · 6</code></div>
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-sm)"></div><code class="small">sm · 10</code></div>
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-md)"></div><code class="small">md · 14</code></div>
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-lg)"></div><code class="small">lg · 20</code></div>
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-xl)"></div><code class="small">xl · 28</code></div>
+        <div class="center"><div class="radius-demo" style="border-radius:var(--r-pill);width:110px"></div><code class="small">pill</code></div>
+      </div>
+      <p class="ds-label">Elevation</p>
+      <div class="ds-demo" style="gap:28px">
+        <div class="shadow-demo" style="box-shadow:var(--shadow-xs)">shadow-xs</div>
+        <div class="shadow-demo" style="box-shadow:var(--shadow-sm)">shadow-sm</div>
+        <div class="shadow-demo" style="box-shadow:var(--shadow-md)">shadow-md</div>
+        <div class="shadow-demo" style="box-shadow:var(--shadow-lg)">shadow-lg</div>
+      </div>
+      <p class="ds-label">Spacing scale (px)</p>
+      <div class="row" style="align-items:flex-end">
+        <div class="center"><div style="width:4px;height:4px;background:var(--gold-500)"></div><code class="small">4</code></div>
+        <div class="center"><div style="width:8px;height:8px;background:var(--gold-500)"></div><code class="small">8</code></div>
+        <div class="center"><div style="width:12px;height:12px;background:var(--gold-500)"></div><code class="small">12</code></div>
+        <div class="center"><div style="width:16px;height:16px;background:var(--gold-500)"></div><code class="small">16</code></div>
+        <div class="center"><div style="width:24px;height:24px;background:var(--gold-500)"></div><code class="small">24</code></div>
+        <div class="center"><div style="width:32px;height:32px;background:var(--gold-500)"></div><code class="small">32</code></div>
+        <div class="center"><div style="width:48px;height:48px;background:var(--gold-500)"></div><code class="small">48</code></div>
+        <div class="center"><div style="width:64px;height:64px;background:var(--gold-500)"></div><code class="small">64</code></div>
+      </div>
+    </div></section>
+
+    <section class="ds-section" id="buttons"><div class="container">
+      <h2>Buttons</h2>
+      <p>Pill-shaped, min 44px tall for touch. One accent button per view marks the primary purchase action; navy is the default; outline and ghost for secondary actions.</p>
+      <div class="ds-demo">
+        <button class="btn btn--accent">Buy now</button>
+        <button class="btn">Add to cart</button>
+        <button class="btn btn--outline">Explore categories</button>
+        <button class="btn btn--ghost">Cancel</button>
+        <button class="btn btn--danger">Remove</button>
+        <button class="btn" disabled>Disabled</button>
+      </div>
+      <div class="ds-demo">
+        <button class="btn btn--sm">Small</button><button class="btn">Default</button><button class="btn btn--lg">Large</button>
+        <button class="icon-btn" aria-label="Wishlist" style="border:1.5px solid var(--border)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.5-4.6-9.3-9.2C1.4 7.4 3.6 4 7 4c2 0 3.3 1 5 3 1.7-2 3-3 5-3 3.4 0 5.6 3.4 4.3 6.8C19.5 15.4 12 20 12 20Z"/></svg></button>
+        <a class="icon-btn" href="cart.html" aria-label="Cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="count" data-n="3">3</span></a>
+        <a class="link" href="#">Text link <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="ds-demo" style="background:var(--navy-900)"><button class="btn btn--accent">On dark</button><button class="btn btn--light">Light</button><button class="btn btn--outline-light">Outline light</button></div>
+      <p class="ds-label">Badges &amp; chips</p>
+      <div class="ds-demo">
+        <span class="badge badge--sale">-25%</span><span class="badge badge--new">New</span><span class="badge badge--gold">Bestseller</span><span class="badge">Hardcover</span><span class="badge badge--soft">Fiction</span><span class="badge badge--cream">Reading guide</span>
+        <span id="ds-chips" class="row"><button class="chip" aria-pressed="true">eBook</button><button class="chip" aria-pressed="false">Audiobook</button><button class="chip" aria-pressed="false">Paperback</button></span>
+      </div>
+    </div></section>
+
+    <section class="ds-section" id="forms"><div class="container">
+      <h2>Forms, search, filters &amp; dropdowns</h2>
+      <p>48px inputs with clear labels above, a visible focus ring, and inline errors. Search surfaces instant suggestions for books, authors and categories.</p>
+      <div class="grid grid--3" style="align-items:start">
+        <div class="stack">
+          <div class="field"><label class="label" for="ds-in">Email</label><input class="input" id="ds-in" placeholder="you@example.com"></div>
+          <div class="field has-error"><label class="label" for="ds-err">Postal code</label><input class="input" id="ds-err" value="ABC"><span class="field__error">Enter a valid postal code.</span></div>
+          <div class="field"><label class="label" for="ds-sel">Sort by</label><select class="select" id="ds-sel"><option>Best selling</option><option>Newest</option></select></div>
+        </div>
+        <div class="stack">
+          <label class="check"><input type="checkbox" checked> Fiction <span class="count">12</span></label>
+          <label class="check"><input type="checkbox"> Business <span class="count">3</span></label>
+          <label class="check"><input type="radio" name="ds-r" checked> Standard delivery</label>
+          <label class="check"><input type="radio" name="ds-r"> Express delivery</label>
+          <div class="row"><div class="qty"><button aria-label="Decrease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button><input value="1" aria-label="Quantity"><button aria-label="Increase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></button></div><label class="switch"><input type="checkbox" checked aria-label="Toggle"></label></div>
+        </div>
+        <div class="stack">
+          <p class="small muted">Try the live search in the header — type “mar” or “psych”.</p>
+          <div class="dropdown is-open" style="height:200px">
+            <button class="btn btn--outline btn--sm" data-dropdown aria-expanded="true">Dropdown menu <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="dropdown__menu" style="left:0;right:auto"><a class="dropdown__item" href="#">My profile</a><a class="dropdown__item" href="#">Orders</a><div class="dropdown__sep"></div><a class="dropdown__item" href="#">Sign out</a></div>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="ds-section" id="cards"><div class="container">
+      <h2>Cards &amp; book covers</h2>
+      <p>The book card is the core commerce unit: cover on a cream stage, badges top-left, wishlist top-right, quick-view on hover, and a one-tap add-to-cart. Covers tilt and lift on hover to feel tactile.</p>
+      <div class="grid grid--books" id="ds-cards" style="max-width:760px"></div>
+      <p class="ds-label">Cover system</p>
+      <div class="row" id="ds-covers" style="gap:16px"></div>
+    </div></section>
+
+    <section class="ds-section" id="nav"><div class="container">
+      <h2>Navigation components</h2>
+      <p>Sticky header with search at the center, tabs for in-page filtering, breadcrumbs for orientation, a checkout stepper and pagination. On mobile the header collapses to logo · search · cart · menu, opening a slide-in drawer.</p>
+      <p class="ds-label">Tabs</p>
+      <div class="tabs" id="ds-tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">All</button><button class="tab" role="tab" aria-selected="false">Fiction</button><button class="tab" role="tab" aria-selected="false">Science</button></div>
+      <p class="ds-label">Breadcrumbs</p>
+      <nav class="breadcrumbs" style="padding:0" aria-label="Example breadcrumb"><a href="#">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><a href="#">Fiction</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">The Quiet Cartographer</span></nav>
+      <p class="ds-label">Stepper</p>
+      <ol class="stepper" style="list-style:none;padding:0;max-width:640px">
+        <li class="stepper__item is-done"><span class="stepper__dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg></span><span class="stepper__label">Shipping</span><span class="stepper__line"></span></li>
+        <li class="stepper__item is-current"><span class="stepper__dot">2</span><span class="stepper__label">Payment</span><span class="stepper__line"></span></li>
+        <li class="stepper__item"><span class="stepper__dot">3</span><span class="stepper__label">Confirm</span></li>
+      </ol>
+      <p class="ds-label">Pagination</p>
+      <nav class="pagination" style="justify-content:flex-start;margin:0" aria-label="Example pagination"><button disabled aria-label="Previous">‹</button><button aria-current="page">1</button><button>2</button><button>3</button><button aria-label="Next">›</button></nav>
+    </div></section>
+
+    <section class="ds-section" id="feedback"><div class="container">
+      <h2>Feedback &amp; modals</h2>
+      <p>Toasts confirm cart and wishlist actions without interrupting browsing. Modals (quick view, sign-in) trap attention, close on Escape or backdrop click, and return focus.</p>
+      <div class="ds-demo"><button class="btn" id="ds-modal">Open quick-view modal</button><button class="btn btn--outline" data-auth="login">Open sign-in modal</button><button class="btn btn--ghost" id="ds-toast">Show toast</button></div>
+      <div class="grid grid--3">
+        <div class="promo-strip" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span>Promo strip with code <code>READ10</code></span></div>
+        <div class="ship-progress">You're <strong>$12.50</strong> away from free shipping<div class="ship-progress__bar"><span style="width:64%"></span></div></div>
+        <div class="row"><span class="status status--delivered">Delivered</span><span class="status status--transit">In transit</span><span class="status status--processing">Processing</span></div>
+      </div>
+    </div></section>
+
+    <section class="ds-section" id="principles" style="border:0"><div class="container">
+      <h2>UX principles</h2>
+      <p>How the system turns a premium bookstore atmosphere into fast discovery and effortless buying.</p>
+      <div class="ds-spec">
+        <div><strong>Discovery first</strong><code>Search is always one tap away; categories, tabs and AI picks surface books in ≤ 2 clicks.</code></div>
+        <div><strong>Minimal checkout</strong><code>3 steps, digital-only orders skip shipping, guest checkout, wallet payments.</code></div>
+        <div><strong>One accent per view</strong><code>Gold marks the single highest-intent action so CTAs are unmistakable.</code></div>
+        <div><strong>Touch friendly</strong><code>44px minimum targets, swipeable carousels with scroll-snap, sticky mobile buy bar.</code></div>
+        <div><strong>Accessible</strong><code>Semantic landmarks, skip link, labelled controls, visible focus, reduced-motion support.</code></div>
+        <div><strong>Trust signals</strong><code>Ratings, verified reviews, clear pricing, returns and secure-payment cues near every CTA.</code></div>
+      </div>
+      <p class="ds-label">Breakpoints</p>
+      <div class="ds-spec">
+        <div><strong>Mobile</strong><code>≤ 640px · 2-col book grid, drawer nav</code></div>
+        <div><strong>Tablet</strong><code>641–960px · filters drawer, stacked PDP</code></div>
+        <div><strong>Desktop</strong><code>≥ 961px · sidebar filters, sticky gallery</code></div>
+        <div><strong>Container</strong><code>1240px max · 16–32px fluid gutter</code></div>
+      </div>
+    </div></section>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>All Books — Folio &amp; Co.</title>
+  <meta name="description" content="Browse and filter books by category, price, author, rating, language and format.">
+  <meta name="theme-color" content="#0f1c36">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="books">
+  <div id="site-header"></div>
+
+  <main id="main">
+    <section class="page-hero" id="listing-top">
+      <div class="container page-hero__inner">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page" id="crumb-current">Books</span></nav>
+        <h1 id="listing-title">All Books</h1>
+        <p id="listing-sub">Browse our full catalogue.</p>
+      </div>
+    </section>
+
+    <div class="container listing">
+      <!-- Sidebar filters -->
+      <aside class="filters" id="filters" aria-label="Filters">
+        <div class="filters__head">
+          <h2>Filters</h2>
+          <div class="row" style="gap:4px">
+            <button class="link" id="clear-filters" type="button">Clear all</button>
+            <button class="icon-btn filters__close" data-close-filters aria-label="Close filters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          </div>
+        </div>
+
+        <div class="acc" data-open="true">
+          <button class="acc__head" aria-expanded="true">Category<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body" id="f-cat"></div>
+        </div>
+        <div class="acc" data-open="true">
+          <button class="acc__head" aria-expanded="true">Price range<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body">
+            <div class="range">
+              <div class="range__rail"><div class="range__fill" id="r-fill"></div></div>
+              <input type="range" id="r-min" min="0" value="0" step="1" aria-label="Minimum price">
+              <input type="range" id="r-max" min="0" step="1" aria-label="Maximum price">
+            </div>
+            <div class="range__vals" id="r-vals"></div>
+          </div>
+        </div>
+        <div class="acc" data-open="true">
+          <button class="acc__head" aria-expanded="true">Author<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body">
+            <div class="filter-search"><label for="f-author-search" class="sr-only">Search authors</label><input class="input" id="f-author-search" placeholder="Search authors…"></div>
+            <div class="filter-list" id="f-author"></div>
+          </div>
+        </div>
+        <div class="acc" data-open="true">
+          <button class="acc__head" aria-expanded="true">Customer rating<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body" id="f-rating"></div>
+        </div>
+        <div class="acc" data-open="true">
+          <button class="acc__head" aria-expanded="true">Language<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body" id="f-lang"></div>
+        </div>
+        <div class="acc" data-open="true" style="border:0">
+          <button class="acc__head" aria-expanded="true">Format<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="acc__body format-grid" id="f-format"></div>
+        </div>
+        <div class="filters__apply"><button class="btn btn--lg btn--block" data-close-filters>Show results</button></div>
+      </aside>
+      <div class="scrim" id="scrim" data-close-filters></div>
+
+      <!-- Results -->
+      <section aria-label="Results">
+        <div class="promo-strip" id="promo-strip" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+          <span>Summer Reading Festival: an extra 30% off festival titles with code <code>SUMMER30</code></span>
+        </div>
+        <div class="toolbar">
+          <button class="btn btn--outline btn--sm filters-btn" id="filters-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg> Filters <span id="filter-badge"></span></button>
+          <p class="toolbar__count" id="result-count" aria-live="polite"></p>
+          <label class="toolbar__sort"><span class="hide-mobile">Sort by</span>
+            <select class="select" id="sort" aria-label="Sort books">
+              <option value="featured">Featured</option>
+              <option value="bestselling">Best selling</option>
+              <option value="newest">Newest</option>
+              <option value="rating">Top rated</option>
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
+            </select>
+          </label>
+          <div class="view-toggle" role="group" aria-label="Layout">
+            <button data-view="grid" aria-pressed="true" aria-label="Grid view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+            <button data-view="list" aria-pressed="false" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+          </div>
+        </div>
+        <div class="active-filters" id="active-filters"></div>
+        <div class="grid grid--books" id="book-grid"></div>
+        <nav class="pagination" id="pagination" aria-label="Pagination"></nav>
+      </section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/pages.js"></script>
+</body>
+</html>
