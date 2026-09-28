@@ -3,6 +3,9 @@
    Tokens → Base → Layout → Components → Sections → Pages → Utilities
    ========================================================================== */
 
+/* Persian font, self-hosted so it loads even when Google Fonts is slow or blocked (SIL OFL, see assets/fonts) */
+@font-face { font-family: "Vazirmatn"; src: url("../fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+
 /* ---------- 1. Design tokens ---------- */
 :root {
   /* Primary — teal (trust, knowledge) */
@@ -22,11 +25,12 @@
   --secondary-50:  #f1f8e9;
 
   /* Warm-neutral surfaces (derived from the background) */
-  --sand-50:  #fbfcf8;
-  --sand-100: #eff2e6;
-  --sand-200: #e4e9d7;
-  --sand-300: #d2dabf;
-  --sand-500: #9aa77f;
+  --sand-50:  #fafafb;
+  --sand-100: #f3f4f6;
+  --sand-200: #e9ebef;
+  --sand-300: #d7dae0;
+  --sand-500: #9aa0aa;
+  --on-accent: #1f2328; /* text on accent buttons; theme.js picks dark or white per template */
 
   /* Accent — golden yellow for key actions */
   --gold-300: #fad98a;
@@ -37,27 +41,27 @@
 
   /* Neutrals */
   --white: #ffffff;
-  --background: #F7F8F2;
-  --gray-25:  #fcfcfa;
-  --gray-50:  #f3f4ee;
-  --gray-100: #eaece4;
-  --gray-200: #dfe2d8;
-  --gray-300: #c8cdc0;
+  --background: #ffffff;
+  --gray-25:  #fcfcfd;
+  --gray-50:  #f5f6f8;
+  --gray-100: #eceef1;
+  --gray-200: #e2e5e9;
+  --gray-300: #cbd0d6;
   --gray-500: #62757f;
   --gray-600: #4f626b;
   --gray-700: #37474f;
   --ink:      #263238;
 
   /* Semantic */
-  --success: var(--secondary-700);
-  --success-bg: var(--secondary-100);
+  --success: #2e8540;
+  --success-bg: #e5f3e8;
   --danger: #c2413a;
   --danger-bg: #fbeceb;
   --info-bg: var(--primary-50);
 
   /* Roles */
   --bg: var(--background);
-  --bg-alt: var(--white);
+  --bg-alt: #F7F8F2; /* tinted section background; theme.js derives it per template */
   --bg-warm: var(--secondary-50);
   --surface: var(--white);
   --text: var(--ink);
@@ -187,7 +191,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .btn:hover { --btn-bg: var(--primary-hover); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
 .btn:active { transform: translateY(0); }
 .btn[disabled], .btn.is-disabled { opacity: .5; pointer-events: none; }
-.btn--accent { --btn-bg: var(--accent); --btn-fg: var(--primary-950); }
+.btn--accent { --btn-bg: var(--accent); --btn-fg: var(--on-accent); }
 .btn--accent:hover { --btn-bg: var(--gold-400); }
 .btn--outline { --btn-bg: transparent; --btn-fg: var(--primary); --btn-bd: var(--border-strong); }
 .btn--outline:hover { --btn-bg: var(--primary); --btn-fg: #fff; --btn-bd: var(--primary); }
@@ -1221,6 +1225,49 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* Grid children must be allowed to shrink below their content width */
 .account > *, .listing > *, .cart-layout > *, .checkout > *, .pdp > *, .reco > *, .arrivals > * { min-width: 0; }
+
+/* Hero banner slider (images are managed in assets/js/config.js) */
+.banner { position: relative; background: var(--bg-alt); }
+.banner__viewport { overflow: hidden; }
+.banner__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.banner__track::-webkit-scrollbar { display: none; }
+.banner__slide { flex: 0 0 100%; scroll-snap-align: start; display: block; position: relative; }
+.banner__slide img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 1; object-fit: cover; background: var(--gray-100); }
+.banner__btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.92); color: var(--text); display: grid; place-items: center; box-shadow: var(--shadow-md); opacity: 0; transition: opacity var(--dur), background var(--dur); }
+.banner:hover .banner__btn, .banner__btn:focus-visible { opacity: 1; }
+.banner__btn:hover { background: #fff; }
+.banner__btn svg { width: 22px; height: 22px; }
+.banner__btn--prev { inset-inline-start: 24px; }
+.banner__btn--next { inset-inline-end: 24px; }
+.banner__dots { position: absolute; inset-inline-start: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; padding: 6px 10px; border-radius: var(--r-pill); background: rgba(0,0,0,.18); backdrop-filter: blur(4px); }
+[dir="rtl"] .banner__dots { transform: translateX(50%); }
+.banner__dot { width: 8px; height: 8px; border-radius: var(--r-pill); background: rgba(255,255,255,.6); transition: width var(--dur) var(--ease), background var(--dur); }
+.banner__dot[aria-current="true"] { width: 24px; background: #fff; }
+@media (max-width: 760px) {
+  .banner__slide img.has-mobile { aspect-ratio: 16 / 10; }
+  .banner__btn { display: none; }
+  .banner__dots { bottom: 10px; }
+}
+@media (hover: none) { .banner__btn { display: none; } }
+
+/* Color-template picker */
+.theme-fab { position: fixed; z-index: 120; bottom: 20px; inset-inline-start: 20px; width: 52px; height: 52px; border-radius: 50%; background: #fff; color: var(--primary-700); box-shadow: var(--shadow-lg); display: grid; place-items: center; border: 1px solid var(--border); transition: transform var(--dur) var(--ease); }
+.theme-fab:hover { transform: scale(1.06); }
+.theme-fab svg { width: 24px; height: 24px; }
+@media (max-width: 960px) { body[data-page="book"] .theme-fab { bottom: 96px; } body[data-page="book"] .theme-panel { bottom: 160px; } }
+.theme-panel { position: fixed; z-index: 121; bottom: 84px; inset-inline-start: 20px; width: min(330px, calc(100vw - 40px)); background: #fff; border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); padding: 18px; display: none; }
+.theme-panel.is-open { display: block; animation: rise .25s var(--ease); }
+.theme-panel h3 { font-family: var(--font-body); font-size: var(--fs-base); font-weight: 700; }
+.theme-panel p { font-size: var(--fs-xs); color: var(--text-muted); margin: 4px 0 14px; }
+.theme-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.theme-opt { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1.5px solid var(--border); border-radius: var(--r-md); font-size: var(--fs-sm); font-weight: 600; color: var(--text); text-align: start; transition: border-color var(--dur); }
+.theme-opt:hover { border-color: var(--gray-300); }
+.theme-opt[aria-pressed="true"] { border-color: var(--primary-700); box-shadow: inset 0 0 0 1px var(--primary-700); }
+.theme-opt__dots { display: flex; flex: none; }
+.theme-opt__dots span { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #fff; margin-inline-start: -5px; box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
+.theme-opt__dots span:first-child { margin-inline-start: 0; }
+.theme-panel__note { margin-top: 12px; padding: 10px 12px; border-radius: var(--r-sm); background: var(--gray-50); font-size: var(--fs-xs); color: var(--text-muted); }
+.theme-panel__note code { direction: ltr; unicode-bidi: embed; color: var(--text); font-weight: 700; }
 
 /* ---------- 9. Right-to-left (Persian) ---------- */
 [lang="fa"] { --font-display: "Vazirmatn", Tahoma, sans-serif; --font-body: "Vazirmatn", Tahoma, sans-serif; }

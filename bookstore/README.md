@@ -17,6 +17,11 @@ A premium, responsive bookstore front end for selling physical books, eBooks and
 | Wishlist | `wishlist.html` | Move to cart, remove, move all, price-drop indicators |
 | Design system | `design-system.html` | Color tokens, type scale, spacing/radius/elevation, buttons, forms, cards, navigation, feedback, UX principles |
 
+## Settings you can edit — `assets/js/config.js`
+
+- **Hero banners:** the homepage opens with a full-width slider (autoplay, arrows, dots, swipe). To change an image, upload a new file with the **same name** to `assets/banners/` (desktop `banner-1.jpg` … 1920×480, optional mobile `banner-1-mobile.jpg` … 1080×675). Links, alt text, number of banners and autoplay speed are set in `banners` / `bannerInterval`.
+- **Color templates:** `teal`, `crimson`, `navy`, `violet`, `orange`, `forest` (defined in `assets/js/theme.js`; every shade is derived from three brand colors). The palette button in the page corner previews them live. When one is chosen, set `defaultTheme` to its id and `showThemeSwitcher: false`.
+
 ## Languages: فارسی / English
 
 - The site runs in **Persian (right-to-left)** and **English (left-to-right)**. Persian is the default.
@@ -28,8 +33,8 @@ A premium, responsive bookstore front end for selling physical books, eBooks and
 
 ## Design system
 
-- **Colors:** primary `#0F7C82` (teal), secondary `#68A936` (green), accent `#F4B323` (yellow, for high-intent actions), background `#F7F8F2`, text `#263238`.
-- **Type:** in English, Fraunces for display headings and Inter for body and UI text; in Persian, Vazirmatn for both. Heading sizes are fluid via `clamp()`.
+- **Colors:** white page background, text `#263238`, and a switchable template of primary / secondary / accent colors (default: teal `#0F7C82`, green `#68A936`, yellow `#F4B323`).
+- **Type:** in English, Fraunces for display headings and Inter for body and UI text; in Persian, Vazirmatn for both (self-hosted in `assets/fonts`, SIL Open Font License). Heading sizes are fluid via `clamp()`.
 - **Tokens:** every color, space, radius, shadow and motion value is a CSS custom property at the top of `assets/css/styles.css`.
 - **Accessibility:** includes a skip link, semantic landmarks, labelled controls, visible focus, keyboard-navigable search suggestions, Escape to close modals, 44px touch targets, and `prefers-reduced-motion` support.
 

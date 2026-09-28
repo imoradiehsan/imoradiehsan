@@ -29,9 +29,38 @@ function summaryRows(o) {
 const emptyState = (ic, title, text, cta) => `<div class="empty"><div class="empty__icon">${icon(ic)}</div><h2 style="font-size:1.6rem">${title}</h2><p>${text}</p>${cta}</div>`;
 
 /* ======================= HOME ======================= */
+function initBanner() {
+  const root = $('#banner'); const list = SITE_CONFIG.banners || [];
+  if (!root || !list.length) { root?.remove(); return; }
+  const track = $('#banner-track'), dots = $('#banner-dots');
+  track.innerHTML = list.map((b, i) => `<a class="banner__slide" href="${esc(b.link || '#')}" aria-roledescription="slide" aria-label="${fmtNum(i + 1)} / ${fmtNum(list.length)}">
+    <picture>${b.mobileImage ? `<source media="(max-width: 760px)" srcset="${esc(b.mobileImage)}">` : ''}
+    <img src="${esc(b.image)}" alt="${esc((b.alt && (b.alt[LANG] || b.alt.en)) || '')}" class="${b.mobileImage ? 'has-mobile' : ''}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} width="1920" height="480"></picture></a>`).join('');
+  dots.innerHTML = list.length > 1 ? list.map((_, i) => `<button class="banner__dot" data-dot="${i}" aria-label="${t('banner.go', { n: i + 1 })}"></button>`).join('') : '';
+  if (list.length < 2) $$('.banner__btn', root).forEach(b => b.remove());
+  const dir = IS_RTL ? -1 : 1;
+  const index = () => Math.round(Math.abs(track.scrollLeft) / track.clientWidth);
+  const go = i => { const n = (i + list.length) % list.length; track.scrollTo({ left: dir * n * track.clientWidth, behavior: 'smooth' }); };
+  const mark = () => { const i = index(); $$('.banner__dot', dots).forEach((d, k) => d.setAttribute('aria-current', k === i)); };
+  root.addEventListener('click', e => {
+    const b = e.target.closest('[data-banner]'), d = e.target.closest('[data-dot]');
+    if (b) go(index() + (b.dataset.banner === 'next' ? 1 : -1)); else if (d) go(Number(d.dataset.dot)); else return;
+    restart();
+  });
+  track.addEventListener('scroll', mark, { passive: true }); mark();
+  // Autoplay: pauses on hover/focus/touch and for reduced-motion users
+  let timer = null; const ms = SITE_CONFIG.bannerInterval;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stop = () => { clearInterval(timer); timer = null; };
+  const restart = () => { stop(); if (ms > 0 && !reduce && list.length > 1) timer = setInterval(() => go(index() + 1), ms); };
+  ['mouseenter', 'focusin', 'touchstart'].forEach(ev => root.addEventListener(ev, stop, { passive: true }));
+  ['mouseleave', 'focusout'].forEach(ev => root.addEventListener(ev, restart));
+  addEventListener('resize', () => track.scrollTo({ left: dir * index() * track.clientWidth }));
+  restart();
+}
+
 Pages.home = () => {
-  $('#hero-stack').innerHTML = [5, 6, 1].map(id => coverHTML(bookById(id))).join('');
-  $('#float-a').innerHTML = `${miniCover(bookById(2))}<div><small>${t('home.floatBest')}</small><strong>${esc(bookById(2).title)}</strong><div class="rating">${starsHTML(4.9)}</div></div>`;
+  initBanner();
 
   // Categories
   $('#cat-grid').innerHTML = CATEGORIES.map((c, i) => `
@@ -565,13 +594,14 @@ Pages.wishlist = () => {
 /* ======================= DESIGN SYSTEM ======================= */
 Pages.ds = () => {
   const sw = (name, v) => `<div class="swatch"><div class="swatch__color" style="background:var(${v})"></div><div class="swatch__meta"><strong>${name}</strong><code dir="ltr">${getComputedStyle(document.documentElement).getPropertyValue(v).trim()}</code></div></div>`;
-  $('#ds-colors').innerHTML = [
+  const renderSwatches = () => $('#ds-colors').innerHTML = [
     [t('ds.gPrimary'), [['Primary 950', '--primary-950'], ['Primary 900', '--primary-900'], ['Primary 800', '--primary-800'], ['Primary 700 ★', '--primary-700'], ['Primary 600', '--primary-600'], ['Primary 100', '--primary-100'], ['Primary 50', '--primary-50']]],
     [t('ds.gSecondary'), [['Secondary 800', '--secondary-800'], ['Secondary 700', '--secondary-700'], ['Secondary 500 ★', '--secondary-500'], ['Secondary 100', '--secondary-100'], ['Secondary 50', '--secondary-50']]],
     [t('ds.gAccent'), [['Accent 300', '--gold-300'], ['Accent 400', '--gold-400'], ['Accent 500 ★', '--gold-500'], ['Accent 600', '--gold-600'], ['Sale', '--orange-500']]],
-    [t('ds.gSurface'), [['Background ★', '--background'], ['White', '--white'], ['Sand 100', '--sand-100'], ['Sand 200', '--sand-200'], ['Sand 300', '--sand-300']]],
+    [t('ds.gSurface'), [['Background ★', '--background'], ['Section tint', '--bg-alt'], ['Sand 100', '--sand-100'], ['Sand 200', '--sand-200'], ['Sand 300', '--sand-300']]],
     [t('ds.gNeutral'), [['Text ★', '--ink'], ['Gray 700', '--gray-700'], ['Gray 600', '--gray-600'], ['Gray 500', '--gray-500'], ['Gray 200', '--gray-200'], ['Success', '--success'], ['Danger', '--danger']]]
   ].map(([g, list]) => `<div class="swatch-group"><h3>${g}</h3><div class="swatches">${list.map(([n, v]) => sw(n, v)).join('')}</div></div>`).join('');
+  renderSwatches(); document.addEventListener('theme:change', renderSwatches);
   $('#ds-cards').innerHTML = [2, 5, 7].map(id => bookCard(bookById(id))).join('');
   $('#ds-covers').innerHTML = BOOKS.slice(0, 10).map(b => `<div style="width:92px">${coverHTML(b)}</div>`).join('');
   $('#ds-modal').addEventListener('click', () => quickView(1));

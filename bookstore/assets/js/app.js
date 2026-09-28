@@ -124,7 +124,8 @@ function postArt(p, i) {
     `<rect width="400" height="250" fill="${a}"/>${[0, 1, 2, 3, 4].map(k => `<rect x="${70 + k * 54}" y="${60 + (k % 2) * 20}" width="40" height="${150 - (k % 2) * 20}" rx="4" fill="${k === 2 ? b : c}" opacity="${k === 2 ? 1 : .85 - k * .1}"/>`).join('')}<rect x="50" y="210" width="300" height="8" rx="4" fill="${c}"/>`,
     `<rect width="400" height="250" fill="${a}"/><circle cx="130" cy="125" r="70" fill="${b}"/><circle cx="130" cy="110" r="26" fill="${c}"/><path d="M84 180 a46 46 0 0 1 92 0Z" fill="${c}"/><path d="M230 90h110M230 120h90M230 150h100M230 180h70" stroke="${b}" stroke-width="8" stroke-linecap="round"/>`
   ];
-  return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${shapes[i % shapes.length]}</svg>`;
+  const svg = shapes[i % shapes.length].replace(/(fill|stroke)="(var\([^"]+\))"/g, 'style="$1:$2"'); // CSS vars only work via style
+  return `<svg viewBox="0 0 400 250" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${svg}</svg>`;
 }
 
 /* ---------- Reusable fragments ---------- */
@@ -475,6 +476,30 @@ document.addEventListener('submit', e => {
 function openDrawer() { const d = $('#nav-drawer'); d.classList.add('is-open'); d.setAttribute('aria-hidden', 'false'); $('[data-open-drawer]').setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; $('.drawer__head .icon-btn', d).focus(); }
 function closeDrawer() { const d = $('#nav-drawer'); if (!d?.classList.contains('is-open')) return; d.classList.remove('is-open'); d.setAttribute('aria-hidden', 'true'); $('[data-open-drawer]').setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
 
+/* ---------- Color-template picker ---------- */
+function initThemePicker() {
+  if (!SITE_CONFIG.showThemeSwitcher) return;
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<button class="theme-fab" aria-expanded="false" aria-controls="theme-panel" aria-label="${t('theme.open')}" title="${t('theme.open')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.9 1.4-1.8l-.4-1.1a1.6 1.6 0 0 1 1.5-2.1H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3Z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10.5" cy="7" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/></svg></button>
+    <div class="theme-panel" id="theme-panel" role="dialog" aria-label="${t('theme.title')}">
+      <h3>${t('theme.title')}</h3><p>${t('theme.desc')}</p>
+      <div class="theme-list">${Object.entries(THEMES).map(([id, th]) => `<button class="theme-opt" data-theme-id="${id}" aria-pressed="false"><span class="theme-opt__dots" aria-hidden="true"><span style="background:${th.primary}"></span><span style="background:${th.secondary}"></span><span style="background:${th.accent}"></span></span>${th[LANG] || th.en}</button>`).join('')}</div>
+      <div class="theme-panel__note" id="theme-note"></div>
+    </div>`;
+  document.body.append(...wrap.children);
+  const fab = $('.theme-fab'), panel = $('#theme-panel');
+  const sync = () => {
+    const cur = document.documentElement.dataset.theme;
+    $$('[data-theme-id]').forEach(b => b.setAttribute('aria-pressed', b.dataset.themeId === cur));
+    $('#theme-note').innerHTML = t('theme.note', { id: `<code>${cur}</code>`, name: THEMES[cur][LANG] || THEMES[cur].en });
+  };
+  fab.addEventListener('click', () => { const open = panel.classList.toggle('is-open'); fab.setAttribute('aria-expanded', open); });
+  panel.addEventListener('click', e => { const b = e.target.closest('[data-theme-id]'); if (b) { Theme.apply(b.dataset.themeId, true); sync(); } });
+  document.addEventListener('click', e => { if (panel.classList.contains('is-open') && !panel.contains(e.target) && !fab.contains(e.target)) { panel.classList.remove('is-open'); fab.setAttribute('aria-expanded', 'false'); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { panel.classList.remove('is-open'); fab.setAttribute('aria-expanded', 'false'); } });
+  sync();
+}
+
 /* ---------- Boot ---------- */
 function boot() {
   applyI18n(); renderHeader(); renderFooter();
@@ -485,7 +510,7 @@ function boot() {
   if (window.Pages && Pages[page]) Pages[page]();
   $$('.carousel').forEach(initCarousel);
   $$('[data-countdown]').forEach(initCountdown);
-  updateCounts(); initReveal();
+  updateCounts(); initReveal(); initThemePicker();
 }
 window.Pages = window.Pages || {};
 document.addEventListener('DOMContentLoaded', boot);
