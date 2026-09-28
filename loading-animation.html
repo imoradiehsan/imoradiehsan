@@ -131,7 +131,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
     </div>
     <div class="row key">
       <label for="delay">مکث بعد از چرخش تا آمدن نقطه‌ها</label>
-      <input id="delay" type="range" min="0" max="1.5" step="0.05">
+      <input id="delay" type="range" min="-1.5" max="1.5" step="0.05">
       <output for="delay"></output>
     </div>
     <div class="row">
@@ -211,7 +211,10 @@ try { Object.assign(cfg, JSON.parse(localStorage.getItem("logo-loader") || "{}")
 
 // The head reaches home at 90% of the spin; the dots are timed from that moment.
 const headHome = () => 0.9 * cfg.spin;
-const dotStart = i => headHome() + cfg.delay + i * cfg.stagger;
+const invInOut = y => y < 0.5 ? Math.cbrt(y / 4) : 1 - Math.cbrt(2 * (1 - y)) / 2;
+// With a negative pause a dot may not return before the arc's head has swallowed it.
+const swallowedAt = i => 0.9 * invInOut((SEGS[i][0] - BLUE[1] + 30) / 360) * cfg.spin;
+const dotStart = i => Math.max(headHome() + cfg.delay + i * cfg.stagger, swallowedAt(i));
 const cycle = () => Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold;
 
 // time in seconds within one cycle; the full logo at 0 and at the cycle end keeps the loop seamless.
@@ -240,7 +243,10 @@ function render(time) {
 
 }
 
-const fa = n => n.toFixed(2).replace(/\.?0+$/, "").replace(".", "٫").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]) + " ثانیه";
+const fa = n => {
+  const s = Math.abs(n).toFixed(2).replace(/\.?0+$/, "").replace(".", "٫").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+  return (n < 0 && s !== "۰" ? "⁦−" + s + "⁩" : s) + " ثانیه";
+};
 const keys = Object.keys(DEFAULTS);
 
 function syncUI() {
