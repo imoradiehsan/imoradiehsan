@@ -1248,11 +1248,12 @@ ul { margin: 0; padding: 0; list-style: none; }
 .banner__track::-webkit-scrollbar { display: none; }
 .banner__slide { flex: 0 0 100%; scroll-snap-align: start; display: block; position: relative; }
 .banner__slide img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 1; object-fit: cover; background: var(--gray-100); }
-.banner__btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.92); color: var(--text); display: grid; place-items: center; box-shadow: var(--shadow-md); opacity: 0; transition: opacity var(--dur), background var(--dur); }
+.banner__btn { position: absolute; bottom: 16px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.92); color: var(--text); display: grid; place-items: center; box-shadow: var(--shadow-md); opacity: 0; transition: opacity var(--dur), background var(--dur); }
 .banner:hover .banner__btn, .banner__btn:focus-visible { opacity: 1; }
 .banner__btn:hover { background: #fff; }
-.banner__btn svg { width: 22px; height: 22px; }
-.banner__btn--prev { inset-inline-start: 24px; }
+.banner__btn svg { width: 20px; height: 20px; }
+/* arrows sit together in the bottom corner so they never cover banner text */
+.banner__btn--prev { inset-inline-end: 72px; }
 .banner__btn--next { inset-inline-end: 24px; }
 .banner__dots { position: absolute; inset-inline-start: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; padding: 6px 10px; border-radius: var(--r-pill); background: rgba(0,0,0,.18); backdrop-filter: blur(4px); }
 [dir="rtl"] .banner__dots { transform: translateX(50%); }
@@ -1261,7 +1262,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 760px) {
   .banner__slide img.has-mobile { aspect-ratio: 16 / 10; }
   .banner__btn { display: none; }
-  .banner__dots { bottom: 10px; }
+  .banner__dots, [dir="rtl"] .banner__dots { position: static; transform: none; width: fit-content; margin: 10px auto 2px; background: none; backdrop-filter: none; padding: 0; }
+  .banner__dot { background: var(--gray-300); }
+  .banner__dot[aria-current="true"] { background: var(--primary-700); }
 }
 @media (hover: none) { .banner__btn { display: none; } }
 
