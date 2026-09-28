@@ -3,10 +3,13 @@
 /* ---------- Helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-const icon = (name, extra = '') =>
-  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONS[name] || ''}</svg>`;
-const money = n => '$' + n.toFixed(2);
-const fmtNum = n => n.toLocaleString('en-US');
+const DIR_ICONS = ['arrowRight', 'chevRight', 'chevLeft']; // mirrored in RTL via .dir-icon
+const icon = (name, extra = '') => {
+  const cls = DIR_ICONS.includes(name) ? 'dir-icon' : '';
+  if (cls) extra = /class="/.test(extra) ? extra.replace('class="', `class="${cls} `) : `${extra} class="${cls}"`;
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${ICONS[name] || ''}</svg>`;
+};
+const shortName = n => n.replace(/^(Dr\. |دکتر )/, '');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const params = new URLSearchParams(location.search);
 const bookById = id => BOOKS.find(b => b.id === Number(id));
@@ -17,7 +20,8 @@ function hash(str) { let h = 0; for (const ch of str) h = (h * 31 + ch.charCodeA
 
 /* ---------- Pricing by format ---------- */
 const FORMAT_MULT = { Hardcover: 1, Paperback: 0.78, eBook: 0.55, Audiobook: 0.85 };
-const FORMAT_NOTE = { Hardcover: 'Ships in 24h', Paperback: 'Ships in 24h', eBook: 'Instant download', Audiobook: 'Stream or download' };
+const FORMAT_NOTE = { Hardcover: t('fmtnote.ship'), Paperback: t('fmtnote.ship'), eBook: t('fmtnote.ebook'), Audiobook: t('fmtnote.audio') };
+const fmtName = f => t('fmt.' + f);
 function priceFor(b, fmt = b.formats[0]) {
   const ratio = FORMAT_MULT[fmt] / FORMAT_MULT[b.formats[0]];
   const p = +(b.price * ratio).toFixed(2);
@@ -56,12 +60,12 @@ const Store = {
 };
 
 function updateCounts() {
-  $$('[data-count="cart"]').forEach(el => { const n = Store.cartCount(); el.textContent = n; el.dataset.n = n; });
-  $$('[data-count="wish"]').forEach(el => { const n = Store.wish.length; el.textContent = n; el.dataset.n = n; });
+  $$('[data-count="cart"]').forEach(el => { const n = Store.cartCount(); el.textContent = fmtNum(n); el.dataset.n = n; });
+  $$('[data-count="wish"]').forEach(el => { const n = Store.wish.length; el.textContent = fmtNum(n); el.dataset.n = n; });
   $$('[data-wish]').forEach(el => {
     const on = Store.wish.includes(Number(el.dataset.wish));
     el.classList.toggle('is-active', on); el.setAttribute('aria-pressed', on);
-    el.setAttribute('aria-label', on ? 'Remove from wishlist' : 'Add to wishlist');
+    el.setAttribute('aria-label', on ? t('card.wishRemove') : t('card.wishAdd'));
   });
 }
 
@@ -88,17 +92,17 @@ function coverArt(b) {
 }
 function coverHTML(b, cls = '') {
   const layout = ['frame'].includes(b.style) ? 'cover--center' : '';
-  return `<div class="cover ${layout} ${cls}" style="--c-bg:${b.pal[0]};--c-fg:${b.pal[1]};--c-ac:${b.pal[2]}" role="img" aria-label="Cover of ${esc(b.title)} by ${esc(authorOf(b).name)}">
+  return `<div class="cover ${layout} ${cls}" style="--c-bg:${b.pal[0]};--c-fg:${b.pal[1]};--c-ac:${b.pal[2]}" role="img" aria-label="${esc(t('cover.aria', { t: b.title, a: authorOf(b).name }))}">
     <div class="cover__art">${coverArt(b)}</div>
     <span class="cover__kicker">${esc(b.kicker)}</span>
     <span class="cover__title">${esc(b.title)}</span>
-    <span class="cover__author">${esc(authorOf(b).name.replace('Dr. ', ''))}</span>
+    <span class="cover__author">${esc(shortName(authorOf(b).name))}</span>
   </div>`;
 }
 const miniCover = b => `<div class="mini-cover">${coverHTML(b)}</div>`;
 
 function avatarHTML(name, color) {
-  const initials = name.replace('Dr. ', '').split(' ').map(p => p[0]).join('').slice(0, 2);
+  const initials = shortName(name).split(' ').map(p => p[0]).join('').slice(0, 2);
   return `<span class="avatar" style="background:${color}" aria-hidden="true">${initials}</span>`;
 }
 function authorPortrait(key) { // illustrated, abstract portrait
@@ -133,14 +137,14 @@ function starsHTML(rating) {
   }
   return out + '</span>';
 }
-const ratingHTML = b => `<span class="rating">${starsHTML(b.rating)}<strong>${b.rating.toFixed(1)}</strong><span>(${fmtNum(b.reviews)})</span><span class="sr-only">Rated ${b.rating} out of 5 from ${b.reviews} reviews</span></span>`;
+const ratingHTML = b => `<span class="rating">${starsHTML(b.rating)}<strong>${fmtRating(b.rating)}</strong><span>(${fmtNum(b.reviews)})</span><span class="sr-only">${t('rating.sr', { r: fmtRating(b.rating), n: b.reviews })}</span></span>`;
 const priceHTML = (b, fmt) => { const p = priceFor(b, fmt); return `<span class="price"><span class="price__now">${money(p.price)}</span>${p.old ? `<span class="price__old">${money(p.old)}</span>` : ''}</span>`; };
 
 function badgesHTML(b) {
   const out = [];
-  if (b.old) out.push(`<span class="badge badge--sale">-${discountPct(b)}%</span>`);
-  if (b.tags.includes('new')) out.push('<span class="badge badge--new">New</span>');
-  else if (b.tags.includes('bestseller')) out.push('<span class="badge badge--gold">Bestseller</span>');
+  if (b.old) out.push(`<span class="badge badge--sale">${(-discountPct(b)).toLocaleString(LOC)}%</span>`);
+  if (b.tags.includes('new')) out.push(`<span class="badge badge--new">${t('badge.new')}</span>`);
+  else if (b.tags.includes('bestseller')) out.push(`<span class="badge badge--gold">${t('badge.best')}</span>`);
   return out.join('');
 }
 
@@ -149,19 +153,19 @@ function bookCard(b, opts = {}) {
   return `<article class="book-card">
     <div class="book-card__media">
       <div class="book-card__badges">${badgesHTML(b)}</div>
-      <button class="book-card__wish" data-wish="${b.id}" aria-label="Add to wishlist">${icon('heart')}</button>
+      <button class="book-card__wish" data-wish="${b.id}" aria-label="${t('card.wishAdd')}">${icon('heart')}</button>
       ${coverHTML(b)}
-      <div class="book-card__quick"><button class="btn btn--sm" data-quick="${b.id}">${icon('eye')} Quick view</button></div>
+      <div class="book-card__quick"><button class="btn btn--sm" data-quick="${b.id}">${icon('eye')} ${t('card.quick')}</button></div>
     </div>
     <div class="book-card__body">
-      <span class="book-card__cat">${opts.match ? `<span class="match">${opts.match}% match</span>` : esc(cat.name)}</span>
+      <span class="book-card__cat">${opts.match ? `<span class="match">${t('card.match', { p: opts.match })}</span>` : esc(cat.name)}</span>
       <h3 class="book-card__title"><a href="book.html?id=${b.id}">${esc(b.title)}</a></h3>
       <span class="book-card__author">${esc(authorOf(b).name)}</span>
       ${ratingHTML(b)}
       <p class="book-card__desc">${esc(b.blurb)}</p>
       <div class="book-card__foot">
         ${priceHTML(b)}
-        <button class="book-card__add" data-add="${b.id}" aria-label="Add ${esc(b.title)} to cart">${icon('bag')}</button>
+        <button class="book-card__add" data-add="${b.id}" aria-label="${esc(t('card.addAria', { t: b.title }))}">${icon('bag')}</button>
       </div>
     </div>
   </article>`;
@@ -176,17 +180,19 @@ const PAY_ICONS = {
   gpay: '<svg viewBox="0 0 48 16"><text x="24" y="12.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="600" font-size="12"><tspan fill="#4285f4">G</tspan><tspan fill="#5f6368"> Pay</tspan></text></svg>'
 };
 const paymentsHTML = (keys = ['visa', 'mc', 'amex', 'paypal', 'apple', 'gpay']) =>
-  `<div class="payments" aria-label="Accepted payment methods">${keys.map(k => `<span class="pay" title="${k}">${PAY_ICONS[k]}</span>`).join('')}</div>`;
+  `<div class="payments" aria-label="${t('pay.aria')}">${keys.map(k => `<span class="pay" title="${k}">${PAY_ICONS[k]}</span>`).join('')}</div>`;
 
 /* ---------- Header / footer / global chrome ---------- */
 const NAV = [
-  ['Home', 'index.html', 'home'], ['Books', 'books.html', 'books'], ['Categories', 'index.html#categories', 'categories'],
-  ['Best Sellers', 'books.html?collection=bestseller', 'bestseller'], ['New Arrivals', 'books.html?collection=new', 'new'],
-  ['Offers', 'books.html?collection=offer', 'offer'], ['Blog', 'index.html#blog', 'blog']
+  [t('nav.home'), 'index.html', 'home'], [t('nav.books'), 'books.html', 'books'], [t('nav.categories'), 'index.html#categories', 'categories'],
+  [t('nav.best'), 'books.html?collection=bestseller', 'bestseller'], [t('nav.new'), 'books.html?collection=new', 'new'],
+  [t('nav.offers'), 'books.html?collection=offer', 'offer'], [t('nav.blog'), 'index.html#blog', 'blog']
 ];
-const LOGO = `<a href="index.html" class="logo" aria-label="Folio & Co. home">
+const LOGO = `<a href="index.html" class="logo" aria-label="${t('brand.aria')}">
   <span class="logo__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2Z"/><path d="M12 6.5v13"/></svg></span>
-  <span><span class="logo__text">Folio <em>&amp;</em> Co.</span><span class="logo__tag">Booksellers · Est. 2014</span></span></a>`;
+  <span><span class="logo__text">${LANG === 'fa' ? 'کتاب‌سرای <em>فولیو</em>' : 'Folio <em>&amp;</em> Co.'}</span><span class="logo__tag">${t('brand.tag')}</span></span></a>`;
+const otherLang = LANG === 'fa' ? 'en' : 'fa';
+const langBtn = (cls = '') => `<button class="lang-btn ${cls}" data-set-lang="${otherLang}" lang="${otherLang}" aria-label="${t('lang.switch')}: ${LANGS[otherLang].label}">${icon('globe')}<span>${LANGS[otherLang].short}</span></button>`;
 
 function activeNavKey() {
   const page = document.body.dataset.page; const col = params.get('collection');
@@ -195,10 +201,10 @@ function activeNavKey() {
 }
 function searchHTML(id) {
   return `<form class="search" role="search" action="books.html" data-search>
-    <label for="${id}" class="sr-only">Search books, authors, categories</label>
+    <label for="${id}" class="sr-only">${t('search.label')}</label>
     ${icon('search', 'class="search__icon"')}
-    <input id="${id}" class="search__input" name="q" type="search" placeholder="Search books, authors, categories…" autocomplete="off" aria-autocomplete="list" aria-controls="${id}-panel" value="${esc(params.get('q') || '')}">
-    <button class="search__submit" type="submit" aria-label="Search">${icon('arrowRight')}</button>
+    <input id="${id}" class="search__input" name="q" type="search"  placeholder="${t('search.ph')}" autocomplete="off" aria-autocomplete="list" aria-controls="${id}-panel" value="${esc(params.get('q') || '')}">
+    <button class="search__submit" type="submit" aria-label="${t('hdr.search')}">${icon('arrowRight')}</button>
     <div class="search__panel" id="${id}-panel" role="listbox"></div>
   </form>`;
 }
@@ -207,51 +213,53 @@ function renderHeader() {
   const key = activeNavKey();
   const navLinks = NAV.map(([label, href, k]) => `<a href="${href}" ${k === key ? 'aria-current="page"' : ''} class="${k === 'offer' ? 'nav__offer' : ''}">${k === 'offer' ? icon('tag', 'width="15" height="15"') : ''}${label}</a>`).join('');
   $('#site-header').outerHTML = `
-  <a href="#main" class="skip-link">Skip to content</a>
+  <a href="#main" class="skip-link">${t('skip')}</a>
   <div class="announce"><div class="container">
-    <span>${icon('truck', 'width="15" height="15" style="display:inline;vertical-align:-3px;margin-right:6px"')}Free shipping on orders over <strong>$35</strong><span class="hide-mobile"> · eBooks delivered instantly</span></span>
-    <div class="announce__links"><a href="account.html#orders">Track order</a><a href="#">Help center</a><a href="#">Gift cards</a></div>
+    <span>${icon('truck', 'width="15" height="15" style="display:inline;vertical-align:-3px;margin-inline-end:6px"')}${t('announce.ship', { amt: moneyInt(35) })}<span class="hide-mobile">${t('announce.ebooks')}</span></span>
+    <div class="announce__links"><a href="account.html#orders">${t('announce.track')}</a><a href="#">${t('announce.help')}</a><a href="#">${t('announce.gift')}</a></div>
   </div></div>
   <header class="header" id="header">
     <div class="container header__main">
-      <button class="icon-btn header__menu-btn" data-open-drawer aria-label="Open menu" aria-controls="nav-drawer" aria-expanded="false">${icon('menu')}</button>
+      <button class="icon-btn header__menu-btn" data-open-drawer aria-label="${t('hdr.menu')}" aria-controls="nav-drawer" aria-expanded="false">${icon('menu')}</button>
       ${LOGO}
       ${searchHTML('search-desktop')}
       <div class="header__actions">
-        <button class="icon-btn header__search-btn" data-toggle-search aria-label="Search" aria-expanded="false">${icon('search')}</button>
+        <button class="icon-btn header__search-btn" data-toggle-search aria-label="${t('hdr.search')}" aria-expanded="false">${icon('search')}</button>
         <div class="dropdown header__user">
-          <button class="icon-btn" data-dropdown aria-haspopup="menu" aria-expanded="false" aria-label="Account menu">${icon('user')}</button>
+          <button class="icon-btn" data-dropdown aria-haspopup="menu" aria-expanded="false" aria-label="${t('hdr.account')}">${icon('user')}</button>
           <div class="dropdown__menu" role="menu">
-            <a class="dropdown__item" role="menuitem" href="account.html#profile">${icon('user')} My profile</a>
-            <a class="dropdown__item" role="menuitem" href="account.html#orders">${icon('package')} Orders</a>
-            <a class="dropdown__item" role="menuitem" href="wishlist.html">${icon('heart')} Wishlist</a>
-            <a class="dropdown__item" role="menuitem" href="account.html#preferences">${icon('settings')} Reading preferences</a>
+            <a class="dropdown__item" role="menuitem" href="account.html#profile">${icon('user')} ${t('menu.profile')}</a>
+            <a class="dropdown__item" role="menuitem" href="account.html#orders">${icon('package')} ${t('menu.orders')}</a>
+            <a class="dropdown__item" role="menuitem" href="wishlist.html">${icon('heart')} ${t('menu.wishlist')}</a>
+            <a class="dropdown__item" role="menuitem" href="account.html#preferences">${icon('settings')} ${t('menu.prefs')}</a>
             <div class="dropdown__sep"></div>
-            <button class="dropdown__item" role="menuitem" data-auth="login">${icon('logout')} Sign in / Register</button>
+            <button class="dropdown__item" role="menuitem" data-auth="login">${icon('logout')} ${t('menu.signin')}</button>
           </div>
         </div>
-        <a class="icon-btn header__wish" href="wishlist.html" aria-label="Wishlist">${icon('heart')}<span class="count" data-count="wish"></span></a>
-        <a class="icon-btn" href="cart.html" aria-label="Shopping cart" data-cart-btn>${icon('bag')}<span class="count" data-count="cart"></span></a>
-        <button class="btn btn--sm header__login" data-auth="login">Login / Register</button>
+        <a class="icon-btn header__wish" href="wishlist.html" aria-label="${t('hdr.wishlist')}">${icon('heart')}<span class="count" data-count="wish"></span></a>
+        <a class="icon-btn" href="cart.html" aria-label="${t('hdr.cart')}" data-cart-btn>${icon('bag')}<span class="count" data-count="cart"></span></a>
+        ${langBtn('header__lang')}
+        <button class="btn btn--sm header__login" data-auth="login">${t('hdr.login')}</button>
       </div>
     </div>
     <div class="container header__mobile-search">${searchHTML('search-mobile')}</div>
-    <div class="header__nav"><nav class="container nav" aria-label="Primary">${navLinks}
-      <div class="nav__aside"><span>${icon('bolt')} Instant eBooks</span><span>${icon('refresh')} 30-day returns</span></div>
+    <div class="header__nav"><nav class="container nav" aria-label="${t('nav.primary')}">${navLinks}
+      <div class="nav__aside"><span>${icon('bolt')} ${t('nav.instant')}</span><span>${icon('refresh')} ${t('nav.returns')}</span></div>
     </nav></div>
   </header>
   <div class="drawer" id="nav-drawer" aria-hidden="true">
     <div class="drawer__backdrop" data-close-drawer></div>
-    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
-      <div class="drawer__head">${LOGO}<button class="icon-btn" data-close-drawer aria-label="Close menu">${icon('close')}</button></div>
+    <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="${t('drawer.title')}">
+      <div class="drawer__head">${LOGO}<button class="icon-btn" data-close-drawer aria-label="${t('hdr.closeMenu')}">${icon('close')}</button></div>
       <div class="drawer__quick" style="padding-top:16px">
-        <a href="account.html">${icon('user')}Account</a><a href="wishlist.html">${icon('heart')}Wishlist</a><a href="cart.html">${icon('bag')}Cart</a>
+        <a href="account.html">${icon('user')}${t('drawer.account')}</a><a href="wishlist.html">${icon('heart')}${t('hdr.wishlist')}</a><a href="cart.html">${icon('bag')}${t('drawer.cart')}</a>
       </div>
-      <nav class="drawer__nav" aria-label="Mobile">${NAV.map(([l, h, k]) => `<a href="${h}" ${k === key ? 'aria-current="page"' : ''}>${l}${icon('chevRight')}</a>`).join('')}
-        <a href="design-system.html">Design System${icon('chevRight')}</a></nav>
+      <nav class="drawer__nav" aria-label="${t('drawer.title')}">${NAV.map(([l, h, k]) => `<a href="${h}" ${k === key ? 'aria-current="page"' : ''}>${l}${icon('chevRight')}</a>`).join('')}
+        <a href="design-system.html">${t('nav.ds')}${icon('chevRight')}</a></nav>
       <div class="drawer__foot">
-        <button class="btn btn--block" data-auth="login">Login</button>
-        <button class="btn btn--outline btn--block" data-auth="register">Create account</button>
+        <button class="btn btn--ghost btn--block" data-set-lang="${otherLang}" lang="${otherLang}">${icon('globe')} ${LANGS[otherLang].label}</button>
+        <button class="btn btn--block" data-auth="login">${t('drawer.login')}</button>
+        <button class="btn btn--outline btn--block" data-auth="register">${t('drawer.register')}</button>
       </div>
     </div>
   </div>`;
@@ -265,43 +273,43 @@ function renderFooter() {
       <div class="footer__grid">
         <div class="footer__about">
           ${LOGO}
-          <p>An independent bookstore for the curious — carefully curated physical books, eBooks and audiobooks, delivered with care since 2014.</p>
-          <div class="social" aria-label="Social media">
+          <p>${t('foot.about')}</p>
+          <div class="social" aria-label="${t('foot.social')}">
             <a href="#" aria-label="Photos">${icon('socialA')}</a><a href="#" aria-label="Microblog">${icon('socialB')}</a>
             <a href="#" aria-label="Community">${icon('socialC')}</a><a href="#" aria-label="Video">${icon('socialD')}</a><a href="#" aria-label="Pins">${icon('socialE')}</a>
           </div>
         </div>
-        ${col('Customer Service', [['Contact us'], ['FAQ'], ['Shipping'], ['Returns'], ['Track order', 'account.html#orders']])}
-        ${col('Information', [['About us'], ['Privacy Policy'], ['Terms & Conditions'], ['Accessibility'], ['Design system', 'design-system.html']])}
-        ${col('Categories', [['Fiction', 'books.html?cat=fiction'], ['Business', 'books.html?cat=business'], ['Psychology', 'books.html?cat=psychology'], ["Children's books", 'books.html?cat=children'], ['All categories', 'index.html#categories']])}
-        <div><h4>Get in touch</h4><div class="footer__contact">
-          <span>${icon('phone')} +1 (555) 012-3456</span><span>${icon('mail')} hello@folio.example</span><span>${icon('pin')} 21 Paper Lane, Boston</span>
+        ${col(t('foot.service'), [[t('foot.contactUs')], [t('foot.faq')], [t('foot.shipping')], [t('foot.returns')], [t('foot.track'), 'account.html#orders']])}
+        ${col(t('foot.info'), [[t('foot.aboutUs')], [t('foot.privacy')], [t('foot.terms')], [t('foot.a11y')], [t('foot.ds'), 'design-system.html']])}
+        ${col(t('foot.cats'), [[catBySlug('fiction').name, 'books.html?cat=fiction'], [catBySlug('business').name, 'books.html?cat=business'], [catBySlug('psychology').name, 'books.html?cat=psychology'], [t('foot.kids'), 'books.html?cat=children'], [t('foot.allCats'), 'index.html#categories']])}
+        <div><h4>${t('foot.contact')}</h4><div class="footer__contact">
+          <span>${icon('phone')} <span class="ltr" dir="ltr">+1 (555) 012-3456</span></span><span>${icon('mail')} hello@folio.example</span><span>${icon('pin')} ${t('foot.address')}</span>
         </div></div>
       </div>
       <div class="footer__bottom">
-        <span>© 2026 Folio &amp; Co. Booksellers. All rights reserved.</span>
+        <span>${t('foot.copy')}</span>
         ${paymentsHTML()}
       </div>
     </div>
   </footer>
   <div class="toast-wrap" aria-live="polite" id="toasts"></div>
   <div class="modal" id="quickview" aria-hidden="true"><div class="modal__backdrop" data-close-modal></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="qv-title"><button class="icon-btn modal__close" data-close-modal aria-label="Close">${icon('close')}</button><div id="qv-body"></div></div></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="qv-title"><button class="icon-btn modal__close" data-close-modal aria-label="${t('close')}">${icon('close')}</button><div id="qv-body"></div></div></div>
   <div class="modal" id="auth" aria-hidden="true"><div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog modal__dialog--sm" role="dialog" aria-modal="true" aria-labelledby="auth-title">
-      <button class="icon-btn modal__close" data-close-modal aria-label="Close">${icon('close')}</button>
+      <button class="icon-btn modal__close" data-close-modal aria-label="${t('close')}">${icon('close')}</button>
       <div style="padding:36px 32px 32px">
         <div class="logo__mark" style="margin-bottom:18px">${icon('bookOpen')}</div>
-        <h2 id="auth-title" style="font-size:1.75rem">Welcome back</h2>
-        <p class="muted small mt-2">Sign in for faster checkout, order tracking and personalised picks.</p>
-        <div class="tabs mt-6" role="tablist" style="width:100%"><button class="tab" role="tab" data-auth-tab="login" style="flex:1">Login</button><button class="tab" role="tab" data-auth-tab="register" style="flex:1">Register</button></div>
+        <h2 id="auth-title" style="font-size:1.75rem">${t('auth.welcome')}</h2>
+        <p class="muted small mt-2">${t('auth.desc')}</p>
+        <div class="tabs mt-6" role="tablist" style="width:100%"><button class="tab" role="tab" data-auth-tab="login" style="flex:1">${t('auth.login')}</button><button class="tab" role="tab" data-auth-tab="register" style="flex:1">${t('auth.register')}</button></div>
         <form class="stack mt-6" data-auth-form>
-          <div class="field" data-register-only hidden><label class="label" for="a-name">Full name</label><input class="input" id="a-name" autocomplete="name" placeholder="Jane Reader"></div>
-          <div class="field"><label class="label" for="a-email">Email</label><input class="input" id="a-email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
-          <div class="field"><label class="label" for="a-pass">Password</label><input class="input" id="a-pass" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6"></div>
-          <button class="btn btn--lg btn--block" type="submit" data-auth-submit>Sign in</button>
-          <p class="center small muted">or continue with</p>
-          <div class="row" style="flex-wrap:nowrap"><button type="button" class="btn btn--outline btn--block">${icon('globe')} Google</button><button type="button" class="btn btn--outline btn--block">${icon('lock')} Passkey</button></div>
+          <div class="field" data-register-only hidden><label class="label" for="a-name">${t('auth.name')}</label><input class="input" id="a-name" autocomplete="name" placeholder="${t('auth.namePh')}"></div>
+          <div class="field"><label class="label" for="a-email">${t('auth.email')}</label><input class="input" id="a-email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+          <div class="field"><label class="label" for="a-pass">${t('auth.pass')}</label><input class="input" id="a-pass" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6"></div>
+          <button class="btn btn--lg btn--block" type="submit" data-auth-submit>${t('auth.signin')}</button>
+          <p class="center small muted">${t('auth.or')}</p>
+          <div class="row" style="flex-wrap:nowrap"><button type="button" class="btn btn--outline btn--block">${icon('globe')} ${t('auth.google')}</button><button type="button" class="btn btn--outline btn--block">${icon('lock')} ${t('auth.passkey')}</button></div>
         </form>
       </div>
     </div></div>`;
@@ -333,25 +341,25 @@ function quickView(id) {
     <div class="quickview__body">
       <div class="row">${badgesHTML(b)}<span class="badge badge--soft">${catBySlug(b.cat).name}</span></div>
       <h3 id="qv-title">${esc(b.title)}</h3>
-      <p class="muted">by <a class="link" href="books.html?author=${b.author}">${esc(a.name)}</a></p>
+      <p class="muted">${t('qv.by')} <a class="link" href="books.html?author=${b.author}">${esc(a.name)}</a></p>
       ${ratingHTML(b)}
-      <div class="row">${priceHTML(b)}${b.old ? `<span class="pdp__save">You save ${money(b.old - b.price)}</span>` : ''}</div>
+      <div class="row">${priceHTML(b)}${b.old ? `<span class="pdp__save">${t('qv.save', { x: money(b.old - b.price) })}</span>` : ''}</div>
       <p class="quickview__desc">${esc(b.blurb)}</p>
-      <div class="row small muted">${icon('bookOpen', 'width="16" height="16"')} ${b.pages} pages · ${b.lang} · ${b.formats.join(', ')}</div>
+      <div class="row small muted">${icon('bookOpen', 'width="16" height="16"')} ${t('qv.meta', { p: b.pages, l: t('lang.' + b.lang), f: b.formats.map(fmtName).join(LANG === 'fa' ? '، ' : ', ') })}</div>
       <div class="row mt-2">
-        <button class="btn btn--accent btn--lg" data-add="${b.id}" style="flex:1">${icon('bag')} Add to cart</button>
-        <button class="icon-btn" style="border:1.5px solid var(--border);width:54px;height:54px" data-wish="${b.id}" aria-label="Add to wishlist">${icon('heart')}</button>
+        <button class="btn btn--accent btn--lg" data-add="${b.id}" style="flex:1">${icon('bag')} ${t('qv.add')}</button>
+        <button class="icon-btn" style="border:1.5px solid var(--border);width:54px;height:54px" data-wish="${b.id}" aria-label="${t('card.wishAdd')}">${icon('heart')}</button>
       </div>
-      <a class="link" href="book.html?id=${b.id}">View full details ${icon('arrowRight')}</a>
+      <a class="link" href="book.html?id=${b.id}">${t('qv.details')} ${icon('arrowRight')}</a>
     </div></div>`;
   updateCounts(); openModal('quickview');
 }
 function openAuth(mode = 'login') {
   const m = $('#auth'); const reg = mode === 'register';
-  $$('[data-auth-tab]', m).forEach(t => t.setAttribute('aria-selected', t.dataset.authTab === mode));
+  $$('[data-auth-tab]', m).forEach(x => x.setAttribute('aria-selected', x.dataset.authTab === mode));
   $('[data-register-only]', m).hidden = !reg;
-  $('#auth-title').textContent = reg ? 'Create your account' : 'Welcome back';
-  $('[data-auth-submit]', m).textContent = reg ? 'Create account' : 'Sign in';
+  $('#auth-title').textContent = reg ? t('auth.create') : t('auth.welcome');
+  $('[data-auth-submit]', m).textContent = reg ? t('auth.createBtn') : t('auth.signin');
   if (!m.classList.contains('is-open')) openModal('auth');
 }
 
@@ -362,7 +370,7 @@ function initSearch(form) {
   const render = () => {
     const q = input.value.trim(); idx = -1;
     if (q.length < 1) {
-      panel.innerHTML = `<div class="search__group">Trending searches</div>${['Atomic Rituals', 'Elena Marsh', 'Psychology', 'The Hidden Cosmos'].map(t => `<a class="search__item" role="option" href="books.html?q=${encodeURIComponent(t)}">${icon('search', 'width="16" height="16" style="color:var(--gray-500)"')}${t}</a>`).join('')}`;
+      panel.innerHTML = `<div class="search__group">${t('search.trending')}</div>${t('search.trend').split('|').map(q => `<a class="search__item" role="option" href="books.html?q=${encodeURIComponent(q)}">${icon('search', 'width="16" height="16" style="color:var(--gray-500)"')}${esc(q)}</a>`).join('')}`;
       return;
     }
     const ql = q.toLowerCase();
@@ -370,10 +378,10 @@ function initSearch(form) {
     const cats = CATEGORIES.filter(c => c.name.toLowerCase().includes(ql)).slice(0, 3);
     const auths = Object.entries(AUTHORS).filter(([, a]) => a.name.toLowerCase().includes(ql)).slice(0, 3);
     let html = '';
-    if (books.length) html += '<div class="search__group">Books</div>' + books.map(b => `<a class="search__item" role="option" href="book.html?id=${b.id}">${miniCover(b)}<span><strong>${highlight(b.title, q)}</strong><small>${esc(authorOf(b).name)} · ${money(b.price)}</small></span></a>`).join('');
-    if (auths.length) html += '<div class="search__group">Authors</div>' + auths.map(([k, a]) => `<a class="search__item" role="option" href="books.html?author=${k}">${avatarHTML(a.name, a.palette[1])}<span><strong>${highlight(a.name, q)}</strong><small>${a.books} books · ${a.genre}</small></span></a>`).join('');
-    if (cats.length) html += '<div class="search__group">Categories</div>' + cats.map(c => `<a class="search__item" role="option" href="books.html?cat=${c.slug}"><span class="cat-card__icon" style="width:34px;height:34px;border-radius:10px;--tint:${c.tint};--ink-tint:${c.ink}">${icon(c.icon)}</span><span><strong>${highlight(c.name, q)}</strong><small>${fmtNum(c.count)} books</small></span></a>`).join('');
-    panel.innerHTML = html || `<div class="search__empty">No matches for “${esc(q)}”. Press Enter to search the full catalogue.</div>`;
+    if (books.length) html += `<div class="search__group">${t('search.books')}</div>` + books.map(b => `<a class="search__item" role="option" href="book.html?id=${b.id}">${miniCover(b)}<span><strong>${highlight(b.title, q)}</strong><small>${esc(authorOf(b).name)} · ${money(b.price)}</small></span></a>`).join('');
+    if (auths.length) html += `<div class="search__group">${t('search.authors')}</div>` + auths.map(([k, a]) => `<a class="search__item" role="option" href="books.html?author=${k}">${avatarHTML(a.name, a.palette[1])}<span><strong>${highlight(a.name, q)}</strong><small>${t('search.authorMeta', { n: a.books, g: a.genre })}</small></span></a>`).join('');
+    if (cats.length) html += `<div class="search__group">${t('search.cats')}</div>` + cats.map(c => `<a class="search__item" role="option" href="books.html?cat=${c.slug}"><span class="cat-card__icon" style="width:34px;height:34px;border-radius:10px;--tint:${c.tint};--ink-tint:${c.ink}">${icon(c.icon)}</span><span><strong>${highlight(c.name, q)}</strong><small>${t('search.nBooks', { n: c.count })}</small></span></a>`).join('');
+    panel.innerHTML = html || `<div class="search__empty">${t('search.none', { q: esc(q) })}</div>`;
   };
   input.addEventListener('focus', () => { render(); form.classList.add('is-open'); });
   input.addEventListener('input', () => { render(); form.classList.add('is-open'); });
@@ -391,13 +399,14 @@ function initSearch(form) {
 /* ---------- Carousels ---------- */
 function initCarousel(root) {
   const track = $('.carousel__track', root); const prev = $('[data-prev]', root), next = $('[data-next]', root); const bar = $('.carousel__progress span', root);
+  const dir = IS_RTL ? -1 : 1;
   const step = () => (track.firstElementChild?.getBoundingClientRect().width || 240) + 24;
-  prev?.addEventListener('click', () => track.scrollBy({ left: -step() * 2, behavior: 'smooth' }));
-  next?.addEventListener('click', () => track.scrollBy({ left: step() * 2, behavior: 'smooth' }));
+  prev?.addEventListener('click', () => track.scrollBy({ left: -dir * step() * 2, behavior: 'smooth' }));
+  next?.addEventListener('click', () => track.scrollBy({ left: dir * step() * 2, behavior: 'smooth' }));
   const update = () => {
-    const max = track.scrollWidth - track.clientWidth;
-    if (prev) prev.disabled = track.scrollLeft < 4; if (next) next.disabled = track.scrollLeft > max - 4;
-    if (bar) { const vis = track.clientWidth / track.scrollWidth; bar.style.width = vis * 100 + '%'; bar.style.transform = `translateX(${max ? (track.scrollLeft / max) * (1 / vis - 1) * 100 : 0}%)`; }
+    const max = track.scrollWidth - track.clientWidth; const pos = Math.abs(track.scrollLeft);
+    if (prev) prev.disabled = pos < 4; if (next) next.disabled = pos > max - 4;
+    if (bar) { const vis = track.clientWidth / track.scrollWidth; bar.style.width = vis * 100 + '%'; bar.style.transform = `translateX(${dir * (max ? (pos / max) * (1 / vis - 1) * 100 : 0)}%)`; }
   };
   track.addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
 }
@@ -410,7 +419,7 @@ function initCountdown(el) {
   const tick = () => {
     let s = Math.max(0, Math.floor((end - Date.now()) / 1000));
     const v = { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
-    units.forEach(u => u.textContent = String(v[u.dataset.unit]).padStart(2, '0'));
+    units.forEach(u => u.textContent = pad2(v[u.dataset.unit]));
   };
   tick(); setInterval(tick, 1000);
 }
@@ -428,25 +437,26 @@ function flyToCart(fromEl) {
   cartBtn.classList.remove('bump'); void cartBtn.offsetWidth; cartBtn.classList.add('bump');
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-add],[data-wish],[data-quick],[data-auth],[data-auth-tab],[data-close-modal],[data-open-drawer],[data-close-drawer],[data-dropdown],[data-toggle-search]');
-  if (!t) { $$('.dropdown.is-open').forEach(d => { if (!d.contains(e.target)) { d.classList.remove('is-open'); $('[data-dropdown]', d).setAttribute('aria-expanded', 'false'); } }); return; }
-  if (t.dataset.add) {
-    e.preventDefault(); const b = bookById(t.dataset.add); Store.addToCart(b.id, t.dataset.fmt);
-    flyToCart(t); toast(`<strong>${esc(b.title)}</strong> added to cart`, { href: 'cart.html', label: 'View cart' });
-    if (t.classList.contains('book-card__add')) { t.classList.add('is-added'); t.innerHTML = icon('check'); setTimeout(() => { t.classList.remove('is-added'); t.innerHTML = icon('bag'); }, 1600); }
+  const el = e.target.closest('[data-add],[data-wish],[data-quick],[data-auth],[data-auth-tab],[data-close-modal],[data-open-drawer],[data-close-drawer],[data-dropdown],[data-toggle-search],[data-set-lang]');
+  if (!el) { $$('.dropdown.is-open').forEach(d => { if (!d.contains(e.target)) { d.classList.remove('is-open'); $('[data-dropdown]', d).setAttribute('aria-expanded', 'false'); } }); return; }
+  if (el.dataset.add) {
+    e.preventDefault(); const b = bookById(el.dataset.add); Store.addToCart(b.id, el.dataset.fmt);
+    flyToCart(el); toast(t('toast.added', { t: esc(b.title) }), { href: 'cart.html', label: t('toast.viewCart') });
+    if (el.classList.contains('book-card__add')) { el.classList.add('is-added'); el.innerHTML = icon('check'); setTimeout(() => { el.classList.remove('is-added'); el.innerHTML = icon('bag'); }, 1600); }
     document.dispatchEvent(new CustomEvent('store:change'));
-  } else if (t.dataset.wish) {
-    e.preventDefault(); const on = Store.toggleWish(t.dataset.wish); const b = bookById(t.dataset.wish);
-    toast(on ? `Saved <strong>${esc(b.title)}</strong> to wishlist` : 'Removed from wishlist', on ? { href: 'wishlist.html', label: 'Wishlist' } : null);
+  } else if (el.dataset.wish) {
+    e.preventDefault(); const on = Store.toggleWish(el.dataset.wish); const b = bookById(el.dataset.wish);
+    toast(on ? t('toast.saved', { t: esc(b.title) }) : t('toast.unsaved'), on ? { href: 'wishlist.html', label: t('toast.wishlist') } : null);
     document.dispatchEvent(new CustomEvent('store:change'));
-  } else if (t.dataset.quick) { e.preventDefault(); quickView(t.dataset.quick); }
-  else if (t.dataset.auth) { e.preventDefault(); closeDrawer(); openAuth(t.dataset.auth); }
-  else if (t.dataset.authTab) openAuth(t.dataset.authTab);
-  else if (t.hasAttribute('data-close-modal')) closeModal(t.closest('.modal'));
-  else if (t.hasAttribute('data-open-drawer')) openDrawer();
-  else if (t.hasAttribute('data-close-drawer')) closeDrawer();
-  else if (t.hasAttribute('data-dropdown')) { const d = t.closest('.dropdown'); const open = d.classList.toggle('is-open'); t.setAttribute('aria-expanded', open); }
-  else if (t.hasAttribute('data-toggle-search')) { const h = $('#header'); const open = h.classList.toggle('search-open'); t.setAttribute('aria-expanded', open); if (open) $('#search-mobile').focus(); }
+  } else if (el.dataset.quick) { e.preventDefault(); quickView(el.dataset.quick); }
+  else if (el.dataset.auth) { e.preventDefault(); closeDrawer(); openAuth(el.dataset.auth); }
+  else if (el.dataset.authTab) openAuth(el.dataset.authTab);
+  else if (el.hasAttribute('data-close-modal')) closeModal(el.closest('.modal'));
+  else if (el.hasAttribute('data-open-drawer')) openDrawer();
+  else if (el.hasAttribute('data-close-drawer')) closeDrawer();
+  else if (el.hasAttribute('data-dropdown')) { const d = el.closest('.dropdown'); const open = d.classList.toggle('is-open'); el.setAttribute('aria-expanded', open); }
+  else if (el.dataset.setLang) setLang(el.dataset.setLang);
+  else if (el.hasAttribute('data-toggle-search')) { const h = $('#header'); const open = h.classList.toggle('search-open'); el.setAttribute('aria-expanded', open); if (open) $('#search-mobile').focus(); }
 });
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
@@ -455,11 +465,11 @@ document.addEventListener('keydown', e => {
 });
 document.addEventListener('submit', e => {
   const f = e.target;
-  if (f.matches('[data-auth-form]')) { e.preventDefault(); closeModal($('#auth')); toast('Signed in — welcome back, Jane!'); }
+  if (f.matches('[data-auth-form]')) { e.preventDefault(); closeModal($('#auth')); toast(t('auth.done')); }
   if (f.matches('[data-newsletter]')) {
     e.preventDefault(); const inp = $('input', f);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value)) { inp.classList.add('is-invalid'); inp.focus(); return; }
-    inp.classList.remove('is-invalid'); f.innerHTML = `<div class="row" style="padding:12px 18px;color:var(--success);font-weight:600">${icon('check', 'width="20" height="20"')} You're on the list! Check your inbox for 10% off.</div>`;
+    inp.classList.remove('is-invalid'); f.innerHTML = `<div class="row" style="padding:12px 18px;color:var(--success);font-weight:600">${icon('check', 'width="20" height="20"')} ${t('nl.ok')}</div>`;
   }
 });
 function openDrawer() { const d = $('#nav-drawer'); d.classList.add('is-open'); d.setAttribute('aria-hidden', 'false'); $('[data-open-drawer]').setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; $('.drawer__head .icon-btn', d).focus(); }
@@ -467,7 +477,7 @@ function closeDrawer() { const d = $('#nav-drawer'); if (!d?.classList.contains(
 
 /* ---------- Boot ---------- */
 function boot() {
-  renderHeader(); renderFooter();
+  applyI18n(); renderHeader(); renderFooter();
   $$('[data-search]').forEach(initSearch);
   const header = $('#header'); const onScroll = () => header.classList.toggle('is-scrolled', scrollY > 8);
   addEventListener('scroll', onScroll, { passive: true }); onScroll();

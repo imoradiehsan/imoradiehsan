@@ -3,91 +3,93 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Checkout — Folio &amp; Co.</title>
-  <meta name="theme-color" content="#0f1c36">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <title data-i18n="title.co">Checkout — Folio &amp; Co.</title>
+  <meta name="theme-color" content="#0F7C82">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F7C82'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23F4B323' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/i18n-static.js"></script>
 </head>
 <body data-page="checkout">
   <div id="site-header"></div>
 
   <main id="main">
     <div class="container">
-      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><a href="cart.html">Cart</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Checkout</span></nav>
+      <nav class="breadcrumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumb.aria"><a href="index.html" data-i18n="crumb.home">Home</a><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><a href="cart.html" data-i18n="drawer.cart">Cart</a><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page" data-i18n="k.crumb">Checkout</span></nav>
 
       <div id="checkout-root" style="scroll-margin-top:140px">
-        <ol class="stepper" aria-label="Checkout progress" style="list-style:none;padding:0">
-          <li class="stepper__item"><span class="stepper__dot">1</span><span class="stepper__label">Shipping</span><span class="stepper__line"></span></li>
-          <li class="stepper__item"><span class="stepper__dot">2</span><span class="stepper__label">Payment</span><span class="stepper__line"></span></li>
-          <li class="stepper__item"><span class="stepper__dot">3</span><span class="stepper__label">Confirm</span></li>
+        <ol class="stepper" aria-label="Checkout progress" data-i18n-attr="aria-label:k.progress" style="list-style:none;padding:0">
+          <li class="stepper__item"><span class="stepper__dot">1</span><span class="stepper__label" data-i18n="k.s1">Shipping</span><span class="stepper__line"></span></li>
+          <li class="stepper__item"><span class="stepper__dot">2</span><span class="stepper__label" data-i18n="k.s2">Payment</span><span class="stepper__line"></span></li>
+          <li class="stepper__item"><span class="stepper__dot">3</span><span class="stepper__label" data-i18n="k.s3">Confirm</span></li>
         </ol>
 
         <div class="checkout">
           <div id="checkout-main">
             <!-- Step 1: shipping -->
             <section class="checkout__panel card card--pad" id="panel-1" aria-labelledby="s1-title">
-              <h2 id="s1-title" style="font-size:var(--fs-xl);margin-bottom:6px">Shipping information</h2>
-              <p class="muted small" style="margin-bottom:24px">Already have an account? <button class="link" data-auth="login">Sign in</button> for faster checkout.</p>
+              <h2 id="s1-title" style="font-size:var(--fs-xl);margin-bottom:6px" data-i18n="k.shipT">Shipping information</h2>
+              <p class="muted small" style="margin-bottom:24px" data-i18n="k.have">Already have an account? <button class="link" data-auth="login">Sign in</button> for faster checkout.</p>
               <div class="form-grid">
-                <div class="field"><label class="label" for="co-email">Email</label><input class="input" id="co-email" type="email" autocomplete="email" required placeholder="you@example.com"><span class="field__error">Please enter a valid email.</span></div>
-                <div class="field"><label class="label" for="co-phone">Phone <span class="muted">(for delivery updates)</span></label><input class="input" id="co-phone" type="tel" autocomplete="tel" placeholder="+1 555 000 0000"></div>
+                <div class="field"><label class="label" for="co-email" data-i18n="acc.email">Email</label><input class="input" id="co-email" type="email" autocomplete="email" required placeholder="you@example.com"><span class="field__error" data-i18n="k.errEmail">Please enter a valid email.</span></div>
+                <div class="field"><label class="label" for="co-phone" data-i18n="k.phone">Phone <span class="muted">(for delivery updates)</span></label><input class="input" id="co-phone" type="tel" autocomplete="tel" placeholder="+1 555 000 0000"></div>
               </div>
-              <p class="promo-strip" id="digital-note" hidden style="margin:20px 0 0">Your order is fully digital — no shipping address needed. Downloads will be available right after payment.</p>
+              <p class="promo-strip" id="digital-note" hidden style="margin:20px 0 0" data-i18n="k.digital">Your order is fully digital — no shipping address needed. Downloads will be available right after payment.</p>
               <div id="ship-physical">
                 <div class="form-grid mt-6">
-                  <div class="field"><label class="label" for="co-first">First name</label><input class="input" id="co-first" autocomplete="given-name" required><span class="field__error">Required</span></div>
-                  <div class="field"><label class="label" for="co-last">Last name</label><input class="input" id="co-last" autocomplete="family-name" required><span class="field__error">Required</span></div>
-                  <div class="field span-2"><label class="label" for="co-address">Street address</label><input class="input" id="co-address" autocomplete="street-address" required placeholder="House number and street"><span class="field__error">Required</span></div>
-                  <div class="field"><label class="label" for="co-city">City</label><input class="input" id="co-city" autocomplete="address-level2" required><span class="field__error">Required</span></div>
-                  <div class="field"><label class="label" for="co-zip">Postal code</label><input class="input" id="co-zip" autocomplete="postal-code" required><span class="field__error">Required</span></div>
-                  <div class="field span-2"><label class="label" for="co-country">Country</label>
-                    <select class="select" id="co-country" autocomplete="country-name"><option>United States</option><option>Canada</option><option>United Kingdom</option><option>Germany</option><option>France</option><option>Australia</option></select></div>
+                  <div class="field"><label class="label" for="co-first" data-i18n="acc.first">First name</label><input class="input" id="co-first" autocomplete="given-name" required><span class="field__error" data-i18n="k.req">Required</span></div>
+                  <div class="field"><label class="label" for="co-last" data-i18n="acc.last">Last name</label><input class="input" id="co-last" autocomplete="family-name" required><span class="field__error" data-i18n="k.req">Required</span></div>
+                  <div class="field span-2"><label class="label" for="co-address" data-i18n="k.addr">Street address</label><input class="input" id="co-address" autocomplete="street-address" required placeholder="House number and street" data-i18n-attr="placeholder:k.addrPh"><span class="field__error" data-i18n="k.req">Required</span></div>
+                  <div class="field"><label class="label" for="co-city" data-i18n="k.city">City</label><input class="input" id="co-city" autocomplete="address-level2" required><span class="field__error" data-i18n="k.req">Required</span></div>
+                  <div class="field"><label class="label" for="co-zip" data-i18n="k.zip">Postal code</label><input class="input" id="co-zip" autocomplete="postal-code" required><span class="field__error" data-i18n="k.req">Required</span></div>
+                  <div class="field span-2"><label class="label" for="co-country" data-i18n="k.country">Country</label>
+                    <select class="select" id="co-country" autocomplete="country-name"><option data-i18n="k.c0">United States</option><option data-i18n="k.c1">Canada</option><option data-i18n="k.c2">United Kingdom</option><option data-i18n="k.c3">Germany</option><option data-i18n="k.c4">France</option><option data-i18n="k.c5">Australia</option></select></div>
                 </div>
-                <p class="label mt-6">Delivery method</p>
+                <p class="label mt-6" data-i18n="k.method">Delivery method</p>
                 <div class="ship-opts">
-                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="standard" checked><span><strong>Standard delivery</strong><small>3–5 business days</small></span></span><strong>Free over $35</strong></label>
-                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="express"><span><strong>Express delivery</strong><small>1–2 business days</small></span></span><strong>$9.99</strong></label>
+                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="standard" checked><span><strong data-i18n="k.std">Standard delivery</strong><small data-i18n="k.stdD">3–5 business days</small></span></span><strong data-i18n="k.stdP">Free over $35</strong></label>
+                  <label class="ship-opt"><span class="check"><input type="radio" name="ship" value="express"><span><strong data-i18n="k.exp">Express delivery</strong><small data-i18n="k.expD">1–2 business days</small></span></span><strong data-i18n="k.expP">$9.99</strong></label>
                 </div>
               </div>
-              <div class="checkout__nav"><a class="btn btn--ghost" href="cart.html">← Back to cart</a><button class="btn btn--lg" data-next="1">Continue to payment</button></div>
+              <div class="checkout__nav"><a class="btn btn--ghost" href="cart.html" data-i18n="k.backCart">← Back to cart</a><button class="btn btn--lg" data-next="1" data-i18n="k.toPay">Continue to payment</button></div>
             </section>
 
             <!-- Step 2: payment -->
             <section class="checkout__panel card card--pad" id="panel-2" aria-labelledby="s2-title">
-              <h2 id="s2-title" style="font-size:var(--fs-xl);margin-bottom:24px">Payment method</h2>
+              <h2 id="s2-title" style="font-size:var(--fs-xl);margin-bottom:24px" data-i18n="k.payT">Payment method</h2>
               <div class="pay-methods">
-                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="card" checked></span><div><strong>Credit or debit card</strong><span>Visa, Mastercard, Amex</span></div>
+                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="card" checked></span><div><strong data-i18n="k.card">Credit or debit card</strong><span data-i18n="k.cardS">Visa, Mastercard, Amex</span></div>
                   <div class="payments"><span class="pay"><svg viewBox="0 0 48 16"><text x="24" y="13" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-style="italic" font-size="14" fill="#1a1f71">VISA</text></svg></span><span class="pay"><svg viewBox="0 0 40 24"><circle cx="15" cy="12" r="9" fill="#eb001b"/><circle cx="25" cy="12" r="9" fill="#f79e1b" fill-opacity=".9"/></svg></span></div></label>
                 <div class="card-fields is-open" id="card-fields">
                   <div class="form-grid">
-                    <div class="field span-2"><label class="label" for="card-num">Card number</label><input class="input" id="card-num" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required pattern="[0-9 ]{19}"><span class="field__error">Enter a 16-digit card number.</span></div>
-                    <div class="field"><label class="label" for="card-exp">Expiry</label><input class="input" id="card-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" required pattern="[0-9]{2} / [0-9]{2}"><span class="field__error">Use MM / YY.</span></div>
-                    <div class="field"><label class="label" for="card-cvc">CVC</label><input class="input" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required pattern="[0-9]{3,4}" maxlength="4"><span class="field__error">3–4 digits.</span></div>
-                    <div class="field span-2"><label class="label" for="card-name">Name on card</label><input class="input" id="card-name" autocomplete="cc-name" required><span class="field__error">Required</span></div>
+                    <div class="field span-2"><label class="label" for="card-num" data-i18n="k.cnum">Card number</label><input class="input" id="card-num" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" required pattern="[0-9 ]{19}"><span class="field__error" data-i18n="k.errNum">Enter a 16-digit card number.</span></div>
+                    <div class="field"><label class="label" for="card-exp" data-i18n="k.cexp">Expiry</label><input class="input" id="card-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY" data-i18n-attr="placeholder:k.expPh" required pattern="[0-9]{2} / [0-9]{2}"><span class="field__error" data-i18n="k.errExp">Use MM / YY.</span></div>
+                    <div class="field"><label class="label" for="card-cvc" data-i18n="k.cvc">CVC</label><input class="input" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123" required pattern="[0-9]{3,4}" maxlength="4"><span class="field__error" data-i18n="k.errCvc">3–4 digits.</span></div>
+                    <div class="field span-2"><label class="label" for="card-name" data-i18n="k.cname">Name on card</label><input class="input" id="card-name" autocomplete="cc-name" required><span class="field__error" data-i18n="k.req">Required</span></div>
                   </div>
-                  <label class="check mt-4"><input type="checkbox" checked> Save this card for faster checkout</label>
+                  <label class="check mt-4"><input type="checkbox" checked> <span data-i18n="k.saveCard">Save this card for faster checkout</span></label>
                 </div>
-                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="paypal"></span><div><strong>PayPal</strong><span>You'll confirm in a secure window</span></div>
+                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="paypal"></span><div><strong data-i18n="co.paypal">PayPal</strong><span data-i18n="k.ppS">You'll confirm in a secure window</span></div>
                   <div class="payments"><span class="pay"><svg viewBox="0 0 56 16"><text x="2" y="12.5" font-family="Arial,sans-serif" font-weight="700" font-style="italic" font-size="12.5" fill="#003087">Pay<tspan fill="#009cde">Pal</tspan></text></svg></span></div></label>
-                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="wallet"></span><div><strong>Apple Pay / Google Pay</strong><span>One-tap payment on supported devices</span></div>
+                <label class="pay-method"><span class="check"><input type="radio" name="pay" value="wallet"></span><div><strong data-i18n="co.wallet">Apple Pay / Google Pay</strong><span data-i18n="k.wS">One-tap payment on supported devices</span></div>
                   <div class="payments"><span class="pay"><svg viewBox="0 0 48 16"><text x="24" y="12.5" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-weight="600" font-size="12" fill="#000">● Pay</text></svg></span><span class="pay"><svg viewBox="0 0 48 16"><text x="24" y="12.5" text-anchor="middle" font-family="Arial,sans-serif" font-weight="600" font-size="12"><tspan fill="#4285f4">G</tspan><tspan fill="#5f6368"> Pay</tspan></text></svg></span></div></label>
               </div>
-              <div class="checkout__nav"><button class="btn btn--ghost" data-back="1">← Back</button><button class="btn btn--lg" data-next="2">Review order</button></div>
+              <div class="checkout__nav"><button class="btn btn--ghost" data-back="1" data-i18n="k.back">← Back</button><button class="btn btn--lg" data-next="2" data-i18n="k.review">Review order</button></div>
             </section>
 
             <!-- Step 3: confirm -->
             <section class="checkout__panel card card--pad" id="panel-3" aria-labelledby="s3-title">
-              <h2 id="s3-title" style="font-size:var(--fs-xl);margin-bottom:24px">Review &amp; confirm</h2>
+              <h2 id="s3-title" style="font-size:var(--fs-xl);margin-bottom:24px" data-i18n="k.revT">Review &amp; confirm</h2>
               <div class="stack" id="review-blocks"></div>
-              <label class="check mt-6"><input type="checkbox" id="terms"> I agree to the <a href="#" class="link">Terms</a> and <a href="#" class="link">Privacy Policy</a></label>
-              <div class="checkout__nav"><button class="btn btn--ghost" data-back="2">← Back</button><button class="btn btn--accent btn--lg" id="place-order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> Place order</button></div>
+              <label class="check mt-6"><input type="checkbox" id="terms"> <span data-i18n="k.terms">I agree to the <a href="#" class="link">Terms</a> and <a href="#" class="link">Privacy Policy</a></span></label>
+              <div class="checkout__nav"><button class="btn btn--ghost" data-back="2" data-i18n="k.back">← Back</button><button class="btn btn--accent btn--lg" id="place-order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> <span data-i18n="k.place">Place order</span></button></div>
             </section>
           </div>
 
-          <aside class="summary" id="co-summary" aria-label="Order summary"></aside>
+          <aside class="summary" id="co-summary" aria-label="Order summary" data-i18n-attr="aria-label:cart.summary"></aside>
         </div>
       </div>
     </div>

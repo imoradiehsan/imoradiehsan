@@ -3,25 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Wishlist — Folio &amp; Co.</title>
-  <meta name="theme-color" content="#0f1c36">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f1c36'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23e9b75a' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <title data-i18n="title.wish">Wishlist — Folio &amp; Co.</title>
+  <meta name="theme-color" content="#0F7C82">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230F7C82'/%3E%3Cpath d='M16 10c-2-2-5-2.5-9-2.5v15c4 0 7 .5 9 2.5 2-2 5-2.5 9-2.5v-15c-4 0-7 .5-9 2.5Zm0 0v15' fill='none' stroke='%23F4B323' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/i18n-static.js"></script>
 </head>
 <body data-page="wishlist">
   <div id="site-header"></div>
 
   <main id="main">
     <div class="container" style="padding-bottom:64px">
-      <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><a href="account.html">Account</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page">Wishlist</span></nav>
+      <nav class="breadcrumbs" aria-label="Breadcrumb" data-i18n-attr="aria-label:crumb.aria"><a href="index.html" data-i18n="crumb.home">Home</a><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><a href="account.html" data-i18n="drawer.account">Account</a><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg><span aria-current="page" data-i18n="hdr.wishlist">Wishlist</span></nav>
       <div class="wish-toolbar">
-        <div><h1 style="font-size:var(--fs-3xl)">My Wishlist</h1><p class="muted mt-2" id="wish-count" aria-live="polite"></p></div>
+        <div><h1 style="font-size:var(--fs-3xl)" data-i18n="w.title">My Wishlist</h1><p class="muted mt-2" id="wish-count" aria-live="polite"></p></div>
         <div class="row">
-          <button class="btn btn--outline" id="wish-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> Share list</button>
-          <button class="btn btn--accent" id="wish-all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> Move all to cart</button>
+          <button class="btn btn--outline" id="wish-share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg> <span data-i18n="w.share">Share list</span></button>
+          <button class="btn btn--accent" id="wish-all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg> <span data-i18n="w.moveAll">Move all to cart</span></button>
         </div>
       </div>
       <div id="wish-root"></div>
@@ -30,13 +32,13 @@
     <section class="section section--alt" aria-labelledby="wr-title">
       <div class="container carousel">
         <div class="section-head">
-          <div class="section-head__text"><span class="eyebrow">Readers also saved</span><h2 id="wr-title">More books you'll love</h2></div>
+          <div class="section-head__text"><span class="eyebrow" data-i18n="w.recEy">Readers also saved</span><h2 id="wr-title" data-i18n="w.recT">More books you'll love</h2></div>
           <div class="carousel__nav">
-            <button class="carousel__btn" data-prev aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
-            <button class="carousel__btn" data-next aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
+            <button class="carousel__btn" data-prev aria-label="Previous" data-i18n-attr="aria-label:prev"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m15 6-6 6 6 6"/></svg></button>
+            <button class="carousel__btn" data-next aria-label="Next" data-i18n-attr="aria-label:next"><svg class="dir-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 6 6 6-6 6"/></svg></button>
           </div>
         </div>
-        <div class="carousel__track" id="wish-reco" tabindex="0" aria-label="Recommended books"></div>
+        <div class="carousel__track" id="wish-reco" tabindex="0" aria-label="Recommended books" data-i18n-attr="aria-label:w.recT"></div>
         <div class="carousel__progress" aria-hidden="true"><span></span></div>
       </div>
     </section>

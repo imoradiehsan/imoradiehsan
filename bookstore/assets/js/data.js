@@ -130,13 +130,80 @@ const TESTIMONIALS = [
 ];
 
 const POSTS = [
-  { title: 'Why "The Quiet Cartographer" is the novel of the season', cat: 'Book Review', mins: 6, date: 'Sep 22, 2026', excerpt: 'Elena Marsh returns with her most ambitious — and most tender — book yet. Here is why readers cannot put it down.', art: ['#16274a', '#e9b75a', '#f8f2e7'] },
-  { title: 'How to read 50 books a year without rushing', cat: 'Reading Guide', mins: 8, date: 'Sep 15, 2026', excerpt: 'Forget speed-reading. Five gentle systems that make more reading feel effortless — tested by our staff.', art: ['#f1e6d3', '#2f8a5b', '#16274a'] },
-  { title: 'In conversation with Priya Raman on building calmly', cat: 'Author Interview', mins: 11, date: 'Sep 04, 2026', excerpt: 'The Lean Founder author on burnout, boredom and why the best companies feel a little dull from the inside.', art: ['#e9b75a', '#16274a', '#fff'] }
+  { title: 'Why "The Quiet Cartographer" is the novel of the season', cat: 'Book Review', mins: 6, date: '2026-09-22', excerpt: 'Elena Marsh returns with her most ambitious — and most tender — book yet. Here is why readers cannot put it down.', art: ['#0F7C82', '#F4B323', '#F7F8F2'] },
+  { title: 'How to read 50 books a year without rushing', cat: 'Reading Guide', mins: 8, date: '2026-09-15', excerpt: 'Forget speed-reading. Five gentle systems that make more reading feel effortless — tested by our staff.', art: ['#e2f0d6', '#68A936', '#0a5256'] },
+  { title: 'In conversation with Priya Raman on building calmly', cat: 'Author Interview', mins: 11, date: '2026-09-04', excerpt: 'The Lean Founder author on burnout, boredom and why the best companies feel a little dull from the inside.', art: ['#F4B323', '#0a5256', '#fff'] }
 ];
 
 const REVIEWS = [
-  { name: 'Olivia Grant', color: '#20345f', rating: 5, date: 'Sep 12, 2026', title: 'Couldn\'t put it down', text: 'Beautifully written and paced perfectly. I finished it in one weekend and immediately started again to catch the details I missed.', helpful: 48 },
-  { name: 'Mateo Alvarez', color: '#9a4a1c', rating: 5, date: 'Aug 30, 2026', title: 'An instant favourite', text: 'The kind of book you want to press into a friend\'s hands. The hardcover edition is gorgeous too — heavy paper, lovely typography.', helpful: 31 },
-  { name: 'Grace Liu', color: '#2f8a5b', rating: 4, date: 'Aug 18, 2026', title: 'Slow start, wonderful finish', text: 'The first fifty pages took patience, but the payoff is enormous. The final chapter is one of the best I have read in years.', helpful: 19 }
+  { name: 'Olivia Grant', color: '#20345f', rating: 5, date: '2026-09-12', title: 'Couldn\'t put it down', text: 'Beautifully written and paced perfectly. I finished it in one weekend and immediately started again to catch the details I missed.', helpful: 48 },
+  { name: 'Mateo Alvarez', color: '#9a4a1c', rating: 5, date: '2026-08-30', title: 'An instant favourite', text: 'The kind of book you want to press into a friend\'s hands. The hardcover edition is gorgeous too — heavy paper, lovely typography.', helpful: 31 },
+  { name: 'Grace Liu', color: '#2f8a5b', rating: 4, date: '2026-08-18', title: 'Slow start, wonderful finish', text: 'The first fifty pages took patience, but the payoff is enormous. The final chapter is one of the best I have read in years.', helpful: 19 }
 ];
+
+/* ---------- Persian (فارسی) catalog content ---------- */
+const DATA_FA = {
+  categories: { fiction: 'داستان', 'self-development': 'توسعه فردی', business: 'کسب‌وکار', psychology: 'روان‌شناسی', history: 'تاریخ', science: 'علم', children: 'کودک', literature: 'ادبیات', technology: 'فناوری' },
+  authors: {
+    'elena-marsh':   { name: 'النا مارش', genre: 'ادبیات داستانی', followers: '۱۸۲ هزار', bio: 'رمان‌نویس برنده جایزه که داستان‌های روشن و نقشه‌وارش درباره حافظه، ساحل‌ها و خانواده‌هایی است که در آن‌ها سرگردان‌اند.' },
+    'james-calder':  { name: 'جیمز کالدر', genre: 'توسعه فردی', followers: '۴۱۰ هزار', bio: 'مربی رفتار و ورزشکار سابق که راهنماهای کاربردی و پژوهش‌محور درباره عادت، تمرکز و زندگی آگاهانه می‌نویسد.' },
+    'priya-raman':   { name: 'پریا رامان', genre: 'کسب‌وکار و استراتژی', followers: '۹۶ هزار', bio: 'بنیان‌گذار دو استارتاپ و سرمایه‌گذار که آشوب استارتاپ را به اصولی آرام و تکرارپذیر تبدیل می‌کند.' },
+    'samuel-okafor': { name: 'دکتر ساموئل اوکافور', genre: 'روان‌شناسی', followers: '۱۵۰ هزار', bio: 'روان‌شناس بالینی و مدرس دانشگاه که علوم اعصاب مدرن را گرم، خواندنی و واقعاً کاربردی می‌کند.' },
+    'marcus-hale':   { name: 'مارکوس هیل', genre: 'تاریخ', followers: '۷۴ هزار', bio: 'مورخ تجارت و امپراتوری‌ها که روایت‌های گسترده‌اش مثل بهترین رمان‌های ماجرایی خوانده می‌شوند.' },
+    'lena-ortiz':    { name: 'دکتر لنا اورتیز', genre: 'علم', followers: '۱۲۱ هزار', bio: 'اخترفیزیک‌دان و مروج علم که کیهان را به اندازه یک میز آشپزخانه قابل فهم می‌کند.' },
+    'clara-bell':    { name: 'کلارا بل', genre: 'کتاب کودک', followers: '۵۸ هزار', bio: 'نویسنده و تصویرگر قصه‌های محبوب شب درباره موجودات کوچک، شجاع، کنجکاو و کمی شیطون.' },
+    'isabel-moreau': { name: 'ایزابل مورو', genre: 'ادبیات', followers: '۶۷ هزار', bio: 'شاعر و رمان‌نویسی که آثار نامه‌نگارانه‌اش درباره فاصله، موسیقی و نامه‌هایی است که هرگز فرستاده نمی‌شوند.' },
+    'arjun-mehta':   { name: 'آرجون مهتا', genre: 'فناوری', followers: '۸۸ هزار', bio: 'مهندس ارشد نرم‌افزار که کتاب‌های روشن و انسانی درباره مهارت برنامه‌نویسی و هوش ماشینی می‌نویسد.' },
+    'noah-whitfield':{ name: 'نوا ویتفیلد', genre: 'معمایی و داستان', followers: '۱۳۲ هزار', bio: 'روزنامه‌نگار سابق و نویسنده رمان‌های معمایی پرحال‌وهوا که در گوشه‌وکنار دنیا می‌گذرند.' },
+    'maya-chen':     { name: 'مایا چن', genre: 'مدیریت مالی شخصی', followers: '۲۰۳ هزار', bio: 'آموزگار مالی که به خوانندگان کمک می‌کند رابطه‌ای آرام و ارزش‌محور با پول بسازند.' }
+  },
+  books: {
+    1:  { title: 'نقشه‌نگار خاموش', kicker: 'رمان', pub: 'نشر بندرگاه', blurb: 'نقشه‌نگاری گوشه‌گیر، اطلس ناتمام مادربزرگش را به ارث می‌برد و ردّ ساحل‌های دست‌کشیده آن را در سه کشور دنبال می‌کند؛ تا به رازی خانوادگی می‌رسد که قرار نبود هیچ‌وقت روی نقشه بیاید.' },
+    2:  { title: 'عادت‌های اتمی', kicker: 'عادت‌های کوچک، زندگی بزرگ', pub: 'نشر ستاره شمالی', blurb: 'نظامی کاربردی و علمی برای طراحی آیین‌های روزانه‌ای که روی هم انباشته می‌شوند. تغییرهای کوچک، نتیجه‌های چشمگیر؛ همراه با کاربرگ‌هایی که واقعاً از آن‌ها استفاده می‌کنید.' },
+    3:  { title: 'بنیان‌گذار چابک', kicker: 'آرام بسازید', pub: 'نشر نصف‌النهار', blurb: 'چطور با سرمایه کمتر، جلسه‌های کمتر و وضوح بیشتر شرکتی ماندگار بسازیم. همان دستورالعملی که پریا آرزو داشت روز اول داشته باشد.' },
+    4:  { title: 'ذهن در حرکت', kicker: 'علم تازه اندیشیدن', pub: 'نشر ستاره شمالی', blurb: 'سفری روشنگر به این‌که فکرها چطور شکل می‌گیرند، حرکت می‌کنند و تغییر می‌کنند؛ و این برای یادگیری، عشق و بهبودی ما چه معنایی دارد.' },
+    5:  { title: 'امپراتوری‌های نمک', kicker: 'تاریخ جهان', pub: 'نشر بندرگاه', blurb: 'بلوری ساده که شهرها ساخت، جنگ‌ها به راه انداخت و نقشه‌ها را از نو کشید. تاریخ گسترده و زنده جهان، از دریچه نمک.' },
+    6:  { title: 'کیهان پنهان', kicker: 'ماده تاریک و ما', pub: 'نشر روشنا', blurb: 'هشتاد و پنج درصد جهان دیده نمی‌شود. دکتر لنا اورتیز با طنز و شگفتی توضیح می‌دهد از کجا می‌دانیم آن‌جاست و چرا اهمیت دارد.' },
+    7:  { title: 'پیپ و ماه کاغذی', kicker: 'برای ۳ تا ۷ سال', pub: 'نشر فانوس کوچک', blurb: 'پیپِ موش یک ماه از کاغذ می‌بُرد تا شب تنها نماند. قصه‌ای آرام و درخشان برای خواب، درباره شجاعت و دوستی.' },
+    8:  { title: 'نامه‌هایی از لیسبون', kicker: 'رمانی در قالب نامه', pub: 'نشر نصف‌النهار', blurb: 'چهل نامه، یک تابستان و نوازنده ویولن‌سلی که هیچ‌کدام را نفرستاد. رمانی لطیف درباره فاصله میان آدم‌ها.' },
+    9:  { title: 'طراحی سامانه‌های هوشمند', kicker: 'ویراست دوم', pub: 'نشر مدار', blurb: 'راهنمایی روشن و عملی برای ساخت محصولات قابل‌اعتماد مبتنی بر هوش مصنوعی؛ از خط لوله داده تا ارزیابی و استقرار مسئولانه.' },
+    10: { title: 'باغ نمک', kicker: 'رمان', pub: 'نشر بندرگاه', blurb: 'دو خواهر، یک باغ رو به زوال کنار دریا و تابستانی که همه‌چیز را تعیین می‌کند.' },
+    11: { title: 'تمرکز عمیق', kicker: 'توجه یک ابرقدرت است', pub: 'نشر ستاره شمالی', blurb: 'توجه‌تان را در دنیایی که برای دزدیدنش طراحی شده پس بگیرید. هفت آزمایش هفتگی برای کاری آرام‌تر و عمیق‌تر.' },
+    12: { title: 'عددهایی که مهم‌اند', kicker: 'شاخص‌ها به زبان آدم', pub: 'نشر نصف‌النهار', blurb: 'چند شاخص انگشت‌شمار که واقعاً سلامت یک کسب‌وکار را پیش‌بینی می‌کنند، بدون اصطلاحات پیچیده.' },
+    13: { title: 'مغز مضطرب', kicker: 'شناخت نگرانی', pub: 'نشر ستاره شمالی', blurb: 'چرا نگرانی وجود دارد، از چه چیزی محافظت می‌کند و جعبه‌ابزاری مهربان برای کم کردن صدای آن.' },
+    14: { title: 'جاده ابریشم از نو', kicker: 'تجارت، اندیشه و امپراتوری', pub: 'نشر بندرگاه', blurb: 'تاریخی تازه و گسترده از راه‌هایی که جهان باستان را به هم پیوند دادند و اندیشه‌هایی که همراه ابریشم سفر کردند.' },
+    15: { title: 'گشتی کوتاه در زمان', kicker: 'فیزیک برای کنجکاوها', pub: 'نشر روشنا', blurb: 'از ساعت آفتابی تا فضازمان؛ گشتی کوتاه و دلنشین در عجیب‌ترین مفهوم فیزیک: خودِ زمان.' },
+    16: { title: 'اژدهایی که عاشق کتاب بود', kicker: 'برای ۴ تا ۸ سال', pub: 'نشر فانوس کوچک', blurb: 'اژدهای کوچک، اِمبِر، می‌خواهد کتاب بخواند، نه این‌که غرّش کند. قصه‌ای بامزه و دلگرم‌کننده در ستایش کتابخانه‌ها و شجاعتِ متفاوت بودن.' },
+    17: { title: 'سونات زمستان', kicker: 'رمان', pub: 'نشر نصف‌النهار', blurb: 'پیانیستی به زادگاه برف‌گرفته‌اش برمی‌گردد تا آخرین قطعه ناتمام استاد درگذشته‌اش را کامل کند.' },
+    18: { title: 'هنر کد تمیز', kicker: 'نرم‌افزار به‌مثابه هنر', pub: 'نشر مدار', blurb: 'اصولی ماندگار برای نوشتن کدی که هم‌تیمی‌ها از خواندنش لذت ببرند؛ با مثال‌هایی به سه زبان برنامه‌نویسی.' },
+    19: { title: 'نیمه‌شب در مراکش', kicker: 'رمان معمایی', pub: 'نشر ستاره شمالی', blurb: 'یک دست‌نوشته دزدیده‌شده، یک حراج نقاب‌دار و شهری که هیچ‌وقت کاملاً نمی‌خوابد. پرحال‌وهواترین رمان معمایی سال.' },
+    20: { title: 'هنر کافی بودن', kicker: 'با کمتر، بهتر زندگی کنید', pub: 'نشر ستاره شمالی', blurb: 'راهنمایی گرم و کاربردی برای تعریف «کافی» در پول، زمان و جاه‌طلبی؛ و بالاخره لذت بردن از آن.' },
+    21: { title: 'باغ شیشه‌ای', kicker: 'رمان معمایی', pub: 'نشر ستاره شمالی', blurb: 'گیاه‌شناسی پیامی پنهان در گلخانه‌ای که مادرش ساخته پیدا می‌کند؛ و ناپدید شدنی که هیچ‌کس گزارشش نکرده بود.' },
+    22: { title: 'پول، ذهن و معنا', kicker: 'آرامش مالی', pub: 'نشر نصف‌النهار', blurb: 'بدون اضطراب ثروت بسازید. چارچوب ارزش‌محور مایا چن برای خرج کردن، پس‌انداز و بخشیدن.' },
+    23: { title: 'آخرین فانوس دریایی', kicker: 'رمان', pub: 'نشر بندرگاه', blurb: 'نگهبان آخرین فانوس دریایی فعال در ساحل اقیانوس اطلس، نامه‌ای دریافت می‌کند از کشتی‌ای که چهل سال پیش غرق شده است.' },
+    24: { title: 'داستان داده‌ها', kicker: 'نمودارهایی که قانع می‌کنند', pub: 'نشر مدار', blurb: 'صفحه‌گسترده‌ها را به داستان‌هایی به‌یادماندنی تبدیل کنید؛ راهنمای عملی مصورسازی داده صادقانه و اثرگذار.' }
+  },
+  testimonials: [
+    { name: 'هانیه لطفی', role: 'دانشجوی ادبیات', text: 'پیشنهادها به طرز عجیبی دقیق‌اند. سه تا از کتاب‌های محبوب امسالم را از بخش «کتاب‌هایی که شاید دوست داشته باشید» پیدا کردم؛ نسخه الکترونیکی هم در چند ثانیه رسید.' },
+    { name: 'داوود کریمی', role: 'مدیر محصول', text: 'سریع‌ترین فرایند پرداختی که در یک کتاب‌فروشی دیده‌ام. دو ضربه و تمام. کتاب‌های جلد سخت هم همیشه با بسته‌بندی عالی می‌رسند.' },
+    { name: 'آمنه نوروزی', role: 'مادر دو فرزند و گرداننده حلقه کتاب‌خوانی', text: 'کتاب‌های ماهانه حلقه کتاب‌خوانی‌مان را از این‌جا سفارش می‌دهم. بخش کودک فوق‌العاده انتخاب شده و راهنماهای مطالعه بحث را خیلی راحت می‌کنند.' }
+  ],
+  posts: [
+    { title: 'چرا «نقشه‌نگار خاموش» رمان این فصل است', cat: 'نقد کتاب', excerpt: 'النا مارش با بلندپروازانه‌ترین و لطیف‌ترین کتابش برگشته است. دلیل این‌که خوانندگان نمی‌توانند زمینش بگذارند.' },
+    { title: 'چطور سالی ۵۰ کتاب بخوانیم، بدون عجله', cat: 'راهنمای مطالعه', excerpt: 'تندخوانی را فراموش کنید. پنج روش آرام که بیشتر خواندن را بی‌زحمت می‌کند؛ آزموده‌شده توسط تیم ما.' },
+    { title: 'گفت‌وگو با پریا رامان درباره آرام ساختن', cat: 'گفت‌وگو با نویسنده', excerpt: 'نویسنده «بنیان‌گذار چابک» از فرسودگی، کسالت و این‌که چرا بهترین شرکت‌ها از درون کمی کسل‌کننده به نظر می‌رسند می‌گوید.' }
+  ],
+  reviews: [
+    { name: 'الهام قربانی', title: 'نتوانستم زمینش بگذارم', text: 'نثری زیبا و ریتمی بی‌نقص. در یک آخر هفته تمامش کردم و بلافاصله دوباره شروع کردم تا جزئیاتی را که از دستم رفته بود پیدا کنم.' },
+    { name: 'مهدی علوی', title: 'بلافاصله محبوبم شد', text: 'از آن کتاب‌هایی که دلت می‌خواهد به دست دوستت بدهی. نسخه جلد سخت هم فوق‌العاده است؛ کاغذ سنگین و حروف‌چینی دلنشین.' },
+    { name: 'گلاره لطیفی', title: 'شروعی آرام، پایانی درخشان', text: 'پنجاه صفحه اول صبر می‌خواست، اما نتیجه‌اش فوق‌العاده است. فصل آخر یکی از بهترین‌هایی است که در این سال‌ها خوانده‌ام.' }
+  ]
+};
+if (typeof LANG !== 'undefined' && LANG === 'fa') {
+  CATEGORIES.forEach(c => { c.name = DATA_FA.categories[c.slug] || c.name; });
+  Object.entries(DATA_FA.authors).forEach(([k, v]) => Object.assign(AUTHORS[k], v));
+  BOOKS.forEach(b => Object.assign(b, DATA_FA.books[b.id]));
+  TESTIMONIALS.forEach((x, i) => Object.assign(x, DATA_FA.testimonials[i]));
+  POSTS.forEach((x, i) => Object.assign(x, DATA_FA.posts[i]));
+  REVIEWS.forEach((x, i) => Object.assign(x, DATA_FA.reviews[i]));
+}
