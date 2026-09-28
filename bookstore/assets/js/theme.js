@@ -5,6 +5,7 @@
 
 const THEMES = {
   teal:    { fa: 'سبزآبی',  en: 'Teal',        primary: '#0F7C82', secondary: '#68A936', accent: '#F4B323', surface: '#F7F8F2' },
+  startup: { fa: 'استارتاپی', en: 'Startup',     primary: '#006D77', secondary: '#E76F51', accent: '#FFB703' },
   crimson: { fa: 'قرمز',    en: 'Crimson',     primary: '#D6293E', secondary: '#0E9AA7', accent: '#FFB400' },
   navy:    { fa: 'سرمه‌ای', en: 'Navy & Gold', primary: '#1C2F5E', secondary: '#2F8A5B', accent: '#D99A2B' },
   violet:  { fa: 'بنفش',    en: 'Violet',      primary: '#5B3FC4', secondary: '#D6457B', accent: '#FFC247' },
