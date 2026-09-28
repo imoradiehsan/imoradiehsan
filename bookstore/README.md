@@ -23,7 +23,7 @@ A premium, responsive bookstore front end for selling physical books, eBooks and
 
 - **Hero banners:** the homepage opens with a full-width slider (autoplay, arrows, dots, swipe). To change an image, upload a new file with the **same name** to `assets/banners/` (desktop `banner-1.jpg` … 1920×480, optional mobile `banner-1-mobile.jpg` … 1080×675). Links, alt text, number of banners and autoplay speed are set in `banners` / `bannerInterval`.
 - **Prices (Toman):** all prices are in Toman (`۵۷۰٬۰۰۰ تومان` / `570,000 Toman`). `freeShippingThreshold`, `shippingStandard` and `shippingExpress` set the shipping rules; any `<span data-amount="…">` in page text is filled from these settings. No tax line is shown, since books are VAT-exempt in Iran.
-- **Color templates:** `teal`, `crimson`, `navy`, `violet`, `orange`, `forest` (defined in `assets/js/theme.js`; every shade is derived from three brand colors). The palette button in the page corner previews them live. When one is chosen, set `defaultTheme` to its id and `showThemeSwitcher: false`.
+- **Color templates:** `teal`, `startup` (teal `#006D77` + warm yellow `#FFB703`), `crimson`, `navy`, `violet`, `orange`, `forest` (defined in `assets/js/theme.js`; every shade is derived from three brand colors). The palette button in the page corner previews them live. When one is chosen, set `defaultTheme` to its id and `showThemeSwitcher: false`.
 
 ## Languages: فارسی / English
 
