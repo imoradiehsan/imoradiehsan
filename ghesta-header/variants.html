@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>۱۰ طرح هدر قسطا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Vazirmatn',system-ui,sans-serif;background:#f3f6fb;color:#0f1f3a;padding-bottom:80px}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input{font:inherit;border:0;outline:0;background:none;color:inherit}
+
+/* ---------- page chrome ---------- */
+.top{position:sticky;top:0;z-index:100;background:rgba(243,246,251,.9);backdrop-filter:blur(10px);border-bottom:1px solid #dfe6f2}
+.top__in{max-width:1280px;margin:auto;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.top h1{font-size:18px;font-weight:700}
+.seg{margin-inline-start:auto;display:flex;background:#e4ebf6;border-radius:12px;padding:4px}
+.seg button{padding:7px 16px;border-radius:9px;font-size:13px;font-weight:600;color:#4a5b78}
+.seg button.on{background:#fff;color:#0b5cad;box-shadow:0 2px 8px rgba(15,31,58,.12)}
+.wrap{max-width:1280px;margin:auto;padding:0 24px}
+.demo{margin-top:44px}
+.demo__label{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.demo__label b{font-size:18px}
+.demo__label span{color:#5b6b85;font-size:13.5px}
+.num{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#0b5cad;color:#fff;font-size:14px;font-weight:700;flex:none}
+
+/* ---------- stage (container for responsive queries) ---------- */
+.stage{
+  --brand:#0b5cad;
+  --hbg:rgba(255,255,255,.85);--hfg:#0f1f3a;--hov-bg:#eef4fd;--hov-fg:#0b5cad;
+  --dbg:#fff;--dfg:#0f1f3a;--dmut:#5b6b85;--dline:#e6ecf5;
+  --ico-bg:linear-gradient(135deg,#e3eeff,#f3f8ff);--ico-fg:#0b5cad;
+  --cta-bg:linear-gradient(135deg,#1a6dff,#0b5cad);--cta-fg:#fff;--cta-sh:0 10px 22px -10px rgba(26,109,255,.8);--cta-bd:transparent;
+  --ghost-bg:#eef4fd;--ghost-fg:#0b5cad;--logo:#0b5cad;--dot:#b9c2cf;--sk:rgba(15,31,58,.07);
+  --hh:72px;
+  container-type:inline-size;position:relative;overflow:hidden;
+  min-height:470px;border-radius:22px;border:1px solid #dbe3f0;
+  background:var(--stage,linear-gradient(180deg,#eaf2fc,#f7f9fd));
+  max-width:var(--sw,100%);margin-inline:auto;transition:max-width .35s ease;
+}
+.stage__body{padding:56px 28px;display:grid;gap:14px;justify-items:center}
+.sk{display:block;height:14px;width:min(560px,90%);border-radius:8px;background:var(--sk)}
+.sk--t{height:30px;width:min(420px,70%)}
+.sk--s{width:min(340px,60%)}
+.sk--b{height:120px;width:min(760px,100%);border-radius:18px}
+
+/* ---------- shared header pieces ---------- */
+.hd{position:relative;z-index:5;background:var(--hbg);color:var(--hfg)}
+.hd__in{display:flex;align-items:center;gap:22px;max-width:1240px;margin:auto;padding:0 24px;height:var(--hh)}
+.lg{display:flex;align-items:center;gap:9px;font-weight:800;font-size:25px;color:var(--logo);flex:none}
+.lg svg{width:36px;height:36px}
+.nv{display:flex;align-items:center;gap:2px}
+.ni{position:relative}
+.nl{position:relative;display:flex;align-items:center;gap:5px;padding:9px 13px;border-radius:12px;font-size:14.5px;font-weight:500;color:var(--hfg);transition:background .2s,color .2s;white-space:nowrap}
+.nl:hover,.ni:hover>.nl,.ni:focus-within>.nl{background:var(--hov-bg);color:var(--hov-fg)}
+.chev{width:13px;height:13px;opacity:.7;transition:transform .25s}
+.ni:hover .chev,.ni:focus-within .chev{transform:rotate(180deg)}
+
+.dp{position:absolute;top:calc(100% + 10px);inset-inline-start:0;min-width:310px;padding:10px;
+  background:var(--dbg);color:var(--dfg);border:1px solid var(--dline);border-radius:18px;
+  box-shadow:0 24px 50px -22px rgba(11,40,90,.45);
+  opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+.dp::before{content:"";position:absolute;top:-14px;left:0;right:0;height:14px}
+.ni:hover .dp,.ni:focus-within .dp{opacity:1;visibility:visible;transform:none}
+.dp a{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;transition:background .2s}
+.dp a:hover{background:var(--hov-bg)}
+.ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--ico-bg);color:var(--ico-fg);font-size:18px}
+.dp b{display:block;font-size:14px;font-weight:600}
+.dp small{display:block;font-size:12px;color:var(--dmut);margin-top:2px}
+
+.ac{margin-inline-start:auto;display:flex;align-items:center;gap:10px}
+.bt{display:inline-flex;align-items:center;gap:8px;padding:10px 19px;border-radius:14px;font-size:14px;font-weight:600;white-space:nowrap;transition:transform .2s,box-shadow .2s,background .2s}
+.bt svg{width:18px;height:18px}
+.bt--cta{background:var(--cta-bg);color:var(--cta-fg);box-shadow:var(--cta-sh);border:1.5px solid var(--cta-bd)}
+.bt--cta:hover{transform:translateY(-2px)}
+.bt--ghost{background:var(--ghost-bg);color:var(--ghost-fg)}
+.bt--ghost:hover{filter:brightness(.96)}
+
+.bg{display:none;width:44px;height:44px;border-radius:12px;background:var(--ghost-bg);place-items:center;flex:none}
+.bg span,.bg span::before,.bg span::after{display:block;width:20px;height:2px;background:var(--ghost-fg);border-radius:2px;position:relative;transition:.25s}
+.bg span::before,.bg span::after{content:"";position:absolute;right:0}
+.bg span::before{top:-6px}.bg span::after{top:6px}
+.bg[aria-expanded=true] span{background:transparent}
+.bg[aria-expanded=true] span::before{top:0;transform:rotate(45deg)}
+.bg[aria-expanded=true] span::after{top:0;transform:rotate(-45deg)}
+
+.mp{position:absolute;top:100%;left:0;right:0;background:var(--dbg);color:var(--dfg);max-height:0;overflow:hidden;opacity:0;visibility:hidden;transition:max-height .35s ease,opacity .25s,visibility .25s;border-radius:0 0 20px 20px;box-shadow:0 30px 40px -24px rgba(11,40,90,.4)}
+.mp.open{max-height:560px;overflow:auto;opacity:1;visibility:visible}
+.mp__in{padding:6px 18px 20px}
+.mp details{border-bottom:1px solid var(--dline)}
+.mp summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:15px 4px;font-weight:600;cursor:pointer}
+.mp summary::-webkit-details-marker{display:none}
+.mp details[open] .chev{transform:rotate(180deg)}
+.mp details a{display:block;padding:10px 12px;color:var(--dmut);font-size:14px;border-radius:10px}
+.mp details a:hover{background:var(--hov-bg);color:var(--hov-fg)}
+.mp .plain{display:block;padding:15px 4px;font-weight:600;border-bottom:1px solid var(--dline)}
+.mp .bt{width:100%;justify-content:center;margin-top:18px;padding:14px}
+.stage :focus-visible{outline:2px solid #1a6dff;outline-offset:2px}
+
+/* ---------- V1 glass classic ---------- */
+.v1 .hd{border-bottom:1px solid #e3eaf5;backdrop-filter:blur(14px)}
+
+/* ---------- V2 floating capsule ---------- */
+.v2{--stage:linear-gradient(135deg,#d9e7ff,#efe4ff 60%,#ffe9d6);--hbg:rgba(255,255,255,.72);--hh:64px}
+.v2 .hd{margin:18px 20px 0;border-radius:999px;border:1px solid rgba(255,255,255,.9);box-shadow:0 18px 40px -18px rgba(40,60,140,.4);backdrop-filter:blur(16px)}
+.v2 .hd__in{padding:0 12px 0 10px;max-width:none}
+.v2 .nl{border-radius:999px}
+.v2 .bt{border-radius:999px}
+.v2 .mp{top:calc(100% + 8px);border-radius:24px}
+
+/* ---------- V3 dark navy ---------- */
+.v3{--stage:linear-gradient(180deg,#0c1a35,#101f3f);--hbg:linear-gradient(90deg,#0a1730,#0f2247);--hfg:#e8eefc;--hov-bg:rgba(255,255,255,.08);--hov-fg:#fff;
+  --dbg:#0f1e3d;--dfg:#eaf0ff;--dmut:#8fa3c7;--dline:rgba(255,255,255,.09);--ico-bg:rgba(26,109,255,.2);--ico-fg:#8dbaff;
+  --cta-bg:linear-gradient(135deg,#ffb020,#ff7a3d);--cta-fg:#1b1200;--cta-sh:0 10px 24px -10px rgba(255,150,40,.8);
+  --ghost-bg:rgba(255,255,255,.09);--ghost-fg:#dbe6ff;--logo:#fff;--dot:#6f86b3;--sk:rgba(255,255,255,.08)}
+.v3 .hd{border-bottom:1px solid rgba(255,255,255,.08)}
+.v3 .hd::after{content:"";position:absolute;inset:auto 0 -1px 0;height:1px;background:linear-gradient(90deg,transparent,#3d86ff,transparent)}
+
+/* ---------- V4 mega menu ---------- */
+.v4 .hd{border-bottom:1px solid #e3eaf5}
+.v4 .ni{position:static}
+.v4 .hd__in{position:relative}
+.v4 .dp{inset-inline-start:16px;inset-inline-end:16px;min-width:0;padding:16px;display:grid;grid-template-columns:1fr 1fr 250px;gap:6px;border-radius:22px}
+.promo{grid-column:3;grid-row:1 / span 2;border-radius:16px;padding:20px;color:#fff;background:radial-gradient(circle at 20% 0%,#4b8dff,#0b5cad 70%);display:flex;flex-direction:column;gap:8px;justify-content:flex-end;min-height:150px}
+.promo b{font-size:16px}.promo p{font-size:12.5px;opacity:.85;line-height:1.8}
+.promo span{align-self:flex-start;background:#fff;color:#0b5cad;font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:10px}
+
+/* ---------- V5 two-tier ---------- */
+.tb{background:#0a2b57;color:#cfe0fb;font-size:12.5px}
+.tb__in{max-width:1240px;margin:auto;padding:0 24px;height:38px;display:flex;align-items:center;gap:22px}
+.tb__in a:hover{color:#fff}
+.tb__in .sp{margin-inline-start:auto;display:flex;gap:20px}
+.tb__in em{font-style:normal;color:#ffc861;font-weight:600}
+.v5 .hd{background:#fff}
+.v5 .hd__in.main{border-bottom:1px solid #e6ecf5}
+
+/* ---------- V6 centered logo ---------- */
+.v6 .hd{background:#fff;border-bottom:1px solid #e6ecf5}
+.v6 .hd__in{display:grid;grid-template-columns:1fr auto 1fr}
+.v6 .side{display:flex;align-items:center;justify-content:flex-end;gap:14px}
+.v6 .side .ac{margin:0}
+.v6 .lg{font-size:28px}
+
+/* ---------- V7 brand bar ---------- */
+.v7{--hbg:linear-gradient(115deg,#0a4f99,#1a6dff);--hfg:#fff;--hov-bg:rgba(255,255,255,.16);--hov-fg:#fff;
+  --dbg:#fff;--dfg:#0f1f3a;--hov-bg-d:#eef4fd;
+  --cta-bg:#ffb400;--cta-fg:#3a2600;--cta-sh:0 10px 22px -10px rgba(0,0,0,.5);--ghost-bg:rgba(255,255,255,.16);--ghost-fg:#fff;--logo:#fff;--dot:rgba(255,255,255,.55)}
+.v7 .dp a:hover,.v7 .mp details a:hover{background:#eef4fd;color:#0f1f3a}
+.v7 .dp{--ico-bg:linear-gradient(135deg,#e3eeff,#f3f8ff);--ico-fg:#0b5cad}
+.v7 .mp{--dbg:#fff}
+
+/* ---------- V8 minimal underline ---------- */
+.v8{--hbg:transparent;--hov-bg:transparent;--cta-bg:transparent;--cta-fg:#0b5cad;--cta-bd:#0b5cad;--cta-sh:none}
+.v8 .hd{border-bottom:1px solid #d8e2f1}
+.v8 .nl{border-radius:0;padding:10px 14px}
+.v8 .nl::after{content:"";position:absolute;bottom:0;left:14px;right:14px;height:2.5px;border-radius:2px;background:linear-gradient(90deg,#1a6dff,#0b5cad);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.v8 .ni:hover>.nl::after,.v8 .ni:focus-within>.nl::after,.v8 .nl:hover::after{transform:scaleX(1)}
+.v8 .hd__in{height:78px}
+.v8 .bt--cta:hover{background:#0b5cad;color:#fff}
+
+/* ---------- V9 soft segmented ---------- */
+.v9{--stage:linear-gradient(160deg,#e9f1ff,#fdf3e8);--hbg:#fff;--hov-bg:#fff;--hh:74px}
+.v9 .hd{margin:16px 20px 0;border-radius:26px;box-shadow:0 14px 40px -20px rgba(11,60,140,.35);border:1px solid #edf1f8}
+.v9 .hd__in{max-width:none;padding:0 16px 0 14px}
+.v9 .nv{background:#eef3fb;padding:5px;border-radius:999px;margin-inline-start:6px}
+.v9 .nl{border-radius:999px;padding:8px 15px;color:#33456a}
+.v9 .nl:hover,.v9 .ni:hover>.nl,.v9 .ni:focus-within>.nl{background:#fff;color:#0b5cad;box-shadow:0 3px 10px -3px rgba(11,60,140,.25)}
+.v9 .bt{border-radius:999px}
+.v9 .mp{top:calc(100% + 8px);border-radius:24px}
+
+/* ---------- V10 e-commerce / search first ---------- */
+.v10 .hd{background:#fff;border-bottom:1px solid #e6ecf5}
+.v10 .row1{height:74px}
+.search{flex:1;max-width:520px;display:flex;align-items:center;gap:10px;background:#f0f4fb;border:1.5px solid transparent;border-radius:14px;padding:0 14px;height:46px;color:#6b7c99;transition:.2s}
+.search:focus-within{background:#fff;border-color:#1a6dff;box-shadow:0 0 0 4px rgba(26,109,255,.12)}
+.search svg{width:19px;height:19px;flex:none}
+.search input{flex:1;font-size:14px;min-width:0}
+.row2{background:#f7faff;border-top:1px solid #edf1f8}
+.row2 .hd__in{height:52px}
+.row2 .nl{font-size:14px;padding:8px 12px}
+.row2 .tl{font-size:13px;color:#5b6b85;padding:6px 10px;border-radius:8px}
+.row2 .tl:hover{background:#e9f0fc;color:#0b5cad}
+.row2 .ac{gap:4px}
+.badge{font-size:11px;font-weight:700;background:#ffefc7;color:#8a5a00;padding:2px 8px;border-radius:99px}
+
+/* ---------- responsive (container-based) ---------- */
+@container (max-width:980px){
+  .nv,.bt--ghost,.tb__in .sp,.row2,.v4 .promo{display:none}
+  .bg{display:grid}
+  .hd__in{padding:0 16px;height:66px}
+  .v6 .hd__in{display:flex}
+  .v6 .side{margin-inline-start:auto}
+  .v6 .lg{font-size:25px}
+  .v2 .hd,.v9 .hd{margin:12px 12px 0;border-radius:22px}
+  .v2 .hd__in,.v9 .hd__in{padding:0 12px}
+  .v10 .hd__in.row1{height:auto;flex-wrap:wrap;padding:12px 16px}
+  .v10 .search{order:3;flex:1 1 100%;max-width:none}
+  .stage__body{padding:36px 18px}
+}
+@container (max-width:520px){
+  .lg{font-size:22px}.lg svg{width:32px;height:32px}
+  .bt--cta{padding:10px 14px}
+  .bt--cta .t{display:none}
+  .tb__in{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="top"><div class="top__in">
+  <h1>۱۰ طرح هدر برای قسطا</h1>
+  <div class="seg" role="group" aria-label="اندازه پیش‌نمایش">
+    <button class="on" data-w="100%">دسکتاپ</button>
+    <button data-w="768px">تبلت</button>
+    <button data-w="390px">موبایل</button>
+  </div>
+</div></div>
+
+<main class="wrap" id="app"></main>
+
+<script>
+const G=[
+ {t:'خدمات',i:[['💳','قسطا کارت','خرید اقساطی بدون ضامن و چک'],['🧭','مراحل دریافت اعتبار','در ۴ قدم ساده، کاملاً آنلاین'],['🧮','محاسبه اقساط','قسط ماهانه را همین حالا ببین'],['📄','شرایط و مدارک','هرچه برای شروع لازم است']]},
+ {t:'سرویس‌ها',i:[['🛍️','خرید اقساطی','از فروشگاه‌های سراسر کشور'],['🏢','قسطا برای سازمان‌ها','اعتبار خرید ویژه کارکنان'],['🏪','قسطا برای فروشگاه‌ها','فروش بیشتر با پرداخت اقساطی']]},
+ {t:'فروشگاه',i:[['🌐','فروشگاه‌های آنلاین','خرید از خانه، پرداخت در ماه‌های بعد'],['📍','فروشگاه‌های حضوری','نزدیک‌ترین فروشگاه به شما'],['🏷️','دسته‌بندی‌ها','موبایل، لوازم خانگی، سفر و ...']]},
+ {t:'مجله',i:[['📚','آموزش‌های مالی','مدیریت پول و قسط هوشمند'],['🛒','راهنمای خرید','مقایسه و انتخاب بهتر'],['📰','اخبار قسطا','تازه‌ترین اتفاقات و همکاری‌ها']]}
+];
+const chev='<svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg>';
+const LOGIN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>';
+const logo=`<a class="lg" href="#" aria-label="قسطا"><svg viewBox="0 0 40 40" fill="none"><path d="M32 8A16 16 0 1 0 32 32" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><circle cx="33" cy="12" r="2.6" fill="var(--dot)"/><circle cx="35.6" cy="20" r="2.6" fill="var(--dot)"/><circle cx="33" cy="28" r="2.6" fill="var(--dot)"/></svg><span>قسطا</span></a>`;
+const items=g=>g.i.map(x=>`<a href="#"><span class="ico">${x[0]}</span><span><b>${x[1]}</b><small>${x[2]}</small></span></a>`).join('');
+const promo='<div class="promo"><b>قسطا کارت</b><p>امروز درخواست بده، فردا اعتبارت فعاله. بدون ضامن، بدون چک.</p><span>دریافت اعتبار ←</span></div>';
+const nav=(gs,mega)=>gs.map(g=>`<div class="ni"><button class="nl" aria-haspopup="true">${g.t}${chev}</button><div class="dp">${items(g)}${mega?promo:''}</div></div>`).join('');
+const about='<div class="ni"><a class="nl" href="#">درباره‌ما</a></div>';
+const cta=`<a href="#" class="bt bt--cta">${LOGIN}<span class="t">ورود / ثبت‌نام</span></a>`;
+const ghost='<a href="#" class="bt bt--ghost">سوالات متداول</a>';
+const burger='<button class="bg" aria-label="منو" aria-expanded="false"><span></span></button>';
+const panel=`<div class="mp"><div class="mp__in">${G.map(g=>`<details><summary>${g.t}${chev}</summary>${g.i.map(x=>`<a href="#">${x[1]}</a>`).join('')}</details>`).join('')}<a class="plain" href="#">درباره‌ما</a><a class="plain" href="#">سوالات متداول</a><a href="#" class="bt bt--cta">${LOGIN}ورود / ثبت‌نام</a></div></div>`;
+const std=(mega)=>`<header class="hd"><div class="hd__in">${logo}<nav class="nv">${nav(G,mega)}${about}</nav><div class="ac">${ghost}${cta}${burger}</div></div>${panel}</header>`;
+const search='<label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" placeholder="جستجوی فروشگاه یا برند…"></label>';
+
+const V=[
+ ['شیشه‌ای کلاسیک','هدر چسبان با بلور ملایم، زیرمنوی کارتی؛ همان طرح اول با ظاهر تمیزتر.','v1',()=>std()],
+ ['کپسول شناور','هدر گرد و معلق روی صفحه با سایه نرم؛ مدرن و سبک.','v2',()=>std()],
+ ['سرمه‌ای تیره','حس حرفه‌ای و مالی/بانکی، دکمه نارنجی برای جلب نگاه.','v3',()=>std()],
+ ['مگامنو','زیرمنوی تمام‌عرض با کارت پروموشن قسطا کارت.','v4',()=>std(true)],
+ ['دو ردیفه','نوار اعتمادساز بالا (بدون ضامن، پشتیبانی) و منوی اصلی زیر آن.','v5',()=>`<div class="tb"><div class="tb__in"><span>✅ <em>خرید اقساطی</em> بدون ضامن و بدون چک</span><div class="sp"><a href="#">سوالات متداول</a><a href="#">پشتیبانی</a><a href="#">پیگیری درخواست</a></div></div></div><header class="hd"><div class="hd__in main">${logo}<nav class="nv">${nav(G)}${about}</nav><div class="ac">${cta}${burger}</div></div>${panel}</header>`],
+ ['لوگوی وسط','منو دو طرف لوگو تقسیم شده؛ متقارن و برند‌محور.','v6',()=>`<header class="hd"><div class="hd__in"><nav class="nv nv--a">${nav(G.slice(0,2))}</nav>${logo}<div class="side"><nav class="nv">${nav(G.slice(2))}${about}</nav><div class="ac">${cta}${burger}</div></div></div>${panel}</header>`],
+ ['نوار رنگی برند','پس‌زمینه گرادیان آبی، متن سفید و دکمه زرد پررنگ.','v7',()=>std()],
+ ['مینیمال با خط زیرین','شفاف و ساده، با انیمیشن خط زیر هر آیتم و دکمه توخالی.','v8',()=>std()],
+ ['کپسول نرم (Segmented)','آیتم‌ها داخل یک کپسول ملایم، هدر کارتی با گوشه‌های گرد.','v9',()=>std()],
+ ['فروشگاهی با جستجو','ردیف بالا: جستجو و ورود، ردیف پایین: منو؛ مناسب بخش فروشگاه‌ها.','v10',()=>`<header class="hd"><div class="hd__in row1">${logo}${search}<div class="ac">${cta}${burger}</div></div><div class="row2"><div class="hd__in"><nav class="nv">${nav(G)}${about}</nav><div class="ac"><a class="tl" href="#">سوالات متداول</a><a class="tl" href="#">پشتیبانی</a><span class="badge">جدید</span></div></div></div>${panel}</header>`]
+];
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+document.getElementById('app').innerHTML=V.map((v,i)=>`
+<section class="demo">
+  <div class="demo__label"><span class="num">${fa(i+1)}</span><b>${v[0]}</b><span>${v[1]}</span></div>
+  <div class="stage ${v[2]}">${v[3]()}<div class="stage__body"><i class="sk sk--t"></i><i class="sk"></i><i class="sk sk--s"></i><i class="sk sk--b"></i></div></div>
+</section>`).join('');
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.bg');
+  if(b){const p=b.closest('.hd').querySelector('.mp');const o=p.classList.toggle('open');b.setAttribute('aria-expanded',o)}
+  const s=e.target.closest('.seg button');
+  if(s){document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x===s));
+    document.documentElement.style.setProperty('--sw',s.dataset.w);
+    document.querySelectorAll('.mp.open').forEach(p=>p.classList.remove('open'));}
+});
+</script>
+</body>
+</html>
