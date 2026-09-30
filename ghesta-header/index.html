@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>هدر قسطا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#0b5cad;
+  --brand-2:#1a6dff;
+  --accent:#f5a623;
+  --ink:#0f1f3a;
+  --muted:#5b6b85;
+  --line:#e6ecf5;
+  --bg:#f5f8fd;
+  --surface:#ffffff;
+  --radius:16px;
+  --shadow:0 20px 50px -20px rgba(11,92,173,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Vazirmatn',system-ui,sans-serif;background:linear-gradient(180deg,#eaf2fc,var(--bg));color:var(--ink);min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+
+/* ---------- Header ---------- */
+.header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,255,255,.78);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid transparent;
+  transition:box-shadow .25s,border-color .25s,background .25s;
+}
+.header.scrolled{border-color:var(--line);box-shadow:0 8px 30px -18px rgba(15,31,58,.3);background:rgba(255,255,255,.92)}
+.header__in{max-width:1240px;margin:auto;height:76px;padding:0 24px;display:flex;align-items:center;gap:28px}
+
+/* logo */
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:26px;color:var(--brand);letter-spacing:-.5px}
+.logo svg{width:38px;height:38px}
+
+/* nav */
+.nav{display:flex;align-items:center;gap:4px;margin-inline-start:12px}
+.nav__item{position:relative}
+.nav__link{
+  display:flex;align-items:center;gap:6px;padding:10px 14px;border-radius:12px;
+  font-size:15px;font-weight:500;color:var(--ink);transition:background .2s,color .2s;
+}
+.nav__link:hover,.nav__item:focus-within>.nav__link,.nav__item:hover>.nav__link{background:#eef4fd;color:var(--brand)}
+.chev{width:14px;height:14px;transition:transform .25s;opacity:.7}
+.nav__item:hover .chev,.nav__item:focus-within .chev{transform:rotate(180deg)}
+
+/* dropdown */
+.drop{
+  position:absolute;top:calc(100% + 10px);inset-inline-start:0;min-width:300px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:10px;
+  opacity:0;visibility:hidden;transform:translateY(8px);
+  transition:opacity .2s,transform .2s,visibility .2s;
+}
+.drop::before{content:"";position:absolute;top:-12px;left:0;right:0;height:12px} /* hover bridge */
+.nav__item:hover .drop,.nav__item:focus-within .drop{opacity:1;visibility:visible;transform:none}
+.drop a{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;transition:background .2s}
+.drop a:hover{background:#f0f6ff}
+.ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#e3eeff,#f3f8ff);color:var(--brand);font-size:18px}
+.drop b{display:block;font-size:14px;font-weight:600}
+.drop small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+
+/* actions */
+.actions{margin-inline-start:auto;display:flex;align-items:center;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:14px;font-weight:600;font-size:14px;transition:transform .2s,box-shadow .2s,background .2s}
+.btn--primary{color:#fff;background:linear-gradient(135deg,var(--brand-2),var(--brand));box-shadow:0 10px 22px -10px rgba(26,109,255,.8)}
+.btn--primary:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(26,109,255,.9)}
+.btn--ghost{color:var(--brand);background:#eef4fd}
+.btn--ghost:hover{background:#e0ecfc}
+.btn svg{width:18px;height:18px}
+
+/* burger */
+.burger{display:none;width:44px;height:44px;border-radius:12px;background:#eef4fd;place-items:center}
+.burger span,.burger span::before,.burger span::after{display:block;width:20px;height:2px;background:var(--brand);border-radius:2px;position:relative;transition:.25s}
+.burger span::before,.burger span::after{content:"";position:absolute;right:0}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+.burger[aria-expanded=true] span{background:transparent}
+.burger[aria-expanded=true] span::before{top:0;transform:rotate(45deg)}
+.burger[aria-expanded=true] span::after{top:0;transform:rotate(-45deg)}
+
+/* mobile drawer */
+.drawer{position:fixed;inset:76px 0 0 0;background:var(--surface);padding:16px 20px 28px;overflow:auto;
+  transform:translateX(100%);transition:transform .3s ease;z-index:40;visibility:hidden}
+.drawer.open{transform:none;visibility:visible}
+.drawer details{border-bottom:1px solid var(--line)}
+.drawer summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:16px 4px;font-weight:600;cursor:pointer}
+.drawer summary::-webkit-details-marker{display:none}
+.drawer details[open] .chev{transform:rotate(180deg)}
+.drawer details a{display:block;padding:10px 12px;color:var(--muted);font-size:14px;border-radius:10px}
+.drawer details a:hover{background:#f0f6ff;color:var(--brand)}
+.drawer .plain{display:block;padding:16px 4px;font-weight:600;border-bottom:1px solid var(--line)}
+.drawer .btn{width:100%;justify-content:center;margin-top:20px;padding:14px}
+
+@media (max-width:980px){
+  .nav,.actions .btn--ghost{display:none}
+  .burger{display:grid}
+  .header__in{height:68px;padding:0 16px}
+  .drawer{inset-block-start:68px}
+}
+
+/* demo hero (remove in production) */
+.hero{max-width:1240px;margin:70px auto;padding:0 24px;text-align:center}
+.hero h1{font-size:clamp(28px,4vw,46px);line-height:1.5}
+.hero p{color:var(--muted);margin-top:14px}
+</style>
+</head>
+<body>
+
+<header class="header" id="header">
+  <div class="header__in">
+
+    <a href="/" class="logo" aria-label="قسطا">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M32 8A16 16 0 1 0 32 32" stroke="#0b5cad" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="33" cy="12" r="2.6" fill="#b9c2cf"/><circle cx="35.6" cy="20" r="2.6" fill="#b9c2cf"/><circle cx="33" cy="28" r="2.6" fill="#b9c2cf"/>
+      </svg>
+      قسطا
+    </a>
+
+    <nav class="nav" aria-label="منوی اصلی">
+
+      <div class="nav__item">
+        <button class="nav__link" aria-haspopup="true">خدمات
+          <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></button>
+        <div class="drop">
+          <a href="#"><span class="ico">💳</span><span><b>قسطا کارت</b><small>خرید اقساطی بدون ضامن و چک</small></span></a>
+          <a href="#"><span class="ico">🧭</span><span><b>مراحل دریافت اعتبار</b><small>در ۴ قدم ساده، فقط آنلاین</small></span></a>
+          <a href="#"><span class="ico">🧮</span><span><b>محاسبه اقساط</b><small>قسط ماهانه را همین حالا ببین</small></span></a>
+          <a href="#"><span class="ico">📄</span><span><b>شرایط و مدارک</b><small>هرچه برای شروع لازم است</small></span></a>
+        </div>
+      </div>
+
+      <div class="nav__item">
+        <button class="nav__link" aria-haspopup="true">سرویس‌ها
+          <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></button>
+        <div class="drop">
+          <a href="#"><span class="ico">🛍️</span><span><b>خرید اقساطی</b><small>از هزاران فروشگاه سراسر کشور</small></span></a>
+          <a href="#"><span class="ico">🏢</span><span><b>قسطا برای سازمان‌ها</b><small>اعتبار خرید ویژه کارکنان</small></span></a>
+          <a href="#"><span class="ico">🏪</span><span><b>قسطا برای فروشگاه‌ها</b><small>فروش بیشتر با پرداخت اقساطی</small></span></a>
+        </div>
+      </div>
+
+      <div class="nav__item">
+        <button class="nav__link" aria-haspopup="true">فروشگاه
+          <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></button>
+        <div class="drop">
+          <a href="#"><span class="ico">🌐</span><span><b>فروشگاه‌های آنلاین</b><small>خرید از خانه، پرداخت در ماه‌های بعد</small></span></a>
+          <a href="#"><span class="ico">📍</span><span><b>فروشگاه‌های حضوری</b><small>نزدیک‌ترین فروشگاه به شما</small></span></a>
+          <a href="#"><span class="ico">🏷️</span><span><b>دسته‌بندی‌ها</b><small>موبایل، لوازم خانگی، سفر و ...</small></span></a>
+        </div>
+      </div>
+
+      <div class="nav__item">
+        <button class="nav__link" aria-haspopup="true">مجله
+          <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></button>
+        <div class="drop">
+          <a href="#"><span class="ico">📚</span><span><b>آموزش‌های مالی</b><small>مدیریت پول و قسط هوشمند</small></span></a>
+          <a href="#"><span class="ico">🛒</span><span><b>راهنمای خرید</b><small>مقایسه و انتخاب بهتر</small></span></a>
+          <a href="#"><span class="ico">📰</span><span><b>اخبار قسطا</b><small>تازه‌ترین اتفاقات و همکاری‌ها</small></span></a>
+        </div>
+      </div>
+
+      <div class="nav__item">
+        <a class="nav__link" href="#">درباره‌ما</a>
+      </div>
+    </nav>
+
+    <div class="actions">
+      <a href="#" class="btn btn--ghost">سوالات متداول</a>
+      <a href="//panel.ghesta.ir" class="btn btn--primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        ورود / ثبت‌نام
+      </a>
+      <button class="burger" id="burger" aria-label="منو" aria-expanded="false" aria-controls="drawer"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile menu -->
+<div class="drawer" id="drawer">
+  <details><summary>خدمات <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></summary>
+    <a href="#">قسطا کارت</a><a href="#">مراحل دریافت اعتبار</a><a href="#">محاسبه اقساط</a><a href="#">شرایط و مدارک</a></details>
+  <details><summary>سرویس‌ها <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></summary>
+    <a href="#">خرید اقساطی</a><a href="#">قسطا برای سازمان‌ها</a><a href="#">قسطا برای فروشگاه‌ها</a></details>
+  <details><summary>فروشگاه <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></summary>
+    <a href="#">فروشگاه‌های آنلاین</a><a href="#">فروشگاه‌های حضوری</a><a href="#">دسته‌بندی‌ها</a></details>
+  <details><summary>مجله <svg class="chev" viewBox="0 0 20 20" fill="currentColor"><path d="M5 7l5 6 5-6z"/></svg></summary>
+    <a href="#">آموزش‌های مالی</a><a href="#">راهنمای خرید</a><a href="#">اخبار قسطا</a></details>
+  <a class="plain" href="#">درباره‌ما</a>
+  <a class="plain" href="#">سوالات متداول</a>
+  <a href="//panel.ghesta.ir" class="btn btn--primary">ورود / ثبت‌نام</a>
+</div>
+
+<section class="hero">
+  <h1>خرید اقساطی، بدون ضامن و بدون چک</h1>
+  <p>این بخش فقط برای نمایش اسکرول هدر است.</p>
+  <div style="height:120vh"></div>
+</section>
+
+<script>
+  const header = document.getElementById('header');
+  const burger = document.getElementById('burger');
+  const drawer = document.getElementById('drawer');
+  addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 8), {passive:true});
+  burger.addEventListener('click', () => {
+    const open = drawer.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+</script>
+</body>
+</html>
