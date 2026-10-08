@@ -205,53 +205,50 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
 
 <script>
 const C = 250, RO = 194, RI = 120, CR = 16, GAP = 24;
-const D = GAP / 2 + CR, T = RO - RI, MID_R = (RO + RI) / 2;
+const D = GAP / 2 + CR, ro = RO - CR, ri = RI + CR;
 const toRad = d => d * Math.PI / 180, toDeg = r => r * 180 / Math.PI;
+const oOff = toDeg(Math.asin(D / ro)), iOff = toDeg(Math.asin(D / ri));
 
 const BLUE = [125, 353];
 const SEGS = [[353, 397], [397, 441], [441, 485]];
 
 const pt = (r, a) => [C + r * Math.cos(toRad(a - 90)), C + r * Math.sin(toRad(a - 90))];
 
-// Ring geometry for a thickness factor (1 = the logo; the arc thins while it stretches).
 // The tipped head end comes to an arrow-like point as in the logo.
-function geom(thin = 1) {
-  const t = T * thin, outer = MID_R + t / 2, inner = MID_R - t / 2;
-  const ro = outer - CR, ri = inner + CR, rt = outer - 0.42 * t;
-  const off = (r, extra = 0) => toDeg(Math.asin((D + extra) / r));
-  return { ro, ri, rt, oOff: off(ro), iOff: off(ri), tOff: off(rt), obOff: off(ro, 0.36 * t), ibOff: off(ri, 0.14 * t) };
-}
-const G1 = geom(1);
+const T = RO - RI;
+const rt = RO - 0.42 * T;
+const headOff = (r, extra) => toDeg(Math.asin((D + extra) / r));
+const tOff = headOff(rt, 0), obOff = headOff(ro, 0.36 * T), ibOff = headOff(ri, 0.14 * T);
 
 // Annular sector between two cut lines; constant-width gaps and rounded corners
 // come from insetting by D and stroking with a round join of width 2*CR.
 // Returned as numbers + flags so the SVG export can morph between frames.
-function sectorShape(a, b, tipped, g = G1) {
-  const oa = a + g.oOff, ia = a + g.iOff;
-  const ob = b - (tipped ? g.obOff : g.oOff), ib = b - (tipped ? g.ibOff : g.iOff);
-  const n = [...pt(g.ro, oa), ...pt(g.ro, ob)];
-  if (tipped) n.push(...pt(g.rt, b - g.tOff));
-  n.push(...pt(g.ri, ib), ...pt(g.ri, ia), g.ro, g.ri);
+function sectorShape(a, b, tipped) {
+  const oa = a + oOff, ia = a + iOff;
+  const ob = b - (tipped ? obOff : oOff), ib = b - (tipped ? ibOff : iOff);
+  const n = [...pt(ro, oa), ...pt(ro, ob)];
+  if (tipped) n.push(...pt(rt, b - tOff));
+  n.push(...pt(ri, ib), ...pt(ri, ia));
   return { n, tipped, lo: ob - oa > 180 ? 1 : 0, li: ib - ia > 180 ? 1 : 0 };
 }
 function shapeD({ n, tipped, lo, li }, dp = 2) {
   let i = 0;
-  const f = v => +v.toFixed(dp);
-  const R = [f(n[n.length - 2]), f(n[n.length - 1])];
-  const p = () => `${f(n[i++])} ${f(n[i++])}`;
-  let d = `M${p()}A${R[0]} ${R[0]} 0 ${lo} 1 ${p()}`;
+  const p = () => `${+n[i++].toFixed(dp)} ${+n[i++].toFixed(dp)}`;
+  let d = `M${p()}A${ro} ${ro} 0 ${lo} 1 ${p()}`;
   if (tipped) d += `L${p()}`;
-  return d + `L${p()}A${R[1]} ${R[1]} 0 ${li} 0 ${p()}Z`;
+  return d + `L${p()}A${ri} ${ri} 0 ${li} 0 ${p()}Z`;
 }
 
 const clamp = x => x < 0 ? 0 : x > 1 ? 1 : x;
 const span = (t, a, b) => clamp((t - a) / (b - a));
 const inOut = x => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const outBack = x => { const c1 = 1.7, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
 const inCubic = x => x * x * x;
 
 const $ = id => document.getElementById(id);
 const blue = $("blue");
 const segEls = [$("s0"), $("s1"), $("s2")];
+const MID_R = (RO + RI) / 2;
 
 const DEFAULTS = { spin: 2.4, speedVar: 0.6, delay: 0, stagger: 0.17, pop: 0.4, hold: 0.5, continuous: true };
 const cfg = { ...DEFAULTS };
@@ -267,17 +264,7 @@ const dotStart = i => Math.max(headHome() + cfg.delay + i * cfg.stagger, swallow
 // In continuous mode one cycle is exactly one turn, so the arc never stops.
 const cycle = () => cfg.continuous ? cfg.spin
   : Math.max(cfg.spin, dotStart(2) + 0.05, Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold);
-// A dot fades in from 70% size, sliding back from the tail's side (popP 0..1); while the
-// head sweeps over it (e 0..1) it is dragged a few degrees along and shrinks away.
-const out3 = x => 1 - Math.pow(1 - x, 3);
-const DRAG_IN = 10, DRAG_OUT = 6, POP_FROM = 0.7;
-const dotVis = (p, e) => ({
-  sc: (POP_FROM + (1 - POP_FROM) * out3(p)) * (1 - 0.55 * e),
-  o: out3(p) * (1 - e),
-  rot: DRAG_IN * (1 - out3(p)) + DRAG_OUT * e,
-});
-// The arc thins by up to a quarter of its width as it stretches.
-const thinFor = stretch => 1 - 0.25 * (1 - Math.exp(-Math.max(0, stretch) / 45));
+const popSc = p => 0.45 + 0.55 * outBack(p), popO = p => clamp(p * 1.8);
 
 // Continuous mode: speed swings with the turn but never reaches zero (speedVar < 1).
 // The head runs the same curve a little ahead, which stretches the arc mid-turn;
@@ -308,10 +295,13 @@ function contState(time) {
     const { tsw, tse, popStart } = contDotTimes(i);
     const sinceSw = m(time - tsw), sincePop = m(time - popStart);
     const p = clamp(sincePop / cfg.pop);
-    return dotVis(p, sinceSw < sincePop ? inCubic(clamp(sinceSw / (tse - tsw))) : 0);
+    if (sinceSw < sincePop) {
+      const e = inCubic(clamp(sinceSw / (tse - tsw)));
+      return { sc: popSc(p) * (1 - 0.55 * e), o: popO(p) * (1 - e) };
+    }
+    return { sc: popSc(p), o: popO(p) };
   });
-  const r = contRot(time);
-  return { ...r, thin: thinFor(r.headRot - r.tailRot), segs };
+  return { ...contRot(time), segs };
 }
 
 // time in seconds within one cycle; the full logo at 0 and at the cycle end keeps the loop seamless.
@@ -325,11 +315,13 @@ function state(time) {
     if (time < dotStart(i)) {
       // The previous cycle's pop may still be finishing when the hold is negative.
       const prev = clamp((time + cycle() - dotStart(i)) / cfg.pop);
-      return dotVis(prev, inCubic(span(headRot, a - BLUE[1], a - BLUE[1] + 30)));
+      const e = inCubic(span(headRot, a - BLUE[1], a - BLUE[1] + 30));
+      return { sc: popSc(prev) * (1 - 0.55 * e), o: popO(prev) * (1 - e) };
     }
-    return dotVis(clamp((time - dotStart(i)) / cfg.pop), 0);
+    const inP = clamp((time - dotStart(i)) / cfg.pop);
+    return { sc: popSc(inP), o: popO(inP) };
   });
-  return { headRot, tailRot, thin: thinFor(headRot - tailRot), segs };
+  return { headRot, tailRot, segs };
 }
 
 const segCenter = i => pt(MID_R, (SEGS[i][0] + SEGS[i][1]) / 2).map(v => +v.toFixed(2));
@@ -337,11 +329,10 @@ SEGS.forEach(([a, b], i) => segEls[i].setAttribute("d", shapeD(sectorShape(a, b,
 
 function render(time) {
   const s = state(time);
-  blue.setAttribute("d", shapeD(sectorShape(BLUE[0] + s.tailRot, BLUE[1] + s.headRot, true, geom(s.thin))));
-  s.segs.forEach(({ sc, o, rot }, i) => {
+  blue.setAttribute("d", shapeD(sectorShape(BLUE[0] + s.tailRot, BLUE[1] + s.headRot, true)));
+  s.segs.forEach(({ sc, o }, i) => {
     const [cx, cy] = segCenter(i);
-    segEls[i].setAttribute("transform",
-      `translate(${cx} ${cy}) scale(${sc.toFixed(4)}) translate(${-cx} ${-cy}) rotate(${rot.toFixed(3)} ${C} ${C})`);
+    segEls[i].setAttribute("transform", `translate(${cx} ${cy}) scale(${sc.toFixed(4)}) translate(${-cx} ${-cy})`);
     segEls[i].style.opacity = o;
   });
 }
@@ -370,10 +361,9 @@ function simplify(times, vals, tol) {
 const LOGO_SCALE = 250 * 0.8 / RO;
 
 // Static Lottie bezier path for a sector (arcs split into cubic pieces).
-function lottiePath(a, b, tipped, g = G1) {
-  const { ro, ri, rt, tOff } = g;
-  const oa = a + g.oOff, ia = a + g.iOff;
-  const ob = b - (tipped ? g.obOff : g.oOff), ib = b - (tipped ? g.ibOff : g.iOff);
+function lottiePath(a, b, tipped) {
+  const oa = a + oOff, ia = a + iOff;
+  const ob = b - (tipped ? obOff : oOff), ib = b - (tipped ? ibOff : iOff);
   const v = [], ins = [], outs = [];
   const r2 = x => +x.toFixed(2);
   const add = (p, i = [0, 0], o = [0, 0]) => { v.push(p.map(r2)); ins.push(i.map(r2)); outs.push(o.map(r2)); };
@@ -397,11 +387,12 @@ function lottiePath(a, b, tipped, g = G1) {
 }
 
 // Easing handles with x at 1/3 and 2/3 make the curve an exact cubic in time, so the
-// arc's ease-in/out and the dots' fade-in need a single keyframe each.
+// arc's ease-in/out and the dots' overshoot need a single keyframe each.
 const EASE = {
   lin: [[0, 0], [1, 1]],
   in3: [[1 / 3, 0], [2 / 3, 0]],
   out3: [[1 / 3, 1], [2 / 3, 1]],
+  back: [[1 / 3, (3 * 2.7 - 2 * 1.7) / 3], [2 / 3, 1]],
 };
 
 function buildLottie() {
@@ -434,6 +425,12 @@ function buildLottie() {
   // Each end of the arc is its own layer: a fixed cap plus a fixed 180-degree body that
   // rotates with it. The two bodies overlap enough to cover the arc at its longest.
   const CAP = 45, BODY_A = BLUE[0] + 22, BODY_B = BLUE[1] - 26, s = cfg.spin;
+  const body = start => ({ ty: "gr", nm: "body", it: [
+    { ty: "el", d: 1, p: st([C, C]), s: st([RO + RI, RO + RI]) },
+    { ty: "tm", s: st(0), e: st(50), o: st(start), m: 1 },
+    { ty: "st", c: st(rgb(colors.blue)), o: st(100), w: st(T), lc: 1, lj: 1 },
+    tr()] });
+  const cap = (a, b, tipped) => ({ ty: "gr", nm: "cap", it: [{ ty: "sh", ks: st(lottiePath(a, b, tipped)) }, ...fillStroke(colors.blue), tr()] });
   const S = +(LOGO_SCALE * 100).toFixed(3);
   // Linear keys sampled from the page's own timeline, for motion with no exact cubic form.
   const sampledKeys = (f, tol) => {
@@ -441,17 +438,6 @@ function buildLottie() {
     const vals = ts.map(t => [f(state(t))]);
     return simplify(ts, vals, tol).map(k => ({ t: ts[k], v: vals[k][0], ease: "lin" }));
   };
-  // Thinning: the body's stroke width and the caps' outlines follow one sampled track.
-  const thinKeys = sampledKeys(x => x.thin, 0.004);
-  const lin = { o: { x: [0], y: [0] }, i: { x: [1], y: [1] } };
-  const capShape = (a, b, tipped) => thinKeys.length < 2 ? st(lottiePath(a, b, tipped)) : { a: 1, k: thinKeys.map((k, j) =>
-    ({ t: r3(k.t * FR), s: [lottiePath(a, b, tipped, geom(k.v))], ...(j < thinKeys.length - 1 ? lin : {}) })) };
-  const body = start => ({ ty: "gr", nm: "body", it: [
-    { ty: "el", d: 1, p: st([C, C]), s: st([RO + RI, RO + RI]) },
-    { ty: "tm", s: st(0), e: st(50), o: st(start), m: 1 },
-    { ty: "st", c: st(rgb(colors.blue)), o: st(100), w: animated(thinKeys.map(k => ({ ...k, v: T * k.v }))), lc: 1, lj: 1 },
-    tr()] });
-  const cap = (a, b, tipped) => ({ ty: "gr", nm: "cap", it: [{ ty: "sh", ks: capShape(a, b, tipped) }, ...fillStroke(colors.blue), tr()] });
   const headRot = animated(cfg.continuous ? sampledKeys(x => x.headRot, 0.15) : [
     { t: 0, v: 0, ease: "in3" }, { t: 0.45 * s, v: 180, ease: "out3" }, { t: 0.9 * s, v: 360, ease: "hold" }, { t: CYCLE, v: 360 }]);
   const tailRot = animated(cfg.continuous ? sampledKeys(x => x.tailRot, 0.15) : [
@@ -470,17 +456,15 @@ function buildLottie() {
     // so that dot is sampled from the same timeline the page plays.
     const wraps = cfg.continuous || pe > CYCLE - 1e-6;
     const sampled = (f, tol) => sampledKeys(x => f(x.segs[i]), tol);
-    // Same three phases for every property: swallowed (in3), hidden, then fading in (out3).
-    const phases = (full, swallowed, popFrom) => [
-      { t: 0, v: full, ease: "hold" }, { t: ts, v: full, ease: "in3" }, { t: te, v: swallowed, ease: "hold" },
-      { t: ds, v: popFrom, ease: "out3" }, { t: pe, v: full, ease: "hold" }, { t: CYCLE, v: full }];
-    const scale = animated(wraps ? sampled(g => g.sc * S, 0.3) : phases(S, 0.45 * S, POP_FROM * S), 3, v => [r3(v), r3(v), 100]);
-    const opacity = animated(wraps ? sampled(g => g.o * 100, 0.5) : phases(100, 0, 0));
-    const drag = animated(wraps ? sampled(g => g.rot, 0.1) : phases(0, DRAG_OUT, DRAG_IN));
+    const scale = animated(wraps ? sampled(g => g.sc * S, 0.3) : [
+      { t: 0, v: S, ease: "hold" }, { t: ts, v: S, ease: "in3" }, { t: te, v: 0.45 * S, ease: "hold" },
+      { t: ds, v: 0.45 * S, ease: "back" }, { t: pe, v: S, ease: "hold" }, { t: CYCLE, v: S }], 3, v => [r3(v), r3(v), 100]);
+    const opacity = animated(wraps ? sampled(g => g.o * 100, 0.5) : [
+      { t: 0, v: 100, ease: "hold" }, { t: ts, v: 100, ease: "in3" }, { t: te, v: 0, ease: "hold" },
+      { t: ds, v: 0, ease: "lin" }, { t: ds + cfg.pop / 1.8, v: 100, ease: "hold" }, { t: CYCLE, v: 100 }]);
     const pos = [C + (cx - C) * LOGO_SCALE, C + (cy - C) * LOGO_SCALE].map(r3);
-    // The drag turns the dot around the logo's centre, inside its own scale.
     layers.push(layer(3 + i, "dot " + (i + 1), ks(pos, [cx, cy], scale, st(0), opacity),
-      [{ ty: "gr", it: [{ ty: "sh", ks: st(lottiePath(a, b, false)) }, ...fillStroke(colors.gray), tr({ p: st([C, C]), a: st([C, C]), r: drag })] }]));
+      [{ ty: "gr", it: [{ ty: "sh", ks: st(lottiePath(a, b, false)) }, ...fillStroke(colors.gray), tr()] }]));
   });
   layers.push(layer(6, "disc", ks([0, 0], [0, 0], st([100, 100, 100])),
     [{ ty: "gr", it: [{ ty: "el", d: 1, p: st([C, C]), s: st([500, 500]) }, { ty: "fl", c: st(rgb(colors.bg)), o: st(100), r: 1 }, tr()] }]));
@@ -499,7 +483,7 @@ function buildSvg() {
   // The rotation carries the tail; a path morph carries only the stretch.
   const rot = frames.map(f => [f.tailRot]);
   const rk = simplify(times, rot, 0.15);
-  const shapes = frames.map(f => sectorShape(BLUE[0], BLUE[1] + f.headRot - f.tailRot, true, geom(f.thin)));
+  const shapes = frames.map(f => sectorShape(BLUE[0], BLUE[1] + f.headRot - f.tailRot, true));
   const dk = simplify(times, shapes.map(s => s.n), 0.25);
   const blueSvg = `<g fill="${colors.blue}" stroke="${colors.blue}">` +
     anim("animateTransform", `attributeName="transform" type="rotate"`, rk, rk.map(k => `${+rot[k][0].toFixed(1)} ${C} ${C}`).join(";")) +
@@ -508,14 +492,12 @@ function buildSvg() {
 
   const segSvg = SEGS.map(([a, b], i) => {
     const [cx, cy] = segCenter(i);
-    const sc = frames.map(f => [f.segs[i].sc]), op = frames.map(f => [f.segs[i].o]), dr = frames.map(f => [f.segs[i].rot]);
-    const sk = simplify(times, sc, 0.004), ok = simplify(times, op, 0.004), rk2 = simplify(times, dr, 0.1);
+    const sc = frames.map(f => [f.segs[i].sc]), op = frames.map(f => [f.segs[i].o]);
+    const sk = simplify(times, sc, 0.004), ok = simplify(times, op, 0.004);
     return `<g transform="translate(${cx} ${cy})"><g>` +
       anim("animateTransform", `attributeName="transform" type="scale"`, sk, sk.map(k => +sc[k][0].toFixed(3)).join(";")) +
       anim("animate", `attributeName="opacity"`, ok, ok.map(k => +op[k][0].toFixed(3)).join(";")) +
-      `<g transform="translate(${-cx} ${-cy})"><g>` +
-      anim("animateTransform", `attributeName="transform" type="rotate"`, rk2, rk2.map(k => `${+dr[k][0].toFixed(2)} ${C} ${C}`).join(";")) +
-      `<path d="${shapeD(sectorShape(a, b, false), 1)}"/></g></g></g></g>`;
+      `<path transform="translate(${-cx} ${-cy})" d="${shapeD(sectorShape(a, b, false), 1)}"/></g></g>`;
   }).join("");
 
   const scale = +(LOGO_SCALE).toFixed(4);
