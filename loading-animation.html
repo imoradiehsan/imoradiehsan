@@ -55,6 +55,9 @@ main {
   gap: 12px;
 }
 .row.key label { color: var(--ui); font-weight: 500; }
+.row[hidden] { display: none; }
+.toggle { display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--ui); cursor: pointer; }
+.toggle input { accent-color: var(--ui); width: 16px; height: 16px; margin: 0; }
 .row input { accent-color: var(--ui); width: 100%; margin: 0; }
 input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outline-offset: 3px; }
 .section {
@@ -139,17 +142,23 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
   </svg>
 
   <form class="panel" id="panel" dir="rtl">
+    <label class="toggle"><input id="continuous" type="checkbox"> چرخش پیوسته، بدون توقف بین دورها</label>
     <div class="row">
       <label for="spin">مدت چرخش قوس</label>
       <input id="spin" type="range" min="0.8" max="4" step="0.05">
       <output for="spin"></output>
     </div>
+    <div class="row cont-only">
+      <label for="speedVar">تغییر سرعت در طول هر دور</label>
+      <input id="speedVar" type="range" min="0" max="0.9" step="0.05">
+      <output for="speedVar"></output>
+    </div>
     <div class="row key">
-      <label for="delay">مکث بعد از چرخش تا آمدن نقطه‌ها</label>
+      <label for="delay" id="delayLabel">مکث بعد از چرخش تا آمدن نقطه‌ها</label>
       <input id="delay" type="range" min="-1.5" max="1.5" step="0.05">
       <output for="delay"></output>
     </div>
-    <div class="row">
+    <div class="row step-only">
       <label for="stagger">فاصله بین نقطه‌ها</label>
       <input id="stagger" type="range" min="0" max="0.6" step="0.01">
       <output for="stagger"></output>
@@ -159,7 +168,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
       <input id="pop" type="range" min="0.1" max="0.8" step="0.01">
       <output for="pop"></output>
     </div>
-    <div class="row">
+    <div class="row step-only">
       <label for="hold">مکث قبل از چرخش بعدی</label>
       <input id="hold" type="range" min="-0.8" max="2" step="0.05">
       <output for="hold"></output>
@@ -241,7 +250,7 @@ const blue = $("blue");
 const segEls = [$("s0"), $("s1"), $("s2")];
 const MID_R = (RO + RI) / 2;
 
-const DEFAULTS = { spin: 2.4, delay: 0, stagger: 0.17, pop: 0.4, hold: 0.5 };
+const DEFAULTS = { spin: 2.4, speedVar: 0.6, delay: 0, stagger: 0.17, pop: 0.4, hold: 0.5, continuous: true };
 const cfg = { ...DEFAULTS };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem("logo-loader") || "{}")); } catch (e) {}
 
@@ -252,11 +261,52 @@ const invInOut = y => y < 0.5 ? Math.cbrt(y / 4) : 1 - Math.cbrt(2 * (1 - y)) / 
 const swallowedAt = i => 0.9 * invInOut((SEGS[i][0] - BLUE[1] + 30) / 360) * cfg.spin;
 const dotStart = i => Math.max(headHome() + cfg.delay + i * cfg.stagger, swallowedAt(i));
 // A negative hold starts the next spin while the last dots are still popping in.
-const cycle = () => Math.max(cfg.spin, dotStart(2) + 0.05, Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold);
+// In continuous mode one cycle is exactly one turn, so the arc never stops.
+const cycle = () => cfg.continuous ? cfg.spin
+  : Math.max(cfg.spin, dotStart(2) + 0.05, Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold);
 const popSc = p => 0.45 + 0.55 * outBack(p), popO = p => clamp(p * 1.8);
+
+// Continuous mode: speed swings with the turn but never reaches zero (speedVar < 1).
+// The head runs the same curve a little ahead, which stretches the arc mid-turn;
+// both ends meet the logo's resting shape at the loop point.
+const PHI = 0.15;
+const F = x => x - cfg.speedVar * Math.sin(2 * Math.PI * x) / (2 * Math.PI);
+const contRot = time => {
+  const x = time / cfg.spin;
+  return { tailRot: 360 * F(x), headRot: 360 * (F(x + PHI) - F(PHI)) };
+};
+// Time within the turn at which an increasing rotation reaches `deg`.
+const solve = (key, deg) => {
+  let lo = 0, hi = cfg.spin;
+  for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; if (contRot(m)[key] < deg) lo = m; else hi = m; }
+  return hi;
+};
+// Each dot is swallowed as the head sweeps over it and returns once the tail has passed.
+function contDotTimes(i) {
+  const [a, b] = SEGS[i];
+  const tsw = solve("headRot", a - BLUE[1]), tse = solve("headRot", Math.min(a - BLUE[1] + 30, 360));
+  const tu = solve("tailRot", b - BLUE[0]);
+  return { tsw, tse, popStart: Math.max(tu + cfg.delay, tse) };
+}
+
+function contState(time) {
+  const c = cfg.spin, m = v => ((v % c) + c) % c;
+  const segs = SEGS.map((_, i) => {
+    const { tsw, tse, popStart } = contDotTimes(i);
+    const sinceSw = m(time - tsw), sincePop = m(time - popStart);
+    const p = clamp(sincePop / cfg.pop);
+    if (sinceSw < sincePop) {
+      const e = inCubic(clamp(sinceSw / (tse - tsw)));
+      return { sc: popSc(p) * (1 - 0.55 * e), o: popO(p) * (1 - e) };
+    }
+    return { sc: popSc(p), o: popO(p) };
+  });
+  return { ...contRot(time), segs };
+}
 
 // time in seconds within one cycle; the full logo at 0 and at the cycle end keeps the loop seamless.
 function state(time) {
+  if (cfg.continuous) return contState(time);
   // Head leads the tail, so the arc stretches over the segments while it turns.
   const t = clamp(time / cfg.spin);
   const headRot = 360 * inOut(clamp(t / 0.9));
@@ -382,9 +432,15 @@ function buildLottie() {
     tr()] });
   const cap = (a, b, tipped) => ({ ty: "gr", nm: "cap", it: [{ ty: "sh", ks: st(lottiePath(a, b, tipped)) }, ...fillStroke(colors.blue), tr()] });
   const S = +(LOGO_SCALE * 100).toFixed(3);
-  const headRot = animated([
+  // Linear keys sampled from the page's own timeline, for motion with no exact cubic form.
+  const sampledKeys = (f, tol) => {
+    const ts = Array.from({ length: OP + 1 }, (_, k) => Math.min(k / FR, CYCLE));
+    const vals = ts.map(t => [f(state(t))]);
+    return simplify(ts, vals, tol).map(k => ({ t: ts[k], v: vals[k][0], ease: "lin" }));
+  };
+  const headRot = animated(cfg.continuous ? sampledKeys(x => x.headRot, 0.15) : [
     { t: 0, v: 0, ease: "in3" }, { t: 0.45 * s, v: 180, ease: "out3" }, { t: 0.9 * s, v: 360, ease: "hold" }, { t: CYCLE, v: 360 }]);
-  const tailRot = animated([
+  const tailRot = animated(cfg.continuous ? sampledKeys(x => x.tailRot, 0.15) : [
     { t: 0, v: 0, ease: "hold" }, { t: 0.1 * s, v: 0, ease: "in3" }, { t: 0.55 * s, v: 180, ease: "out3" }, { t: s, v: 360, ease: "hold" }, { t: CYCLE, v: 360 }]);
   const layers = [
     layer(1, "arc head", ks([C, C], [C, C], st([S, S, 100]), headRot), [cap(BLUE[1] - CAP, BLUE[1], true), body(BODY_B - 180)]),
@@ -398,12 +454,8 @@ function buildLottie() {
     const ts = 0.9 * invInOut(off / 360) * s, te = swallowedAt(i);
     // A pop that runs past the cycle end (negative hold) wraps into the next cycle,
     // so that dot is sampled from the same timeline the page plays.
-    const wraps = pe > CYCLE - 1e-6;
-    const sampled = (f, tol) => {
-      const ts = Array.from({ length: OP + 1 }, (_, k) => Math.min(k / FR, CYCLE));
-      const vals = ts.map(t => [f(state(t).segs[i])]);
-      return simplify(ts, vals, tol).map(k => ({ t: ts[k], v: vals[k][0], ease: "lin" }));
-    };
+    const wraps = cfg.continuous || pe > CYCLE - 1e-6;
+    const sampled = (f, tol) => sampledKeys(x => f(x.segs[i]), tol);
     const scale = animated(wraps ? sampled(g => g.sc * S, 0.3) : [
       { t: 0, v: S, ease: "hold" }, { t: ts, v: S, ease: "in3" }, { t: te, v: 0.45 * S, ease: "hold" },
       { t: ds, v: 0.45 * S, ease: "back" }, { t: pe, v: S, ease: "hold" }, { t: CYCLE, v: S }], 3, v => [r3(v), r3(v), 100]);
@@ -459,21 +511,32 @@ const fa = n => {
   const s = Math.abs(n).toFixed(2).replace(/\.?0+$/, "").replace(".", "٫").replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
   return (n < 0 && s !== "۰" ? "⁦−" + s + "⁩" : s) + " ثانیه";
 };
-const keys = Object.keys(DEFAULTS);
+const keys = Object.keys(DEFAULTS).filter(k => k !== "continuous");
+const pct = n => Math.round(n * 100).toString().replace(/\d/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]) + "٪";
+const saveCfg = () => { try { localStorage.setItem("logo-loader", JSON.stringify(cfg)); } catch (err) {} };
 
 function syncUI() {
   keys.forEach(k => {
     const input = $(k);
     input.value = cfg[k];
-    input.nextElementSibling.textContent = fa(cfg[k]);
+    input.nextElementSibling.textContent = k === "speedVar" ? pct(cfg[k]) : fa(cfg[k]);
   });
+  $("continuous").checked = cfg.continuous;
+  document.querySelectorAll(".step-only").forEach(el => { el.hidden = cfg.continuous; });
+  document.querySelectorAll(".cont-only").forEach(el => { el.hidden = !cfg.continuous; });
+  $("delayLabel").textContent = cfg.continuous ? "مکث بعد از رد شدن قوس تا آمدن نقطه‌ها" : "مکث بعد از چرخش تا آمدن نقطه‌ها";
   $("total").textContent = "هر دور: " + fa(cycle());
 }
 keys.forEach(k => $(k).addEventListener("input", e => {
   cfg[k] = parseFloat(e.target.value);
   syncUI();
-  try { localStorage.setItem("logo-loader", JSON.stringify(cfg)); } catch (err) {}
+  saveCfg();
 }));
+$("continuous").addEventListener("change", e => {
+  cfg.continuous = e.target.checked;
+  syncUI();
+  saveCfg();
+});
 const COLOR_DEFAULTS = { blue: "#0b57a4", gray: "#a6a9ae", bg: "#ffffff" };
 const colors = { ...COLOR_DEFAULTS };
 try { Object.assign(colors, JSON.parse(localStorage.getItem("logo-loader-colors") || "{}")); } catch (e) {}
