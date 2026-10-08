@@ -161,7 +161,7 @@ input:focus-visible, button:focus-visible { outline: 2px solid var(--ui); outlin
     </div>
     <div class="row">
       <label for="hold">مکث قبل از چرخش بعدی</label>
-      <input id="hold" type="range" min="0" max="2" step="0.05">
+      <input id="hold" type="range" min="-0.8" max="2" step="0.05">
       <output for="hold"></output>
     </div>
     <div class="section">رنگ‌ها</div>
@@ -251,7 +251,9 @@ const invInOut = y => y < 0.5 ? Math.cbrt(y / 4) : 1 - Math.cbrt(2 * (1 - y)) / 
 // With a negative pause a dot may not return before the arc's head has swallowed it.
 const swallowedAt = i => 0.9 * invInOut((SEGS[i][0] - BLUE[1] + 30) / 360) * cfg.spin;
 const dotStart = i => Math.max(headHome() + cfg.delay + i * cfg.stagger, swallowedAt(i));
-const cycle = () => Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold;
+// A negative hold starts the next spin while the last dots are still popping in.
+const cycle = () => Math.max(cfg.spin, dotStart(2) + 0.05, Math.max(cfg.spin, dotStart(2) + cfg.pop) + cfg.hold);
+const popSc = p => 0.45 + 0.55 * outBack(p), popO = p => clamp(p * 1.8);
 
 // time in seconds within one cycle; the full logo at 0 and at the cycle end keeps the loop seamless.
 function state(time) {
@@ -261,11 +263,13 @@ function state(time) {
   const tailRot = 360 * inOut(clamp((t - 0.1) / 0.9));
   const segs = SEGS.map(([a], i) => {
     if (time < dotStart(i)) {
+      // The previous cycle's pop may still be finishing when the hold is negative.
+      const prev = clamp((time + cycle() - dotStart(i)) / cfg.pop);
       const e = inCubic(span(headRot, a - BLUE[1], a - BLUE[1] + 30));
-      return { sc: 1 - 0.55 * e, o: 1 - e };
+      return { sc: popSc(prev) * (1 - 0.55 * e), o: popO(prev) * (1 - e) };
     }
-    const inP = cfg.pop > 0 ? clamp((time - dotStart(i)) / cfg.pop) : 1;
-    return { sc: 0.45 + 0.55 * outBack(inP), o: clamp(inP * 1.8) };
+    const inP = clamp((time - dotStart(i)) / cfg.pop);
+    return { sc: popSc(inP), o: popO(inP) };
   });
   return { headRot, tailRot, segs };
 }
@@ -392,10 +396,18 @@ function buildLottie() {
     // Swallowed while the head sweeps 30 degrees past the dot's leading edge.
     const off = a - BLUE[1], ds = dotStart(i), pe = ds + cfg.pop;
     const ts = 0.9 * invInOut(off / 360) * s, te = swallowedAt(i);
-    const scale = animated([
+    // A pop that runs past the cycle end (negative hold) wraps into the next cycle,
+    // so that dot is sampled from the same timeline the page plays.
+    const wraps = pe > CYCLE - 1e-6;
+    const sampled = (f, tol) => {
+      const ts = Array.from({ length: OP + 1 }, (_, k) => Math.min(k / FR, CYCLE));
+      const vals = ts.map(t => [f(state(t).segs[i])]);
+      return simplify(ts, vals, tol).map(k => ({ t: ts[k], v: vals[k][0], ease: "lin" }));
+    };
+    const scale = animated(wraps ? sampled(g => g.sc * S, 0.3) : [
       { t: 0, v: S, ease: "hold" }, { t: ts, v: S, ease: "in3" }, { t: te, v: 0.45 * S, ease: "hold" },
       { t: ds, v: 0.45 * S, ease: "back" }, { t: pe, v: S, ease: "hold" }, { t: CYCLE, v: S }], 3, v => [r3(v), r3(v), 100]);
-    const opacity = animated([
+    const opacity = animated(wraps ? sampled(g => g.o * 100, 0.5) : [
       { t: 0, v: 100, ease: "hold" }, { t: ts, v: 100, ease: "in3" }, { t: te, v: 0, ease: "hold" },
       { t: ds, v: 0, ease: "lin" }, { t: ds + cfg.pop / 1.8, v: 100, ease: "hold" }, { t: CYCLE, v: 100 }]);
     const pos = [C + (cx - C) * LOGO_SCALE, C + (cy - C) * LOGO_SCALE].map(r3);
