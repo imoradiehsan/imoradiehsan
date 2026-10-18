@@ -14,21 +14,18 @@
     --bg: #ffffff;
     --ink: #1f2933;
     --muted: #6b7280;
-    --seg-stroke: #ffffff;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0e1620;
       --ink: #eef2f6;
       --muted: #9aa5b1;
-      --seg-stroke: #0e1620;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0e1620;
     --ink: #eef2f6;
     --muted: #9aa5b1;
-    --seg-stroke: #0e1620;
   }
 
   * { box-sizing: border-box; }
@@ -68,10 +65,10 @@
     height: min(92vw, 86vh);
     overflow: visible;
   }
-  .team-logo__seg-fill { stroke: var(--seg-stroke); stroke-width: 0.6; }
+  .team-logo__seg-fill, .team-logo__seg-glow { stroke-linejoin: round; }
   .team-logo__seg { outline: none; cursor: pointer; }
-  .team-logo__intro, .team-logo__mark, .team-logo__brand { pointer-events: none; }
-  .team-logo__seg-glow { fill: none; stroke: var(--ghesta-blue); pointer-events: none; }
+  .team-logo__intro, .team-logo__brand { pointer-events: none; }
+  .team-logo__seg-glow { fill: var(--ghesta-blue); stroke: var(--ghesta-blue); pointer-events: none; }
   .team-logo__wordmark {
     font-family: "Vazirmatn", system-ui, sans-serif;
     font-weight: 800;
@@ -129,19 +126,6 @@
         <text class="team-logo__intro-sub" text-anchor="middle" y="9" font-size="3.8">۵۰ نفر، هر کدوم یه تکه از قسطا</text>
       </g>
       <g class="team-logo__ring"></g>
-      <!-- لوگوی دقیق قسطا از فایل لوتی (مرکز ۰، شعاع بیرونی ۲۰۰) -->
-      <g class="team-logo__mark" opacity="0" stroke-width="32.99" stroke-linejoin="round">
-        <g fill="var(--ghesta-blue)" stroke="var(--ghesta-blue)">
-          <path d="M88.15 135.74A161.856 161.856 0 0 1 -88.15 -135.74" fill="none" stroke-width="76.29" stroke-linejoin="miter"/>
-          <path d="M-125.03 -134.32C-110.88 -147.5 -94.73 -158.34 -77.2 -166.47L-48.81 -160.71L-55.65 -128.69C-68.21 -123.27 -79.9 -116.03 -90.35 -107.22Z"/>
-          <path d="M131.89 127.59C111.82 148.32 87.17 164.04 59.9 173.45L52.25 130.1C68.37 123.63 83.15 114.22 95.84 102.34Z"/>
-        </g>
-        <g fill="var(--ghesta-gray)" stroke="var(--ghesta-gray)">
-          <path d="M6.57 -183.39C34.32 -182.4 61.48 -175.11 86.01 -162.1L59.52 -126.95C44.53 -133.97 28.42 -138.29 11.93 -139.7Z"/>
-          <path d="M132.11 -127.36C151.38 -107.37 165.87 -83.26 174.47 -56.86L131 -49.97C125.1 -65.43 116.52 -79.74 105.63 -92.21Z"/>
-          <path d="M183.5 0.16C183.48 27.93 177.15 55.33 165 80.3L128.95 55.05C135.44 39.83 139.2 23.58 140.03 7.05Z"/>
-        </g>
-      </g>
       <g class="team-logo__brand" opacity="0">
         <text class="team-logo__wordmark" text-anchor="middle" font-size="22">قسطا</text>
         <text class="team-logo__tagline" text-anchor="middle" font-size="6">تکه‌تکه، کنار هم؛ یک قسطا</text>
@@ -189,7 +173,8 @@
     ...Array.from({ length: BLUE_COUNT }, (_, i) => [35 + i * BLUE_STEP, 35 + (i + 1) * BLUE_STEP]),
     [263, 307], [307, 351], [351, 395],
   ];
-  FINAL_EDGES[BLUE_COUNT - 1][1] = 254;   // سرِ کمان کمی کوتاه‌تر است؛ لوگوی دقیق رویش می‌نشیند
+  // سرِ کمان آبی در لوگو صاف نیست: لبه‌اش از سه نقطه می‌گذرد (شعاع نسبی، زاویه)
+  const HEAD_EDGE = [[183.5 / 200, 245.12], [167.96 / 200, 253.1], [140.21 / 200, 246.61]];
   // حالت اول (حلقهٔ عکس‌ها): تکه‌های هم‌اندازه با گام ۴۵ درجه
   const START_EDGES = Array.from({ length: COUNT }, (_, i) => [35 + i * 45, 80 + i * 45]);
 
@@ -198,7 +183,6 @@
   const ring = svg.querySelector(".team-logo__ring");
   const intro = svg.querySelector(".team-logo__intro");
   const brand = svg.querySelector(".team-logo__brand");
-  const mark = svg.querySelector(".team-logo__mark");
   const wordmark = brand.querySelector(".team-logo__wordmark");
   const tagline = brand.querySelector(".team-logo__tagline");
   const section = document.getElementById("team-logo");
@@ -234,41 +218,41 @@
   };
 
   /*
-   * مسیر یک تکهٔ حلقه، مثل تکه‌های لوگو: لبه‌ها موازی با خط شعاعیِ وسط فاصله
-   * (ga و gb) با فاصلهٔ ha و hb از آن، و گوشه‌های گرد با شعاع rca و rcb.
-   * برای چسبیدن تکه‌های آبی، فاصله منفی و گردیِ لبهٔ مشترک صفر می‌شود.
+   * مسیر «هستهٔ» یک تکه، همان روشی که فایل لوتی لوگو استفاده می‌کند: هسته با
+   * fill کشیده می‌شود و یک stroke هم‌رنگ با اتصال گرد به پهنای دو برابر شعاع
+   * گردی، گوشه‌ها را گرد و تکه را به اندازهٔ نهایی می‌رساند.
+   * edge(g, side, off): نقاط لبه‌ای موازی با خط شعاعی g با فاصلهٔ off از آن.
    */
-  function segPath(r0, r1, ga, ha, rca, gb, hb, rcb) {
-    const corner = (g, side, h, rc, R, outer) => {
-      const u = [Math.cos(rad(g)), Math.sin(rad(g))], n = [-u[1], u[0]];
-      const off = side * (h + rc), Rc = outer ? R - rc : R + rc;
-      const t = Math.sqrt(Math.max(0, Rc * Rc - (h + rc) * (h + rc)));
-      const C = [off * n[0] + t * u[0], off * n[1] + t * u[1]];
-      const len = Math.hypot(C[0], C[1]) || 1;
-      return { C, rc, line: [C[0] - side * rc * n[0], C[1] - side * rc * n[1]], circ: [C[0] / len * R, C[1] / len * R] };
+  function edgePoints(g, side, off, r0c, r1c) {
+    const u = [Math.cos(rad(g)), Math.sin(rad(g))], n = [-u[1], u[0]];
+    const at = R => {
+      const t = Math.sqrt(Math.max(0, R * R - off * off));
+      return [side * off * n[0] + t * u[0], side * off * n[1] + t * u[1]];
     };
+    const o = at(r1c), i = at(r0c);
+    return [o, [(o[0] + i[0]) / 2, (o[1] + i[1]) / 2], i];
+  }
+  function corePath(r0c, r1c, A, B) {
     const f = n => n.toFixed(3);
     const P = q => `${f(q[0])} ${f(q[1])}`;
-    const fillet = (c, from, to) => {
-      const cross = (from[0] - c.C[0]) * (to[1] - c.C[1]) - (from[1] - c.C[1]) * (to[0] - c.C[0]);
-      return `A${f(c.rc)} ${f(c.rc)} 0 0 ${cross > 0 ? 1 : 0} ${P(to)}`;
-    };
-    const Ao = corner(ga, 1, ha, rca, r1, true), Bo = corner(gb, -1, hb, rcb, r1, true);
-    const Bi = corner(gb, -1, hb, rcb, r0, false), Ai = corner(ga, 1, ha, rca, r0, false);
-    const angle = q => Math.atan2(q[1], q[0]) * 180 / Math.PI;
-    const span = ((angle(Bo.circ) - angle(Ao.circ)) % 360 + 360) % 360;
-    const large = span > 180 ? 1 : 0;
-    return `M${P(Ao.circ)}A${f(r1)} ${f(r1)} 0 ${large} 1 ${P(Bo.circ)}` +
-      fillet(Bo, Bo.circ, Bo.line) + `L${P(Bi.line)}` + fillet(Bi, Bi.line, Bi.circ) +
-      `A${f(r0)} ${f(r0)} 0 ${large} 0 ${P(Ai.circ)}` +
-      fillet(Ai, Ai.circ, Ai.line) + `L${P(Ao.line)}` + fillet(Ao, Ao.line, Ao.circ) + "Z";
+    const ang = q => Math.atan2(q[1], q[0]) * 180 / Math.PI;
+    const large = q0 => (((ang(q0[1]) - ang(q0[0])) % 360 + 360) % 360) > 180 ? 1 : 0;
+    return `M${P(A[0])}A${f(r1c)} ${f(r1c)} 0 ${large([A[0], B[0]])} 1 ${P(B[0])}` +
+      `L${P(B[1])}L${P(B[2])}` +
+      `A${f(r0c)} ${f(r0c)} 0 ${large([A[2], B[2]])} 0 ${P(A[2])}` +
+      `L${P(A[1])}Z`;
   }
 
   // ساخت المان‌ها
   const segs = TEAMS.slice(0, COUNT).map((team, i) => {
-    const clip = document.createElementNS(NS, "clipPath");
-    clip.id = `team-seg-clip-${i}`;
+    const clip = document.createElementNS(NS, "mask");
+    clip.id = `team-seg-mask-${i}`;
+    clip.setAttribute("maskUnits", "userSpaceOnUse");
+    for (const [k, v] of [["x", -200], ["y", -200], ["width", 400], ["height", 400]]) clip.setAttribute(k, v);
     const clipPath = document.createElementNS(NS, "path");
+    clipPath.setAttribute("fill", "#fff");
+    clipPath.setAttribute("stroke", "#fff");
+    clipPath.setAttribute("stroke-linejoin", "round");
     clip.appendChild(clipPath);
     defs.appendChild(clip);
 
@@ -281,10 +265,10 @@
     const img = document.createElementNS(NS, "image");
     img.setAttribute("href", team.photo || placeholder(i, team.members));
     img.setAttribute("preserveAspectRatio", `${team.align || "xMidYMid"} slice`);
-    img.setAttribute("clip-path", `url(#${clip.id})`);
+    img.setAttribute("mask", `url(#${clip.id})`);
     const glow = document.createElementNS(NS, "path");
     glow.setAttribute("class", "team-logo__seg-glow");
-    g.append(fill, img, glow);
+    g.append(glow, fill, img);
     ring.appendChild(g);
 
     const on = () => { hovered = i; };
@@ -324,11 +308,6 @@
     const halfGap = r1 * lerp(0.02, LOGO.halfGap, shrink);
     const spin = lerp(-60, 0, shrink);
     const cy = lerp(0, -22, reveal);
-    // لوگوی دقیق در پایان روی تکه‌ها می‌نشیند
-    const exact = phase(p, 0.80, 0.90);
-    mark.setAttribute("transform", `translate(0 ${cy.toFixed(2)}) scale(${(r1 / 200).toFixed(4)})`);
-    mark.setAttribute("opacity", exact.toFixed(3));
-    ring.style.visibility = exact >= 1 ? "hidden" : "";
 
     ring.setAttribute("transform", `translate(0 ${cy.toFixed(2)})`);
     intro.setAttribute("opacity", (1 - phase(p, 0.04, 0.22)).toFixed(3));
@@ -337,21 +316,33 @@
       const ga = lerp(START_EDGES[i][0], FINAL_EDGES[i][0], shrink) + spin;
       const gb = lerp(START_EDGES[i][1], FINAL_EDGES[i][1], shrink) + spin;
       const center = (ga + gb) / 2;
-      let ha = halfGap, hb = halfGap, rca = rc, rcb = rc;
+      let ha = halfGap, hb = halfGap;
       if (s.blue) {
-        // لبه‌های داخلی بخش آبی بسته می‌شوند (با کمی هم‌پوشانی تا درز دیده نشود)
-        const closed = -0.4;
-        if (i > 0)              { ha = lerp(ha, closed, merge); rca = rc * (1 - merge); }
-        if (i < BLUE_COUNT - 1) { hb = lerp(hb, closed, merge); rcb = rc * (1 - merge); }
+        // لبه‌های داخلی بخش آبی بسته می‌شوند؛ هسته‌ها آن‌قدر روی هم می‌روند
+        // که گوشه‌های گرد زیر تکهٔ کناری پنهان شوند و درزی نماند
+        const closed = -2 * rc - 0.3;
+        if (i > 0)              ha = lerp(ha, closed, merge);
+        if (i < BLUE_COUNT - 1) hb = lerp(hb, closed, merge);
       }
       // هاور: تکه کمی بزرگ‌تر و به بیرون می‌آید، تا وقتی عکس‌ها پیدا هستند
       const ho = ease(s.h) * (1 - photos);
       const grow = 4 * ho;
-      const d = segPath(r0 - grow * 0.4, r1 + grow, ga - ho, ha, rca, gb + ho, hb, rcb);
-      s.fill.setAttribute("d", d);
-      s.clipPath.setAttribute("d", d);
-      s.glow.setAttribute("d", d);
-      s.glow.setAttribute("stroke-width", (1.6 * ho).toFixed(3));
+      const r1c = r1 + grow - rc, r0c = r0 - grow * 0.4 + rc;
+      const A = edgePoints(ga - ho, 1, ha + rc, r0c, r1c);
+      let B = edgePoints(gb + ho, -1, hb + rc, r0c, r1c);
+      if (i === BLUE_COUNT - 1) {
+        // سرِ کمان کم‌کم به شکل دقیق لوگو درمی‌آید
+        B = B.map((q, k) => {
+          const [hr, ha2] = HEAD_EDGE[k];
+          const target = pt(hr * r1, ha2 + spin);
+          return [lerp(q[0], target[0], shrink), lerp(q[1], target[1], shrink)];
+        });
+      }
+      const d = corePath(r0c, r1c, A, B);
+      for (const el of [s.fill, s.clipPath, s.glow]) el.setAttribute("d", d);
+      s.fill.setAttribute("stroke-width", (2 * rc).toFixed(3));
+      s.clipPath.setAttribute("stroke-width", (2 * rc).toFixed(3));
+      s.glow.setAttribute("stroke-width", (2 * rc + 3.2 * ho).toFixed(3));
       s.glow.setAttribute("opacity", ho.toFixed(3));
       const [ox, oy] = pt(5 * ho, center);
       s.g.setAttribute("transform", `translate(${ox.toFixed(2)} ${oy.toFixed(2)})`);
@@ -361,8 +352,9 @@
       s.g.style.filter = dim > 0.01 ? `grayscale(${(0.7 * dim).toFixed(2)})` : "";
 
       const tintI = s.blue ? clamp(tint * BLUE_COUNT - (BLUE_COUNT - 1 - i) * 0.6) : 0;
-      s.fill.setAttribute("fill", mix(GRAY, BLUE, ease(clamp(tintI))));
-      s.fill.style.strokeOpacity = (1 - merge).toFixed(3);
+      const color = mix(GRAY, BLUE, ease(clamp(tintI)));
+      s.fill.setAttribute("fill", color);
+      s.fill.setAttribute("stroke", color);
 
       // عکس، صاف و رو به بیننده، روی مرکز تکه
       const [mx, my] = pt((r0 + r1) / 2, center);
