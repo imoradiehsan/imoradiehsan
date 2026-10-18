@@ -69,6 +69,8 @@
     overflow: visible;
   }
   .team-logo__seg-fill { stroke: var(--seg-stroke); stroke-width: 0.6; }
+  .team-logo__seg { outline: none; cursor: pointer; }
+  .team-logo__seg-glow { fill: none; stroke: var(--ghesta-blue); pointer-events: none; }
   .team-logo__wordmark {
     font-family: "Vazirmatn", system-ui, sans-serif;
     font-weight: 800;
@@ -103,8 +105,12 @@
     text-align: center;
     white-space: nowrap;
     opacity: 0;
-    transform: translate(50%, -120%);
-    transition: opacity .15s;
+    transform: translate(var(--tx, -50%), var(--ty, -50%)) scale(.85);
+    transition: opacity .2s, transform .35s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  .team-logo__person.is-on {
+    opacity: 1;
+    transform: translate(var(--tx, -50%), var(--ty, -50%)) scale(1);
   }
   .team-logo__person small { display: block; opacity: .75; }
 </style>
@@ -229,21 +235,41 @@
     defs.appendChild(clip);
 
     const g = document.createElementNS(NS, "g");
-    g.style.cursor = "default";
+    g.setAttribute("class", "team-logo__seg");
+    g.setAttribute("tabindex", "0");
+    g.setAttribute("aria-label", `${person.name}، ${person.role}`);
     const fill = document.createElementNS(NS, "path");
     fill.setAttribute("class", "team-logo__seg-fill");
     const img = document.createElementNS(NS, "image");
     img.setAttribute("href", person.photo || placeholder(i));
     img.setAttribute("preserveAspectRatio", "xMidYMid slice");
     img.setAttribute("clip-path", `url(#${clip.id})`);
-    g.append(fill, img);
+    const glow = document.createElementNS(NS, "path");
+    glow.setAttribute("class", "team-logo__seg-glow");
+    g.append(fill, img, glow);
     ring.appendChild(g);
 
-    g.addEventListener("pointerenter", () => { hovered = i; });
-    g.addEventListener("pointerleave", () => { if (hovered === i) hovered = -1; });
-    return { person, clipPath, fill, img, g, blue: i < BLUE_COUNT };
+    const on = () => { hovered = i; };
+    const off = () => { if (hovered === i) hovered = -1; };
+    g.addEventListener("pointerenter", on);
+    g.addEventListener("pointerleave", off);
+    g.addEventListener("focus", on);
+    g.addEventListener("blur", off);
+    // h: میزان هاور این تکه (۰ تا ۱) که نرم به سمت هدف حرکت می‌کند
+    return { person, clipPath, fill, img, glow, g, blue: i < BLUE_COUNT, h: 0 };
   });
   let hovered = -1;
+
+  // نرم کردن حالت هاور هر تکه؛ اگر هنوز در حال حرکت باشد true برمی‌گرداند
+  function stepHover() {
+    let moving = false;
+    segs.forEach((s, i) => {
+      const goal = i === hovered ? 1 : 0;
+      s.h = reduceMotion ? goal : lerp(s.h, goal, 0.16);
+      if (Math.abs(s.h - goal) < 0.002) s.h = goal; else moving = true;
+    });
+    return moving;
+  }
 
   function render(p) {
     // مراحل انیمیشن بر اساس پیشرفت اسکرول (۰ تا ۱)
@@ -253,6 +279,7 @@
     const merge = phase(p, 0.66, 0.84);    // به‌هم‌پیوستن تکه‌های آبی
     const reveal = phase(p, 0.82, 0.96);   // نمایش نام قسطا
 
+    const maxHover = Math.max(...segs.map(s => s.h));
     const r1 = lerp(98, 46, shrink);
     const r0 = r1 * lerp(0.40, LOGO_INNER_RATIO, shrink);
     const rc = r1 * 0.065;
@@ -272,9 +299,21 @@
         if (i > 0)              { half0 = lerp(half0, closed, merge); rc0 = rc * (1 - merge); }
         if (i < BLUE_COUNT - 1) { half1 = lerp(half1, closed, merge); rc1 = rc * (1 - merge); }
       }
-      const d = sectorPath(r0, r1, center - half0, center + half1, rc0, rc1);
+      // هاور: تکه کمی بزرگ‌تر و به بیرون می‌آید، تا وقتی عکس‌ها پیدا هستند
+      const ho = ease(s.h) * (1 - photos);
+      const grow = 4 * ho;
+      const d = sectorPath(r0 - grow * 0.4, r1 + grow, center - half0 - ho, center + half1 + ho, rc0, rc1);
       s.fill.setAttribute("d", d);
       s.clipPath.setAttribute("d", d);
+      s.glow.setAttribute("d", d);
+      s.glow.setAttribute("stroke-width", (1.6 * ho).toFixed(3));
+      s.glow.setAttribute("opacity", ho.toFixed(3));
+      const [ox, oy] = pt(5 * ho, center);
+      s.g.setAttribute("transform", `translate(${ox.toFixed(2)} ${oy.toFixed(2)})`);
+      // بقیهٔ تکه‌ها کمی کم‌رنگ و خاکستری می‌شوند
+      const dim = clamp(maxHover - s.h) * (1 - photos);
+      s.g.style.opacity = (1 - 0.3 * dim).toFixed(3);
+      s.g.style.filter = dim > 0.01 ? `grayscale(${(0.7 * dim).toFixed(2)})` : "";
 
       const tintI = s.blue ? clamp(tint * BLUE_COUNT - (BLUE_COUNT - 1 - i) * 0.6) : 0;
       s.fill.setAttribute("fill", mix(GRAY, BLUE, ease(clamp(tintI))));
@@ -282,14 +321,17 @@
 
       // عکس، صاف و رو به بیننده، روی مرکز تکه
       const [mx, my] = pt((r0 + r1) / 2, center);
-      const size = Math.max(r1 - r0, rad(PITCH) * r1) * 1.05;
+      // عکس هنگام هاور کمی زوم می‌شود
+      const size = Math.max(r1 - r0, rad(PITCH) * r1) * (1.05 + 0.18 * ho);
       s.img.setAttribute("x", (mx - size / 2).toFixed(2));
       s.img.setAttribute("y", (my - size / 2).toFixed(2));
       s.img.setAttribute("width", size.toFixed(2));
       s.img.setAttribute("height", size.toFixed(2));
       s.img.setAttribute("opacity", (1 - photos).toFixed(3));
       s.img.style.display = photos >= 1 ? "none" : "";
-      s.mid = [mx, my + cy];
+      const [ex, ey] = pt(r1 + 9, center);
+      s.edge = [ex + ox, ey + oy + cy];
+      s.angle = center;
     });
 
     brand.setAttribute("opacity", reveal.toFixed(3));
@@ -306,11 +348,18 @@
       const stage = section.querySelector(".team-logo__stage").getBoundingClientRect();
       const k = box.width / 200;
       personTip.innerHTML = `${s.person.name}<small>${s.person.role}</small>`;
-      personTip.style.right = `${stage.right - (box.left + (s.mid[0] + 100) * k)}px`;
-      personTip.style.top = `${box.top - stage.top + (s.mid[1] + 100) * k}px`;
-      personTip.style.opacity = 1;
+      // کارت اسم بیرونِ تکه، در امتداد زاویه‌اش
+      const [cx, cyy] = pt(1, s.angle);
+      // داخل کادر نگه داشتن کارت در لبه‌های صفحه
+      const tipX = clamp(box.left - stage.left + (s.edge[0] + 100) * k, 90, stage.width - 90);
+      const tipY = clamp(box.top - stage.top + (s.edge[1] + 100) * k, 60, stage.height - 60);
+      personTip.style.left = `${tipX}px`;
+      personTip.style.top = `${tipY}px`;
+      personTip.style.setProperty("--tx", `${(-50 + cx * 50).toFixed(1)}%`);
+      personTip.style.setProperty("--ty", `${(-50 + cyy * 50).toFixed(1)}%`);
+      personTip.classList.add("is-on");
     } else {
-      personTip.style.opacity = 0;
+      personTip.classList.remove("is-on");
     }
   }
 
@@ -331,7 +380,8 @@
   function tick() {
     current = reduceMotion ? target : lerp(current, target, 0.09);
     if (Math.abs(current - target) < 0.0005) current = target;
-    if (current !== last || hovered >= 0) { render(current); last = current; }
+    const hoverMoving = stepHover();
+    if (current !== last || hoverMoving || hovered >= 0) { render(current); last = current; }
     requestAnimationFrame(tick);
   }
   addEventListener("scroll", readScroll, { passive: true });
