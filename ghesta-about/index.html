@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تیم قسطا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ghesta-blue: #0058A0;
+    --ghesta-gray: #A5A7AA;
+    --bg: #ffffff;
+    --ink: #1f2933;
+    --muted: #6b7280;
+    --seg-stroke: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1620;
+      --ink: #eef2f6;
+      --muted: #9aa5b1;
+      --seg-stroke: #0e1620;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1620;
+    --ink: #eef2f6;
+    --muted: #9aa5b1;
+    --seg-stroke: #0e1620;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Vazirmatn", system-ui, sans-serif;
+  }
+
+  /* فقط برای پیش‌نمایش: جای بقیهٔ محتوای صفحه */
+  .demo-filler {
+    min-height: 70vh;
+    display: grid;
+    place-items: center;
+    padding: 0 16px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  /* ───────── بخش تیم → لوگو ───────── */
+  .team-logo {
+    position: relative;
+    height: 420vh;               /* طول اسکرول انیمیشن */
+  }
+  .team-logo__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .team-logo__svg {
+    width: min(92vw, 86vh);
+    height: min(92vw, 86vh);
+    overflow: visible;
+  }
+  .team-logo__seg-fill { stroke: var(--seg-stroke); stroke-width: 0.6; }
+  .team-logo__wordmark {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-weight: 800;
+    fill: var(--ghesta-blue);
+  }
+  .team-logo__tagline {
+    font-family: "Vazirmatn", system-ui, sans-serif;
+    font-weight: 400;
+    fill: var(--muted);
+  }
+  .team-logo__intro-title { font-weight: 800; fill: var(--ink); }
+  .team-logo__intro-sub { fill: var(--muted); }
+  .team-logo__caption {
+    position: absolute;
+    inset-inline: 16px;
+    bottom: 5vh;
+    margin: 0;
+    text-align: center;
+    font-size: clamp(13px, 2.2vw, 16px);
+    color: var(--muted);
+    transition: opacity .3s;
+  }
+  .team-logo__person {
+    position: absolute;
+    pointer-events: none;
+    padding: 6px 12px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(50%, -120%);
+    transition: opacity .15s;
+  }
+  .team-logo__person small { display: block; opacity: .75; }
+</style>
+</head>
+<body>
+
+<div class="demo-filler"><p>بالای صفحهٔ «درباره ما»<br>به پایین اسکرول کنید ↓</p></div>
+
+<section class="team-logo" id="team-logo" aria-label="تیم قسطا">
+  <div class="team-logo__stage">
+    <svg class="team-logo__svg" viewBox="-100 -100 200 200" role="img" aria-label="عکس‌های تیم قسطا که به لوگوی قسطا تبدیل می‌شوند">
+      <defs></defs>
+      <g class="team-logo__intro">
+        <text class="team-logo__intro-title" text-anchor="middle" y="-2" font-size="10">تیم قسطا</text>
+        <text class="team-logo__intro-sub" text-anchor="middle" y="9" font-size="3.8">آدم‌هایی که هر قسط رو ممکن می‌کنن</text>
+      </g>
+      <g class="team-logo__ring"></g>
+      <g class="team-logo__brand" opacity="0">
+        <text class="team-logo__wordmark" text-anchor="middle" font-size="22">قسطا</text>
+        <text class="team-logo__tagline" text-anchor="middle" font-size="6">تکه‌تکه، کنار هم؛ یک قسطا</text>
+      </g>
+    </svg>
+    <div class="team-logo__person" role="status"></div>
+    <p class="team-logo__caption">اسکرول کنید</p>
+  </div>
+</section>
+
+<div class="demo-filler"><p>ادامهٔ محتوای صفحهٔ «درباره ما»</p></div>
+
+<script>
+(() => {
+  /*
+   * عکس‌های تیم: ۹ نفر، به ترتیب ساعتگرد از پایینِ سمت راست.
+   * شش‌تای اول بخش آبی لوگو می‌شوند و سه‌تای آخر تکه‌های خاکستری.
+   * برای عکس واقعی، photo را آدرس فایل بگذارید (مثلاً "team/ali.jpg").
+   */
+  const TEAM = [
+    { name: "نام همکار ۱", role: "مدیرعامل",        photo: null },
+    { name: "نام همکار ۲", role: "مدیر محصول",      photo: null },
+    { name: "نام همکار ۳", role: "طراح تجربهٔ کاربری", photo: null },
+    { name: "نام همکار ۴", role: "توسعه‌دهنده",     photo: null },
+    { name: "نام همکار ۵", role: "اعتبارسنجی",      photo: null },
+    { name: "نام همکار ۶", role: "پشتیبانی",        photo: null },
+    { name: "نام همکار ۷", role: "مالی",            photo: null },
+    { name: "نام همکار ۸", role: "فروش و همکاری",   photo: null },
+    { name: "نام همکار ۹", role: "بازاریابی",       photo: null },
+  ];
+
+  // هندسهٔ لوگو (اندازه‌گیری‌شده از لوگوی اصلی): ۹ تکه با گام ۴۰ درجه،
+  // ۶ تکهٔ آبی از ۴۷° تا ۲۴۷° و ۳ تکهٔ خاکستری در ۲۸۷°، ۳۲۷° و ۷°.
+  const COUNT = 9, BLUE_COUNT = 6, PITCH = 40, FIRST_CENTER = 47;
+  const BLUE = "#0058A0", GRAY = "#A5A7AA";
+  const LOGO_INNER_RATIO = 0.665;   // نسبت شعاع داخلی به بیرونی در لوگو
+  const LOGO_GAP = 9;               // فاصلهٔ بین تکه‌ها در لوگو (درجه)
+
+  const svg = document.querySelector(".team-logo__svg");
+  const defs = svg.querySelector("defs");
+  const ring = svg.querySelector(".team-logo__ring");
+  const intro = svg.querySelector(".team-logo__intro");
+  const brand = svg.querySelector(".team-logo__brand");
+  const wordmark = brand.querySelector(".team-logo__wordmark");
+  const tagline = brand.querySelector(".team-logo__tagline");
+  const section = document.getElementById("team-logo");
+  const caption = section.querySelector(".team-logo__caption");
+  const personTip = section.querySelector(".team-logo__person");
+  const NS = "http://www.w3.org/2000/svg";
+
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const phase = (p, a, b) => ease(clamp((p - a) / (b - a)));
+  const rad = d => d * Math.PI / 180;
+  const pt = (r, deg) => [r * Math.cos(rad(deg)), r * Math.sin(rad(deg))];
+
+  // آواتار جایگزین تا وقتی عکس واقعی نیست
+  const placeholder = i => {
+    const hue = (200 + i * 37) % 360;
+    const s = `<svg xmlns="${NS}" viewBox="0 0 100 100">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="hsl(${hue} 45% 78%)"/><stop offset="1" stop-color="hsl(${hue} 40% 58%)"/>
+      </linearGradient></defs>
+      <rect width="100" height="100" fill="url(#g)"/>
+      <circle cx="50" cy="40" r="17" fill="hsl(${hue} 30% 94%)"/>
+      <path d="M18 100c2-22 16-34 32-34s30 12 32 34z" fill="hsl(${hue} 30% 94%)"/>
+    </svg>`;
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(s);
+  };
+
+  /*
+   * مسیر یک تکهٔ حلقه با گوشه‌های گرد.
+   * a0..a1 بازهٔ زاویه، rc0 و rc1 شعاع گردی گوشه‌ها در لبهٔ شروع و پایان
+   * (برای چسبیدن تکه‌های آبی به هم، گردی لبهٔ مشترک به صفر می‌رسد).
+   */
+  function sectorPath(r0, r1, a0, a1, rc0, rc1) {
+    const span = a1 - a0;
+    const maxRc = Math.min((r1 - r0) / 2, rad(span) * r0 * 0.45);
+    rc0 = Math.min(rc0, maxRc); rc1 = Math.min(rc1, maxRc);
+    const d0o = rc0 / r1 * 180 / Math.PI, d1o = rc1 / r1 * 180 / Math.PI;
+    const d0i = rc0 / r0 * 180 / Math.PI, d1i = rc1 / r0 * 180 / Math.PI;
+    const f = n => n.toFixed(3);
+    const P = (r, a) => pt(r, a).map(f).join(" ");
+    const large = span > 180 ? 1 : 0;
+    return [
+      `M${P(r1 - rc0, a0)}`,
+      `Q${P(r1, a0)} ${P(r1, a0 + d0o)}`,
+      `A${f(r1)} ${f(r1)} 0 ${large} 1 ${P(r1, a1 - d1o)}`,
+      `Q${P(r1, a1)} ${P(r1 - rc1, a1)}`,
+      `L${P(r0 + rc1, a1)}`,
+      `Q${P(r0, a1)} ${P(r0, a1 - d1i)}`,
+      `A${f(r0)} ${f(r0)} 0 ${large} 0 ${P(r0, a0 + d0i)}`,
+      `Q${P(r0, a0)} ${P(r0 + rc0, a0)}`,
+      "Z",
+    ].join("");
+  }
+
+  // ساخت المان‌ها
+  const segs = TEAM.slice(0, COUNT).map((person, i) => {
+    const clip = document.createElementNS(NS, "clipPath");
+    clip.id = `team-seg-clip-${i}`;
+    const clipPath = document.createElementNS(NS, "path");
+    clip.appendChild(clipPath);
+    defs.appendChild(clip);
+
+    const g = document.createElementNS(NS, "g");
+    g.style.cursor = "default";
+    const fill = document.createElementNS(NS, "path");
+    fill.setAttribute("class", "team-logo__seg-fill");
+    const img = document.createElementNS(NS, "image");
+    img.setAttribute("href", person.photo || placeholder(i));
+    img.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    img.setAttribute("clip-path", `url(#${clip.id})`);
+    g.append(fill, img);
+    ring.appendChild(g);
+
+    g.addEventListener("pointerenter", () => { hovered = i; });
+    g.addEventListener("pointerleave", () => { if (hovered === i) hovered = -1; });
+    return { person, clipPath, fill, img, g, blue: i < BLUE_COUNT };
+  });
+  let hovered = -1;
+
+  function render(p) {
+    // مراحل انیمیشن بر اساس پیشرفت اسکرول (۰ تا ۱)
+    const shrink = phase(p, 0.10, 0.62);   // کوچک شدن حلقه و نازک شدن تکه‌ها
+    const photos = phase(p, 0.38, 0.62);   // محو شدن عکس‌ها
+    const tint = clamp((p - 0.50) / 0.18); // آبی شدن تکه‌ها، یکی‌یکی
+    const merge = phase(p, 0.66, 0.84);    // به‌هم‌پیوستن تکه‌های آبی
+    const reveal = phase(p, 0.82, 0.96);   // نمایش نام قسطا
+
+    const r1 = lerp(98, 46, shrink);
+    const r0 = r1 * lerp(0.40, LOGO_INNER_RATIO, shrink);
+    const rc = r1 * 0.065;
+    const gap = lerp(3.5, LOGO_GAP, shrink);
+    const spin = lerp(-60, 0, shrink);
+    const cy = lerp(0, -22, reveal);
+
+    ring.setAttribute("transform", `translate(0 ${cy.toFixed(2)})`);
+    intro.setAttribute("opacity", (1 - phase(p, 0.04, 0.22)).toFixed(3));
+
+    segs.forEach((s, i) => {
+      const center = FIRST_CENTER + i * PITCH + spin;
+      let half0 = (PITCH - gap) / 2, half1 = half0, rc0 = rc, rc1 = rc;
+      if (s.blue) {
+        // لبه‌های داخلی بخش آبی بسته می‌شوند (با کمی هم‌پوشانی تا درز دیده نشود)
+        const closed = PITCH / 2 + 0.4;
+        if (i > 0)              { half0 = lerp(half0, closed, merge); rc0 = rc * (1 - merge); }
+        if (i < BLUE_COUNT - 1) { half1 = lerp(half1, closed, merge); rc1 = rc * (1 - merge); }
+      }
+      const d = sectorPath(r0, r1, center - half0, center + half1, rc0, rc1);
+      s.fill.setAttribute("d", d);
+      s.clipPath.setAttribute("d", d);
+
+      const tintI = s.blue ? clamp(tint * BLUE_COUNT - (BLUE_COUNT - 1 - i) * 0.6) : 0;
+      s.fill.setAttribute("fill", mix(GRAY, BLUE, ease(clamp(tintI))));
+      s.fill.style.strokeOpacity = (1 - merge).toFixed(3);
+
+      // عکس، صاف و رو به بیننده، روی مرکز تکه
+      const [mx, my] = pt((r0 + r1) / 2, center);
+      const size = Math.max(r1 - r0, rad(PITCH) * r1) * 1.05;
+      s.img.setAttribute("x", (mx - size / 2).toFixed(2));
+      s.img.setAttribute("y", (my - size / 2).toFixed(2));
+      s.img.setAttribute("width", size.toFixed(2));
+      s.img.setAttribute("height", size.toFixed(2));
+      s.img.setAttribute("opacity", (1 - photos).toFixed(3));
+      s.img.style.display = photos >= 1 ? "none" : "";
+      s.mid = [mx, my + cy];
+    });
+
+    brand.setAttribute("opacity", reveal.toFixed(3));
+    wordmark.setAttribute("y", lerp(52, 46, reveal).toFixed(2));
+    tagline.setAttribute("y", lerp(64, 58, reveal).toFixed(2));
+
+    caption.textContent = p < 0.5 ? "اسکرول کنید" : "";
+    caption.style.opacity = p < 0.05 ? 1 : 1 - phase(p, 0.05, 0.2);
+
+    // نام و سمت همکار هنگام هاور، تا وقتی عکس‌ها پیدا هستند
+    if (hovered >= 0 && photos < 0.5) {
+      const s = segs[hovered];
+      const box = svg.getBoundingClientRect();
+      const stage = section.querySelector(".team-logo__stage").getBoundingClientRect();
+      const k = box.width / 200;
+      personTip.innerHTML = `${s.person.name}<small>${s.person.role}</small>`;
+      personTip.style.right = `${stage.right - (box.left + (s.mid[0] + 100) * k)}px`;
+      personTip.style.top = `${box.top - stage.top + (s.mid[1] + 100) * k}px`;
+      personTip.style.opacity = 1;
+    } else {
+      personTip.style.opacity = 0;
+    }
+  }
+
+  function mix(a, b, t) {
+    const pa = a.match(/\w\w/g).map(h => parseInt(h, 16));
+    const pb = b.match(/\w\w/g).map(h => parseInt(h, 16));
+    return "rgb(" + pa.map((v, k) => Math.round(lerp(v, pb[k], t))).join(",") + ")";
+  }
+
+  // پیشرفت اسکرول با کمی نرمی، تا حرکت «آروم آروم» باشد
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let target = 0, current = 0, last = -1;
+  function readScroll() {
+    const rect = section.getBoundingClientRect();
+    const total = rect.height - innerHeight;
+    target = clamp(-rect.top / total);
+  }
+  function tick() {
+    current = reduceMotion ? target : lerp(current, target, 0.09);
+    if (Math.abs(current - target) < 0.0005) current = target;
+    if (current !== last || hovered >= 0) { render(current); last = current; }
+    requestAnimationFrame(tick);
+  }
+  addEventListener("scroll", readScroll, { passive: true });
+  addEventListener("resize", readScroll);
+  readScroll(); current = target; render(current);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
