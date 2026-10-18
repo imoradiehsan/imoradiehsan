@@ -125,7 +125,7 @@
       <defs></defs>
       <g class="team-logo__intro">
         <text class="team-logo__intro-title" text-anchor="middle" y="-2" font-size="10">تیم قسطا</text>
-        <text class="team-logo__intro-sub" text-anchor="middle" y="9" font-size="3.8">آدم‌هایی که هر قسط رو ممکن می‌کنن</text>
+        <text class="team-logo__intro-sub" text-anchor="middle" y="9" font-size="3.8">۵۰ نفر، هر کدوم یه تکه از قسطا</text>
       </g>
       <g class="team-logo__ring"></g>
       <g class="team-logo__brand" opacity="0">
@@ -143,20 +143,22 @@
 <script>
 (() => {
   /*
-   * عکس‌های تیم: ۹ نفر، به ترتیب ساعتگرد از پایینِ سمت راست.
+   * عکس‌های جمعی تیم‌ها: ۹ تکه، به ترتیب ساعتگرد از پایینِ سمت راست.
    * شش‌تای اول بخش آبی لوگو می‌شوند و سه‌تای آخر تکه‌های خاکستری.
-   * برای عکس واقعی، photo را آدرس فایل بگذارید (مثلاً "team/ali.jpg").
+   * برای عکس واقعی، photo را آدرس فایل بگذارید (مثلاً "team/tech.jpg").
+   * align تعیین می‌کند کدام قسمت عکس داخل تکه دیده شود؛ برای عکس‌های
+   * جمعی معمولاً "xMidYMin" (بالای عکس، جایی که صورت‌ها هستند) بهتر است.
    */
-  const TEAM = [
-    { name: "نام همکار ۱", role: "مدیرعامل",        photo: null },
-    { name: "نام همکار ۲", role: "مدیر محصول",      photo: null },
-    { name: "نام همکار ۳", role: "طراح تجربهٔ کاربری", photo: null },
-    { name: "نام همکار ۴", role: "توسعه‌دهنده",     photo: null },
-    { name: "نام همکار ۵", role: "اعتبارسنجی",      photo: null },
-    { name: "نام همکار ۶", role: "پشتیبانی",        photo: null },
-    { name: "نام همکار ۷", role: "مالی",            photo: null },
-    { name: "نام همکار ۸", role: "فروش و همکاری",   photo: null },
-    { name: "نام همکار ۹", role: "بازاریابی",       photo: null },
+  const TEAMS = [
+    { name: "تیم فنی",              members: 8, photo: null, align: "xMidYMid" },
+    { name: "تیم محصول و طراحی",    members: 7, photo: null, align: "xMidYMid" },
+    { name: "تیم اعتبارسنجی",       members: 6, photo: null, align: "xMidYMid" },
+    { name: "تیم پشتیبانی",         members: 5, photo: null, align: "xMidYMid" },
+    { name: "تیم فروش و همکاری‌ها", members: 6, photo: null, align: "xMidYMid" },
+    { name: "تیم مالی",             members: 5, photo: null, align: "xMidYMid" },
+    { name: "تیم بازاریابی",        members: 4, photo: null, align: "xMidYMid" },
+    { name: "تیم عملیات",           members: 5, photo: null, align: "xMidYMid" },
+    { name: "مدیریت و منابع انسانی", members: 4, photo: null, align: "xMidYMid" },
   ];
 
   // هندسهٔ لوگو (اندازه‌گیری‌شده از لوگوی اصلی): ۹ تکه با گام ۴۰ درجه،
@@ -182,19 +184,25 @@
   const lerp = (a, b, t) => a + (b - a) * t;
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const phase = (p, a, b) => ease(clamp((p - a) / (b - a)));
+  const toFa = n => n.toLocaleString("fa-IR");
   const rad = d => d * Math.PI / 180;
   const pt = (r, deg) => [r * Math.cos(rad(deg)), r * Math.sin(rad(deg))];
 
-  // آواتار جایگزین تا وقتی عکس واقعی نیست
-  const placeholder = i => {
+  // عکس جمعی جایگزین تا وقتی عکس واقعی نیست: چند آدم کنار هم در دو ردیف
+  const placeholder = (i, members) => {
     const hue = (200 + i * 37) % 360;
+    const back = Math.min(4, Math.ceil(members / 2)), front = Math.min(4, members - back) || 1;
+    const person = (x, y, r, shade) =>
+      `<circle cx="${x}" cy="${y}" r="${r}" fill="hsl(${hue} 30% ${shade}%)"/>` +
+      `<path d="M${x - r * 2} ${y + r * 4.2}c0-${r * 1.6} ${r * .9}-${r * 2.6} ${r * 2}-${r * 2.6}s${r * 2} ${r} ${r * 2} ${r * 2.6}z" fill="hsl(${hue} 30% ${shade}%)"/>`;
+    const row = (n, y, r, shade) => Array.from({ length: n }, (_, k) =>
+      person(50 + (k - (n - 1) / 2) * r * 3.1, y, r, shade)).join("");
     const s = `<svg xmlns="${NS}" viewBox="0 0 100 100">
       <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="hsl(${hue} 45% 78%)"/><stop offset="1" stop-color="hsl(${hue} 40% 58%)"/>
       </linearGradient></defs>
       <rect width="100" height="100" fill="url(#g)"/>
-      <circle cx="50" cy="40" r="17" fill="hsl(${hue} 30% 94%)"/>
-      <path d="M18 100c2-22 16-34 32-34s30 12 32 34z" fill="hsl(${hue} 30% 94%)"/>
+      ${row(back, 40, 7, 86)}${row(front, 58, 8, 95)}
     </svg>`;
     return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(s);
   };
@@ -227,7 +235,7 @@
   }
 
   // ساخت المان‌ها
-  const segs = TEAM.slice(0, COUNT).map((person, i) => {
+  const segs = TEAMS.slice(0, COUNT).map((team, i) => {
     const clip = document.createElementNS(NS, "clipPath");
     clip.id = `team-seg-clip-${i}`;
     const clipPath = document.createElementNS(NS, "path");
@@ -237,12 +245,12 @@
     const g = document.createElementNS(NS, "g");
     g.setAttribute("class", "team-logo__seg");
     g.setAttribute("tabindex", "0");
-    g.setAttribute("aria-label", `${person.name}، ${person.role}`);
+    g.setAttribute("aria-label", `${team.name}، ${toFa(team.members)} نفر`);
     const fill = document.createElementNS(NS, "path");
     fill.setAttribute("class", "team-logo__seg-fill");
     const img = document.createElementNS(NS, "image");
-    img.setAttribute("href", person.photo || placeholder(i));
-    img.setAttribute("preserveAspectRatio", "xMidYMid slice");
+    img.setAttribute("href", team.photo || placeholder(i, team.members));
+    img.setAttribute("preserveAspectRatio", `${team.align || "xMidYMid"} slice`);
     img.setAttribute("clip-path", `url(#${clip.id})`);
     const glow = document.createElementNS(NS, "path");
     glow.setAttribute("class", "team-logo__seg-glow");
@@ -256,7 +264,7 @@
     g.addEventListener("focus", on);
     g.addEventListener("blur", off);
     // h: میزان هاور این تکه (۰ تا ۱) که نرم به سمت هدف حرکت می‌کند
-    return { person, clipPath, fill, img, glow, g, blue: i < BLUE_COUNT, h: 0 };
+    return { team, clipPath, fill, img, glow, g, blue: i < BLUE_COUNT, h: 0 };
   });
   let hovered = -1;
 
@@ -347,12 +355,13 @@
       const box = svg.getBoundingClientRect();
       const stage = section.querySelector(".team-logo__stage").getBoundingClientRect();
       const k = box.width / 200;
-      personTip.innerHTML = `${s.person.name}<small>${s.person.role}</small>`;
+      personTip.innerHTML = `${s.team.name}<small>${toFa(s.team.members)} نفر</small>`;
       // کارت اسم بیرونِ تکه، در امتداد زاویه‌اش
       const [cx, cyy] = pt(1, s.angle);
       // داخل کادر نگه داشتن کارت در لبه‌های صفحه
-      const tipX = clamp(box.left - stage.left + (s.edge[0] + 100) * k, 90, stage.width - 90);
-      const tipY = clamp(box.top - stage.top + (s.edge[1] + 100) * k, 60, stage.height - 60);
+      const tw = personTip.offsetWidth + 16, th = personTip.offsetHeight + 16;
+      const tipX = clamp(box.left - stage.left + (s.edge[0] + 100) * k, tw, stage.width - tw);
+      const tipY = clamp(box.top - stage.top + (s.edge[1] + 100) * k, th, stage.height - th);
       personTip.style.left = `${tipX}px`;
       personTip.style.top = `${tipY}px`;
       personTip.style.setProperty("--tx", `${(-50 + cx * 50).toFixed(1)}%`);
