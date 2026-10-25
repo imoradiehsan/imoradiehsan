@@ -210,6 +210,16 @@ ol.rd.rv li{opacity:0;transform:translateY(14px);transition:opacity .45s ease,tr
 .nlt{display:flex;gap:8px}.nlt div{flex:1;background:#fff;border:1px solid #F3E3D3;border-radius:14px;padding:10px 6px;cursor:pointer}.nlt small{display:block;font-size:11px;color:var(--mut)}.nlt b{font-size:16px;color:var(--ink)}
 .nlw{display:flex;gap:10px;padding:10px 0;border-top:1px solid #EEF1F5}.nlw:first-of-type{border-top:0}.nlw i{width:8px;height:8px;border-radius:50%;background:#F08A24;margin-top:9px;flex:none;box-shadow:0 0 0 4px #F08A2422}.nlw b{display:block;font-size:13.5px;color:var(--ink)}.nlw p{margin:2px 0 0;font-size:12.5px;line-height:1.9;color:#4B5563}
 .nlo{display:flex;align-items:center;gap:10px;width:100%;text-align:right;background:#F7F9FC;border:0;border-radius:14px;padding:12px;margin-top:8px;font-family:inherit;cursor:pointer}.nlo>span{width:36px;height:36px;border-radius:11px;background:#EAF1FF;color:var(--blue);display:grid;place-items:center;flex:none}.nlo div{flex:1}.nlo b{display:block;font-size:13.5px;color:var(--ink)}.nlo small{font-size:12px;color:var(--mut)}.nlo em{font-style:normal;color:var(--blue);font-weight:800}
+.lv{flex:1;overflow:auto;background:#fff}.lvh{position:relative;background:radial-gradient(120% 80% at 80% 0%,#4D8BFF 0%,#2563EB 55%,#1D4ED8 100%);color:#fff;text-align:center;padding:30px 20px 70px;border-radius:0 0 50% 50%/0 0 60px 60px;overflow:hidden}
+.lvh:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:#ffffff12;left:-60px;top:-40px}.lvh img{width:240px;position:relative;z-index:1;animation:float 4s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}
+.lvh h2{position:relative;z-index:1;font-size:21px;line-height:1.8;margin:8px 0 0;color:#fff}.lvb{position:absolute!important;top:10px;right:10px;color:#fff!important;z-index:2}
+.lvf{padding:18px 16px 10px}.lvf>div{display:flex;gap:12px;align-items:center;background:#F3F7FF;border-radius:16px;padding:12px 14px;margin-bottom:10px;animation:rise .5s both}.lvf>div:nth-child(2){animation-delay:.08s}.lvf>div:nth-child(3){animation-delay:.16s}
+.lvf span{width:42px;height:42px;border-radius:50%;background:#E3ECFF;color:var(--blue);display:grid;place-items:center;flex:none}.lvf p{margin:0;font-size:12.5px;color:var(--mut);line-height:1.8}.lvf b{display:block;font-size:13.5px;color:var(--ink)}
+.hl{background:#F6F8FB}.hr{display:block;width:100%;text-align:right;background:#fff;border:1px solid #E7EBF1;border-radius:16px;padding:14px;margin-bottom:10px;font-family:inherit;cursor:pointer}
+.hrt{display:flex;justify-content:space-between;align-items:center}.hrt small{display:block;font-size:11.5px;color:var(--mut)}.hrt b{font-size:16px;color:var(--ink)}.hrt i{font-style:normal;font-size:11.5px;color:var(--mut);font-weight:600}
+.hp{font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px;background:#EDEFF2;color:#6B7280}.hp.on{background:#E3F5EA;color:#18A058}
+.hrc{display:flex;gap:8px;margin:12px 0}.hrc span{flex:1;background:#F3F7FF;border-radius:10px;padding:8px 4px;text-align:center}.hrc em{display:block;font-style:normal;font-size:11px;color:var(--mut)}.hrc b{font-size:13px;color:#1E3A8A}
+.hrf{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut);border-top:1px dashed #E6EAF0;padding-top:10px}.hrf>span:first-child{display:inline-flex;gap:5px;align-items:center}.hrf .go{color:var(--blue);font-weight:700}.hr.off .hrf .go{color:#B5C3E0}
 /* designed result + detail */
 .rhero{background:radial-gradient(120% 70% at 80% 0%,#3D7BFF 0,#1E5BF0 45%,#4A4CE6 100%);color:#fff;margin:-14px -14px 0;padding:14px 14px 70px;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
 .rhero .top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
@@ -406,29 +416,29 @@ function loanCard(r,i,best){const l=r.l,e=r.e;const aff=canAfford(e.inst);
 
 /* ---------- screens ---------- */
 const REPORTS=[
- {d:'۵ مهر ۱۴۰۵',amt:625e6,n:7,sc:'B2',left:28,ans:[1,0,[6],0,1],cap:7,amtSet:625e6},
- {d:'۱۸ شهریور ۱۴۰۵',amt:100e6,n:3,sc:'C3',left:0,ans:[1,0,[6],0,1],cap:3,amtSet:0},
- {d:'۲ مرداد ۱۴۰۵',amt:300e6,n:1,sc:'C3',left:0,ans:[3,3,[0,3],1,2],cap:1,amtSet:0}];
+ {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'B2',left:28,ans:[1,0,[6],0,1],cap:7,amtSet:625e6},
+ {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'C3',left:0,ans:[1,0,[6],0,1],cap:7,amtSet:625e6}];
 function openReport(i){const r=REPORTS[i];S.ans=JSON.parse(JSON.stringify(r.ans));S.cap=r.cap;S.amt=r.amtSet;S.score=r.sc;S.saved=true;go('result');}
-function home(){return `<div class="hd"><b>گزارش‌های مشاوره وام</b><span class="sp"></span><button class="ib" onclick="S.sheet='human';render()">🎧</button></div>
- <div class="body">
-  ${S.pending?`<button class="rep2 act pend fade" onclick="${S.pending==='ready'?"S.pending=null;go('result')":"toast('گزارش هنوز در حال آماده‌سازی است')"}"><div class="r2h"><span class="r2i">${S.pending==='ready'?'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#18A058" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>':'<span class="spn"></span>'}</span><div class="r2t"><small>${S.pending==='ready'?'گزارش جدید':'گزارش در حال آماده‌سازی'}</small><b style="font-size:15px">${S.pending==='ready'?'گزارش شما آماده است':'یک گزارش در حال آماده‌سازی دارید'}</b></div></div><div class="r2f" style="margin-top:12px"><span>${S.pending==='ready'?'همین الان':'تا چند لحظه دیگر آماده می‌شود'}</span><span class="go">${S.pending==='ready'?'مشاهده گزارش ‹':''}</span></div></button>`:''}
-  <h4 class="rh">گزارش‌های قبلی <small>${fa(REPORTS.length)} گزارش</small></h4>
-  ${REPORTS.map((r,i)=>{const c=SCORES[r.sc].c;return `<button class="rep2 fade ${r.left?'act':''}" style="animation-delay:${.05+i*.06}s" onclick="openReport(${i})">
-    <div class="r2h"><span class="r2i">${window.IMG?`<img src="${IMG.report}" alt="">`:''}</span><div class="r2t"><small>مبلغ درخواستی</small><b>${mil(r.amt)} <i>تومان</i></b></div>${r.left?`<span class="r2s on"><span class="dot"></span>فعال</span>`:'<span class="r2s">منقضی</span>'}</div>
-    <div class="r2c"><span><em>وام پیشنهادی</em><b>${fa(r.n)}</b></span><span><em>رتبه اعتباری</em><b style="color:${c}">${r.sc}</b></span><span><em>${r.left?'اعتبار گزارش':'وضعیت'}</em><b>${r.left?fa(r.left)+' روز':'تمام شده'}</b></span></div>
-    <div class="r2f"><span>🗓 ${r.d}</span><span class="go">مشاهده گزارش ‹</span></div>
-  </button>`;}).join('')}
- </div><div class="ft"><button class="btn newbtn" onclick="go('landing')">✦ مشاوره جدید وام</button></div>`;}
+function home(){return `<div class="hd"><button class="ib" onclick="go('landing')">›</button><b>لیست گزارش</b><span class="sp"></span></div>
+ <div class="body hl">
+  ${S.pending?`<button class="hr fade" onclick="${S.pending==='ready'?"S.pending=null;go('result')":"toast('گزارش هنوز در حال آماده‌سازی است')"}"><div class="hrt"><div><small>${S.pending==='ready'?'گزارش جدید':'در حال آماده‌سازی'}</small><b style="font-size:14.5px">${S.pending==='ready'?'گزارش شما آماده است':'یک گزارش در حال آماده‌سازی دارید'}</b></div>${S.pending==='ready'?'<span class="hp on">آماده</span>':'<span class="spn" style="width:20px;height:20px"></span>'}</div></button>`:''}
+  ${REPORTS.map((r,i)=>`<button class="hr fade ${r.left?'':'off'}" style="animation-delay:${.05+i*.06}s" onclick="${r.left?`openReport(${i})`:"toast('اعتبار این گزارش تمام شده است')"}">
+    <div class="hrt"><div><small>مبلغ درخواستی</small><b>${mil(r.amt)} <i>تومان</i></b></div><span class="hp ${r.left?'on':''}">${r.left?'فعال':'منقضی'}</span></div>
+    <div class="hrc"><span><em>وام پیشنهادی</em><b>${fa(r.n)}</b></span><span><em>رتبه اعتباری</em><b>${fa(r.sc)}</b></span><span><em>اعتبار گزارش</em><b>${r.left?fa(r.left)+' روز':'تمام شده'}</b></span></div>
+    <div class="hrf"><span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/></svg> ${r.d}</span><span class="go">مشاهده گزارش ‹</span></div>
+  </button>`).join('')}
+ </div><div class="ft"><button class="btn" onclick="go('landing')">+ مشاوره جدید وام</button></div>`;}
 
-function landing(){return `<div class="l2">
-  <div class="l2top"><button class="ib" onclick="go('home')">›</button><span class="sp"></span><button class="ib" onclick="S.sheet='human';render()">🎧</button></div>
-  <div class="l2ill">${window.IMG?`<img src="${IMG.report}" alt="">`:''}<span class="orb o1"></span><span class="orb o2"></span></div>
-  <span class="l2tag">✦ مشاوره هوشمند وام</span>
-  <h2>وام متناسب با شرایط خود را<br>در کمتر از ۲ دقیقه بیابید</h2>
-  <ul class="l2pts"><li>✓ بررسی ${fa(LOANS.length)} وام از ۵۵ بانک کشور</li><li>✓ متناسب با رتبه اعتباری و توان بازپرداخت شما</li><li>✓ ارائه نقشه راه گام‌به‌گام تا دریافت وام</li></ul>
-  <div class="l2cta"><button class="pulse" onclick="go('login')">شروع مشاوره ←</button></div>
- </div>`;}
+function landing(){return `<div class="lv"><div class="lvh">
+  <button class="ib lvb" onclick="go('home')">›</button>
+  ${window.IMG?`<img src="${IMG.report}" alt="">`:''}
+  <h2>وام مناسب خودت رو<br>در کمتر از ۵ دقیقه پیدا کن</h2></div>
+  <div class="lvf">
+   <div><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h4"/><path d="M14 3l5 5h-5z"/><circle cx="16" cy="16" r="3"/><path d="M18.5 18.5L21 21"/></svg></span><p><b>بررسی بیش از ${fa(600)} طرح وام بانکی</b>اطلاعات وام‌ها رو یک‌جا ببین و مقایسه کن</p></div>
+   <div><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><p><b>وام متناسب با رتبه اعتباری و توان پرداخت</b>پیشنهادهایی بر اساس شرایط خودت</p></div>
+   <div><span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg></span><p><b>مسیر دریافت وام رو قدم‌به‌قدم پیش برو</b>از انتخاب وام تا آماده‌کردن مدارک</p></div>
+  </div>
+ </div><div class="ft"><button class="btn" onclick="go('login')">شروع مشاوره ←</button></div>`;}
 function q(){const qq=Q[S.qi],a=S.ans[S.qi];const ready=qq.multi?a.length>0:a!=null;
  const m=S.qi>=1?match():null;
  return hdr('مشاوره هوشمند وام',S.qi?`go('q${S.qi-1}')`:"go('landing')")+`<div class="body">
@@ -452,7 +462,7 @@ function verify(){const n=en(S.nid),ok=/^\d{10}$/.test(n);
  </div><div class="ft"><button class="btn" id="nidBtn" onclick="if(S.nid.length!==10)toast('کد ملی ۱۰ رقمی را وارد کنید');else{S.votp='';S.tEnd.idv=0;go('idv')}">دریافت کد تأیید</button></div>`;}
 const PEN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>';
 const otpBox=(n,k,cb)=>`<div class="otp" data-n="${n}" data-k="${k}" data-cb="${cb}"><input inputmode="numeric" autocomplete="one-time-code" maxlength="${n}" value="${S[k]}">${Array.from({length:n},(_,i)=>`<span class="ob ${S[k][i]?'f':''}">${S[k][i]?fa(S[k][i]):'-'}</span>`).join('')}</div>`;
-document.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.isComposing)return;const sc=document.getElementById('scr');const b=[...sc.querySelectorAll('.lgc .btn,.ft .btn,.l2cta .pulse')].find(x=>!x.disabled&&!x.classList.contains('sec'));if(b){e.preventDefault();b.click();}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter'||e.isComposing)return;const sc=document.getElementById('scr');const b=[...sc.querySelectorAll('.lgc .btn,.ft .btn')].find(x=>!x.disabled&&!x.classList.contains('sec'));if(b){e.preventDefault();b.click();}});
 function smsPush(){const w=document.querySelector('#scr .otp');if(!w)return;const k=w.dataset.k,n=+w.dataset.n,id=k+(S.tEnd[k==='lotp'?'login':'idv']||0);if(window._smsId===id)return;window._smsId=id;
  const code=String(Math.floor(Math.random()*9*10**(n-1))+10**(n-1));clearTimeout(window._smsT);
  window._smsT=setTimeout(()=>{const sc=document.getElementById('scr');if(!sc.querySelector('.otp'))return;sc.querySelector('.sms')?.remove();const d=document.createElement('div');d.className='sms';
