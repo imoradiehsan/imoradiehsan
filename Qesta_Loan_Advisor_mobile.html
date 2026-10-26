@@ -355,8 +355,8 @@ const Q=[
   o:[['هزینه‌های شخصی','cash'],['خرید کالا','buy'],['راه‌اندازی یا توسعه کسب‌وکار','biz'],['اجاره، ودیعه یا تعمیر خانه','home'],['هزینه تحصیل','edu'],['فرقی نمی‌کنه','any']]},
  {k:'have',multi:true,t:'از این موارد کدوم‌ها رو داری؟',
   o:[['ضامن رسمی دارم (کارمند یا بازنشسته)','guar'],['می‌تونم مدتی پول تو حسابم نگه دارم','dep'],['چک صیادی یا سفته دارم','chq'],['حقوق ثابت و فیش حقوقی دارم','sal'],['سند ملک یا وثیقه دارم','col'],['هیچ‌کدوم رو ندارم','none']]},
- {k:'pri',t:'مهم‌ترین چیز برات چیه؟',why:'وام‌های سازگار بر اساس این اولویت مرتب می‌شن.',
-  o:[['کارمزد کمتر','rate'],['قسط ماهانه کمتر','inst'],['سقف مبلغ بیشتر','max'],['دریافت سریع‌تر (آنلاین)','fast']]},
+ {k:'pri',t:'موقع انتخاب وام، چی برات مهم‌تره؟',
+  o:[['سود و کارمزد کمتر','rate'],['قسط ماهانه کمتر','inst'],['مبلغ وام بیشتر','max'],['دریافت سریع و آنلاین','fast'],['بدون نیاز به ضامن','noguar'],['مدت بازپرداخت طولانی‌تر','long']]},
  {k:'inc',t:'حدوداً ماهانه چقدر می‌تونی قسط بدی؟',why:'وام‌هایی که قسطشون از توانت بیشتره، با هشدار نشون داده می‌شن.',
   o:[['تا ۵ میلیون تومان',5],['۵ تا ۱۰ میلیون',10],['۱۰ تا ۲۰ میلیون',20],['بیشتر از ۲۰ میلیون',60],['نمی‌دونم',0]]}
 ];
@@ -392,7 +392,7 @@ function match(opt){
   const rows=LOANS.map(l=>({l,e:evaluate(l,opt)}));
   const full=rows.filter(r=>r.e.ok), near=rows.filter(r=>!r.e.ok&&r.e.near);
   const p=S.ans[3]==null?'rate':Q[3].o[S.ans[3]][1];
-  const key={rate:r=>(r.e.y)*1e3+r.e.inst/1e7,inst:r=>r.e.inst,max:r=>-(r.l.mx||0),fast:r=>(['وام آنلاین','وام فوری','وام بدون ضامن'].includes(r.l.ty)?0:1e6)+r.e.y}[p];
+  const key={rate:r=>(r.e.y)*1e3+r.e.inst/1e7,inst:r=>r.e.inst,max:r=>-(r.l.mx||0),fast:r=>(['وام آنلاین','وام فوری','وام بدون ضامن'].includes(r.l.ty)?0:1e6)+r.e.y,noguar:r=>(r.l.tg.includes('guar')?1e6:0)+r.e.y,long:r=>-months(r.l)*1e3+r.e.y}[p];
   const k2=r=>(canAfford(r.e.inst)?0:1e12)+key(r);
   full.sort((a,b)=>k2(a)-k2(b)); near.sort((a,b)=>k2(a)-k2(b));
   return {full,near,inactive:LOANS.filter(l=>!l.a).length};
@@ -566,8 +566,8 @@ function gauge(){const sc=SCORES[S.score],a=Math.PI*(1-sc.p),x=32+26*Math.cos(a)
  return `<svg class="gauge" viewBox="0 0 64 36"><path d="M6 32a26 26 0 0 1 52 0" fill="none" stroke="#ffffff40" stroke-width="7" stroke-linecap="round"/><path d="M6 32A26 26 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}" fill="none" stroke="${sc.c}" stroke-width="7" stroke-linecap="round"/><text x="32" y="33" text-anchor="middle" font-size="11" font-weight="700" fill="#fff" font-family="Vazirmatn">${S.score}</text></svg>`;}
 LOANS.forEach(l=>{if(!l.tg.includes('dep')&&l.rq.some(r=>/موجودی|سپرده|انضباط مالی/.test(r[0])))l.tg.push('dep');});
 function plan(m){const N=amount(),pick=[],banks=new Set();
- const NICHE=/ویژه|هیئت علمی|بازنشست|فرهنگیان|کارکنان|اشتغال|ایثارگر|جانباز|دانشجو|طلاب|کارآفرینی|زوج|ازدواج|فرزندآوری|مسکن ملی/;
- let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t)&&r.l.b!=='بانک مرکزی').sort((a,b)=>a.e.y-b.e.y||(b.l.mx||0)-(a.l.mx||0));
+ const NICHE=/ویژه|کشاورز|هیئت علمی|بازنشست|فرهنگیان|کارکنان|اشتغال|ایثارگر|جانباز|دانشجو|طلاب|کارآفرینی|زوج|ازدواج|فرزندآوری|مسکن ملی/;
+ let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t)&&r.l.b!=='بانک مرکزی');
  if(!pool.length)pool=m.full.slice();
  const K=S.cap||3;
  if(K===1){const big=pool.filter(r=>(r.l.mx??Infinity)>=N);if(big.length)pool=big;}
