@@ -611,8 +611,8 @@ function rng(x,u=5e6){const lo=Math.max(u,Math.floor(x*.9/u)*u),hi=Math.ceil(x*1
 function amtLabel(){const a=S.ans[0];if(S.amt||a==null)return 'حدود '+mil(amount())+' تومان';const t=Q[0].o[a][0];return (t.startsWith('تا')||t.startsWith('بیشتر')?t:'بین '+t)+(t.includes('تومان')?'':' تومان');}
 function estAmt(P){return Math.max(5e6,Math.floor(P.total*.95/5e6)*5e6);}
 function aiText(m,best){const P=plan(m),N=amtLabel(),n=P.loans.length;let t;
- if(n>1)t='برای رسیدن به '+N+'، این '+fa(n)+' وام رو با هم بگیر؛ جمعشون این مبلغ رو پوشش می‌ده. قسط ماهانه همه روی هم حدود '+rng(P.inst,5e5)+' تومان.';
- else{const x=P.loans[0];t='برای '+N+'، '+x.r.l.t+' از '+x.r.l.b+' به‌تنهایی کافیه. قسط ماهانه حدود '+rng(x.inst,5e5)+' تومان.';}
+ if(n>1)t='برای وام '+N+'، این '+fa(n)+' وام رو با هم بگیر؛ جمعشون این مبلغ رو پوشش می‌ده. قسط ماهانه همه روی هم حدود '+rng(P.inst,5e5)+' تومان.';
+ else{const x=P.loans[0];t='برای وام '+N+'، '+x.r.l.t+' از '+x.r.l.b+' به‌تنهایی کافیه. قسط ماهانه حدود '+rng(x.inst,5e5)+' تومان.';}
  return t;}
 function shortNote(k){let s=k.split('.')[0].trim();if(s.length>110)s=s.slice(0,s.lastIndexOf(' ',108))+'…';return s;}
 function resNotes(m,best,road){const P=plan(m),out=[],has=t=>P.loans.some(x=>x.r.l.rq.some(r=>r[0]===t));
