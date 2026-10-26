@@ -579,17 +579,18 @@ function plan(m){const N=amount(),pick=[],banks=new Set();
    else if(GU.includes(t))prep.push({t:'آماده کردن '+t+' برای '+b,d:t+' رو قبل از درخواست آماده کن.',lid:id});
    else other.push(t);});
   if(other.length)prep.push({t:'آماده کردن مدارک '+l.t,d:'اینا رو آماده کن: '+other.slice(0,3).join('، ')+'.',lid:id});
-  apply.push({t:'درخواست '+mil(x.share)+' از '+l.t,d:'از سایت '+b+' درخواست بده؛ قسطش حدود '+mil(x.inst)+' تومان می‌شه.',lid:id,dep:hasDep,y:x.r.e.y});});
+  apply.push({t:'درخواست حدود '+rng(x.share)+' از '+l.t,d:'از سایت '+b+' درخواست بده؛ قسطش حدود '+rng(x.inst,5e5)+' تومان می‌شه.',lid:id,dep:hasDep,y:x.r.e.y});});
  apply.sort((a,b)=>(a.dep-b.dep)||(a.y-b.y));
  if(apply.length>1)apply[apply.length-1].d+=' این یکی رو آخر از همه بذار.';
  const steps=[];
  if(['C3','D2','E1'].includes(S.score))steps.push({t:'بهبود رتبه اعتباری',d:'اول اینو درست کن: '+REASONS[S.score]+'. وگرنه درخواستت رد می‌شه.',lid:null});
  const seen=new Set();[...acc,...long,...prep,...apply].forEach(s=>{if(seen.has(s.t))return;seen.add(s.t);steps.push(s);});
  return {loans,total,inst,single,steps,banks:loans.length};}
+function rng(x,u=5e6){const lo=Math.max(u,Math.floor(x*.9/u)*u),hi=Math.ceil(x*1.1/u)*u;const f=v=>{const s=mil(v);return s};const a=mil(lo).replace(/ (میلیون|میلیارد)$/,''),un=mil(hi).match(/(میلیون|میلیارد)$/)[0];return lo>=hi?mil(hi):(mil(lo).endsWith(un)?a:mil(lo))+' تا '+mil(hi);}
 function estAmt(P){return Math.max(5e6,Math.floor(P.total*.95/5e6)*5e6);}
 function aiText(m,best){const P=plan(m),N=mil(amount())+' تومان';let t;
- if(P.loans.length>1)t='گفته بودی به '+N+' نیاز داری. برای رسیدن به این مبلغ، این '+fa(P.loans.length)+' وام رو بهت پیشنهاد می‌کنیم. قسط ماهانه‌شون روی هم حدود '+mil(P.inst)+' تومان می‌شه.';
- else t='گفته بودی به '+N+' نیاز داری. برای رسیدن به این مبلغ، '+best.l.t+' از '+best.l.b+' رو بهت پیشنهاد می‌کنیم. قسط ماهانه‌ش حدود '+mil(best.e.inst)+' تومان می‌شه.';
+ if(P.loans.length>1)t='گفته بودی به '+N+' نیاز داری. برای رسیدن به این مبلغ، این '+fa(P.loans.length)+' وام رو بهت پیشنهاد می‌کنیم. قسط ماهانه‌شون روی هم حدود '+rng(P.inst,5e5)+' تومان می‌شه.';
+ else t='گفته بودی به '+N+' نیاز داری. برای رسیدن به این مبلغ، '+best.l.t+' از '+best.l.b+' رو بهت پیشنهاد می‌کنیم. قسط ماهانه‌ش حدود '+rng(best.e.inst,5e5)+' تومان می‌شه.';
  if(['C3','D2','E1'].includes(S.score))t+=' اول رتبه‌ت رو بهتر کن.';
  return t;}
 function shortNote(k){let s=k.split('.')[0].trim();if(s.length>110)s=s.slice(0,s.lastIndexOf(' ',108))+'…';return s;}
