@@ -220,6 +220,7 @@ ol.rd.rv li{opacity:0;transform:translateY(14px);transition:opacity .45s ease,tr
 .hp{font-size:12px;font-weight:700;padding:4px 12px;border-radius:99px;background:#EDEFF2;color:#6B7280}.hp.on{background:#E3F5EA;color:#18A058}
 .hrc{display:flex;gap:8px;margin:12px 0}.hrc span{flex:1;background:#F3F7FF;border-radius:10px;padding:8px 4px;text-align:center}.hrc em{display:block;font-style:normal;font-size:11px;color:var(--mut)}.hrc b{font-size:13px;color:#1E3A8A}
 .hrf{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mut);border-top:1px dashed #E6EAF0;padding-top:10px}.hrf>span:first-child{display:inline-flex;gap:5px;align-items:center}.hrf .go{color:var(--blue);font-weight:700}.hr.off .hrf .go{color:#B5C3E0}
+.opt.dim{opacity:.4;transition:opacity .25s}
 /* designed result + detail */
 .rhero{background:radial-gradient(120% 70% at 80% 0%,#3D7BFF 0,#1E5BF0 45%,#4A4CE6 100%);color:#fff;margin:-14px -14px 0;padding:14px 14px 70px;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
 .rhero .top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
@@ -352,8 +353,8 @@ const Q=[
   o:[['۵۰ میلیون تومان',50],['۱۰۰ میلیون تومان',100],['۲۰۰ میلیون تومان',200],['۳۰۰ میلیون تومان',300],['۵۰۰ میلیون تومان',500],['۱ میلیارد تومان',1000],['بیشتر از ۱ میلیارد',2000]]},
  {k:'use',t:'وام رو برای چه کاری لازم داری؟',
   o:[['هزینه‌های شخصی','cash'],['خرید کالا','buy'],['راه‌اندازی یا توسعه کسب‌وکار','biz'],['اجاره، ودیعه یا تعمیر خانه','home'],['هزینه تحصیل','edu'],['فرقی نمی‌کنه','any']]},
- {k:'have',multi:true,t:'کدوم‌ها رو داری؟',hint:'هر چندتا که داری انتخاب کن. وام‌هایی که چیزی می‌خوان که نداری، پیشنهاد نمی‌شن.',why:'شکایت اصلی کاربران قبلی این بود که وامِ «ضامن‌دار» یا «سپرده‌دار» بهشون پیشنهاد شده بود.',
-  o:[['ضامن رسمی (کارمند یا بازنشسته)','guar'],['می‌تونم مدتی پول در حساب بانک نگه دارم','dep','میانگین حساب یا سپرده'],['چک صیادی یا سفته','chq'],['حقوق ثابت با فیش حقوقی','sal'],['جواز کسب یا مدارک کسب‌وکار','lic'],['سند ملک یا وثیقه','col'],['هیچ‌کدوم','none']]},
+ {k:'have',multi:true,t:'از این موارد کدوم‌ها رو داری؟',
+  o:[['ضامن رسمی دارم (کارمند یا بازنشسته)','guar'],['می‌تونم مدتی پول تو حسابم نگه دارم','dep'],['چک صیادی یا سفته دارم','chq'],['حقوق ثابت و فیش حقوقی دارم','sal'],['جواز کسب یا مدارک کسب‌وکار دارم','lic'],['سند ملک یا وثیقه دارم','col'],['هیچ‌کدوم رو ندارم','none']]},
  {k:'pri',t:'مهم‌ترین چیز برات چیه؟',why:'وام‌های سازگار بر اساس این اولویت مرتب می‌شن.',
   o:[['کارمزد کمتر','rate'],['قسط ماهانه کمتر','inst'],['سقف مبلغ بیشتر','max'],['دریافت سریع‌تر (آنلاین)','fast']]},
  {k:'inc',t:'حدوداً ماهانه چقدر می‌تونی قسط بدی؟',why:'وام‌هایی که قسطشون از توانت بیشتره، با هشدار نشون داده می‌شن.',
@@ -444,11 +445,11 @@ function q(){const qq=Q[S.qi],a=S.ans[S.qi];const ready=qq.multi?a.length>0:a!=n
  return hdr('مشاوره هوشمند وام',S.qi?`go('q${S.qi-1}')`:"go('landing')")+`<div class="body">
   <div class="bars">${Q.map((_,i)=>`<i class="${i<=S.qi?'on':''}"></i>`).join('')}</div><div class="mut">مرحله ${fa(S.qi+1)} از ${fa(Q.length)}</div>
   <div class="qt">${qq.t}</div>${qq.hint?`<p class="mut">${qq.hint}</p>`:''}
-  ${qq.o.map((o,i)=>{const sel=qq.multi?a.includes(i):a===i;return `<button class="opt ${qq.multi?'m':''} ${sel?'sel':''} fade" style="animation-delay:${i*.03}s" onclick="pick(${i})"><span class="ind">${sel?'✓':''}</span><span>${o[0]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`;}).join('')}
+  ${qq.o.map((o,i)=>{const sel=qq.multi?a.includes(i):a===i;return `<button class="opt ${qq.multi?'m':''} ${sel?'sel':''} ${qq.multi&&!sel&&a.some(x=>qq.o[x][1]==='none')?'dim':''} fade" style="animation-delay:${i*.03}s" onclick="pick(${i})"><span class="ind">${sel?'✓':''}</span><span>${o[0]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`;}).join('')}
   ${qq.why?`<div class="why">ⓘ<span><b>چرا می‌پرسیم؟</b> ${qq.why}</span></div>`:''}
  </div>${qq.multi?`<div class="ft"><button class="btn" ${ready?'':'disabled'} onclick="${S.qi<Q.length-1?`go('q${S.qi+1}')`:"go('pay')"}">ادامه</button></div>`:''}`;}
 function pick(i){if(S.qi===0)S.amt=0;const qq=Q[S.qi],bs=[...document.querySelectorAll('#scr .opt')];
- const mark=()=>bs.forEach((b,k)=>{const sel=qq.multi?S.ans[S.qi].includes(k):S.ans[S.qi]===k;b.classList.toggle('sel',sel);b.querySelector('.ind').textContent=sel?'✓':'';b.classList.remove('fade');b.style.animation='none';});
+ const mark=()=>bs.forEach((b,k)=>{const sel=qq.multi?S.ans[S.qi].includes(k):S.ans[S.qi]===k;b.classList.toggle('sel',sel);if(qq.multi)b.classList.toggle('dim',!sel&&S.ans[S.qi].some(x=>qq.o[x][1]==='none'));b.querySelector('.ind').textContent=sel?'✓':'';b.classList.remove('fade');b.style.animation='none';});
  if(qq.multi){let c=S.ans[S.qi].slice();const none=qq.o[i][1]==='none';if(c.includes(i))c=c.filter(x=>x!==i);else c=none?[i]:c.filter(x=>qq.o[x][1]!=='none').concat(i);S.ans[S.qi]=c;mark();const fb=document.querySelector('#scr .ft .btn');if(fb)fb.disabled=!c.length;return;}
  if(window._pk)return;S.ans[S.qi]=i;mark();const b=bs[i];if(b){b.style.animation='';b.classList.add('blink');}
  const nx=S.qi<Q.length-1?'q'+(S.qi+1):'pay';window._pk=setTimeout(()=>{window._pk=null;go(nx);},560);}
