@@ -467,7 +467,7 @@ function verify(){const n=en(S.nid),ok=/^\d{10}$/.test(n);
  return hdr('تایید هویت',"go('pay')")+`<div class="body idv">
   <img class="lock" src="${IMG.idcard}" alt="">
   <h3 class="lgh">وارد کردن کد ملی</h3>
-  <p class="otx" style="margin-top:6px">برای تأیید و بررسی هویت، لطفاً کد ملی خود را بدون خط فاصله وارد کنید و روی دریافت کد تایید کلیک کنید.</p>
+  <p class="otx" style="margin-top:6px">برای استعلام رتبه اعتباری شما از سامانه رسمی بانک مرکزی، لطفاً کد ملی خود را بدون خط فاصله وارد کنید و روی دریافت کد تأیید بزنید.</p>
   <input class="inp lgi" inputmode="numeric" maxlength="10" placeholder="کد ملی خود را اینجا وارد کنید" value="${fa(S.nid)}" oninput="S.nid=en(this.value).replace(/\\D/g,'').slice(0,10);this.value=fa(S.nid)">
  </div><div class="ft"><button class="btn" id="nidBtn" onclick="if(S.nid.length!==10)toast('کد ملی ۱۰ رقمی را وارد کنید');else{S.votp='';S.tEnd.idv=0;go('idv')}">دریافت کد تأیید</button></div>`;}
 const PEN='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>';
