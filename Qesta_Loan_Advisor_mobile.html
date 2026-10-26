@@ -541,8 +541,8 @@ function pay(){const BASE=134400,SPECIAL=9400,code=S.disc?Math.round((BASE-SPECI
  const tm=n=>fa(n.toLocaleString('en-US'))+' تومان';
  return hdr('بررسی و پرداخت',"go('q4')")+`<div class="body">
   <div class="card pay-hero fade">${window.IMG&&IMG.payIll?`<img src="${IMG.payIll}" alt="">`:''}
-   <h3>فقط یک قدم تا نتیجه مشاوره وام ${window.IMG&&IMG.pct?`<img class="emo" src="${IMG.pct}" alt="">`:''}</h3>
-   <p>با پرداخت، شرایط اعتباری شما بررسی و وام‌های مناسب به شما پیشنهاد می‌شوند.</p></div>
+   <h3>پاسخ‌هات ثبت شد؛ یک قدم تا دیدن نتیجه ${window.IMG&&IMG.pct?`<img class="emo" src="${IMG.pct}" alt="">`:''}</h3>
+   <p>بعد از پرداخت، رتبه اعتباری‌ات استعلام می‌شه و گزارش وام‌های مناسب بر اساس جواب‌هایی که دادی آماده می‌شه.</p></div>
   <button class="card disc-row fade" onclick="S.sheet='disc';render()"><span class="pctb"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><circle cx="7.5" cy="7.5" r="2.3"/><circle cx="16.5" cy="16.5" r="2.3"/></svg></span><span class="tx"><b>${S.disc?'کد تخفیف QESTA10 اعمال شد':'کد تخفیف دارید؟'}</b><small>${S.disc?'برای حذف یا تغییر بزنید':'کد تخفیف خود را وارد کنید'}</small></span><span class="go">‹</span></button>
   <div class="card pay-det fade"><h4>جزئیات پرداخت</h4>
    <div class="pr"><span>نوع خرید</span><b>مشاوره هوشمند وام بانکی</b></div>
