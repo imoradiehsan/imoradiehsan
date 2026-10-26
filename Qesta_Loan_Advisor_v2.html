@@ -224,6 +224,7 @@ ol.rd.rv li{opacity:0;transform:translateY(14px);transition:opacity .45s ease,tr
 .lvu{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:#ffffff22;border:1px solid #ffffff33;border-radius:99px;padding:6px 12px 6px 8px;font-size:12px;color:#fff;backdrop-filter:blur(6px)}
 .lvu .av{display:flex;flex-direction:row-reverse}.lvu .av i{width:22px;height:22px;border-radius:50%;background:#fff;color:var(--blue);font-style:normal;font-size:11px;font-weight:800;display:grid;place-items:center;border:2px solid #2563EB;margin-left:-7px}.lvu .av i:nth-child(2){background:#DDE8FF}.lvu .av i:nth-child(3){background:#FFE9D6;color:#E07A1F}
 .lvt{display:flex;gap:8px;margin:-34px 16px 0;position:relative;z-index:2}.lvt>div{flex:1;background:#fff;border-radius:14px;box-shadow:0 8px 20px #1e3a8a1a;padding:10px 4px;text-align:center}.lvt span{width:30px;height:30px;border-radius:50%;background:#EAF1FF;color:var(--blue);display:grid;place-items:center;margin:0 auto 4px}.lvt span.em{background:#E3F5EA}.lvt b{display:block;font-size:11.5px;color:var(--ink)}.lvt small{font-size:10.5px;color:var(--mut)}
+.est .esgo{display:inline-flex;margin-top:6px;font-size:11.5px;font-weight:700;color:var(--blue);background:#EAF1FF;border-radius:99px;padding:3px 10px}.est{transition:transform .15s}.est:active{transform:scale(.98)}
 /* designed result + detail */
 .rhero{background:radial-gradient(120% 70% at 80% 0%,#3D7BFF 0,#1E5BF0 45%,#4A4CE6 100%);color:#fff;margin:-14px -14px 0;padding:14px 14px 70px;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
 .rhero .top{display:flex;justify-content:space-between;align-items:center;font-size:12.5px}
@@ -641,7 +642,7 @@ function result(){const m=match(),best=m.full[0];
   <div class="rhero">
    ${window.IMG?`<img class="ill" src="${IMG.report}" alt="">`:''}
    <h2>گزارش مشاوره وام شما آماده است</h2>
-   <div class="est" style="cursor:pointer" onclick="S.sheet='est';render()"><div class="tx"><span class="lb">ⓘ برآورد مبلغ قابل دریافت</span><b>حدود ${mil(estAmt(P))} تومان</b><small>با اجرای مسیر پیشنهادی و تایید نهایی بانک</small></div>${window.IMG?`<img src="${IMG.money}" alt="">`:''}</div>
+   <div class="est" style="cursor:pointer" onclick="S.sheet='est';render()"><div class="tx"><span class="lb">ⓘ برآورد مبلغ قابل دریافت</span><b>حدود ${mil(estAmt(P))} تومان</b><small>با اجرای مسیر پیشنهادی و تایید نهایی بانک</small><span class="esgo">چرا حدودی؟ ‹</span></div>${window.IMG?`<img src="${IMG.money}" alt="">`:''}</div>
    <div class="tiles"><div class="tl" onclick="S.sheet='score';render()">${gauge()}رتبه اعتباری ${SCORES[S.score].t}</div>
     <div class="tl" onclick="scrollToSec('.accsec[data-k=loansOpen]',true)"><span class="logos">${ordered.slice(0,3).map(r=>r.l.b).map(b=>{const k=LOGO[b];return `<span>${k?`<img src="${IMG[k]}">`:esc(b.replace(/^(بانک|موسسه)\s*/,'').replace('قرض‌الحسنه ','')[0])}</span>`;}).join('')}</span>${fa(ordered.length)} وام پیشنهادی</div>
     <div class="tl" onclick="scrollToSec('.roadsec')"><span class="ticon">⤳</span>${fa(road.length)} قدم تا دریافت</div></div>
