@@ -350,8 +350,8 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const Q=[
  {k:'amount',t:'چقدر وام نیاز داری؟',why:'طرح‌هایی که سقفشون به این مبلغ نمی‌رسه کنار گذاشته می‌شن.',
   o:[['۵۰ میلیون تومان',50],['۱۰۰ میلیون تومان',100],['۲۰۰ میلیون تومان',200],['۳۰۰ میلیون تومان',300],['۵۰۰ میلیون تومان',500],['۱ میلیارد تومان',1000],['بیشتر از ۱ میلیارد',2000]]},
- {k:'use',t:'وام رو برای چه کاری می‌خوای؟',why:'بعضی طرح‌ها فقط برای کاربرد خاصی هستن؛ مثلاً وام خرید کالا پول نقد نمی‌ده.',
-  o:[['پول نقد برای نیاز شخصی','cash','واریز به حساب'],['خرید کالا','buy','از فروشگاه‌های طرف قرارداد'],['کسب‌وکار','biz'],['مسکن، ودیعه یا تعمیرات','home'],['خودرو','car'],['ازدواج یا فرزندآوری','mar'],['تحصیل','edu'],['فرقی نداره','any']]},
+ {k:'use',t:'وام رو برای چه کاری لازم داری؟',
+  o:[['هزینه‌های شخصی','cash'],['خرید کالا','buy'],['راه‌اندازی یا توسعه کسب‌وکار','biz'],['اجاره، ودیعه یا تعمیر خانه','home'],['هزینه تحصیل','edu'],['فرقی نمی‌کنه','any']]},
  {k:'have',multi:true,t:'کدوم‌ها رو داری؟',hint:'هر چندتا که داری انتخاب کن. وام‌هایی که چیزی می‌خوان که نداری، پیشنهاد نمی‌شن.',why:'شکایت اصلی کاربران قبلی این بود که وامِ «ضامن‌دار» یا «سپرده‌دار» بهشون پیشنهاد شده بود.',
   o:[['ضامن رسمی (کارمند یا بازنشسته)','guar'],['می‌تونم مدتی پول در حساب بانک نگه دارم','dep','میانگین حساب یا سپرده'],['چک صیادی یا سفته','chq'],['حقوق ثابت با فیش حقوقی','sal'],['جواز کسب یا مدارک کسب‌وکار','lic'],['سند ملک یا وثیقه','col'],['هیچ‌کدوم','none']]},
  {k:'pri',t:'مهم‌ترین چیز برات چیه؟',why:'وام‌های سازگار بر اساس این اولویت مرتب می‌شن.',
@@ -445,7 +445,7 @@ function q(){const qq=Q[S.qi],a=S.ans[S.qi];const ready=qq.multi?a.length>0:a!=n
   <div class="bars">${Q.map((_,i)=>`<i class="${i<=S.qi?'on':''}"></i>`).join('')}</div><div class="mut">مرحله ${fa(S.qi+1)} از ${fa(Q.length)}</div>
   <div class="qt">${qq.t}</div>${qq.hint?`<p class="mut">${qq.hint}</p>`:''}
   ${qq.o.map((o,i)=>{const sel=qq.multi?a.includes(i):a===i;return `<button class="opt ${qq.multi?'m':''} ${sel?'sel':''} fade" style="animation-delay:${i*.03}s" onclick="pick(${i})"><span class="ind">${sel?'✓':''}</span><span>${o[0]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`;}).join('')}
-  <div class="why">ⓘ<span><b>چرا می‌پرسیم؟</b> ${qq.why}</span></div>
+  ${qq.why?`<div class="why">ⓘ<span><b>چرا می‌پرسیم؟</b> ${qq.why}</span></div>`:''}
  </div>${qq.multi?`<div class="ft"><button class="btn" ${ready?'':'disabled'} onclick="${S.qi<Q.length-1?`go('q${S.qi+1}')`:"go('pay')"}">ادامه</button></div>`:''}`;}
 function pick(i){if(S.qi===0)S.amt=0;const qq=Q[S.qi],bs=[...document.querySelectorAll('#scr .opt')];
  const mark=()=>bs.forEach((b,k)=>{const sel=qq.multi?S.ans[S.qi].includes(k):S.ans[S.qi]===k;b.classList.toggle('sel',sel);b.querySelector('.ind').textContent=sel?'✓':'';b.classList.remove('fade');b.style.animation='none';});
