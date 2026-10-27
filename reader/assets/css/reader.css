@@ -83,7 +83,7 @@ svg { display: block; }
 
 /* ---------- Reader chrome ---------- */
 .reader { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
-.appbar--reader { position: static; height: auto; min-height: calc(52px + max(env(safe-area-inset-top), var(--sat, 0px))); gap: 6px; justify-content: flex-start; padding-inline: 8px 14px; }
+.appbar--reader { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(20, 10, 38, .97); position: static; height: auto; min-height: calc(52px + max(env(safe-area-inset-top), var(--sat, 0px))); gap: 6px; justify-content: flex-start; padding-inline: 8px 14px; }
 .bar { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; padding-bottom: max(8px, env(safe-area-inset-bottom)); z-index: 20; background: rgba(20, 10, 38, .97); border-top: 1px solid rgba(255, 255, 255, .08); }
 .bar__row { display: flex; align-items: center; gap: 6px; }
 .bar__meta { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
@@ -145,6 +145,7 @@ svg { display: block; }
 
 .page { position: absolute; inset: 0; background: var(--paper); color: var(--ink); overflow: hidden; border-radius: inherit;
   background-image: linear-gradient(135deg, rgba(139, 92, 246, .05), transparent 40%), radial-gradient(circle at 20% 0%, rgba(255, 255, 255, .6), transparent 50%); }
+.pagebox:has(.sheet) > .page { background-image: none; }
 .page--blank { background: var(--paper-2); }
 .page__inner { position: absolute; inset: 0; padding: 36px 30px 44px; overflow: hidden; container-type: inline-size; }
 .page__num { position: absolute; bottom: 14px; inset-inline: 0; text-align: center; font-size: .72rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
@@ -162,7 +163,7 @@ svg { display: block; }
 .sheet { position: absolute; inset: 0; pointer-events: none; z-index: 5; --shade: 0; --sw: 40px; }
 .sheet > * { position: absolute; inset: 0; }
 .sheet__front { z-index: 1; }
-.sheet__back { z-index: 4; transform-origin: 0 0; will-change: transform, clip-path; background: var(--paper); overflow: hidden; border-radius: 4px; }
+.sheet__back { z-index: 4; transform-origin: 0 0; will-change: transform; background: var(--paper); overflow: hidden; border-radius: 4px; }
 .sheet__back .page { border-radius: 4px; }
 .sheet--ghost .sheet__back::after { content: ""; position: absolute; inset: 0; background: var(--paper); opacity: .8; }
 .sheet__back::before { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(60, 30, 100, .08); }
@@ -170,7 +171,10 @@ svg { display: block; }
 .sheet__shade--under { z-index: 2; }
 .sheet__shade--front { z-index: 3; }
 .sheet__shade--back { z-index: 5; }
-.shade { position: absolute; top: 0; left: 0; transform-origin: center; opacity: var(--shade); will-change: transform; }
+.shade { position: absolute; top: 0; left: 0; transform-origin: center; opacity: var(--shade); will-change: transform, opacity; contain: strict; }
+.sheet__front, .sheet__back { contain: paint; }
+.sheet--lite .sheet__back::after { opacity: 1; }
+.sheet--lite .sheet__back::before { display: none; }
 /* the lifted sheet casts a shadow on the page beneath (toward -n, left of center) */
 .sheet__shade--under .shade { background: linear-gradient(90deg, transparent calc(50% - var(--sw) * 1.6), rgba(25, 5, 50, .6) 50%, transparent 50%); }
 /* the flat part bends up into the fold (toward +n) */
