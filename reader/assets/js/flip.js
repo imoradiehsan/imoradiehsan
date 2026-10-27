@@ -20,6 +20,8 @@ class PageCurl {
     this.corner = o.corner === 'top' ? 0 : this.H; // y of the grabbed free corner (local frame)
     this.onEnd = o.onEnd || (() => {});
     this.onProgress = o.onProgress || (() => {});
+    // a sheet pulled back in starts off-screen, so the crease (not the corner) follows the finger: 2× gain
+    this.gain = o.startFlipped ? 2 : 1;
     this.raf = null; this.done = false;
 
     const el = document.createElement('div');
@@ -133,7 +135,7 @@ class PageCurl {
   beginDrag(elPt) { this.cancelAnim(); this.F0 = { ...this.F }; this.P0 = this.L(elPt); this.lastT = performance.now(); this.vx = 0; }
   drag(elPt) {
     const p = this.L(elPt), now = performance.now();
-    const F = this.clamp({ x: this.F0.x + (p.x - this.P0.x), y: this.F0.y + (p.y - this.P0.y) });
+    const F = this.clamp({ x: this.F0.x + (p.x - this.P0.x) * this.gain, y: this.F0.y + (p.y - this.P0.y) * this.gain });
     const dt = Math.max(1, now - this.lastT); this.vx = 0.7 * this.vx + 0.3 * ((F.x - this.F.x) / dt); this.lastT = now;
     this.F = F; this.render();
   }
