@@ -32,6 +32,10 @@
 
   <!-- صفحه مطالعه -->
   <section id="reader" class="reader" hidden>
+    <header class="appbar appbar--reader">
+      <button class="ibtn" id="rd-back" aria-label="بازگشت به کتابخانه"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+      <div class="bar__meta"><div class="bar__title" id="rd-title"></div><div class="bar__count" id="rd-count"></div></div>
+    </header>
     <div class="stage" id="stage">
       <div class="book" id="book"></div>
     </div>
@@ -39,8 +43,6 @@
     <!-- نوار ابزار زیر کتاب -->
     <footer class="bar">
       <div class="bar__row">
-        <button class="ibtn" id="rd-back" aria-label="بازگشت به کتابخانه"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
-        <div class="bar__meta"><div class="bar__title" id="rd-title"></div><div class="bar__count" id="rd-count"></div></div>
         <div class="tools">
           <button class="tbtn" id="rd-font-down" aria-label="کوچک‌تر کردن متن"><span style="font-size:.8em">A</span></button>
           <button class="tbtn" id="rd-font-up" aria-label="بزرگ‌تر کردن متن"><span style="font-size:1.15em">A</span></button>

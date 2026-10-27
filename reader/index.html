@@ -6,6 +6,8 @@
   <title>ورق</title>
   <meta name="description" content="کتاب‌خوان ورق در موکاپ آیفون.">
   <link rel="icon" href="assets/icon-192.png">
+  <script>/* on a real phone there is no mockup: open the app itself, full screen */
+    if (innerWidth < 700 || matchMedia('(pointer: coarse)').matches && innerWidth < 1000) location.replace('app.html' + location.hash);</script>
   <style>
     @font-face { font-family: "Vazirmatn"; src: url("assets/fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
     :root { --bg: #140a26; --violet: #8b5cf6; --violet-300: #c4b5fd; --pink: #f0abfc; --text: #f4edff; --muted: #b9a7e0; --card: rgba(255,255,255,.06); --line: rgba(255,255,255,.12); }

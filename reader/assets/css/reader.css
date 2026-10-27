@@ -82,10 +82,12 @@ svg { display: block; }
 .cover--big .cover__brand { font-size: .9rem; }
 
 /* ---------- Reader chrome ---------- */
-.reader { position: fixed; inset: 0; display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+.reader { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+.appbar--reader { position: static; height: auto; min-height: calc(52px + max(env(safe-area-inset-top), var(--sat, 0px))); gap: 6px; justify-content: flex-start; padding-inline: 8px 14px; }
 .bar { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; padding-bottom: max(8px, env(safe-area-inset-bottom)); z-index: 20; background: rgba(20, 10, 38, .97); border-top: 1px solid rgba(255, 255, 255, .08); }
 .bar__row { display: flex; align-items: center; gap: 6px; }
 .bar__meta { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.appbar--reader .bar__title { font-size: 1.05rem; }
 .bar__title { flex: 1; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar__count { font-variant-numeric: tabular-nums; color: var(--violet-300); font-size: .85rem; white-space: nowrap; }
 .ibtn, .tbtn { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; color: var(--violet-200); transition: background .2s, transform .2s; }
@@ -112,8 +114,8 @@ svg { display: block; }
 .reader[data-mode="single"] .stage { padding: 0; }
 .reader[data-mode="single"] .book, .reader[data-mode="single"] .pagebox, .reader[data-mode="single"] .page { border-radius: 0; }
 .reader[data-mode="single"] .pagebox { box-shadow: none; }
-.reader[data-mode="single"] .page__inner { padding: calc(34px + max(env(safe-area-inset-top), var(--sat, 0px))) 22px 34px; }
-.reader[data-mode="single"] .page__run { top: calc(12px + max(env(safe-area-inset-top), var(--sat, 0px))); inset-inline: 22px; }
+.reader[data-mode="single"] .page__inner { padding: 26px 22px 34px; }
+.reader[data-mode="single"] .page__run { display: none; } /* the app bar names the book */
 .reader[data-mode="single"] .page__num { bottom: 10px; }
 .measure { position: absolute; top: 0; left: 0; visibility: hidden; pointer-events: none; z-index: -1; }
 
