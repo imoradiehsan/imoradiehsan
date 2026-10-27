@@ -56,7 +56,7 @@ function pageHTML(book, page, idx, total) {
   const dir = book.lang === 'fa' ? 'rtl' : 'ltr';
   if (!page || page.blank) return `<div class="page page--blank" dir="${dir}"></div>`;
   if (page.cover) return `<div class="page page--cover" dir="${dir}">${coverHTML(book, true)}</div>`;
-  if (page.end) return `<div class="page page--end" dir="${dir}"><div class="page__inner"><div class="end"><div class="end__mark">❦</div><div class="end__title">${book.lang === 'fa' ? 'پایان' : 'The End'}</div><div class="end__sub">${esc(book.title)} — ${esc(book.author)}</div><a class="btn" href="#">${book.lang === 'fa' ? 'بازگشت به کتابخانه' : 'Back to library'}</a></div></div></div>`;
+  if (page.end) return `<div class="page page--end" dir="${dir}"><div class="page__inner"><div class="end"><div class="end__mark">❦</div><div class="end__title">${book.lang === 'fa' ? 'پایان' : 'The End'}</div><div class="end__sub">${esc(book.title)} — ${esc(book.author)}</div><a class="btn" href="#book/${book.id}">${book.lang === 'fa' ? 'بازگشت' : 'Back'}</a></div></div></div>`;
   const num = book.lang === 'fa' ? faNum(idx) : idx;
   const ribbon = Reader.isBookmarked(idx) ? '<div class="page__ribbon" aria-label="نشان‌شده"></div>' : '';
   return `<div class="page" dir="${dir}"><div class="page__inner">${page.html}</div><div class="page__num">${num}</div><div class="page__run">${esc(book.title)}</div>${ribbon}</div>`;
@@ -302,12 +302,33 @@ const Reader = {
 };
 
 /* ---------- Wiring ---------- */
+/* ---------- Book page ---------- */
+const Detail = {
+  book: null,
+  open(b) {
+    this.book = b;
+    $('#library').hidden = true; $('#detail').hidden = false; scrollTo(0, 0);
+    $('#dt-cover').innerHTML = coverHTML(b, true);
+    $('#dt-title').textContent = b.title; $('#dt-blurb').textContent = b.blurb;
+    $('#dt-author').textContent = b.author; $('#dt-minutes').textContent = `${faNum(b.minutes)} دقیقه`;
+    const pr = store.get('progress.' + b.id, null), pct = pr && pr.total ? Math.round(100 * (pr.page + 1) / pr.total) : 0;
+    $('#dt-info').innerHTML = [['نوع محتوا', b.kind.map(k => KIND[k]).join('، ')], ['زبان', b.lang === 'fa' ? 'فارسی' : 'انگلیسی'], b.subtitle ? ['مجموعه', b.subtitle] : null, ['پیشرفت', pct ? `${faNum(pct)}٪` : 'شروع نشده']].filter(Boolean)
+      .map(([k, v]) => `<div class="kv__row"><span class="kv__k">${k}</span><span class="kv__v">${esc(v)}</span></div>`).join('');
+    const bms = store.get('bm.' + b.id, []);
+    $('#dt-bms').innerHTML = bms.length ? bms.map(i => `<button class="list__row" data-page="${i}"><span class="list__icon">${icon('bookOpen')}</span><span class="list__text">صفحه ${faNum(i + 1)}</span><span class="list__go">${icon('chevLeft')}</span></button>`).join('')
+      : '<div class="list__empty">هنوز نشانی نگذاشته‌اید؛ داخل کتاب از دکمه نشان استفاده کنید.</div>';
+    $('#dt-read').textContent = pct ? 'ادامه مطالعه' : 'شروع مطالعه';
+  },
+  close() { $('#detail').hidden = true; $('#library').hidden = false; this.book = null; renderLibrary(); }
+};
+const icon = n => ({ bookOpen: '<svg viewBox="0 0 24 24"><path d="M2 5h6a4 4 0 0 1 4 4v11a3 3 0 0 0-3-3H2V5ZM22 5h-6a4 4 0 0 0-4 4v11a3 3 0 0 1 3-3h7V5Z"/></svg>', chevLeft: '<svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>' })[n];
+
 function route() {
-  const m = location.hash.match(/^#book\/([\w-]+)/);
-  const b = m && BOOKS.find(x => x.id === m[1]);
-  if (b) { if (Reader.book !== b) Reader.open(b); }
-  else if (Reader.book) Reader.close();
-  else renderLibrary();
+  const m = location.hash.match(/^#(book|read)\/([\w-]+)/);
+  const b = m && BOOKS.find(x => x.id === m[2]);
+  if (b && m[1] === 'read') { if (Detail.book) Detail.close(); if (Reader.book !== b) Reader.open(b); return; }
+  if (Reader.book) Reader.close();
+  if (b) Detail.open(b); else { if (Detail.book) Detail.close(); renderLibrary(); }
 }
 addEventListener('hashchange', route);
 addEventListener('resize', () => { if (Reader.book) Reader.layout(); });
@@ -315,7 +336,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const sat = new URLSearchParams(location.search).get('sat') || (window.self !== window.top ? '48' : '');
   if (sat) document.documentElement.style.setProperty('--sat', sat + 'px');
   Reader.bindGestures();
-  $('#rd-back').addEventListener('click', () => { location.hash = ''; });
+  $('#rd-back').addEventListener('click', () => { location.hash = Reader.book ? 'book/' + Reader.book.id : ''; });
+  $('#dt-back').addEventListener('click', () => { location.hash = ''; });
+  $('#dt-read').addEventListener('click', () => { location.hash = 'read/' + Detail.book.id; });
+  $('#dt-bm').addEventListener('click', () => $('#dt-bms').scrollIntoView({ behavior: 'smooth', block: 'center' }));
+  $('#dt-share').addEventListener('click', () => { const b = Detail.book, url = location.href; if (navigator.share) navigator.share({ title: b.title, text: `${b.title} — ${b.author}`, url }).catch(() => {}); else navigator.clipboard && navigator.clipboard.writeText(url); });
+  $('#dt-bms').addEventListener('click', e => { const r = e.target.closest('[data-page]'); if (!r) return; store.set('progress.' + Detail.book.id, { page: +r.dataset.page, total: 0 }); location.hash = 'read/' + Detail.book.id; });
   $('#rd-bm').addEventListener('click', () => Reader.toggleBookmark());
   $('#rd-bm-list').addEventListener('click', () => Reader.showBookmarks($('#bm-pop').hidden));
   $('#bm-pop').addEventListener('click', e => {
