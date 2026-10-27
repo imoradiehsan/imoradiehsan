@@ -234,6 +234,7 @@ const Reader = {
     const stage = $('#stage');
     let drag = null;
     const boxPoint = (box, e) => { const r = box.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    stage.addEventListener('dragstart', e => e.preventDefault()); // images must not start a native drag
     stage.addEventListener('pointerdown', e => {
       if (e.button || !this.book) return;
       if (e.target.closest('video, a, button, input, .end')) return;
