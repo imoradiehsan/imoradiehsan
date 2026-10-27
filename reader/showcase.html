@@ -69,7 +69,7 @@
               <svg viewBox="0 0 28 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2.5" y="2.5" width="19" height="8" rx="2" fill="#fff"/><path d="M25.5 4.5v4a2 2 0 0 0 0-4Z" fill="#fff" fill-opacity=".5"/></svg>
             </span>
           </div>
-          <iframe src="index.html?sat=48" title="ورق — کتاب‌خوان" allow="autoplay; fullscreen"></iframe>
+          <iframe id="app" data-src="index.html" title="ورق — کتاب‌خوان" allow="autoplay; fullscreen"></iframe>
         </div>
       </div>
     </div>
@@ -98,6 +98,9 @@
   <script>
     const tick = () => { const d = new Date(); document.getElementById('clock').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0'); };
     tick(); setInterval(tick, 15000);
+    // on the artifact host the app is published beside this page as app.html; in the repo it is index.html
+    const app = document.getElementById('app');
+    app.src = (location.hostname.endsWith('claude.ai') ? 'app.html' : app.dataset.src) + '?sat=48';
   </script>
 </body>
 </html>
