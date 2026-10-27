@@ -34,7 +34,7 @@ function renderLibrary() {
         <h3 class="book-card__title">${esc(b.title)}</h3>
         <div class="book-card__author">${esc(b.author)}</div>
         <p class="book-card__blurb">${esc(b.blurb)}</p>
-        <div class="book-card__meta"><span>${faNum(b.minutes)} دقیقه مطالعه</span>${pct ? `<span>${faNum(pct)}٪ خوانده شده</span>` : '<span>شروع نشده</span>'}</div>
+        <div class="book-card__meta"><span>${faNum(b.minutes)} دقیقه مطالعه</span>${pct ? `<span>${faNum(pct)}٪ خوانده شده</span>` : '<span>شروع نشده</span>'}${(store.get('bm.' + b.id, []).length) ? `<span class="meta-bm">${faNum(store.get('bm.' + b.id, []).length)} نشان</span>` : ''}</div>
         <div class="progress" aria-hidden="true"><span style="width:${pct}%"></span></div>
       </div></a>`;
   }).join('');
@@ -58,7 +58,8 @@ function pageHTML(book, page, idx, total) {
   if (page.cover) return `<div class="page page--cover" dir="${dir}">${coverHTML(book, true)}</div>`;
   if (page.end) return `<div class="page page--end" dir="${dir}"><div class="page__inner"><div class="end"><div class="end__mark">❦</div><div class="end__title">${book.lang === 'fa' ? 'پایان' : 'The End'}</div><div class="end__sub">${esc(book.title)} — ${esc(book.author)}</div><a class="btn" href="#">${book.lang === 'fa' ? 'بازگشت به کتابخانه' : 'Back to library'}</a></div></div></div>`;
   const num = book.lang === 'fa' ? faNum(idx) : idx;
-  return `<div class="page" dir="${dir}"><div class="page__inner">${page.html}</div><div class="page__num">${num}</div><div class="page__run">${esc(book.title)}</div></div>`;
+  const ribbon = Reader.isBookmarked(idx) ? '<div class="page__ribbon" aria-label="نشان‌شده"></div>' : '';
+  return `<div class="page" dir="${dir}"><div class="page__inner">${page.html}</div><div class="page__num">${num}</div><div class="page__run">${esc(book.title)}</div>${ribbon}</div>`;
 }
 /* Fill a hidden page of the real size with blocks until it overflows; long paragraphs split on word boundaries. */
 function paginate(book, W, H) {
@@ -104,6 +105,24 @@ function paginate(book, W, H) {
 /* ---------- Reader ---------- */
 const Reader = {
   book: null, pages: [], index: 0, mode: 'single', W: 0, H: 0, curl: null,
+  /* ---- bookmarks: a list of page indices per book, kept in localStorage ---- */
+  get bms() { return this.book ? store.get('bm.' + this.book.id, []) : []; },
+  isBookmarked(i) { return this.bms.includes(i); },
+  toggleBookmark() {
+    const i = this.index, list = this.bms.filter(x => x !== i);
+    if (!this.isBookmarked(i)) list.push(i);
+    store.set('bm.' + this.book.id, list.sort((a, b) => a - b));
+    this.renderStatic();
+  },
+  bookmarkList() {
+    const pop = $('#bm-pop'), fa = this.rtl;
+    const items = this.bms.filter(i => i < this.pages.length).map(i => {
+      const p = this.pages[i], label = p.cover ? (fa ? 'جلد' : 'Cover') : p.end ? (fa ? 'پایان' : 'End') : (p.html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) + '…';
+      return `<button class="bm-pop__item" data-go="${i}"><span class="bm-pop__num">${fa ? faNum(i + 1) : i + 1}</span><span class="bm-pop__text">${esc(label)}</span><span class="bm-pop__del" data-del="${i}" role="button" aria-label="حذف نشان">×</span></button>`;
+    });
+    pop.innerHTML = items.length ? items.join('') : `<div class="bm-pop__empty">${fa ? 'هنوز نشانی نگذاشته‌اید. با دکمه نشان، این صفحه را ذخیره کنید.' : 'No bookmarks yet.'}</div>`;
+  },
+  showBookmarks(on) { const pop = $('#bm-pop'); if (on) this.bookmarkList(); pop.hidden = !on; $('#rd-bm-list').setAttribute('aria-expanded', !!on); },
   open(book) {
     this.book = book;
     document.body.classList.add('is-reading');
@@ -180,6 +199,8 @@ const Reader = {
     this.pauseMedia();
     this.updateHud();
     store.set('progress.' + b.id, { page: i, total: n });
+    $('#rd-bm').setAttribute('aria-pressed', this.isBookmarked(i));
+    this.showBookmarks(false);
   },
   updateHud() {
     const n = this.pages.length, i = this.index, fa = this.rtl;
@@ -295,6 +316,14 @@ document.addEventListener('DOMContentLoaded', () => {
   if (sat) document.documentElement.style.setProperty('--sat', sat + 'px');
   Reader.bindGestures();
   $('#rd-back').addEventListener('click', () => { location.hash = ''; });
+  $('#rd-bm').addEventListener('click', () => Reader.toggleBookmark());
+  $('#rd-bm-list').addEventListener('click', () => Reader.showBookmarks($('#bm-pop').hidden));
+  $('#bm-pop').addEventListener('click', e => {
+    const del = e.target.closest('[data-del]');
+    if (del) { e.stopPropagation(); store.set('bm.' + Reader.book.id, Reader.bms.filter(x => x !== +del.dataset.del)); Reader.bookmarkList(); Reader.renderStatic(); Reader.showBookmarks(true); return; }
+    const go = e.target.closest('[data-go]'); if (go) Reader.jump(+go.dataset.go);
+  });
+  $('#stage').addEventListener('pointerdown', () => Reader.showBookmarks(false), true);
   $('#rd-prev').addEventListener('click', () => Reader.go(-1));
   $('#rd-next').addEventListener('click', () => Reader.go(1));
   $('#rd-slider').addEventListener('input', e => Reader.jump(+e.target.value));

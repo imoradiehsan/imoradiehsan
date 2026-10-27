@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
   <title>ورق — کتاب‌خوان</title>
   <meta name="description" content="کتاب‌خوان بنفش با ورق‌خوردن واقعی صفحه‌ها؛ متن، تصویر و ویدئو.">
   <meta name="theme-color" content="#1a0b2e">
@@ -35,6 +35,9 @@
     <header class="appbar appbar--reader">
       <button class="ibtn" id="rd-back" aria-label="بازگشت به کتابخانه"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
       <div class="bar__meta"><div class="bar__title" id="rd-title"></div><div class="bar__count" id="rd-count"></div></div>
+      <button class="ibtn" id="rd-bm-list" aria-label="فهرست نشان‌ها" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
+      <button class="ibtn ibtn--bm" id="rd-bm" aria-label="نشان‌گذاری این صفحه" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4.5L6 21V3Z"/></svg></button>
+      <div class="bm-pop" id="bm-pop" hidden></div>
     </header>
     <div class="stage" id="stage">
       <div class="book" id="book"></div>
@@ -62,6 +65,12 @@
   <script src="assets/js/books.js"></script>
   <script src="assets/js/flip.js"></script>
   <script src="assets/js/app.js"></script>
-  <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+    // iOS Safari ignores user-scalable=no: block pinch zoom so the fixed layout never gets cropped
+    ['gesturestart', 'gesturechange'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
+    document.addEventListener('touchmove', e => { if (e.scale && e.scale !== 1) e.preventDefault(); }, { passive: false });
+    if (window.visualViewport) visualViewport.addEventListener('resize', () => { if (Reader.book) Reader.layout(); });
+  </script>
 </body>
 </html>
