@@ -22,6 +22,7 @@ class PageCurl {
     this.onProgress = o.onProgress || (() => {});
     // a sheet pulled back in starts off-screen, so the crease (not the corner) follows the finger: 2× gain
     this.gain = o.startFlipped ? 2 : 1;
+    this.lite = PageCurl.lite(); // weak phones: fewer shadow layers, blank paper on the ghost back
     this.raf = null; this.done = false;
 
     const el = document.createElement('div');
@@ -30,7 +31,7 @@ class PageCurl {
       <div class="sheet__front">${o.frontHTML}</div>
       <div class="sheet__shade sheet__shade--under"><div class="shade"></div></div>
       <div class="sheet__shade sheet__shade--front"><div class="shade"></div></div>
-      <div class="sheet__back">${this.ghost ? o.frontHTML : o.backHTML}</div>
+      <div class="sheet__back">${this.ghost ? (this.lite ? '<div class="page"></div>' : o.frontHTML) : o.backHTML}</div>
       <div class="sheet__shade sheet__shade--back"><div class="shade"></div></div>`;
     this.el = el;
     this.front = el.querySelector('.sheet__front');
@@ -40,7 +41,12 @@ class PageCurl {
     this.shBack = el.querySelector('.sheet__shade--back');
     // media inside the lifted copy must not play or load twice
     this.back.querySelectorAll('video, audio').forEach(v => { const d = document.createElement('div'); d.className = 'pg-media-ghost'; if (v.poster) d.style.backgroundImage = `url("${v.poster}")`; v.replaceWith(d); });
-    el.querySelectorAll('.shade').forEach(s => { const S = this.D * 2.2; s.style.width = S + 'px'; s.style.height = S + 'px'; });
+    // shade strips: narrow across the fold, long along it; their gradient never changes, only their opacity
+    this.sw = Math.round(Math.max(28, Math.min(70, this.W * 0.15)));
+    el.style.setProperty('--sw', this.sw + 'px');
+    this.shadeW = this.sw * 6; this.shadeH = Math.ceil(this.D * 2.2);
+    el.querySelectorAll('.shade').forEach(s => { s.style.width = this.shadeW + 'px'; s.style.height = this.shadeH + 'px'; });
+    if (this.lite) { this.shFront.remove(); this.shFront = null; el.classList.add('sheet--lite'); }
     o.host.appendChild(el);
 
     this.C = { x: this.W, y: this.corner };                  // free corner (local)
@@ -93,7 +99,7 @@ class PageCurl {
     if (len < 0.5) { // sheet lies flat
       this.front.style.clipPath = 'none';
       this.back.style.display = 'none';
-      [this.shUnder, this.shFront, this.shBack].forEach(s => s.style.display = 'none');
+      [this.shUnder, this.shFront, this.shBack].forEach(s => s && (s.style.display = 'none'));
       this.el.style.setProperty('--shade', 0);
       this.onProgress(0);
       return;
@@ -116,30 +122,43 @@ class PageCurl {
     const MidE = PageCurl.apply(Lmat, Mid), nE = { x: this.spineRight ? -n.x : n.x, y: n.y };
     const ang = Math.atan2(nE.y, nE.x) * 180 / Math.PI;
     const place = (wrap, poly) => {
+      if (!wrap) return;
       wrap.style.display = '';
       wrap.style.clipPath = PageCurl.poly(poly);
-      const s = wrap.firstElementChild, S = this.D * 2.2;
-      s.style.transform = `translate(${(MidE.x - S / 2).toFixed(2)}px,${(MidE.y - S / 2).toFixed(2)}px) rotate(${ang.toFixed(3)}deg)`;
+      wrap.firstElementChild.style.transform = `translate(${(MidE.x - this.shadeW / 2).toFixed(1)}px,${(MidE.y - this.shadeH / 2).toFixed(1)}px) rotate(${ang.toFixed(2)}deg)`;
     };
     place(this.shUnder, liftPoly.map(p => PageCurl.apply(Lmat, p)));
     place(this.shFront, frontPoly.map(p => PageCurl.apply(Lmat, p)));
     place(this.shBack, liftPoly.map(p => PageCurl.apply(Lmat, PageCurl.apply(R, p))));
 
     const pr = this.progress, amt = Math.sin(Math.PI * pr);
-    this.el.style.setProperty('--shade', amt.toFixed(3));
-    this.el.style.setProperty('--sw', (20 + 90 * amt).toFixed(1) + 'px');
+    this.el.style.setProperty('--shade', amt.toFixed(2));
     this.onProgress(pr);
   }
 
   /* ---- interaction ---- */
   beginDrag(elPt) { this.cancelAnim(); this.F0 = { ...this.F }; this.P0 = this.L(elPt); this.lastT = performance.now(); this.vx = 0; }
-  drag(elPt) {
+  drag(elPt) { // pointer events can arrive faster than frames: keep the last point, render once per frame
     const p = this.L(elPt), now = performance.now();
     const F = this.clamp({ x: this.F0.x + (p.x - this.P0.x) * this.gain, y: this.F0.y + (p.y - this.P0.y) * this.gain });
     const dt = Math.max(1, now - this.lastT); this.vx = 0.7 * this.vx + 0.3 * ((F.x - this.F.x) / dt); this.lastT = now;
-    this.F = F; this.render();
+    this.F = F;
+    if (!this.dragRaf) this.dragRaf = requestAnimationFrame(t => { this.dragRaf = null; if (this.done) return; if (this.lastF) PageCurl.noteFrame(t - this.lastF); this.lastF = t; this.render(); });
+  }
+  /* weak device? start from the hardware hints, then confirm by measuring real frame times */
+  static lite() {
+    if (PageCurl._lite != null) return PageCurl._lite;
+    const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 4;
+    return (PageCurl._lite = cores <= 2 || mem <= 2 || matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+  static noteFrame(dt) { // called once per rendered frame with the time since the previous one
+    if (PageCurl._lite || dt > 200) return;
+    const s = PageCurl._fs || (PageCurl._fs = { n: 0, slow: 0 });
+    s.n++; if (dt > 34) s.slow++;
+    if (s.n >= 24 && s.slow / s.n > 0.4) PageCurl._lite = true; // dropping below ~30fps: next flips use the light renderer
   }
   release() {
+    if (this.dragRaf) { cancelAnimationFrame(this.dragRaf); this.dragRaf = null; }
     const flick = Math.abs(this.vx) > 0.35;
     const flipped = flick ? this.vx < 0 : this.progress > 0.5;
     this.flipTo(flipped, 420 + 300 * (flipped ? 1 - this.progress : this.progress));
@@ -150,7 +169,9 @@ class PageCurl {
     const dist = Math.abs(to.x - from.x) / (2 * this.W), lift = (this.corner === 0 ? 1 : -1) * this.H * 0.32 * dist;
     const t0 = performance.now(), ease = t => 1 - Math.pow(1 - t, 3);
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) dur = Math.min(dur, 160);
+    let prev = null;
     const step = now => {
+      if (prev != null) PageCurl.noteFrame(now - prev); prev = now;
       const t = Math.min(1, (now - t0) / dur), e = ease(t);
       this.F = this.clamp({ x: from.x + (to.x - from.x) * e, y: from.y + (to.y - from.y) * e + Math.sin(Math.PI * t) * lift });
       this.render();
@@ -159,6 +180,6 @@ class PageCurl {
     };
     this.raf = requestAnimationFrame(step);
   }
-  cancelAnim() { if (this.raf) cancelAnimationFrame(this.raf); this.raf = null; }
+  cancelAnim() { if (this.raf) cancelAnimationFrame(this.raf); this.raf = null; if (this.dragRaf) cancelAnimationFrame(this.dragRaf); this.dragRaf = null; }
   destroy() { this.cancelAnim(); this.el.remove(); }
 }
