@@ -289,7 +289,7 @@ function route() {
 addEventListener('hashchange', route);
 addEventListener('resize', () => { if (Reader.book) Reader.layout(); });
 document.addEventListener('DOMContentLoaded', () => {
-  const sat = new URLSearchParams(location.search).get('sat');
+  const sat = new URLSearchParams(location.search).get('sat') || (window.self !== window.top ? '48' : '');
   if (sat) document.documentElement.style.setProperty('--sat', sat + 'px');
   Reader.bindGestures();
   $('#rd-back').addEventListener('click', () => { location.hash = ''; });
