@@ -303,3 +303,18 @@ body { background: var(--canvas); color: var(--text); }
 .end .btn { background: var(--primary); box-shadow: none; }
 .detail__hero .cover:not(.cover--img) .cover__text { padding-top: 22%; }
 @media (min-width: 700px) { .detail__body { max-width: 720px; margin-inline: auto; } .cta { display: flex; justify-content: center; } .btn-primary { max-width: 720px; } }
+
+
+/* ---------- swipe hint ---------- */
+.swipe-hint { position: absolute; inset-inline: 0; bottom: 0; height: 46%; pointer-events: none; z-index: 8; animation: fade .5s var(--ease); }
+.swipe-hint__glow { position: absolute; inset-inline: 10%; bottom: -10%; height: 70%; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(124, 58, 237, .55), rgba(124, 58, 237, .18) 45%, transparent 70%); filter: blur(6px); animation: hint-glow 2.4s ease-in-out infinite; }
+@keyframes hint-glow { 0%, 100% { opacity: .55; transform: scale(.92); } 50% { opacity: 1; transform: scale(1.04); } }
+.swipe-hint__path, .swipe-hint__hand { position: absolute; left: 50%; bottom: 20%; width: 300px; height: 120px; transform: translateX(-50%) scale(var(--hs, 1)); transform-origin: bottom center; }
+.swipe-hint__path { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35)); }
+/* the hand rides the same cubic as the dashed path (both in the 300x120 box) */
+.swipe-hint__hand svg { position: absolute; left: 0; top: 0; width: 58px; height: 58px; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .35)); offset-path: path('M20 95 C 90 20, 210 20, 280 95'); offset-rotate: 0deg; offset-anchor: 35% 8%; animation: hint-hand 2.4s cubic-bezier(.45, 0, .35, 1) infinite; }
+@keyframes hint-hand { 0% { offset-distance: 0%; opacity: 0; } 12% { opacity: 1; } 85% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+.swipe-hint__text { position: absolute; inset-inline: 16px; bottom: 6%; text-align: center; font-size: .9rem; font-weight: 700; color: #fff; text-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
+/* LTR books flip the other way */
+.book[data-dir="ltr"] ~ .swipe-hint .swipe-hint__path, .book[data-dir="ltr"] ~ .swipe-hint .swipe-hint__hand { transform: translateX(-50%) scale(var(--hs, 1)) scaleX(-1); }
+.night .swipe-hint__glow { background: radial-gradient(ellipse at center, rgba(167, 139, 250, .5), rgba(167, 139, 250, .15) 45%, transparent 70%); }

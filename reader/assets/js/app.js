@@ -201,6 +201,9 @@ const Reader = {
     store.set('progress.' + b.id, { page: i, total: n });
     $('#rd-bm').setAttribute('aria-pressed', this.isBookmarked(i));
     this.showBookmarks(false);
+    // first-time hint on the cover: a glow and a finger tracing the swipe, until the reader has turned a page in this book
+    const hint = $('#swipe-hint'); hint.hidden = !(i === 0 && !store.get('hinted.' + b.id, false));
+    hint.style.setProperty('--hs', Math.min(1, (this.W - 40) / 300).toFixed(3));
   },
   updateHud() {
     const n = this.pages.length, i = this.index, fa = this.rtl;
@@ -235,7 +238,7 @@ const Reader = {
       backHTML: this.mode === 'single' ? null : pageHTML(b, p[sheetBack], sheetBack, n),
       onEnd: flipped => {
         const moved = dirn > 0 ? flipped : !flipped;
-        if (moved) this.index += dirn * (this.mode === 'single' ? 1 : 2);
+        if (moved) { this.index += dirn * (this.mode === 'single' ? 1 : 2); store.set('hinted.' + b.id, true); }
         this.curl = null;
         this.renderStatic();
       }
@@ -258,6 +261,7 @@ const Reader = {
     stage.addEventListener('dragstart', e => e.preventDefault()); // images must not start a native drag
     stage.addEventListener('pointerdown', e => {
       if (e.button || !this.book) return;
+      $('#swipe-hint').hidden = true;
       if (e.target.closest('video, a, button, input, .end')) return;
       const book = $('#book'), r = book.getBoundingClientRect();
       const x = e.clientX - r.left, inside = e.clientY >= r.top - 10 && e.clientY <= r.bottom + 10 && x >= -10 && x <= r.width + 10;
