@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>ورق — کتاب‌خوان</title>
+  <meta name="description" content="کتاب‌خوان بنفش با ورق‌خوردن واقعی صفحه‌ها؛ متن، تصویر و ویدئو.">
+  <meta name="theme-color" content="#1a0b2e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ورق">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235b2a86'/%3E%3Cpath d='M8 7h11a4 4 0 0 1 4 4v14H12a4 4 0 0 0-4 4V7Z' fill='%23f5efff'/%3E%3Cpath d='M23 11v14a4 4 0 0 0-3-1.5' fill='none' stroke='%23c084fc' stroke-width='1.5'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/css/reader.css">
+</head>
+<body>
+  <!-- کتابخانه -->
+  <section id="library" class="library">
+    <header class="appbar">
+      <div class="appbar__brand">
+        <div class="logo" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor" opacity=".18"/><path d="M8 7h11a4 4 0 0 1 4 4v14H12a4 4 0 0 0-4 4V7Z" fill="currentColor"/></svg></div>
+        <h1>ورق</h1>
+      </div>
+      <span class="appbar__sub">کتابخانه</span>
+    </header>
+    <p class="lib-hint">یک کتاب را باز کنید، با انگشت از گوشه صفحه بگیرید و بکشید.</p>
+    <div class="lib-grid" id="lib-grid"></div>
+    <footer class="lib-foot">متن‌های نمونه از آثار عمومی؛ ویدئوها نمونه‌های آزاد بنیاد بلندر.</footer>
+  </section>
+
+  <!-- صفحه مطالعه -->
+  <section id="reader" class="reader" hidden>
+    <header class="appbar appbar--reader">
+      <button class="ibtn" id="rd-back" aria-label="بازگشت به کتابخانه"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+      <div class="bar__meta"><div class="bar__title" id="rd-title"></div><div class="bar__count" id="rd-count"></div></div>
+    </header>
+    <div class="stage" id="stage">
+      <div class="book" id="book"></div>
+    </div>
+
+    <!-- نوار ابزار زیر کتاب -->
+    <footer class="bar">
+      <div class="bar__row">
+        <div class="tools">
+          <button class="tbtn" id="rd-font-down" aria-label="کوچک‌تر کردن متن"><span style="font-size:.8em">A</span></button>
+          <button class="tbtn" id="rd-font-up" aria-label="بزرگ‌تر کردن متن"><span style="font-size:1.15em">A</span></button>
+          <button class="tbtn" id="rd-night" aria-label="حالت شب" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg></button>
+          <button class="tbtn tbtn--layout" id="rd-layout" aria-label="چیدمان صفحه" data-layout="auto"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="8" height="14" rx="1.5"/><rect x="13" y="5" width="8" height="14" rx="1.5"/></svg><span class="tbtn__label"></span></button>
+        </div>
+      </div>
+      <div class="scrub">
+        <button class="ibtn" id="rd-prev" aria-label="صفحه قبل"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+        <div class="scrub__track"><div class="scrub__fill" id="rd-pct"></div><input type="range" id="rd-slider" min="0" max="1" value="0" aria-label="رفتن به صفحه"></div>
+        <button class="ibtn" id="rd-next" aria-label="صفحه بعد"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+      </div>
+    </footer>
+    <div id="measure" class="measure" aria-hidden="true"></div>
+  </section>
+
+  <script src="assets/js/books.js"></script>
+  <script src="assets/js/flip.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>
+</body>
+</html>
