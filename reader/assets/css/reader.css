@@ -188,11 +188,15 @@ svg { display: block; }
 
 @media (max-width: 600px) {
   .library { padding-inline: 14px; padding-bottom: 40px; }
-  .lib-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-  .book-card__cover { padding: 16px 16px 0; } .book-card__cover .cover { width: 104px; }
-  .book-card__body { padding: 12px 12px 14px; }
-  .book-card__blurb { display: none; }
-  .book-card__title { font-size: 1rem; }
+  /* one book per row: cover beside the text */
+  .lib-grid { grid-template-columns: 1fr; gap: 12px; }
+  .book-card { grid-template-columns: auto 1fr; grid-template-rows: none; align-items: center; }
+  .book-card__cover { padding: 14px 14px 14px 0; background: none; } .book-card__cover .cover { width: 92px; transform: rotateY(-10deg) rotateX(3deg); }
+  .book-card__body { padding: 14px 4px 14px 14px; min-width: 0; }
+  .book-card__blurb { -webkit-line-clamp: 2; font-size: .82rem; margin-bottom: 8px; }
+  .book-card__title { font-size: 1.05rem; }
+  .book-card__author { font-size: .85rem; margin-bottom: 6px; }
+  .book-card__meta { font-size: .74rem; }
   .page__inner { font-size: calc(16px * var(--font-scale)); }
   .page__run { inset-inline: 20px; }
   .tools .tbtn__label { display: none; }
