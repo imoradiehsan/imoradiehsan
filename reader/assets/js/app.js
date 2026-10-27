@@ -102,7 +102,7 @@ function paginate(book, W, H) {
 
 /* ---------- Reader ---------- */
 const Reader = {
-  book: null, pages: [], index: 0, mode: 'single', W: 0, H: 0, curl: null, barsHidden: false,
+  book: null, pages: [], index: 0, mode: 'single', W: 0, H: 0, curl: null,
   open(book) {
     this.book = book;
     document.body.classList.add('is-reading');
@@ -112,8 +112,6 @@ const Reader = {
     const pr = store.get('progress.' + book.id, null);
     this.index = pr ? pr.page : 0;
     this.layout(true);
-    this.showBars(true);
-    clearTimeout(this._barsT); this._barsT = setTimeout(() => { if (this.book) this.showBars(false); }, 2600);
   },
   close() {
     this.killCurl();
@@ -136,13 +134,13 @@ const Reader = {
     const auto = sw > 760 && sw > sh * 1.05;
     this.mode = settings.layout === 'auto' ? (auto ? 'spread' : 'single') : settings.layout;
     if (this.mode === 'spread' && sw < 560) this.mode = 'single';
-    $('#reader').dataset.mode = this.mode; // single mode drops the stage padding: the page fills the screen
+    $('#reader').dataset.mode = this.mode; // single mode drops the stage padding: the page fills the stage edge to edge
     const cs = getComputedStyle(stage);
     const aw = sw - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const ah = sh - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     let W, H;
     if (this.mode === 'spread') { W = Math.min((aw - 48) / 2, (ah - 32) / 1.42); H = Math.min(ah - 32, W * 1.42); }
-    else if (aw <= 700) { W = aw; H = ah; } // phone: full screen, bars float over the page
+    else if (aw <= 700) { W = aw; H = ah; } // phone: edge to edge, toolbar sits below the page
     else { W = Math.min(640, ah / 1.3); H = ah - 24; }
     W = Math.floor(W); H = Math.floor(H);
     const book = $('#book');
@@ -229,7 +227,6 @@ const Reader = {
     if (c) c.flipTo(dirn > 0, 850);
   },
   jump(i) { this.killCurl(); this.index = Math.max(0, Math.min(this.pages.length - 1, i)); if (this.mode === 'spread' && this.index % 2) this.index--; this.renderStatic(); },
-  showBars(on) { this.barsHidden = !on; $('#reader').classList.toggle('bars-hidden', !on); },
 
   /* ---- pointer gestures on the stage ---- */
   bindGestures() {
@@ -265,10 +262,10 @@ const Reader = {
       if (!drag) return;
       const d = drag; drag = null;
       if (d.started) { this.curl && this.curl.release(); return; }
-      // a tap: edges turn the page, the middle toggles the bars
+      // a tap near either edge turns the page
       const book = $('#book'), r = book.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width;
       if (performance.now() - d.t0 > 500) return;
-      if (fx < 0.28 || fx > 0.72) this.go(d.dirn); else this.showBars(this.barsHidden);
+      if (fx < 0.3 || fx > 0.7) this.go(d.dirn);
     };
     stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', () => { if (drag && drag.started && this.curl) this.curl.release(); drag = null; });
     addEventListener('keydown', e => {

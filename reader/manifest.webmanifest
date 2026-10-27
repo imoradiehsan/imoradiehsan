@@ -4,7 +4,7 @@
   "description": "کتاب‌خوان بنفش با ورق‌خوردن واقعی صفحه‌ها",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./",
+  "start_url": "app.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
