@@ -13,6 +13,7 @@ const saveSettings = () => store.set('settings', settings);
 /* ---------- Covers ---------- */
 function coverHTML(b, big = false) {
   const pat = `<svg class="cover__pattern" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${Array.from({ length: 28 }, (_, i) => `<circle cx="${(i * 67) % 200}" cy="${(i * 113) % 300}" r="${8 + (i % 4) * 9}" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1.5"/>`).join('')}</svg>`;
+  if (b.cover) return `<div class="cover cover--img${big ? ' cover--big' : ''}" style="--c1:${b.color};--c2:${b.color2}"><img src="${esc(b.cover)}" alt="${esc(b.title)}"><div class="cover__spine"></div></div>`;
   return `<div class="cover${big ? ' cover--big' : ''}" style="--c1:${b.color};--c2:${b.color2}" dir="${b.lang === 'fa' ? 'rtl' : 'ltr'}">${pat}
     <div class="cover__spine"></div>
     <div class="cover__text"><div class="cover__title">${esc(b.title)}</div>${b.subtitle ? `<div class="cover__sub">${esc(b.subtitle)}</div>` : ''}<div class="cover__author">${esc(b.author)}</div></div>

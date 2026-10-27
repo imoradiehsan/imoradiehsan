@@ -70,7 +70,11 @@ svg { display: block; }
 .cover__sub { font-size: .72rem; opacity: .85; margin-top: 6px; line-height: 1.5; }
 .cover__author { margin-top: 14px; font-size: .78rem; font-weight: 600; opacity: .9; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, .35); display: inline-block; }
 .cover__brand { position: absolute; bottom: 6%; inset-inline-end: 10%; font-size: .66rem; font-weight: 800; letter-spacing: .1em; opacity: .7; }
+.cover--img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cover--img .cover__spine { opacity: .7; }
 .cover--big { width: 100%; height: 100%; }
+.page--cover .cover--img { background: #0b0613; }
+.page--cover .cover--img img { object-fit: contain; }
 .cover--big .cover__title { font-size: clamp(1.6rem, 5cqw, 2.6rem); }
 .cover--big .cover__sub { font-size: 1rem; }
 .cover--big .cover__author { font-size: 1rem; }
