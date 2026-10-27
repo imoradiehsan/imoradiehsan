@@ -113,6 +113,7 @@ const Reader = {
     this.index = pr ? pr.page : 0;
     this.layout(true);
     this.showBars(true);
+    clearTimeout(this._barsT); this._barsT = setTimeout(() => { if (this.book) this.showBars(false); }, 2600);
   },
   close() {
     this.killCurl();
@@ -131,15 +132,18 @@ const Reader = {
   /* page size + mode from the viewport; re-paginate keeping the reader's place */
   layout(first = false) {
     const stage = $('#stage');
-    const cs = getComputedStyle(stage);
-    const aw = stage.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    const ah = stage.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    const auto = aw > 760 && aw > ah * 1.05;
+    const sw = stage.clientWidth, sh = stage.clientHeight;
+    const auto = sw > 760 && sw > sh * 1.05;
     this.mode = settings.layout === 'auto' ? (auto ? 'spread' : 'single') : settings.layout;
-    if (this.mode === 'spread' && aw < 560) this.mode = 'single';
+    if (this.mode === 'spread' && sw < 560) this.mode = 'single';
+    $('#reader').dataset.mode = this.mode; // single mode drops the stage padding: the page fills the screen
+    const cs = getComputedStyle(stage);
+    const aw = sw - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const ah = sh - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     let W, H;
     if (this.mode === 'spread') { W = Math.min((aw - 48) / 2, (ah - 32) / 1.42); H = Math.min(ah - 32, W * 1.42); }
-    else { W = Math.min(aw - 16, (ah - 16) / 1.25); H = ah - 16; if (aw > 600) W = Math.min(W, 640); }
+    else if (aw <= 700) { W = aw; H = ah; } // phone: full screen, bars float over the page
+    else { W = Math.min(640, ah / 1.3); H = ah - 24; }
     W = Math.floor(W); H = Math.floor(H);
     const book = $('#book');
     book.style.width = (this.mode === 'spread' ? W * 2 : W) + 'px'; book.style.height = H + 'px';
@@ -288,6 +292,8 @@ function route() {
 addEventListener('hashchange', route);
 addEventListener('resize', () => { if (Reader.book) Reader.layout(); });
 document.addEventListener('DOMContentLoaded', () => {
+  const sat = new URLSearchParams(location.search).get('sat');
+  if (sat) document.documentElement.style.setProperty('--sat', sat + 'px');
   Reader.bindGestures();
   $('#rd-back').addEventListener('click', () => { location.hash = ''; });
   $('#rd-prev').addEventListener('click', () => Reader.go(-1));
