@@ -318,3 +318,14 @@ body { background: var(--canvas); color: var(--text); }
 /* LTR books flip the other way */
 .book[data-dir="ltr"] ~ .swipe-hint .swipe-hint__path, .book[data-dir="ltr"] ~ .swipe-hint .swipe-hint__hand { transform: translateX(-50%) scale(var(--hs, 1)) scaleX(-1); }
 .night .swipe-hint__glow { background: radial-gradient(ellipse at center, rgba(167, 139, 250, .5), rgba(167, 139, 250, .15) 45%, transparent 70%); }
+
+
+/* ---------- full-page video ---------- */
+.page--video { background: #000; }
+.page--video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.page--video .page__vcap { position: absolute; inset-inline: 0; bottom: 0; padding: 40px 22px 34px; color: #fff; font-weight: 700; text-align: center; background: linear-gradient(to top, rgba(0, 0, 0, .6), transparent); text-shadow: 0 2px 6px rgba(0, 0, 0, .5); }
+.page--video .page__num { color: rgba(255, 255, 255, .7); }
+.vmute { position: absolute; top: 14px; inset-inline-start: 14px; width: 42px; height: 42px; border-radius: 50%; background: rgba(0, 0, 0, .45); color: #fff; display: grid; place-items: center; backdrop-filter: blur(4px); pointer-events: auto; }
+.vmute svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.vmute .vmute__on { display: none; } .vmute[aria-pressed="true"] .vmute__on { display: block; } .vmute[aria-pressed="true"] .vmute__off { display: none; }
+.sheet .vmute { display: none; }
