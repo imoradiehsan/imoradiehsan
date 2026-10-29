@@ -771,9 +771,9 @@ function loan(){const m=match(),l=LOANS.find(x=>x.i===S.detail)||m.full[0]?.l;if
   if(t==='مدارک هویتی')return ['ok','✓','تایید شد'];
   return ['wa','!','بررسی شود'];};
  const rank=m.full.findIndex(r=>r.l.i===l.i);
- const why=[];if(!e.short)why.push('مبلغ موردنیاز شما در سقف این طرح جا می‌شود.');else why.push('سقف این طرح '+mil(l.mx)+' است؛ بقیه مبلغ را از وام دیگر بگیر.');
+ const PL0=plan(m).loans.find(x=>x.r.l.i===l.i),wIns=PL0?PL0.inst:e.inst;const why=[];if(!e.short)why.push('مبلغ موردنیاز شما در سقف این طرح جا می‌شود.');else why.push('سقف این طرح '+mil(l.mx)+' است؛ بقیه مبلغ را از وام دیگر بگیر.');
  if(!l.tg.includes('guar'))why.push('برای این وام ضامن رسمی لازم نیست.');if(!l.tg.includes('dep'))why.push('لازم نیست پول در حساب بلوکه کنی.');
- if(canAfford(e.inst))why.push('قسط حدود '+mil(e.inst)+' تومان با توان پرداختت سازگار است.');
+ if(canAfford(wIns))why.push('قسط '+m5(wIns)+' تومان با توان پرداختت سازگار است.');
  const PP=plan(m),gs=PP.steps.map((s,i)=>({...s,n:i+1})).filter(s=>s.lid===l.i||s.lid===null);const road=gs.length>1?gs:roadmap(l).map((s,i)=>({t:s[0],d:s[1],n:i+1}));const guarTxt=l.tg.includes('guar')?'ضامن رسمی':l.tg.includes('chq')?'چک یا سفته':l.tg.includes('col')?'وثیقه':'طبق شرایط بانک';
  return hdr('جزئیات وام',"go('result')")+`<div class="body">
   <div class="sec dhead">${rank===0?'<span class="pill p-g tg">بیشترین تطابق</span>':rank>0?'<span class="pill p-b tg">گزینه مناسب</span>':'<span class="pill p-a tg">با یک شرط اضافه</span>'}
