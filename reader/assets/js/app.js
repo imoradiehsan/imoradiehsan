@@ -56,6 +56,7 @@ function pageHTML(book, page, idx, total) {
   const dir = book.lang === 'fa' ? 'rtl' : 'ltr';
   if (!page || page.blank) return `<div class="page page--blank" dir="${dir}"></div>`;
   if (page.cover) return `<div class="page page--cover" dir="${dir}">${coverHTML(book, true)}</div>`;
+  if (page.video) { const v = page.video; return `<div class="page page--video" dir="${dir}"><video playsinline loop muted preload="auto" poster="${esc(v.poster || '')}" src="${esc(v.src)}"></video>${v.caption ? `<div class="page__vcap">${esc(v.caption)}</div>` : ''}<button class="vmute" aria-label="صدا" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path class="vmute__on" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="vmute__off" d="m17 9 4 6M21 9l-4 6"/></svg></button><div class="page__num">${book.lang === 'fa' ? faNum(idx) : idx}</div></div>`; }
   if (page.end) return `<div class="page page--end" dir="${dir}"><div class="page__inner"><div class="end"><div class="end__mark">❦</div><div class="end__title">${book.lang === 'fa' ? 'پایان' : 'The End'}</div><div class="end__sub">${esc(book.title)} — ${esc(book.author)}</div><a class="btn" href="#book/${book.id}">${book.lang === 'fa' ? 'بازگشت' : 'Back'}</a></div></div></div>`;
   const num = book.lang === 'fa' ? faNum(idx) : idx;
   const ribbon = Reader.isBookmarked(idx) ? '<div class="page__ribbon" aria-label="نشان‌شده"></div>' : '';
@@ -74,6 +75,7 @@ function paginate(book, W, H) {
   const queue = book.blocks.map(b => ({ ...b }));
   while (queue.length) {
     const bl = queue.shift();
+    if (bl.t === 'video' && bl.full) { flush(); pages.push({ video: bl }); continue; } // a full-bleed video is a page of its own
     const html = blockHTML(bl, book);
     inner.insertAdjacentHTML('beforeend', html);
     if (fits()) { cur.push(html); continue; }
@@ -197,6 +199,7 @@ const Reader = {
       book.innerHTML = this.rtl ? front + other : other + front; // RTL: front page on the left
     }
     this.pauseMedia();
+    this.playVisibleVideo();
     this.updateHud();
     store.set('progress.' + b.id, { page: i, total: n });
     $('#rd-bm').setAttribute('aria-pressed', this.isBookmarked(i));
@@ -213,6 +216,17 @@ const Reader = {
     $('#rd-pct').style.width = (100 * i / (n - 1)) + '%';
   },
   pauseMedia() { $$('#book video').forEach(v => v.pause()); },
+  /* a full-page video starts as soon as its page is turned to; with sound when the browser allows it, else muted with an unmute button */
+  playVisibleVideo() {
+    $$('#book .page--video video').forEach(v => {
+      v.muted = !!settings.muted;
+      const p = v.play(); if (p) p.catch(() => { v.muted = true; v.play().catch(() => {}); });
+      const btn = v.parentElement.querySelector('.vmute');
+      const sync = () => btn.setAttribute('aria-pressed', !v.muted); sync();
+      v.addEventListener('volumechange', sync);
+      btn.addEventListener('click', e => { e.stopPropagation(); v.muted = !v.muted; settings.muted = v.muted; saveSettings(); if (v.paused) v.play().catch(() => {}); });
+    });
+  },
   canFlip(dirn) { // +1 forward, -1 back
     const n = this.pages.length, i = this.index;
     return dirn > 0 ? i + 1 < n : i > 0;
@@ -262,7 +276,7 @@ const Reader = {
     stage.addEventListener('pointerdown', e => {
       if (e.button || !this.book) return;
       $('#swipe-hint').hidden = true;
-      if (e.target.closest('video, a, button, input, .end')) return;
+      if (e.target.closest('a, button, input, .end')) return; // (a full-page video itself can still be swiped)
       const book = $('#book'), r = book.getBoundingClientRect();
       const x = e.clientX - r.left, inside = e.clientY >= r.top - 10 && e.clientY <= r.bottom + 10 && x >= -10 && x <= r.width + 10;
       if (!inside) return;
