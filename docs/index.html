@@ -721,8 +721,8 @@ function noLoan(){const sc=/^[ABC]/.test(S.score)&&!S.noLoan?S.score:S.score,T=n
  const tg=T?SCORES[T.g]:null,FREE=2,show=FIXALL.slice(0,FREE),lock=FIXALL.slice(FREE);
  return hdr('گزارش مشاوره وام بانکی',"go('home')")+`<div class="body">
   <div class="nlh">
-   <h2>با بهبود رتبه اعتباری، قفل فرصت‌های بیشتر برای دریافت وام را باز کنید</h2>
-   <p>با استفاده از سرویس بهبود رتبه اعتباری، رتبه خود را ارتقا دهید و به وام‌های بیشتری با شرایط بهتر دسترسی پیدا کنید.</p>
+   <h2>متأسفانه فعلاً وامی به شما تعلق نگرفت</h2>
+   <p>با رتبه اعتباری فعلی، هیچ وامی قابل دریافت نیست. با <b style="color:var(--blue);font-weight:500">سرویس بهبود رتبه اعتباری</b> رتبه خود را ارتقا دهید تا قفل وام‌های بیشتر با شرایط بهتر برایتان باز شود.</p>
    <div class="gux">
    <div class="guk cur" onclick="S.sheet='score';render()"><small>رتبه فعلی</small><b style="color:${scc.c}">${fa(sc)}</b><span class="gseg"><i class="on" style="background:${scc.c}"></i><i></i><i></i></span></div>
    ${T?`<div class="gln r"><i class="gdot"></i><i class="guorb"></i></div>
