@@ -15,8 +15,8 @@ const svgData = s => 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s)
 
 const BOOKS = [
   {
-    id: 'bagh-jadooyi', lang: 'fa', title: 'باغ جادویی', subtitle: 'رمان نوجوان', author: 'مجید شفیعی',
-    cover: 'assets/covers/bagh-jadooyi.webp', color: '#0f5f66', color2: '#5fd3d8', kind: ['text'], minutes: 4,
+    id: 'bagh-jadooyi', lang: 'fa', narration: 'assets/audio/bagh-jadooyi', title: 'باغ جادویی', subtitle: 'رمان نوجوان', author: 'مجید شفیعی',
+    cover: 'assets/covers/bagh-jadooyi.webp', color: '#0f5f66', color2: '#5fd3d8', kind: ['text', 'audio'], minutes: 4,
     blurb: 'رمانی نوجوانانه درباره باغی که اسرار خانواده‌ای را در خود پنهان کرده است. (پیش‌نمایش)',
     blocks: [
       { t: 'h', text: 'درباره این کتاب' },
@@ -29,8 +29,8 @@ const BOOKS = [
     ]
   },
   {
-    id: 'abriha', lang: 'fa', title: 'ابری‌ها', subtitle: 'رمان نوجوان', author: 'محمدرضا یوسفی',
-    cover: 'assets/covers/abriha.webp', color: '#4c6b3c', color2: '#b7d6f2', kind: ['text', 'video'], minutes: 4,
+    id: 'abriha', lang: 'fa', narration: 'assets/audio/abriha', title: 'ابری‌ها', subtitle: 'رمان نوجوان', author: 'محمدرضا یوسفی',
+    cover: 'assets/covers/abriha.webp', color: '#4c6b3c', color2: '#b7d6f2', kind: ['text', 'video', 'audio'], minutes: 4,
     blurb: 'ماجرای پسرکی با کلاه خلبانی و دوربین دوچشمی که از نردبانی بالای ابرها می‌رود. (پیش‌نمایش)',
     blocks: [
       { t: 'h', text: 'درباره این کتاب' },
@@ -44,8 +44,8 @@ const BOOKS = [
     ]
   },
   {
-    id: 'witcher-1', lang: 'fa', title: 'ویچر ۱: آخرین آرزو', subtitle: 'حماسه ویچر', author: 'آنجی سپکوفسکی · ترجمه سینا طاووسی مسرور',
-    cover: 'assets/covers/witcher-1.webp', color: '#1c2a33', color2: '#7fa6b8', kind: ['text'], minutes: 4,
+    id: 'witcher-1', lang: 'fa', narration: 'assets/audio/witcher-1', title: 'ویچر ۱: آخرین آرزو', subtitle: 'حماسه ویچر', author: 'آنجی سپکوفسکی · ترجمه سینا طاووسی مسرور',
+    cover: 'assets/covers/witcher-1.webp', color: '#1c2a33', color2: '#7fa6b8', kind: ['text', 'audio'], minutes: 4,
     blurb: 'نخستین کتاب حماسه ویچر: گرالت از ریویا، شکارچی هیولاها، و آرزویی که همه‌چیز را عوض می‌کند. (پیش‌نمایش)',
     blocks: [
       { t: 'h', text: 'درباره این کتاب' },
@@ -58,8 +58,8 @@ const BOOKS = [
     ]
   },
   {
-    id: 'anne-shirley', lang: 'fa', title: 'آنی شرلی در گرین گیبلز', subtitle: 'کتاب اول', author: 'ال. ام. مونتگمری · ترجمه سارا قدیانی',
-    cover: 'assets/covers/anne-shirley.webp', color: '#1b7a3e', color2: '#f2d98a', kind: ['text'], minutes: 5,
+    id: 'anne-shirley', lang: 'fa', narration: 'assets/audio/anne-shirley', title: 'آنی شرلی در گرین گیبلز', subtitle: 'کتاب اول', author: 'ال. ام. مونتگمری · ترجمه سارا قدیانی',
+    cover: 'assets/covers/anne-shirley.webp', color: '#1b7a3e', color2: '#f2d98a', kind: ['text', 'audio'], minutes: 5,
     blurb: 'دختری مو قرمز و پرحرف که به اشتباه به مزرعه گرین گیبلز می‌رسد و زندگی همه را عوض می‌کند. (پیش‌نمایش)',
     blocks: [
       { t: 'h', text: 'درباره این کتاب' },

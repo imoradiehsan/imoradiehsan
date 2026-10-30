@@ -196,7 +196,7 @@ svg { display: block; }
 .pg-p--cont { text-indent: 0; }
 .pg-q { margin: .6em 1em 1em; padding: .55em 1em; border-inline-start: 3px solid var(--violet-400); background: rgba(139, 92, 246, .07); border-radius: 0 10px 10px 0; font-size: .95em; text-align: center; }
 [dir="rtl"] .pg-q { border-radius: 10px 0 0 10px; }
-.pg-q span { display: block; }
+.pg-q > span { display: block; } .pg-q .w { display: inline; }
 .pg-sep { text-align: center; color: var(--violet-400); margin: .5em 0; font-size: 1.3em; }
 .pg-fig { margin: .3em 0 .9em; }
 .pg-media { border-radius: 12px; overflow: hidden; background: var(--paper-2); box-shadow: 0 10px 24px -14px rgba(40, 10, 80, .6); }
@@ -329,3 +329,21 @@ body { background: var(--canvas); color: var(--text); }
 .vmute svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .vmute .vmute__on { display: none; } .vmute[aria-pressed="true"] .vmute__on { display: block; } .vmute[aria-pressed="true"] .vmute__off { display: none; }
 .sheet .vmute { display: none; }
+
+
+/* ---------- read-along ---------- */
+.w { border-radius: 4px; transition: background-color .15s, color .15s; }
+.w.is-on { background: var(--primary-soft-2); color: #4c1d95; box-shadow: 0 0 0 3px var(--primary-soft-2); }
+.night .w.is-on { background: #5b35b8; color: #fff; box-shadow: 0 0 0 3px #5b35b8; }
+.ibtn--voice { position: relative; }
+.ibtn--voice .v-pause { display: none; }
+.ibtn--voice[aria-pressed="true"] { background: var(--primary); color: #fff; }
+.ibtn--voice[aria-pressed="true"] .v-play { display: none; } .ibtn--voice[aria-pressed="true"] .v-pause { display: block; }
+.ibtn--voice.is-waiting { background: var(--primary-soft); color: var(--primary); }
+.ibtn__bars { position: absolute; bottom: 5px; inset-inline: 0; display: none; justify-content: center; gap: 2px; height: 8px; }
+.ibtn__bars i { width: 3px; background: currentColor; border-radius: 2px; animation: eq .9s ease-in-out infinite; transform-origin: bottom; }
+.ibtn__bars i:nth-child(2) { animation-delay: .2s; } .ibtn__bars i:nth-child(3) { animation-delay: .4s; }
+.ibtn--voice[aria-pressed="true"] .ibtn__bars { display: flex; }
+.ibtn--voice[aria-pressed="true"] svg { transform: translateY(-3px); }
+@keyframes eq { 0%, 100% { height: 3px; } 50% { height: 8px; } }
+.pill--audio { background: var(--success-soft); color: var(--success); }

@@ -21,7 +21,7 @@ function coverHTML(b, big = false) {
 }
 
 /* ---------- Library ---------- */
-const KIND = { text: 'متن', image: 'تصویر', video: 'ویدئو' };
+const KIND = { text: 'متن', image: 'تصویر', video: 'ویدئو', audio: 'روایت صوتی' };
 function renderLibrary() {
   const grid = $('#lib-grid');
   grid.innerHTML = BOOKS.map(b => {
@@ -43,15 +43,17 @@ function renderLibrary() {
 /* ---------- Pagination ---------- */
 function blockHTML(bl, book) {
   switch (bl.t) {
-    case 'h': return `<h2 class="pg-h${bl.small ? ' pg-h--small' : ''}">${esc(bl.text)}</h2>`;
-    case 'p': return `<p class="pg-p${bl.cont ? ' pg-p--cont' : ''}">${esc(bl.text)}</p>`;
-    case 'quote': return `<blockquote class="pg-q">${bl.text.split('\n').map(l => `<span>${esc(l)}</span>`).join('')}</blockquote>`;
+    case 'h': return `<h2 class="pg-h${bl.small ? ' pg-h--small' : ''}">${words(bl.text, bl.w0)}</h2>`;
+    case 'p': return `<p class="pg-p${bl.cont ? ' pg-p--cont' : ''}">${words(bl.text, bl.w0)}</p>`;
+    case 'quote': { let k = bl.w0; return `<blockquote class="pg-q">${bl.text.split('\n').map(l => { const h = `<span>${words(l, k)}</span>`; if (k != null) k += l.split(/\s+/).filter(Boolean).length; return h; }).join('')}</blockquote>`; }
     case 'sep': return `<div class="pg-sep" aria-hidden="true">❦</div>`;
     case 'img': return `<figure class="pg-fig"><div class="pg-media">${bl.svg || `<img src="${esc(bl.src)}" alt="${esc(bl.caption || '')}" loading="lazy">`}</div>${bl.caption ? `<figcaption>${esc(bl.caption)}</figcaption>` : ''}</figure>`;
     case 'video': return `<figure class="pg-fig pg-fig--video"><div class="pg-media"><video controls playsinline preload="none" poster="${esc(bl.poster || '')}" src="${esc(bl.src)}"></video></div>${bl.caption ? `<figcaption>${esc(bl.caption)}</figcaption>` : ''}</figure>`;
   }
   return '';
 }
+/* each word in its own span so the narrator can light it up; w0 is the word's index in the whole book */
+const words = (text, w0) => w0 == null ? esc(text) : text.split(/\s+/).filter(Boolean).map((w, i) => `<span class="w" data-w="${w0 + i}">${esc(w)}</span>`).join(' ');
 function pageHTML(book, page, idx, total) {
   const dir = book.lang === 'fa' ? 'rtl' : 'ltr';
   if (!page || page.blank) return `<div class="page page--blank" dir="${dir}"></div>`;
@@ -73,6 +75,7 @@ function paginate(book, W, H) {
   let cur = [];
   const flush = () => { if (cur.length) pages.push({ html: cur.join('') }); cur = []; inner.innerHTML = ''; };
   const queue = book.blocks.map(b => ({ ...b }));
+  if (book.narration) { let n = 0; for (const b of queue) if (['h', 'p', 'quote'].includes(b.t)) { b.w0 = n; n += b.text.split(/\s+/).filter(Boolean).length; } }
   while (queue.length) {
     const bl = queue.shift();
     if (bl.t === 'video' && bl.full) { flush(); pages.push({ video: bl }); continue; } // a full-bleed video is a page of its own
@@ -92,7 +95,7 @@ function paginate(book, W, H) {
       if (lo >= 6 && words.length - lo >= 3) {
         const h = blockHTML({ ...bl, text: words.slice(0, lo).join(' ') }, book);
         inner.insertAdjacentHTML('beforeend', h); cur.push(h);
-        queue.unshift({ ...bl, text: words.slice(lo).join(' '), cont: true });
+        queue.unshift({ ...bl, text: words.slice(lo).join(' '), cont: true, w0: bl.w0 == null ? undefined : bl.w0 + lo });
         flush(); continue;
       }
     }
@@ -130,12 +133,14 @@ const Reader = {
     document.body.classList.add('is-reading');
     $('#library').hidden = true; $('#reader').hidden = false;
     $('#rd-title').textContent = book.title;
+    $('#rd-voice').hidden = !book.narration; Narrator.load(book);
     this.applySettings();
     const pr = store.get('progress.' + book.id, null);
     this.index = pr ? pr.page : 0;
     this.layout(true);
   },
   close() {
+    Narrator.stop();
     this.killCurl();
     document.body.classList.remove('is-reading');
     $('#reader').hidden = true; $('#library').hidden = false;
@@ -175,6 +180,7 @@ const Reader = {
       const anchor = this.pages[this.index]?.html ?? null;
       this.W = W; this.H = H; this._font = settings.font; this._mode = this.mode;
       this.pages = paginate(this.book, W, H);
+      for (const pg of this.pages) { const m = pg.html && [...pg.html.matchAll(/data-w="(\d+)"/g)]; if (m && m.length) { pg.w0 = +m[0][1]; pg.w1 = +m[m.length - 1][1]; } }
       if (this.mode === 'spread' && this.pages.length % 2) this.pages.push({ blank: true }); // spreads need pairs
       if (anchor && !first) {
         const head = anchor.slice(0, 120);
@@ -200,6 +206,7 @@ const Reader = {
     }
     this.pauseMedia();
     this.playVisibleVideo();
+    Narrator.onPage();
     this.updateHud();
     store.set('progress.' + b.id, { page: i, total: n });
     $('#rd-bm').setAttribute('aria-pressed', this.isBookmarked(i));
@@ -320,6 +327,46 @@ const Reader = {
 };
 
 /* ---------- Wiring ---------- */
+/* ---------- Narrator: read-along audio, the current word lights up and pages turn by themselves ---------- */
+const Narrator = {
+  book: null, audio: null, words: null, on: false, waiting: false, cur: -1, raf: null,
+  load(book) {
+    if (this.book === book) return; this.stop(); this.book = book; this.words = null; this.cur = -1;
+    if (!book.narration) { this.audio = null; return; }
+    this.audio = new Audio(book.narration + '.mp3'); this.audio.preload = 'auto';
+    this.audio.addEventListener('ended', () => this.stop());
+    fetch(book.narration + '.json').then(r => r.json()).then(d => { this.words = d.words; }).catch(() => {});
+  },
+  toggle() { this.on || this.waiting ? this.pause() : this.play(); },
+  seekToPage(pg) { if (pg && pg.w0 != null) { this.audio.currentTime = this.words[pg.w0][0]; this.cur = pg.w0; return true; } return false; },
+  play() {
+    if (!this.audio || !this.words) { setTimeout(() => this.words && this.play(), 300); return; }
+    const pg = Reader.pages[Reader.index];
+    if (!pg || pg.w0 == null) { // cover, video: start with the first page that has words
+      const nxt = Reader.pages.slice(Reader.index).find(p => p.w0 != null); if (nxt) this.seekToPage(nxt); else return;
+    } else if (this.cur < pg.w0 || this.cur > pg.w1) this.seekToPage(pg);
+    this.audio.play().catch(() => {}); this.on = true; this.waiting = false; this.button();
+    cancelAnimationFrame(this.raf); const tick = () => { this.tick(); if (this.on) this.raf = requestAnimationFrame(tick); }; tick();
+  },
+  pause() { if (this.audio) this.audio.pause(); this.on = false; this.waiting = false; cancelAnimationFrame(this.raf); this.button(); },
+  stop() { this.pause(); this.cur = -1; $$('#book .w.is-on').forEach(el => el.classList.remove('is-on')); },
+  button() { const b = $('#rd-voice'); b.setAttribute('aria-pressed', this.on); b.classList.toggle('is-waiting', this.waiting); },
+  tick() {
+    const t = this.audio.currentTime, w = this.words; let lo = 0, hi = w.length - 1, i = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (w[m][0] <= t) { i = m; lo = m + 1; } else hi = m - 1; }
+    if (i !== this.cur) { this.cur = i; $$('#book .w.is-on').forEach(el => el.classList.remove('is-on')); const el = $(`#book .pagebox .w[data-w="${i}"]`); if (el) el.classList.add('is-on'); }
+    const pg = Reader.pages[Reader.index];
+    if (pg && i >= 0 && pg.w1 != null && i > pg.w1 && !Reader.curl) Reader.go(1); // the voice has moved on: turn the page
+  },
+  /* after a page turn: a page without words (video) pauses the voice until the reader moves on; a text page resumes in place */
+  onPage() {
+    if (!this.audio || (!this.on && !this.waiting)) return;
+    const pg = Reader.pages[Reader.index];
+    if (!pg || pg.w0 == null) { if (this.on) { this.audio.pause(); this.on = false; this.waiting = true; cancelAnimationFrame(this.raf); this.button(); } return; }
+    if (this.waiting || this.cur < pg.w0 || this.cur > pg.w1) { this.seekToPage(pg); this.play(); }
+  }
+};
+
 /* ---------- Book page ---------- */
 const Detail = {
   book: null,
@@ -330,7 +377,7 @@ const Detail = {
     $('#dt-title').textContent = b.title; $('#dt-blurb').textContent = b.blurb;
     $('#dt-author').textContent = b.author; $('#dt-minutes').textContent = `${faNum(b.minutes)} دقیقه`;
     const pr = store.get('progress.' + b.id, null), pct = pr && pr.total ? Math.round(100 * (pr.page + 1) / pr.total) : 0;
-    $('#dt-info').innerHTML = [['نوع محتوا', b.kind.map(k => KIND[k]).join('، ')], ['زبان', b.lang === 'fa' ? 'فارسی' : 'انگلیسی'], b.subtitle ? ['مجموعه', b.subtitle] : null, ['پیشرفت', pct ? `${faNum(pct)}٪` : 'شروع نشده']].filter(Boolean)
+    $('#dt-info').innerHTML = [['نوع محتوا', b.kind.map(k => KIND[k]).join('، ')], ['زبان', b.lang === 'fa' ? 'فارسی' : 'انگلیسی'], b.subtitle ? ['مجموعه', b.subtitle] : null, ['پیشرفت', pct ? `${faNum(pct)}٪` : 'شروع نشده'], b.narration ? ['روایت صوتی', 'دارد — متن همراه صدا روشن می‌شود'] : null].filter(Boolean)
       .map(([k, v]) => `<div class="kv__row"><span class="kv__k">${k}</span><span class="kv__v">${esc(v)}</span></div>`).join('');
     const bms = store.get('bm.' + b.id, []);
     $('#dt-bms').innerHTML = bms.length ? bms.map(i => `<button class="list__row" data-page="${i}"><span class="list__icon">${icon('bookOpen')}</span><span class="list__text">صفحه ${faNum(i + 1)}</span><span class="list__go">${icon('chevLeft')}</span></button>`).join('')
@@ -361,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#dt-share').addEventListener('click', () => { const b = Detail.book, url = location.href; if (navigator.share) navigator.share({ title: b.title, text: `${b.title} — ${b.author}`, url }).catch(() => {}); else navigator.clipboard && navigator.clipboard.writeText(url); });
   $('#dt-bms').addEventListener('click', e => { const r = e.target.closest('[data-page]'); if (!r) return; store.set('progress.' + Detail.book.id, { page: +r.dataset.page, total: 0 }); location.hash = 'read/' + Detail.book.id; });
   $('#rd-bm').addEventListener('click', () => Reader.toggleBookmark());
+  $('#rd-voice').addEventListener('click', () => Narrator.toggle());
   $('#rd-bm-list').addEventListener('click', () => Reader.showBookmarks($('#bm-pop').hidden));
   $('#bm-pop').addEventListener('click', e => {
     const del = e.target.closest('[data-del]');
