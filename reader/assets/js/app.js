@@ -24,6 +24,14 @@ function coverHTML(b, big = false) {
 const KIND = { text: 'متن', image: 'تصویر', video: 'ویدئو', audio: 'روایت صوتی' };
 function renderLibrary() {
   const grid = $('#lib-grid');
+  // the book read most recently, with its progress, as a large card on top
+  const last = store.get('last', null), lb = last && BOOKS.find(b => b.id === last);
+  const lpr = lb && store.get('progress.' + lb.id, null), lpct = lpr && lpr.total ? Math.round(100 * (lpr.page + 1) / lpr.total) : 0;
+  $('#lib-continue').innerHTML = lb ? `<a class="hero-card" href="#read/${lb.id}" style="--c1:${lb.color};--c2:${lb.color2}">
+      <div class="hero-card__cover">${coverHTML(lb)}</div>
+      <div class="hero-card__body"><span class="hero-card__eyebrow">ادامه مطالعه</span><h3>${esc(lb.title)}</h3><p>${esc(lb.author)}</p>
+        <div class="hero-card__progress"><span style="width:${lpct}%"></span></div><span class="hero-card__pct">${faNum(lpct)}٪</span></div>
+      <span class="hero-card__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 8 5.5Z"/></svg></span></a>` : '';
   grid.innerHTML = BOOKS.map(b => {
     const pr = store.get('progress.' + b.id, null);
     const pct = pr && pr.total ? Math.round(100 * (pr.page + 1) / pr.total) : 0;
@@ -34,6 +42,7 @@ function renderLibrary() {
         <h3 class="book-card__title">${esc(b.title)}</h3>
         <div class="book-card__author">${esc(b.author)}</div>
         <p class="book-card__blurb">${esc(b.blurb)}</p>
+        <div class="book-card__badges">${b.narration ? '<span class="badge-i badge-i--audio" title="روایت صوتی"><svg viewBox="0 0 24 24"><path d="M3 17v-5a9 9 0 0 1 18 0v5"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/></svg>صوتی</span>' : ''}${b.kind.includes('video') ? '<span class="badge-i badge-i--video" title="ویدئو"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></svg>ویدئو</span>' : ''}</div>
         <div class="book-card__meta"><span>${faNum(b.minutes)} دقیقه مطالعه</span>${pct ? `<span>${faNum(pct)}٪ خوانده شده</span>` : '<span>شروع نشده</span>'}${(store.get('bm.' + b.id, []).length) ? `<span class="meta-bm">${faNum(store.get('bm.' + b.id, []).length)} نشان</span>` : ''}</div>
         <div class="progress" aria-hidden="true"><span style="width:${pct}%"></span></div>
       </div></a>`;
@@ -48,7 +57,7 @@ function blockHTML(bl, book) {
     case 'quote': { let k = bl.w0; return `<blockquote class="pg-q">${bl.text.split('\n').map(l => { const h = `<span>${words(l, k)}</span>`; if (k != null) k += l.split(/\s+/).filter(Boolean).length; return h; }).join('')}</blockquote>`; }
     case 'sep': return `<div class="pg-sep" aria-hidden="true">❦</div>`;
     case 'img': return `<figure class="pg-fig"><div class="pg-media">${bl.svg || `<img src="${esc(bl.src)}" alt="${esc(bl.caption || '')}" loading="lazy">`}</div>${bl.caption ? `<figcaption>${esc(bl.caption)}</figcaption>` : ''}</figure>`;
-    case 'video': return `<figure class="pg-fig pg-fig--video"><div class="pg-media"><video controls playsinline preload="none" poster="${esc(bl.poster || '')}" src="${esc(bl.src)}"></video></div>${bl.caption ? `<figcaption>${esc(bl.caption)}</figcaption>` : ''}</figure>`;
+    case 'video': return `<figure class="pg-fig pg-fig--video"><div class="pg-media"><video class="v-inline" muted loop playsinline preload="metadata" poster="${esc(bl.poster || '')}" src="${esc(bl.src)}"></video></div>${bl.caption ? `<figcaption>${esc(bl.caption)}</figcaption>` : ''}</figure>`;
   }
   return '';
 }
@@ -58,7 +67,7 @@ function pageHTML(book, page, idx, total) {
   const dir = book.lang === 'fa' ? 'rtl' : 'ltr';
   if (!page || page.blank) return `<div class="page page--blank" dir="${dir}"></div>`;
   if (page.cover) return `<div class="page page--cover" dir="${dir}">${coverHTML(book, true)}</div>`;
-  if (page.video) { const v = page.video; return `<div class="page page--video" dir="${dir}"><video playsinline loop muted preload="auto" poster="${esc(v.poster || '')}" src="${esc(v.src)}"></video>${v.caption ? `<div class="page__vcap">${esc(v.caption)}</div>` : ''}<button class="vmute" aria-label="صدا" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path class="vmute__on" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="vmute__off" d="m17 9 4 6M21 9l-4 6"/></svg></button><div class="page__num">${book.lang === 'fa' ? faNum(idx) : idx}</div></div>`; }
+  if (page.video) { const v = page.video; return `<div class="page page--video" dir="${dir}"><video playsinline muted preload="auto" poster="${esc(v.poster || '')}" src="${esc(v.src)}"></video>${v.caption ? `<div class="page__vcap">${esc(v.caption)}</div>` : ''}<div class="vend"><div class="vend__card"><div class="vend__title">ویدئو تمام شد</div><button class="vend__next">ورق بزنید <svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button><button class="vend__replay"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4h4"/></svg>دوباره ببینم</button></div></div><button class="vmute" aria-label="صدا" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path class="vmute__on" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="vmute__off" d="m17 9 4 6M21 9l-4 6"/></svg></button><div class="page__num">${book.lang === 'fa' ? faNum(idx) : idx}</div></div>`; }
   if (page.end) return `<div class="page page--end" dir="${dir}"><div class="page__inner"><div class="end"><div class="end__mark">❦</div><div class="end__title">${book.lang === 'fa' ? 'پایان' : 'The End'}</div><div class="end__sub">${esc(book.title)} — ${esc(book.author)}</div><a class="btn" href="#book/${book.id}">${book.lang === 'fa' ? 'بازگشت' : 'Back'}</a></div></div></div>`;
   const num = book.lang === 'fa' ? faNum(idx) : idx;
   const ribbon = Reader.isBookmarked(idx) ? '<div class="page__ribbon" aria-label="نشان‌شده"></div>' : '';
@@ -79,6 +88,7 @@ function paginate(book, W, H) {
   while (queue.length) {
     const bl = queue.shift();
     if (bl.t === 'video' && bl.full) { flush(); pages.push({ video: bl }); continue; } // a full-bleed video is a page of its own
+    if (bl.t === 'break') { flush(); continue; } // start a new page (e.g. a picture or clip with its text)
     const html = blockHTML(bl, book);
     inner.insertAdjacentHTML('beforeend', html);
     if (fits()) { cur.push(html); continue; }
@@ -129,11 +139,12 @@ const Reader = {
   },
   showBookmarks(on) { const pop = $('#bm-pop'); if (on) this.bookmarkList(); pop.hidden = !on; $('#rd-bm-list').setAttribute('aria-expanded', !!on); },
   open(book) {
-    this.book = book;
+    this.book = book; store.set('last', book.id);
     document.body.classList.add('is-reading');
     $('#library').hidden = true; $('#reader').hidden = false;
     $('#rd-title').textContent = book.title;
-    $('#rd-voice').hidden = !book.narration; Narrator.load(book);
+    $('#rd-voice').hidden = true; Narrator.load(book);
+    $('#reader').classList.toggle('voice-mode', !!book.narration); $('#player').hidden = !book.narration; // audio books: the toolbar becomes a player
     this.applySettings();
     const pr = store.get('progress.' + book.id, null);
     this.index = pr ? pr.page : 0;
@@ -225,7 +236,13 @@ const Reader = {
   pauseMedia() { $$('#book video').forEach(v => v.pause()); },
   /* a full-page video starts as soon as its page is turned to; with sound when the browser allows it, else muted with an unmute button */
   playVisibleVideo() {
+    $('#reader').classList.remove('cue-next');
+    $$('#book .v-inline').forEach(v => v.play().catch(() => {})); // clips inside a text page play silently beside the words
     $$('#book .page--video video').forEach(v => {
+      const page = v.closest('.page--video');
+      v.addEventListener('ended', () => { page.classList.add('is-ended'); $('#reader').classList.add('cue-next'); });
+      page.querySelector('.vend__next').addEventListener('click', e => { e.stopPropagation(); this.go(1); });
+      page.querySelector('.vend__replay').addEventListener('click', e => { e.stopPropagation(); page.classList.remove('is-ended'); $('#reader').classList.remove('cue-next'); v.currentTime = 0; v.play().catch(() => {}); });
       v.muted = !!settings.muted;
       const p = v.play(); if (p) p.catch(() => { v.muted = true; v.play().catch(() => {}); });
       const btn = v.parentElement.querySelector('.vmute');
@@ -335,7 +352,35 @@ const Narrator = {
     if (!book.narration) { this.audio = null; return; }
     this.audio = new Audio(book.narration + '.mp3'); this.audio.preload = 'auto';
     this.audio.addEventListener('ended', () => this.stop());
-    fetch(book.narration + '.json').then(r => r.json()).then(d => { this.words = d.words; }).catch(() => {});
+    ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(ev => this.audio.addEventListener(ev, () => this.ui()));
+    fetch(book.narration + '.json').then(r => r.json()).then(d => { this.words = d.words; this.ui(); }).catch(() => {});
+  },
+  at(t) { const w = this.words; let lo = 0, hi = w.length - 1, i = -1; while (lo <= hi) { const m = (lo + hi) >> 1; if (w[m][0] <= t) { i = m; lo = m + 1; } else hi = m - 1; } return i; },
+  /* light up word i, and the line of text it belongs to; everything else on the page dims */
+  mark(i) {
+    $$('#book .w.is-on').forEach(el => el.classList.remove('is-on'));
+    $$('#book .is-reading').forEach(el => el.classList.remove('is-reading'));
+    const el = i >= 0 && $(`#book .pagebox .w[data-w="${i}"]`);
+    if (el) { el.classList.add('is-on'); (el.closest('.pg-q > span') || el.closest('.pg-p, .pg-h, .pg-q')).classList.add('is-reading'); }
+    $('#reader').classList.toggle('is-narrating', i >= 0 && !!el);
+  },
+  /* jump in time (±15 s or the seek bar), and bring the page that holds that moment */
+  seek(t) {
+    if (!this.audio || !this.words) return;
+    t = Math.max(0, Math.min(t, (this.audio.duration || 1e9) - .05)); this.audio.currentTime = t;
+    const i = Math.max(0, this.at(t)); this.cur = i;
+    const k = Reader.pages.findIndex(p => p.w0 != null && i >= p.w0 && i <= p.w1);
+    if (k >= 0 && k !== Reader.index) { if (this.waiting) { this.waiting = false; this.on = true; this.audio.play().catch(() => {}); this.loop(); } Reader.jump(k); }
+    this.mark(i); this.ui();
+  },
+  loop() { cancelAnimationFrame(this.raf); const tick = () => { this.tick(); if (this.on) this.raf = requestAnimationFrame(tick); }; tick(); },
+  ui() {
+    if (!this.audio) return;
+    const fmt = s => { s = Math.max(0, Math.floor(s || 0)); return faNum(Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0')); };
+    const d = this.audio.duration || 0, t = this.audio.currentTime || 0;
+    $('#pl-cur').textContent = fmt(t); $('#pl-dur').textContent = fmt(d);
+    if (!this.dragging) $('#pl-seek').value = d ? Math.round(1000 * t / d) : 0;
+    $('#pl-fill').style.width = (d ? 100 * t / d : 0) + '%';
   },
   toggle() { this.on || this.waiting ? this.pause() : this.play(); },
   seekToPage(pg) { if (pg && pg.w0 != null) { this.audio.currentTime = this.words[pg.w0][0]; this.cur = pg.w0; return true; } return false; },
@@ -345,16 +390,17 @@ const Narrator = {
     if (!pg || pg.w0 == null) { // cover, video: start with the first page that has words
       const nxt = Reader.pages.slice(Reader.index).find(p => p.w0 != null); if (nxt) this.seekToPage(nxt); else return;
     } else if (this.cur < pg.w0 || this.cur > pg.w1) this.seekToPage(pg);
-    this.audio.play().catch(() => {}); this.on = true; this.waiting = false; this.button();
-    cancelAnimationFrame(this.raf); const tick = () => { this.tick(); if (this.on) this.raf = requestAnimationFrame(tick); }; tick();
+    this.audio.play().catch(() => {}); this.on = true; this.waiting = false; this.button(); this.loop();
   },
   pause() { if (this.audio) this.audio.pause(); this.on = false; this.waiting = false; cancelAnimationFrame(this.raf); this.button(); },
-  stop() { this.pause(); this.cur = -1; $$('#book .w.is-on').forEach(el => el.classList.remove('is-on')); },
-  button() { const b = $('#rd-voice'); b.setAttribute('aria-pressed', this.on); b.classList.toggle('is-waiting', this.waiting); },
+  stop() { this.pause(); this.cur = -1; this.mark(-1); },
+  button() {
+    const b = $('#rd-voice'); b.setAttribute('aria-pressed', this.on); b.classList.toggle('is-waiting', this.waiting);
+    const p = $('#pl-play'); p.setAttribute('aria-pressed', this.on); p.setAttribute('aria-label', this.on ? 'توقف' : 'پخش'); p.classList.toggle('is-waiting', this.waiting);
+  },
   tick() {
-    const t = this.audio.currentTime, w = this.words; let lo = 0, hi = w.length - 1, i = -1;
-    while (lo <= hi) { const m = (lo + hi) >> 1; if (w[m][0] <= t) { i = m; lo = m + 1; } else hi = m - 1; }
-    if (i !== this.cur) { this.cur = i; $$('#book .w.is-on').forEach(el => el.classList.remove('is-on')); const el = $(`#book .pagebox .w[data-w="${i}"]`); if (el) el.classList.add('is-on'); }
+    const i = this.at(this.audio.currentTime);
+    if (i !== this.cur || !$('#book .w.is-on')) { this.cur = i; this.mark(i); }
     const pg = Reader.pages[Reader.index];
     if (pg && i >= 0 && pg.w1 != null && i > pg.w1 && !Reader.curl) Reader.go(1); // the voice has moved on: turn the page
   },
@@ -364,6 +410,7 @@ const Narrator = {
     const pg = Reader.pages[Reader.index];
     if (!pg || pg.w0 == null) { if (this.on) { this.audio.pause(); this.on = false; this.waiting = true; cancelAnimationFrame(this.raf); this.button(); } return; }
     if (this.waiting || this.cur < pg.w0 || this.cur > pg.w1) { this.seekToPage(pg); this.play(); }
+    else this.mark(this.cur);
   }
 };
 
@@ -409,6 +456,14 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#dt-bms').addEventListener('click', e => { const r = e.target.closest('[data-page]'); if (!r) return; store.set('progress.' + Detail.book.id, { page: +r.dataset.page, total: 0 }); location.hash = 'read/' + Detail.book.id; });
   $('#rd-bm').addEventListener('click', () => Reader.toggleBookmark());
   $('#rd-voice').addEventListener('click', () => Narrator.toggle());
+  $('#pl-play').addEventListener('click', () => Narrator.toggle());
+  $('#pl-back').addEventListener('click', () => Narrator.seek(Narrator.audio.currentTime - 15));
+  $('#pl-fwd').addEventListener('click', () => Narrator.seek(Narrator.audio.currentTime + 15));
+  $('#pl-prev').addEventListener('click', () => Reader.go(-1));
+  $('#pl-next').addEventListener('click', () => Reader.go(1));
+  const seekBar = $('#pl-seek');
+  seekBar.addEventListener('input', () => { Narrator.dragging = true; const d = Narrator.audio.duration || 0; $('#pl-fill').style.width = seekBar.value / 10 + '%'; $('#pl-cur').textContent = faNum((s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0'))(d * seekBar.value / 1000)); });
+  seekBar.addEventListener('change', () => { Narrator.dragging = false; Narrator.seek((Narrator.audio.duration || 0) * seekBar.value / 1000); });
   $('#rd-bm-list').addEventListener('click', () => Reader.showBookmarks($('#bm-pop').hidden));
   $('#bm-pop').addEventListener('click', e => {
     const del = e.target.closest('[data-del]');
