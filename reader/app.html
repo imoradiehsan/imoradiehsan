@@ -22,7 +22,9 @@
       <h1 class="appbar__title">کتابخانه</h1>
       <div class="logo" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="currentColor" opacity=".15"/><path d="M8 7h11a4 4 0 0 1 4 4v14H12a4 4 0 0 0-4 4V7Z" fill="currentColor"/></svg></div>
     </header>
-    <p class="lib-hint">یک کتاب را انتخاب کنید؛ داخل کتاب با انگشت از گوشه صفحه بگیرید و ورق بزنید.</p>
+    <div class="lib-hello"><h2>امروز چی بخونیم؟</h2><p>کتاب‌ها را ورق بزنید، یا بگذارید برایتان خوانده شوند.</p></div>
+    <div id="lib-continue"></div>
+    <h3 class="lib-section">همه کتاب‌ها</h3>
     <div class="lib-grid" id="lib-grid"></div>
     <footer class="lib-foot">متن‌های نمونه از آثار عمومی؛ ویدئوها نمونه‌های آزاد بنیاد بلندر.</footer>
   </section>
@@ -76,6 +78,17 @@
 
     <!-- نوار ابزار زیر کتاب -->
     <footer class="bar">
+      <!-- پخش‌کننده روایت (کتاب‌های صوتی) -->
+      <div class="player" id="player" hidden>
+        <div class="player__time"><span id="pl-cur">۰:۰۰</span><div class="player__track"><div class="player__fill" id="pl-fill"></div><input type="range" id="pl-seek" min="0" max="1000" value="0" aria-label="زمان روایت"></div><span id="pl-dur">۰:۰۰</span></div>
+        <div class="player__ctrls">
+          <button class="pbtn" id="pl-prev" aria-label="صفحه قبل"><svg viewBox="0 0 24 24"><path d="M6 5v14M18 6l-8 6 8 6V6Z"/></svg></button>
+          <button class="pbtn pbtn--skip" id="pl-back" aria-label="۱۵ ثانیه عقب"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v4h4"/></svg><b>۱۵</b></button>
+          <button class="pbtn pbtn--main" id="pl-play" aria-label="پخش" aria-pressed="false"><svg viewBox="0 0 24 24"><path class="i-play" d="M8 5.5v13a1 1 0 0 0 1.5.86l10-6.5a1 1 0 0 0 0-1.72l-10-6.5A1 1 0 0 0 8 5.5Z"/><path class="i-pause" d="M8 5h2.5v14H8zM13.5 5H16v14h-2.5z"/></svg></button>
+          <button class="pbtn pbtn--skip" id="pl-fwd" aria-label="۱۵ ثانیه جلو"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4h-4"/></svg><b>۱۵</b></button>
+          <button class="pbtn" id="pl-next" aria-label="صفحه بعد"><svg viewBox="0 0 24 24"><path d="M18 5v14M6 6l8 6-8 6V6Z"/></svg></button>
+        </div>
+      </div>
       <div class="bar__row">
         <div class="tools">
           <button class="tbtn" id="rd-font-down" aria-label="کوچک‌تر کردن متن"><span style="font-size:.8em">A</span></button>
