@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مقایسه پلتفرم‌های خرید اقساطی طلا</title>
+  <meta name="description" content="مقایسه شرایط خرید اقساطی طلا در کاریزما، ملی‌گلد، وال‌گلد، طلاسی و دیگر پلتفرم‌ها؛ پیش‌پرداخت، سقف، اقساط، جریمه و کسر طلا.">
+  <meta name="theme-color" content="#8a5a00">
+  <link rel="stylesheet" href="assets/css/gold.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">پنل مقایسه</p>
+    <h1>خرید اقساطی طلا؛ کدام پلتفرم؟</h1>
+    <p class="lead">پیش‌پرداخت، سقف، تعداد اقساط، مهلت و جریمه، و اینکه اگر قسط ندهید چه مقدار طلا از شما کم می‌شود را کنار هم ببینید.</p>
+    <p class="stamp" id="stamp"></p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="explain" aria-label="مدل‌های خرید">
+    <div class="chip-card"><b>طلا توثیق می‌شود</b><span>پلتفرم مقدار مشخصی طلا به شما می‌فروشد؛ تا تسویه آخرین قسط نمی‌توانید بفروشید و در صورت نپرداختن قسط، از مقدار طلا کم می‌شود.</span></div>
+    <div class="chip-card"><b>اعتبار اقساطی</b><span>پلتفرم خودش اعتبار می‌دهد؛ دیرکرد با جریمه روزانه یا لغو خرید همراه است.</span></div>
+    <div class="chip-card"><b>اعتبار شرکت ثالث</b><span>پرداخت با اسنپ‌پی، دیجی‌پی و مانند آن؛ شرایط را اعتباردهنده تعیین می‌کند.</span></div>
+  </section>
+
+  <section class="panel filters" aria-label="فیلتر">
+    <label>مدل
+      <select id="f-model"><option value="">همه</option></select>
+    </label>
+    <label>مبلغ مورد نیاز (تومان)
+      <input id="f-amount" inputmode="numeric" placeholder="مثلاً ۵۰۰۰۰۰۰۰۰">
+    </label>
+    <label>مرتب‌سازی
+      <select id="f-sort">
+        <option value="max">بیشترین سقف</option>
+        <option value="down">کمترین پیش‌پرداخت</option>
+        <option value="periods">بیشترین مدت بازپرداخت</option>
+        <option value="name">نام</option>
+      </select>
+    </label>
+    <label class="check"><input type="checkbox" id="f-nolock"> فقط بدون قفل شدن طلا</label>
+  </section>
+
+  <section aria-label="جدول مقایسه">
+    <div class="table-scroll">
+      <table id="tbl">
+        <thead><tr>
+          <th>پلتفرم</th><th>مدل</th><th>پیش‌پرداخت</th><th>سقف</th><th>مدت اقساط</th>
+          <th>مهلت و جریمه</th><th>اگر قسط ندهید</th><th>فروش طلا تا تسویه</th><th>ضامن/چک</th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="empty" id="empty" hidden>پلتفرمی با این فیلترها پیدا نشد.</p>
+  </section>
+
+  <section class="panel calc" aria-label="شبیه‌ساز">
+    <h2>شبیه‌ساز خرید و دیرکرد</h2>
+    <div class="calc-grid">
+      <label>پلتفرم<select id="c-plat"></select></label>
+      <label>مبلغ خرید (تومان)<input id="c-amount" inputmode="numeric" value="200,000,000"></label>
+      <label>تعداد اقساط<select id="c-months"></select></label>
+      <label>قیمت هر گرم طلا (تومان، قابل ویرایش)<input id="c-price" inputmode="numeric" value="10,000,000"></label>
+      <label>پیش‌پرداخت (درصد)<input id="c-down" inputmode="numeric" value="40"></label>
+      <label>اقساط پرداخت‌نشده<input id="c-miss" type="number" min="0" value="1"></label>
+    </div>
+    <div class="result" id="result" aria-live="polite"></div>
+    <p class="fine">این شبیه‌ساز کارمزد و سود را لحاظ نمی‌کند (در منابع عمومی موجود نبود) و فقط برای درک ساز‌وکار است. قیمت طلا مثال است، قیمت لحظه‌ای را وارد کنید.</p>
+  </section>
+
+  <section class="panel" aria-label="هشدارها">
+    <h2>پیش از خرید</h2>
+    <ul class="tips">
+      <li>در مدل توثیق، اگر قیمت طلا پایین بیاید و قسط ندهید، مقدار طلای شما کمتر می‌شود؛ ریسک نوسان قیمت با شماست.</li>
+      <li>مجموع پرداختی در خرید اقساطی بیشتر از خرید نقدی است؛ کارمزد و سود را در قرارداد ببینید.</li>
+      <li>ارقام این پنل از مقالات عمومی (بخشی تبلیغاتی) جمع شده است. موارد با نشان <span class="flag">تأیید نشده</span> را حتماً در خود پلتفرم بررسی کنید.</li>
+    </ul>
+  </section>
+</main>
+<footer class="wrap foot">این پنل مشاوره مالی نیست. منابع هر پلتفرم در کارت جزئیات آمده است.</footer>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="modal-box"><button class="x" id="m-close" aria-label="بستن">×</button><div id="m-body"></div></div>
+</div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
