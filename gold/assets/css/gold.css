@@ -9,6 +9,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Vazirmatn",syst
 .eyebrow{margin:0;opacity:.85;font-weight:600}
 .lead{max-width:60ch;margin:.3em 0 .6em;opacity:.95}
 .stamp{font-size:.85rem;opacity:.85;margin:0}
+.notice{margin:20px 0 0;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn);border-radius:12px;padding:10px 14px;font-size:.9rem}
+.notice a{color:inherit;font-weight:700}
 .explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:20px 0}
 .chip-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
 .chip-card b{color:var(--gold-d)}.chip-card span{font-size:.88rem;color:var(--mute)}
