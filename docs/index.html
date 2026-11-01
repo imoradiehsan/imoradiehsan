@@ -403,7 +403,7 @@ const Q=[
  {k:'have',multi:true,t:'از این موارد کدام‌ها را داری؟',
   o:[['ضامن رسمی دارم (کارمند یا بازنشسته)','guar'],['می‌توانم مدتی پول در حسابم نگه دارم','dep'],['چک صیادی یا سفته دارم','chq'],['حقوق ثابت و فیش حقوقی دارم','sal'],['سند ملک یا وثیقه دارم','col'],['هیچ‌کدوم را ندارم','none'],['شرایط ویژه دارم','spec','ازدواج، فرزند جدید، ایثارگری یا دانشجویی']],show:[0,1,2,4,6,5]},
  {k:'pri',t:'موقع انتخاب وام، چه برایت مهم‌تر است؟',
-  o:[['بدون ضامن یا با ضامن کمتر','noguar'],['سریع‌تر وام را بگیرم','fast'],['سود کمتری بدهم','rate']]},
+  o:[['سریع و آنلاین به پول برسم','fast','کمترین زمان، بدون رفتن به شعبه'],['کمترین سود را بدهم','rate','حتی اگر کمی طول بکشد'],['همه پول را از یک جا بگیرم','one','یک وام، یک بانک، کمترین رفت‌وآمد']]},
  {k:'inc',t:'حداکثر قسط ماهانه‌ای که راحت می‌توانی بدهی چقدر است؟',
   o:[['تا ۱۰ میلیون تومان',10],['۱۱ تا ۱۵ میلیون',15],['۱۶ تا ۲۰ میلیون',20],['۲۱ تا ۲۵ میلیون',25],['بیشتر از ۲۵ میلیون',60]]},
  {k:'job',t:'منبع درآمدت چیست؟',why:'بعضی وام‌ها فقط برای کارمندان، بازنشسته‌ها یا صاحبان جواز کسب است.',
@@ -450,8 +450,8 @@ function evaluate(l,opt={}){
 function match(opt){
   const rows=LOANS.map(l=>({l,e:evaluate(l,opt)}));
   const full=rows.filter(r=>r.e.ok), near=rows.filter(r=>!r.e.ok&&r.e.near);
-  const p=S.ans[3]==null?'noguar':Q[3].o[S.ans[3]][1];
-  const key={rate:r=>(r.e.y)*1e3+r.e.inst/1e7,inst:r=>r.e.inst,max:r=>-(r.l.mx||0),fast:r=>(['وام آنلاین','وام فوری','وام بدون ضامن'].includes(r.l.ty)?0:1e6)+r.e.y,noguar:r=>(r.l.tg.includes('guar')?1e6:0)+r.e.y,long:r=>-months(r.l)*1e3+r.e.y}[p];
+  const p=S.ans[3]==null?'rate':Q[3].o[S.ans[3]][1];
+  const key={rate:r=>(r.e.y)*1e3+r.e.inst/1e7,inst:r=>r.e.inst,max:r=>-(r.l.mx||0),fast:r=>(['وام آنلاین','وام فوری','وام بدون ضامن'].includes(r.l.ty)?0:1e6)+r.e.y,noguar:r=>(r.l.tg.includes('guar')?1e6:0)+r.e.y,one:r=>-(r.l.mx||0)*1e-6+r.e.y*1e-3,long:r=>-months(r.l)*1e3+r.e.y}[p];
   const k2=r=>(canAfford(r.e.inst)?0:1e12)+key(r);
   full.sort((a,b)=>k2(a)-k2(b)); near.sort((a,b)=>k2(a)-k2(b));
   return {full,near,inactive:LOANS.filter(l=>!l.a).length};
@@ -476,8 +476,8 @@ function loanCard(r,i,best){const l=r.l,e=r.e;const aff=canAfford(e.inst);
 
 /* ---------- screens ---------- */
 const REPORTS=[
- {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'B2',left:28,ans:[1,0,[5],0,1],cap:7,amtSet:625e6},
- {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'C3',left:0,ans:[1,0,[5],0,1],cap:7,amtSet:625e6}];
+ {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'B2',left:28,ans:[1,0,[5],2,1],cap:7,amtSet:625e6},
+ {d:'۱۴۰۵/۰۵/۲۳',amt:625e6,n:7,sc:'C3',left:0,ans:[1,0,[5],2,1],cap:7,amtSet:625e6}];
 function openReport(i){const r=REPORTS[i];S.ans=JSON.parse(JSON.stringify(r.ans));S.cap=r.cap;S.amt=r.amtSet;S.score=r.sc;S.saved=true;go('result');}
 function home(){return `<div class="hd"><button class="ib" onclick="go('landing')">›</button><b>لیست گزارش</b><span class="sp"></span></div>
  <div class="body hl">
@@ -922,11 +922,11 @@ function render(){
   document.getElementById('flow').innerHTML=FLOW.map(([k,l],i)=>`<button class="${k===cur?'on':''}" onclick="jump('${k}')"><span>${fa(i+1)}</span>${l}</button>`).join('');
   document.getElementById('scores').innerHTML=Object.keys(SCORES).map(k=>`<button class="chip ${S.score===k?'on':''}" onclick="S.score='${k}';render()">${fa(k)}</button>`).join('');
   const RS=()=>{Object.assign(S,{forceK:false,noLoan:false,ics:null,amt:0,cap:null,spec:[],bk:{},bkNone:false,guarN:1,score:'B2',sheet:null,payErr:false,procErr:false,pending:null,saved:false});window._resSeen={};window._rdSet={};};
-  const st=[['بدون ضامن و سپرده',()=>{RS();S.ans=[1,0,[5],0,1,0];go('result');return true;}],['با ضامن و فیش',()=>{RS();S.ans=[3,4,[0],1,2,0];go('result');return true;}],['مبلغ خیلی بالا',()=>{RS();S.ans=[6,4,[0],1,3,0];go('result');return true;}],['پرداخت ناموفق',()=>{RS();S.ans=[2,4,[0],1,1,0];S.payErr=true;go('pay');return true;}],['پردازش خطا',()=>{RS();S.ans=[2,4,[0],1,1,0];S.procErr=true;go('processing');return true;}],['نتیجه، ۱ وام',()=>{RS();S.cap=1;S.ans=[1,4,[0],1,1,0];go('result');return true;}],['نتیجه، ۳ وام',()=>{RS();S.forceK=true;S.cap=3;S.amt=300e6;S.ans=[3,4,[0,2],2,2,0];go('result');return true;}],['نتیجه، ۷ وام',()=>{RS();S.forceK=true;S.cap=7;S.amt=625e6;S.ans=[5,4,[0,1,2,4],2,4,0];go('result');return true;}],['نتیجه، بدون محدودیت',()=>{RS();S.cap=10;S.ans=[5,4,[0,1,2,4],2,4,0];go('result');return true;}],['نتیجه، شرایط واقعی (ICS)',()=>{RS();S.score='B2';S.ans=[4,0,[0,2],1,1,0];S.ics={debt:11.1e6,inq:9,mellatLeft:8,mellatInst:4.7e6};go('result');return true;}],['پرداخت شد، گوشی خاموش شد',()=>{RS();S.ans=[2,4,[0],1,1,0];S.paid=true;savePaid();S.pending='verify';go('home',{sheet:'resume'});return true;}],['نتیجه، بدون وام',()=>{RS();S.noLoan=true;S.score='E2';S.ans=[2,4,[0],1,1,0];go('result');return true;}]];
+  const st=[['بدون ضامن و سپرده',()=>{RS();S.ans=[1,0,[5],2,1,0];go('result');return true;}],['با ضامن و فیش',()=>{RS();S.ans=[3,4,[0],0,2,0];go('result');return true;}],['مبلغ خیلی بالا',()=>{RS();S.ans=[6,4,[0],0,3,0];go('result');return true;}],['پرداخت ناموفق',()=>{RS();S.ans=[2,4,[0],0,1,0];S.payErr=true;go('pay');return true;}],['پردازش خطا',()=>{RS();S.ans=[2,4,[0],0,1,0];S.procErr=true;go('processing');return true;}],['نتیجه، ۱ وام',()=>{RS();S.cap=1;S.ans=[1,4,[0],0,1,0];go('result');return true;}],['نتیجه، ۳ وام',()=>{RS();S.forceK=true;S.cap=3;S.amt=300e6;S.ans=[3,4,[0,2],1,2,0];go('result');return true;}],['نتیجه، ۷ وام',()=>{RS();S.forceK=true;S.cap=7;S.amt=625e6;S.ans=[5,4,[0,1,2,4],1,4,0];go('result');return true;}],['نتیجه، بدون محدودیت',()=>{RS();S.cap=10;S.ans=[5,4,[0,1,2,4],1,4,0];go('result');return true;}],['نتیجه، شرایط واقعی (ICS)',()=>{RS();S.score='B2';S.ans=[4,0,[0,2],0,1,0];S.ics={debt:11.1e6,inq:9,mellatLeft:8,mellatInst:4.7e6};go('result');return true;}],['پرداخت شد، گوشی خاموش شد',()=>{RS();S.ans=[2,4,[0],0,1,0];S.paid=true;savePaid();S.pending='verify';go('home',{sheet:'resume'});return true;}],['نتیجه، بدون وام',()=>{RS();S.noLoan=true;S.score='E2';S.ans=[2,4,[0],0,1,0];go('result');return true;}]];
 
   window._st=st;document.getElementById('states').innerHTML=st.map((s,i)=>`<button class="chip ${s[0].startsWith('نتیجه')&&S.scr==='result'&&((S.cap||0)===(['','۱','۳','۷'].indexOf(s[0].split('، ')[1].split(' ')[0])>0?[0,1,3,7][['','۱','۳','۷'].indexOf(s[0].split('، ')[1].split(' ')[0])]:0))?'on':''}" onclick="if(_st[${i}][1]()!==true){if(['q','home','landing','verify'].includes(S.scr))go('result');else render()}">${s[0]}</button>`).join('');
 }
-function jump(k){if(['pay','processing','result','loan'].includes(k)&&S.ans[0]==null){S.ans=[1,0,[5],0,1];}
+function jump(k){if(['pay','processing','result','loan'].includes(k)&&S.ans[0]==null){S.ans=[1,0,[5],2,1];}
   if(k==='result'||k==='loan')S.saved=true; if(k==='loan')S.detail=match().full[0]?.l.i; go(k);}
 (()=>{try{const p=JSON.parse(localStorage.getItem('qesta_paid')||'null');if(p&&Date.now()-p.t<7*864e5){Object.assign(S,{ans:p.ans,spec:p.spec||[],bk:p.bk||{},guarN:p.guarN,score:p.score||S.score,paid:true,pending:'verify',scr:'home',sheet:'resume'});}}catch(e){}})();
 render();
