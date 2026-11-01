@@ -396,22 +396,22 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 
 /* ---------- questions ---------- */
 const Q=[
- {k:'amount',t:'چقدر وام نیاز داری؟',why:'طرح‌هایی که سقفشون به این مبلغ نمی‌رسه کنار گذاشته می‌شن.',
+ {k:'amount',t:'چه مبلغی وام لازم دارید؟',why:'طرح‌هایی که سقفشون به این مبلغ نمی‌رسه کنار گذاشته می‌شن.',
   o:[['تا ۵۰ میلیون تومان',50],['۵۱ تا ۱۰۰ میلیون',100],['۱۰۱ تا ۲۰۰ میلیون',200],['۲۰۱ تا ۳۰۰ میلیون',300],['۳۰۱ تا ۵۰۰ میلیون',500],['۵۰۱ میلیون تا ۱ میلیارد',1000],['بیشتر از ۱ میلیارد',2000]]},
- {k:'use',t:'وام را برای چه کاری لازم داری؟',
-  o:[['هزینه‌های شخصی','cash'],['خرید کالا','buy'],['راه‌اندازی یا توسعه کسب‌وکار','biz'],['اجاره، ودیعه یا تعمیر خانه','home'],['فرقی نمی‌کند','any']]},
- {k:'have',multi:true,t:'از این موارد کدام‌ها را داری؟',
-  o:[['ضامن رسمی دارم (کارمند یا بازنشسته)','guar'],['می‌توانم مدتی پول در حسابم نگه دارم','dep'],['چک صیادی یا سفته دارم','chq'],['حقوق ثابت و فیش حقوقی دارم','sal'],['سند ملک یا وثیقه دارم','col'],['هیچ‌کدوم را ندارم','none'],['شرایط ویژه دارم','spec','ازدواج، فرزند جدید، ایثارگری یا دانشجویی']],show:[0,1,2,4,6,5]},
- {k:'pri',t:'موقع انتخاب وام، چه برایت مهم‌تر است؟',
-  o:[['سریع و آنلاین به پول برسم','fast','کمترین زمان، بدون رفتن به شعبه'],['کمترین سود را بدهم','rate','حتی اگر کمی طول بکشد'],['همه پول را از یک جا بگیرم','one','یک وام، یک بانک، کمترین رفت‌وآمد']]},
- {k:'inc',t:'حداکثر قسط ماهانه‌ای که راحت می‌توانی بدهی چقدر است؟',
+ {k:'use',t:'وام را برای چه کاری می‌خواهید؟',
+  o:[['هزینه‌های شخصی','cash'],['خرید کالا','buy'],['راه‌اندازی یا توسعه کسب‌وکار','biz'],['اجاره، رهن یا تعمیر خانه','home'],['فرقی ندارد','any']]},
+ {k:'have',multi:true,t:'کدام‌یک از این موارد را دارید؟',
+  o:[['ضامن کارمند یا بازنشسته','guar'],['امکان سپرده‌گذاری در بانک','dep'],['چک صیادی یا سفته','chq'],['حقوق ثابت با فیش حقوقی','sal'],['سند ملک یا وثیقه','col'],['هیچ‌کدام','none'],['شرایط ویژه','spec','ازدواج، فرزند جدید، ایثارگری یا دانشجویی']],show:[0,1,2,4,6,5]},
+ {k:'pri',t:'در انتخاب وام، چه چیزی برایتان مهم‌تر است؟',
+  o:[['دریافت سریع و آنلاین','fast','در کوتاه‌ترین زمان، بدون مراجعه به شعبه'],['کمترین سود','rate','حتی اگر دریافت آن کمی طول بکشد'],['دریافت کل مبلغ از یک بانک','one','یک وام، بدون رفت‌وآمد به چند بانک']]},
+ {k:'inc',t:'ماهانه تا چه مبلغی می‌توانید قسط بپردازید؟',
   o:[['تا ۱۰ میلیون تومان',10],['۱۱ تا ۱۵ میلیون',15],['۱۶ تا ۲۰ میلیون',20],['۲۱ تا ۲۵ میلیون',25],['بیشتر از ۲۵ میلیون',60]]},
- {k:'job',t:'منبع درآمدت چیست؟',why:'بعضی وام‌ها فقط برای کارمندان، بازنشسته‌ها یا صاحبان جواز کسب است.',
-  o:[['کارمندم (فیش حقوقی دارم)','priv'],['شغل آزاد با جواز کسب دارم','lic'],['بازنشسته‌ام','ret'],['مدرک درآمد ثابت ندارم','none']]}
+ {k:'job',t:'منبع درآمد شما چیست؟',why:'بعضی وام‌ها فقط برای کارمندان، بازنشسته‌ها یا صاحبان جواز کسب است.',
+  o:[['کارمند با فیش حقوقی','priv'],['شغل آزاد با جواز کسب','lic'],['بازنشسته','ret'],['بدون درآمد ثابت','none']]}
 ];
 const ORDER=[0,4,1,3,5,2];
 const QSUB=['طرح‌هایی که سقفشان به این مبلغ نمی‌رسد کنار گذاشته می‌شوند تا وقتت هدر نرود.','بعضی وام‌ها فقط برای خرید کالا یا کسب‌وکار پرداخت می‌شوند.','هر کدام از این‌ها درِ وام‌های بیشتری را به رویت باز می‌کند.','وام‌های مناسب را بر اساس همین اولویت مرتب می‌کنیم.','جمع قسط وام‌های پیشنهادی از این عدد بالاتر نمی‌رود.','بعضی وام‌ها فقط برای کارمندان، بازنشسته‌ها یا صاحبان جواز کسب است.'];
-const SPEC=[['marr','تازه ازدواج کرده‌ام'],['child','فرزند جدید دارم'],['isar','ایثارگر یا خانواده شهید هستم'],['stu','دانشجو هستم']];
+const SPEC=[['marr','ازدواج اخیر'],['child','تولد فرزند جدید'],['isar','ایثارگر یا خانواده شهید'],['stu','دانشجو']];
 const needBanks=()=>{const p=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';return p||haves().includes('dep');};
 const qNext=i=>{const k=ORDER.indexOf(i);return k<ORDER.length-1?'q'+ORDER[k+1]:(needBanks()?'banks':'pay');};
 const qPrev=i=>{const k=ORDER.indexOf(i);return k>0?'q'+ORDER[k-1]:'landing';};
@@ -511,8 +511,8 @@ function q(){const qq=Q[S.qi],a=S.ans[S.qi];const ready=qq.multi?a.length>0:a!=n
  const m=S.qi>=1?match():null;
  const pos=ORDER.indexOf(S.qi);return hdr('مشاوره هوشمند وام',`go('${qPrev(S.qi)}')`)+`<div class="body">
   <div class="bars">${ORDER.map((_,i)=>`<i class="${i<=pos?'on':''}"></i>`).join('')}</div><div class="mut">مرحله ${fa(pos+1)} از ${fa(ORDER.length)}</div>
-  <div class="qt">${qq.t}</div>${qq.multi?`<div class="mhint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>می‌توانی چند تا انتخاب کنی، بعد «ادامه» را بزن</div>`:''}${qq.hint?`<p class="mut">${qq.hint}</p>`:''}
-  ${SLQ.includes(S.qi)?slider(qq,a):''}${(SLQ.includes(S.qi)?[]:(qq.show||qq.o.map((_,i)=>i))).map(i=>{const o=qq.o[i];const sel=qq.multi?a.includes(i):a===i;return `<button class="opt ${qq.multi?'m':''} ${sel?'sel':''} ${sel&&S.qi===2&&['guar','spec'].includes(o[1])?'hasub':''} ${qq.multi&&!sel&&a.some(x=>qq.o[x][1]==='none')?'dim':''} fade" style="animation-delay:${i*.03}s" data-i="${i}" onclick="pick(${i})"><span class="ind">${sel?'✓':''}</span><span>${o[0]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`+(S.qi===2&&o[1]==='guar'?`<div class="subw ${sel?'open':''}" data-k="guar"><div class="gin"><div class="gcnt"><span>چند ضامن داری؟</span><button class="${(S.guarN||1)===1?'on':''}" onclick="S.guarN=1;render()">۱ نفر</button><button class="${S.guarN>=2?'on':''}" onclick="S.guarN=2;render()">۲ نفر یا بیشتر</button></div></div></div>`:'')+(S.qi===2&&o[1]==='spec'?`<div class="subw ${sel?'open':''}" data-k="spec"><div class="gin"><div class="gcnt spc"><span>کدام شرایط ویژه را داری؟</span>${SPEC.map(([k,t])=>`<button class="${S.spec.includes(k)?'on':''}" onclick="S.spec=S.spec.includes('${k}')?S.spec.filter(x=>x!=='${k}'):S.spec.concat('${k}');render()">${t}</button>`).join('')}</div></div></div>`:'');}).join('')}
+  <div class="qt">${qq.t}</div>${qq.multi?`<div class="mhint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>می‌توانید چند گزینه را انتخاب کنید</div>`:''}${qq.hint?`<p class="mut">${qq.hint}</p>`:''}
+  ${SLQ.includes(S.qi)?slider(qq,a):''}${(SLQ.includes(S.qi)?[]:(qq.show||qq.o.map((_,i)=>i))).map(i=>{const o=qq.o[i];const sel=qq.multi?a.includes(i):a===i;return `<button class="opt ${qq.multi?'m':''} ${sel?'sel':''} ${sel&&S.qi===2&&['guar','spec'].includes(o[1])?'hasub':''} ${qq.multi&&!sel&&a.some(x=>qq.o[x][1]==='none')?'dim':''} fade" style="animation-delay:${i*.03}s" data-i="${i}" onclick="pick(${i})"><span class="ind">${sel?'✓':''}</span><span>${o[0]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`+(S.qi===2&&o[1]==='guar'?`<div class="subw ${sel?'open':''}" data-k="guar"><div class="gin"><div class="gcnt"><span>چند ضامن دارید؟</span><button class="${(S.guarN||1)===1?'on':''}" onclick="S.guarN=1;render()">۱ نفر</button><button class="${S.guarN>=2?'on':''}" onclick="S.guarN=2;render()">۲ نفر یا بیشتر</button></div></div></div>`:'')+(S.qi===2&&o[1]==='spec'?`<div class="subw ${sel?'open':''}" data-k="spec"><div class="gin"><div class="gcnt spc"><span>کدام شرایط را دارید؟</span>${SPEC.map(([k,t])=>`<button class="${S.spec.includes(k)?'on':''}" onclick="S.spec=S.spec.includes('${k}')?S.spec.filter(x=>x!=='${k}'):S.spec.concat('${k}');render()">${t}</button>`).join('')}</div></div></div>`:'');}).join('')}
   ${false?`<div class="why">ⓘ<span><b>چرا می‌پرسیم؟</b> ${qq.why}</span></div>`:''}
  </div>${SLQ.includes(S.qi)?`<div class="ft"><button class="btn" onclick="slGo()">ادامه</button></div>`:''}${qq.multi?`<div class="ft"><button class="btn" ${ready?'':'disabled'} onclick="go('${qNext(S.qi)}')">${qq.multi&&a.length?'ادامه با '+fa(a.length)+' مورد':'ادامه'}</button></div>`:''}`;}
 const DUR=['کمتر از ۳ ماه','۳ تا ۶ ماه','بیشتر از ۶ ماه'];
@@ -520,7 +520,7 @@ function topBanks(){const c={};LOANS.forEach(l=>{if(/^بانک|پست بانک/.
 function banks(){const bs=topBanks(),sel=Object.keys(S.bk),none=S.bkNone;const pos=ORDER.length;
  return hdr('مشاوره هوشمند وام',`go('q${ORDER[ORDER.length-1]}')`)+`<div class="body">
   <div class="bars">${ORDER.map(()=>'<i class="on"></i>').join('')}</div><div class="mut">مرحله ${fa(pos)} از ${fa(pos)}</div>
-  <div class="qt">در کدام بانک‌ها حساب فعال داری؟</div><div class="mhint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>می‌توانی چند تا انتخاب کنی، بعد «ادامه» را بزن</div>
+  <div class="qt">در کدام بانک‌ها حساب فعال دارید؟</div><div class="mhint"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12l3 3 5-6"/></svg>می‌توانید چند گزینه را انتخاب کنید</div>
   <div class="bkg">${bs.map(b=>{const on=S.bk[b]!=null;return `<div class="bkr ${on?'on':''}"><button class="bkb" onclick="if(S.bk['${b}']!=null)delete S.bk['${b}'];else{S.bk['${b}']=0;S.bkNone=false;window._nb='${b}';}render();window._nb=null"><span class="bka">${logo(b)}${on?`<em class="${window._nb===b?'nw':''}">✓</em>`:''}</span><span>${b.replace(/^بانک\s+/,'').replace('قرض‌الحسنه ','').replace('پست بانک ایران','پست بانک')}</span></button></div>`;}).join('')}
   <button class="opt ${none?'sel':''}" onclick="S.bk={};S.bkNone=!S.bkNone;render()"><span class="ind">${none?'✓':''}</span><span>در هیچ بانکی حساب فعال ندارم</span></button></div>
  </div><div class="ft"><button class="btn" ${sel.length||none?'':'disabled'} onclick="go('pay')">${sel.length?'ادامه با '+fa(sel.length)+' بانک':'ادامه'}</button></div>`;}
