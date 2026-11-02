@@ -502,7 +502,7 @@ function landing(){return `<div class="lv"><div class="lvh">
  </div><div class="ft"><p class="lvtr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#18A058" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>دارای اینماد، اطلاعاتت محرمانه می‌ماند</p><button class="btn" onclick="go('login')">شروع مشاوره ←</button></div>`;}
 const SLQ=[0,4];
 function slider(qq,a){const n=qq.o.length,v=a!=null?a:1,pct=v/(n-1)*100;
- return `<div class="slc"><small>${S.qi===0?'مبلغ وام':'قسط ماهانه'}</small><b id="slv">${qq.o[v][0]}</b></div>
+ return `<div class="slc"><small>${S.qi===0?'مبلغ وام':'مبلغ قسط ماهانه'}</small><b id="slv">${qq.o[v][0]}</b></div>
  <div class="slw"><input type="range" id="slr" min="0" max="${n-1}" step="1" value="${v}" style="--p:${pct}%" oninput="slSet(this)"><div class="slt">${qq.o.map((_,i)=>`<i class="${i<=v?'on':''}"></i>`).join('')}</div>
  <div class="sle"><span>${qq.o[0][0]}</span><span>${qq.o[n-1][0]}</span></div></div>`;}
 function slSet(el){const qq=Q[S.qi],v=+el.value,n=qq.o.length;el.style.setProperty('--p',v/(n-1)*100+'%');document.getElementById('slv').textContent=qq.o[v][0];document.querySelectorAll('#scr .slt i').forEach((t,i)=>t.classList.toggle('on',i<=v));}
