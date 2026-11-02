@@ -680,7 +680,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
   if(other.length)prep.push({t:'آماده کردن مدارک '+l.t,d:'این‌ها را آماده کن: '+other.slice(0,3).join('، ')+'.',lid:id});
   apply.push({t:'درخواست '+mil(x.share)+' از '+l.t,d:'از سایت '+b+' درخواست بده؛ قسطش حدود '+mil(Math.round(x.inst/1e5)*1e5)+' تومان در '+fa(months(l))+' ماه.',lid:id,dep:hasDep,y:x.r.e.y});});
  apply.sort((a,b)=>(a.dep-b.dep)||(a.y-b.y));
- if(apply.length>1)apply[apply.length-1].d+=' این یکی را آخر از همه بگذار.';
+ if(apply.length>1){const z=apply[apply.length-1];z.d+=z.dep?' چون این وام سپرده لازم دارد، آن را بعد از بقیه درخواست بده تا پولت دیرتر بلوکه شود.':z.y>apply[0].y?' سود این وام از بقیه بیشتر است؛ آن را آخر درخواست بده تا اگر وام‌های قبلی کافی بود، به آن نیازی نداشته باشی.':'';}
  const steps=[];
  const fast=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast',have=S.ans[2]||[],hasG=have.some(k=>Q[2].o[k][1]==='guar');
  const accB=[...new Set(acc.map(s=>s.t.replace('افتتاح حساب در ','')))],regB=[...new Set(prep.filter(s=>/ثبت‌نام/.test(s.t)).map(s=>s.t.replace('ثبت‌نام در سامانه ','')))],docs=prep.filter(s=>!/ثبت‌نام/.test(s.t));
