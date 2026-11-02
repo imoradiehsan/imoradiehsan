@@ -802,7 +802,7 @@ function loan(){const m=match(),l=LOANS.find(x=>x.i===S.detail)||m.full[0]?.l;if
  if(canAfford(wIns))why.push('قسط '+m5(wIns)+' تومان با توان پرداختت سازگار است.');
  const PP=plan(m),gs=PP.steps.map((s,i)=>({...s,n:i+1})).filter(s=>s.lid===l.i||s.lid===null);const road=gs.length>1?gs:roadmap(l).map((s,i)=>({t:s[0],d:s[1],n:i+1}));const guarTxt=l.tg.includes('guar')?'ضامن رسمی':l.tg.includes('chq')?'چک یا سفته':l.tg.includes('col')?'وثیقه':'طبق شرایط بانک';
  return hdr('جزئیات وام',"go('result')")+`<div class="body">
-  <div class="sec dhead"><div class="dtags">${rank===0?'<span class="pill p-g tg">بیشترین تطابق</span>':rank>0?'<span class="pill p-b tg">گزینه مناسب</span>':'<span class="pill p-a tg">با یک شرط اضافه</span>'}${chBadge(l)}</div>
+  <div class="sec dhead">${chBadge(l)?`<div class="dtags">${chBadge(l)}</div>`:''}
    ${logo(l.b)}<h3>${esc(l.t)}</h3><p class="mut">${esc(l.b)}</p>
    <div class="whyb"><h5><span class="spk"></span>چرا پیشنهاد شد؟</h5><ul>${why.map(w=>`<li><i>✓</i>${w}</li>`).join('')}</ul></div></div>
   
