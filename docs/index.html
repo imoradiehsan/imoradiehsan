@@ -660,7 +660,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const longWait=l=>{if(owned(l.b)&&S.bk[l.b]>=1)return false;const t=(l.rq||[]).filter(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0])).map(r=>r[1]).join(' ');const y=t.match(/([0-9۰-۹]+)\s*سال/),mo=t.match(/([0-9۰-۹]+)\s*ماه/);return (y&&+en(y[1])>=1)||(mo&&+en(mo[1])>12);};
  let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t+' '+(r.l.rq||[]).filter(q=>q[3]!=='step').map(q=>q[2]).join(' ')+' '+(r.l.rm||[]).filter(q=>q[0]==='شروع درخواست').map(q=>q[2]).join(' '))&&r.l.b!=='بانک مرکزی'&&!longWait(r.l));
  if(!pool.length)pool=m.full.slice();
- const fastP=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';pool=pool.map((r,i)=>({r,i,w:(SPRX&&SPRX.test(r.l.t)?-2:0)+(fastP&&owned(r.l.b)?-1:0)})).sort((a,b)=>a.w-b.w||a.i-b.i).map(x=>x.r);
+ const fastP=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';const needDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع/.test(r[1])));pool=pool.map((r,i)=>({r,i,w:(SPRX&&SPRX.test(r.l.t)?-2:0)+(fastP&&owned(r.l.b)?-1:0)+(fastP&&needDep(r.l)?5:0)})).sort((a,b)=>a.w-b.w||a.i-b.i).map(x=>x.r);
  const K=S.cap||3;
  if(K===1){const big=pool.filter(r=>(r.l.mx??Infinity)>=N);if(big.length)pool=big;}
  const a4=S.ans[4],BUD=a4!=null&&Q[4].o[a4][1]?Q[4].o[a4][1]*1e6:Infinity;
@@ -680,7 +680,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const total=loans.reduce((a,x)=>a+x.share,0),inst=loans.reduce((a,x)=>a+x.inst,0);
  const single=m.full[0]?pmt(Math.min(N,m.full[0].l.mx??N),23,48):inst;
  const NB=b=>b.replace(/^بانک /,''),S1=s=>(s||'').split(/(?<=[.؛])\s/)[0].replace(/[.؛]\s*$/,''),SEC=(l,s)=>(l.rm||[]).filter(r=>r[0]===s&&r[3]),UNK=l=>(l.rm||[]).filter(r=>!r[3]);
- const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&DEPRX.test(r[1])));
+ const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&DEPRX.test(r[1])));
  const L=loans.map(x=>({...x,l:x.r.l,dep:isDep(x.r.l)}));
  const steps=[],lo=amtLow(),gap=Math.max(0,lo-total);
  // 1. goal
@@ -691,7 +691,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const uk=L.map(x=>{const u=UNK(x.l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2]));return u.length?NB(x.l.b)+' ('+u.map(r=>tu(r[2]).replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرس\.?$/,'').replace(/\.$/,'')).join('، ')+')':null;}).filter(Boolean);
  if(st0.length||uk.length)steps.push({t:'کارهای اولیه',d:[st0.join('. '),uk.length?'از بانک بپرس: '+uk.join('؛ '):''].filter(Boolean).join('. ')+'.',lid:null,par:L.length>1});
  // 3. deposit
- L.filter(x=>x.dep).forEach(x=>{const t=(x.l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(x.l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);steps.push({t:'خواباندن پول در '+NB(x.l.b),d:(/^مدت و مبلغ دقیق/.test(z)?'همان مبلغ و مدتی که بانک گفت را در حسابت نگه دار.':tu(S1(z))+'.')+' هم‌زمان بقیه کارها را جلو ببر.',lid:x.l.i,par:true});});
+ L.filter(x=>x.dep).forEach(x=>{const t=(x.l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(x.l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);const mx=(x.l.rm||[]).map(r=>r[2]).join(' ').match(/([0-9۰-۹]+)\s*برابر/),dAmt=mx&&+en(mx[1])>0?Math.ceil(x.share/+en(mx[1])/5e6)*5e6:0;steps.push({t:'خواباندن پول در '+NB(x.l.b),d:(dAmt?'حدود '+mil(dAmt)+' تومان در '+NB(x.l.b)+' بگذار؛ وام تا '+fa(+en(mx[1]))+' برابر همین مبلغ داده می‌شود. ':'')+(/^مدت و مبلغ دقیق/.test(z)?(dAmt?'مدتش را از بانک بپرس.':'همان مبلغ و مدتی که بانک گفت را در حسابت نگه دار.'):tu(S1(z))+'.')+' هم‌زمان بقیه کارها را جلو ببر.',lid:x.l.i,par:true});});
  // 4. docs & guarantee (short canonical labels)
  const RX=/مدارک|فیش|گواهی|ضامن|چک صیادی|سفته|سند ملکی|وثیقه|جواز/;
  const dg=L.map(x=>{const ls=[...new Set(condU(x.l).map(r=>condLbl(r,x.l)).filter(t=>RX.test(t)))];return ls.length?NB(x.l.b)+': '+ls.join('، '):null;}).filter(Boolean);
