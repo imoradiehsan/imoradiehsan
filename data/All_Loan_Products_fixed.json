@@ -136,6 +136,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -276,6 +283,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -417,6 +431,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -597,6 +618,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -743,6 +771,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -878,6 +913,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1017,6 +1059,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1153,6 +1202,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1292,6 +1348,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1437,6 +1500,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1584,6 +1654,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1725,6 +1802,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1845,6 +1929,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -1980,6 +2071,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2113,6 +2211,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2264,6 +2369,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2404,6 +2516,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2533,6 +2652,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2672,6 +2798,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2808,6 +2941,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -2947,6 +3087,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3083,6 +3230,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3226,6 +3380,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3369,6 +3530,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3495,6 +3663,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3627,6 +3802,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -3765,6 +3947,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "دهیاری",
+      "group": "ساکنان روستا",
+      "match": null
     }
   },
   {
@@ -3903,6 +4092,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4038,6 +4234,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4167,6 +4370,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4292,6 +4502,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4430,6 +4647,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4568,6 +4792,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4697,6 +4928,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4844,6 +5082,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -4978,6 +5223,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5114,6 +5366,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5247,6 +5506,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5384,6 +5650,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5532,6 +5805,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5664,6 +5944,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5798,6 +6085,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -5923,6 +6217,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6067,6 +6368,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6199,6 +6507,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6340,6 +6655,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6482,6 +6804,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "کمیته امداد / بنیاد برکت",
+      "group": "متقاضیان طرح‌های تکلیفی اشتغال‌زایی",
+      "match": "aid"
     }
   },
   {
@@ -6633,6 +6962,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6761,6 +7097,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -6892,6 +7235,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7017,6 +7367,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7167,6 +7524,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7285,6 +7649,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7426,6 +7797,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7569,6 +7947,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7719,6 +8104,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -7857,6 +8249,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8009,6 +8408,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8152,6 +8558,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "دانشگاه",
+      "group": "دانشجویان",
+      "match": "stu"
     }
   },
   {
@@ -8288,6 +8701,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8416,6 +8836,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8535,6 +8962,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8665,6 +9099,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8798,6 +9239,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -8936,6 +9384,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9073,6 +9528,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9206,6 +9668,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9342,6 +9811,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9492,6 +9968,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9610,6 +10093,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9728,6 +10218,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9856,6 +10353,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -9977,6 +10481,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -10147,6 +10658,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "صندوق ذخیره فرهنگیان / اداره آموزش و پرورش",
+      "group": "فرهنگیان عضو صندوق ذخیره",
+      "match": "cult"
     }
   },
   {
@@ -10302,6 +10820,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -10486,6 +11011,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -10660,6 +11192,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -10799,6 +11338,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -10929,6 +11475,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11071,6 +11624,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11202,6 +11762,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11341,6 +11908,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "بهزیستی / کمیته امداد / بنیاد شهید",
+      "group": "مددجویان نهادهای حمایتی",
+      "match": "aid"
     }
   },
   {
@@ -11450,6 +12024,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11582,6 +12163,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "دانشگاه آزاد (سامانه ساجد)",
+      "group": "دانشجویان دانشگاه آزاد",
+      "match": "stu"
     }
   },
   {
@@ -11692,6 +12280,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11832,6 +12427,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -11968,6 +12570,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "ساتبا",
+      "group": "متقاضیان نیروگاه خورشیدی",
+      "match": null
     }
   },
   {
@@ -12108,6 +12717,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12244,6 +12860,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12376,6 +12999,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12525,6 +13155,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12675,6 +13312,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12814,6 +13458,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -12964,6 +13615,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13117,6 +13775,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13263,6 +13928,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13406,6 +14078,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13549,6 +14228,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "کمیته امداد / بهزیستی",
+      "group": "مددجویان متقاضی خوداشتغالی",
+      "match": "aid"
     }
   },
   {
@@ -13690,6 +14376,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13833,6 +14526,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -13981,6 +14681,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14122,6 +14829,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14271,6 +14985,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14396,6 +15117,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14534,6 +15262,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "شرکت طرف قرارداد",
+      "group": "کارکنان شرکت‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -14682,6 +15417,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14810,6 +15552,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -14936,6 +15685,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15096,6 +15852,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15257,6 +16020,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15404,6 +16174,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15561,6 +16338,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15704,6 +16488,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -15849,6 +16640,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16006,6 +16804,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16131,6 +16936,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "نهاد حمایتی طرف قرارداد",
+      "group": "معرفی‌شدگان نهادهای حمایتی",
+      "match": "aid"
     }
   },
   {
@@ -16270,6 +17082,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16415,6 +17234,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16564,6 +17390,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16699,6 +17532,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -16835,6 +17675,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "بنیاد مسکن",
+      "group": "مالکان واحدهای آسیب‌دیده جنگ",
+      "match": null
     }
   },
   {
@@ -16966,6 +17813,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "فرمانداری / مراجع ذی‌صلاح",
+      "group": "خسارت‌دیدگان جنگ",
+      "match": null
     }
   },
   {
@@ -17099,6 +17953,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17244,6 +18105,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17392,6 +18260,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17521,6 +18396,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17677,6 +18559,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17809,6 +18698,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -17972,6 +18868,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18098,6 +19001,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18243,6 +19153,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18375,6 +19292,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18509,6 +19433,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18643,6 +19574,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -18783,6 +19721,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "صندوق امداد ولایت",
+      "group": "معرفی‌شدگان صندوق امداد ولایت",
+      "match": null
     }
   },
   {
@@ -18940,6 +19885,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -19102,6 +20054,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -19264,6 +20223,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -19400,6 +20366,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان طرف قرارداد (منابع انسانی)",
+      "group": "کارکنان سازمان‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -19550,6 +20523,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -19704,6 +20684,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -19852,6 +20839,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20006,6 +21000,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20141,6 +21142,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20244,6 +21252,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20391,6 +21406,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20544,6 +21566,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "بهزیستی / نهاد حمایتی",
+      "group": "مددجویان و معلولان",
+      "match": "aid"
     }
   },
   {
@@ -20683,6 +21712,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان طرف قرارداد",
+      "group": "معرفی‌شدگان نهادها و اصناف",
+      "match": null
     }
   },
   {
@@ -20836,6 +21872,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -20977,6 +22020,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -21120,6 +22170,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان حمایتی طرف تفاهم‌نامه",
+      "group": "معرفی‌شدگان سازمان طرف تفاهم‌نامه",
+      "match": "aid"
     }
   },
   {
@@ -21254,6 +22311,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان حمایتی طرف قرارداد",
+      "group": "مستمری‌بگیران سازمان‌های حمایتی",
+      "match": "aid"
     }
   },
   {
@@ -21393,6 +22457,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -21533,6 +22604,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -21668,6 +22746,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "کارگروه استانی / معاونت علمی (گواهی دانش‌بنیان)",
+      "group": "شرکت‌های دانش‌بنیان و خلاق",
+      "match": null
     }
   },
   {
@@ -21815,6 +22900,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -21968,6 +23060,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22122,6 +23221,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22276,6 +23382,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22422,6 +23535,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22572,6 +23692,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22714,6 +23841,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22861,6 +23995,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -22986,6 +24127,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -23115,6 +24263,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -23268,6 +24423,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -23420,6 +24582,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -23565,6 +24734,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -23710,6 +24886,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان طرف قرارداد",
+      "group": "کارکنان سازمان‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -23872,6 +25055,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24016,6 +25206,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24160,6 +25357,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24290,6 +25494,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24428,6 +25639,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24580,6 +25798,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24723,6 +25948,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -24854,6 +26086,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان طرف قرارداد",
+      "group": "کارکنان سازمان‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -25000,6 +26239,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان طرف قرارداد با بانک کارآفرین",
+      "group": "کارکنان سازمان‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -25136,6 +26382,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -25294,6 +26547,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -25441,6 +26701,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -25580,6 +26847,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -25714,6 +26988,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -25851,6 +27132,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26002,6 +27290,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26165,6 +27460,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26317,6 +27619,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26472,6 +27781,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26619,6 +27935,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "تعاونی‌های روستایی یا عشایری",
+      "group": "کشاورزان و صیادان (وام بدون ضامن)",
+      "match": null
     }
   },
   {
@@ -26775,6 +28098,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -26926,6 +28256,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27080,6 +28417,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27221,6 +28565,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27363,6 +28714,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27514,6 +28872,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27653,6 +29018,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "شرکت/سازمان طرف قرارداد (کارفرما)",
+      "group": "کارکنان شرکت‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -27789,6 +29161,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -27941,6 +29320,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -28114,6 +29500,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -28259,6 +29652,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -28408,6 +29808,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -28553,6 +29960,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "سازمان تابعه وزارت بهداشت",
+      "group": "کادر درمان",
+      "match": "cult"
     }
   },
   {
@@ -28692,6 +30106,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -28828,6 +30249,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "صندوق اعتباری هنر",
+      "group": "اعضای صندوق اعتباری هنر",
+      "match": null
     }
   },
   {
@@ -28965,6 +30393,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29104,6 +30539,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29263,6 +30705,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29398,6 +30847,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29534,6 +30990,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29677,6 +31140,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "ستاد مردمی رسیدگی به امور دیه",
+      "group": "زندانیان غیرعمد معرفی‌شده",
+      "match": null
     }
   },
   {
@@ -29826,6 +31296,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -29954,6 +31431,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30082,6 +31566,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30195,6 +31686,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30307,6 +31805,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30431,6 +31936,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30551,6 +32063,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30688,6 +32207,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30833,6 +32359,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -30973,6 +32506,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31115,6 +32655,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31278,6 +32825,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31431,6 +32985,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31587,6 +33148,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31715,6 +33283,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -31869,6 +33444,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32035,6 +33617,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32205,6 +33794,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32342,6 +33938,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32484,6 +34087,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32635,6 +34245,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32783,6 +34400,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -32924,6 +34548,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33046,6 +34677,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33179,6 +34817,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33321,6 +34966,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33459,6 +35111,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33597,6 +35256,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33728,6 +35394,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33857,6 +35530,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -33974,6 +35654,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34111,6 +35798,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34246,6 +35940,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34374,6 +36075,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34501,6 +36209,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34630,6 +36345,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34764,6 +36486,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -34879,6 +36608,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35020,6 +36756,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35140,6 +36883,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35269,6 +37019,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35410,6 +37167,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35524,6 +37288,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35630,6 +37401,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35745,6 +37523,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35878,6 +37663,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -35981,6 +37773,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36099,6 +37898,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36249,6 +38055,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36405,6 +38218,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36549,6 +38369,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36690,6 +38517,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36812,6 +38646,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -36974,6 +38815,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37099,6 +38947,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37226,6 +39081,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37365,6 +39227,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37502,6 +39371,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37620,6 +39496,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37738,6 +39621,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37860,6 +39750,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -37981,6 +39878,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38115,6 +40019,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38237,6 +40148,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38363,6 +40281,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38491,6 +40416,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38636,6 +40568,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38782,6 +40721,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -38924,6 +40870,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39058,6 +41011,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39202,6 +41162,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39364,6 +41331,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39473,6 +41447,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39597,6 +41578,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39742,6 +41730,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -39854,6 +41849,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40001,6 +42003,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40170,6 +42179,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40308,6 +42324,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40448,6 +42471,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40580,6 +42610,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40730,6 +42767,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -40862,6 +42906,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41006,6 +43057,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41149,6 +43207,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41320,6 +43385,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41460,6 +43532,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41593,6 +43672,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41717,6 +43803,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41846,6 +43939,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -41987,6 +44087,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42127,6 +44234,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42259,6 +44373,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42403,6 +44524,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42532,6 +44660,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42672,6 +44807,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42803,6 +44945,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -42935,6 +45084,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43067,6 +45223,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43186,6 +45349,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43320,6 +45490,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43442,6 +45619,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43586,6 +45770,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43720,6 +45911,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -43852,6 +46050,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44017,6 +46222,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44147,6 +46359,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44284,6 +46503,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44398,6 +46624,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44542,6 +46775,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44711,6 +46951,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -44867,6 +47114,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45030,6 +47284,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45193,6 +47454,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45352,6 +47620,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45503,6 +47778,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45649,6 +47931,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45823,6 +48112,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -45994,6 +48290,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46128,6 +48431,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46296,6 +48606,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46472,6 +48789,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46642,6 +48966,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46809,6 +49140,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -46976,6 +49314,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47133,6 +49478,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47232,6 +49584,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47338,6 +49697,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47428,6 +49794,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "صندوق بازنشستگی کشوری",
+      "group": "بازنشستگان و مستمری‌بگیران صندوق بازنشستگی کشوری",
+      "match": null
     }
   },
   {
@@ -47529,6 +49902,13 @@
     "channel": {
       "code": "mix",
       "label": "آنلاین و حضوری"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47623,6 +50003,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47709,6 +50096,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47801,6 +50195,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -47889,6 +50290,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -48043,6 +50451,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "کارفرما/سازمان طرف قرارداد بانک رفاه",
+      "group": "کارکنان مجموعه‌های طرف قرارداد",
+      "match": null
     }
   },
   {
@@ -48219,6 +50634,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -48385,6 +50807,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -48542,6 +50971,13 @@
     "channel": {
       "code": "in",
       "label": "حضوری در شعبه"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -48720,6 +51156,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -48876,6 +51319,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49049,6 +51499,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49213,6 +51670,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49380,6 +51844,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49551,6 +52022,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49724,6 +52202,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -49891,6 +52376,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "شرکت یا سازمان محل کار",
+      "group": "کارکنان مجموعه‌های دارای تمرکز حقوق در بانک توسعه تعاون",
+      "match": null
     }
   },
   {
@@ -50066,6 +52558,13 @@
     "channel": {
       "code": "unknown",
       "label": "نامشخص، از بانک بپرسید"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -50237,6 +52736,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": false,
+      "needs_letter": true,
+      "issuer": "بنیاد شهید و امور ایثارگران",
+      "group": "ایثارگران (جانبازان، آزادگان، خانواده شهدا)",
+      "match": "isar"
     }
   },
   {
@@ -50419,6 +52925,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   },
   {
@@ -50515,6 +53028,13 @@
     "channel": {
       "code": "on",
       "label": "آنلاین"
+    },
+    "eligibility": {
+      "open": true,
+      "needs_letter": false,
+      "issuer": null,
+      "group": null,
+      "match": null
     }
   }
 ]
