@@ -7162,7 +7162,7 @@
       "name": "های‌بانک (HiBank)",
       "slug": "hibank",
       "website": "https://hibank.ir",
-      "avatar": null
+      "avatar": "avatars/hibank.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -7301,7 +7301,7 @@
       "name": "های‌بانک (HiBank)",
       "slug": "hibank",
       "website": "https://hibank.ir",
-      "avatar": null
+      "avatar": "avatars/hibank.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -8913,7 +8913,7 @@
       "name": "ویپاد",
       "slug": "vipad",
       "website": "https://www.vipad.ir",
-      "avatar": null
+      "avatar": "avatars/vipad.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -18402,7 +18402,7 @@
       "name": "ویپاد",
       "slug": "vipad",
       "website": "https://www.vipad.ir",
-      "avatar": null
+      "avatar": "avatars/vipad.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -42032,7 +42032,7 @@
       "name": "ویپاد",
       "slug": "vipad",
       "website": "https://www.vipad.ir",
-      "avatar": null
+      "avatar": "avatars/vipad.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
