@@ -429,13 +429,14 @@ const rateTxt=l=>l.rr?fa(l.rr.min)+'٪ تا '+fa(l.rr.max)+'٪':(l.r!=null?fa(l.
 const months=l=>l.m||12;
 
 /* ---------- state ---------- */
-const S={age:30,scr:'landing',phone:'',lsent:false,phEdit:false,lotp:'',votp:'',tEnd:{},qi:0,ans:[null,null,[],null,null,null],spec:[],bk:{},nid:'',consent:false,otpSent:false,otp:'',otpErr:0,score:'C3',paid:false,payErr:false,procErr:false,detail:null,done:{},toast:'',sheet:null,disc:false,saved:false};
+const S={birth:'1372/03/10',scr:'landing',phone:'',lsent:false,phEdit:false,lotp:'',votp:'',tEnd:{},qi:0,ans:[null,null,[],null,null,null],spec:[],bk:{},nid:'',consent:false,otpSent:false,otp:'',otpErr:0,score:'C3',paid:false,payErr:false,procErr:false,detail:null,done:{},toast:'',sheet:null,disc:false,saved:false};
 function amount(){if(S.amt)return S.amt;const a=S.ans[0];return (a==null?Q[0].o[2]:Q[0].o[a])[1]*1e6;}
 function haves(){const h=(S.ans[2]||[]).map(i=>Q[2].o[i][1]).filter(x=>x!=='none'&&x!=='spec'),j=S.ans[5]!=null?Q[5].o[S.ans[5]][1]:null;if(['gov','priv','ret'].includes(j)&&!h.includes('sal'))h.push('sal');if(j==='lic'&&!h.includes('lic'))h.push('lic');return h;}
 function useKey(){const a=S.ans[1];return a==null||!Q[1].o[a]?'any':Q[1].o[a][1];}
 
 function ageRng(l){const E=s=>+en(s);let lo=0,hi=0;(l.rq||[]).filter(r=>r[3]!=='step'&&/(^|\s)(سن|سنی)(\s|$)/.test(r[2])).forEach(r=>{const t=r[2];let m=t.match(/سن\s*([0-9۰-۹]+)\s*تا\s*([0-9۰-۹]+)/);if(m){lo=Math.max(lo,E(m[1]));hi=hi?Math.min(hi,E(m[2])):E(m[2]);return;}m=t.match(/حداقل سن\s*([0-9۰-۹]+)/);if(m)lo=Math.max(lo,E(m[1]));});return [lo,hi];}
-function ageOK(l){const a=(S.ics&&S.ics.age)||S.age;if(!a)return true;const [lo,hi]=ageRng(l);return !(lo&&a<lo)&&!(hi&&a>hi);}
+function userAge(){const b=((S.ics&&S.ics.birth)||S.birth||'').split('/').map(Number);if(b.length<3)return 0;const p=new Intl.DateTimeFormat('en-u-ca-persian',{year:'numeric',month:'numeric',day:'numeric'}).formatToParts(new Date()),g=t=>+p.find(x=>x.type===t).value,y=g('year'),m=g('month'),d=g('day');return y-b[0]-((m<b[1]||(m===b[1]&&d<b[2]))?1:0);}
+function ageOK(l){const a=userAge();if(!a)return true;const [lo,hi]=ageRng(l);return !(lo&&a<lo)&&!(hi&&a>hi);}
 function evaluate(l,opt={}){
   const N=amount(),h=haves(),u=opt.use||useKey();
   if(!l.a)return {ok:false,why:'inactive'};
@@ -800,7 +801,7 @@ const CHB={on:['آنلاین','ch-on','M5 12.5l4 4 10-10'],in:['حضوری در 
 const chBadge=l=>{const k=chan(l);if(!k)return '';const c=CHB[k];return `<span class="pill ${c[1]} tg"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${c[2]}"/></svg>${c[0]}</span>`;};
 function loan(){const m=match(),l=LOANS.find(x=>x.i===S.detail)||m.full[0]?.l;if(!l)return home();const e=evaluate(l),h=haves();
  const MAP={guar:['معرفی ضامن'],dep:['میانگین حساب','مسدودی سپرده','میانگین موجودی','مدت انتظار'],chq:['چک یا سفته'],lic:['جواز کسب','پروانه فعالیت','مدارک کسب‌وکار','مدارک ثبتی'],sal:['حقوق‌بگیر بودن','مدارک شغلی و حقوقی'],col:['ارائه وثیقه','سند و وثیقه']};
- const st=t=>{const tag=Object.entries(MAP).find(([k,v])=>v.includes(t));const rr=(l.rq||[]).find(r=>r[0]===t);if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa((S.ics&&S.ics.age)||S.age||30)+' سال'];
+ const st=t=>{const tag=Object.entries(MAP).find(([k,v])=>v.includes(t));const rr=(l.rq||[]).find(r=>r[0]===t);if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa(userAge())+' سال'];
   if(t==='داشتن حساب در بانک'&&S.bk&&S.bk[l.b]!=null)return ['ok','✓','داری'];if(tag&&tag[0]==='dep'&&S.bk&&S.bk[l.b]>=1)return ['ok','✓','داری'];
   if(tag)return h.includes(tag[0])?['ok','✓','داری']:['wa','!','نداری'];
   if(t==='اعتبارسنجی'||t==='نداشتن بدهی و چک برگشتی')return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];
