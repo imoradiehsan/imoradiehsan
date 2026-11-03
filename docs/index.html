@@ -672,7 +672,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const long=[],acc=[],prep=[],apply=[];
  loans.forEach(x=>{const l=x.r.l,b=l.b,id=l.i;let hasDep=false;const other=[];
   l.rq.forEach(([t,d])=>{if(SKIP.includes(t))return;
-   if(DEP.includes(t)&&owned(b)&&S.bk[b]>=1)return;if(ACC.includes(t)&&owned(b))return;if(DEP.includes(t)){hasDep=true;long.push({t:'ایجاد میانگین حساب در '+b,d:'یک مدت پول در حسابت نگه دار. زمان می‌برد، پس از همین الان شروع کن.',lid:id,par:true});}
+   if(DEP.includes(t)&&owned(b)&&S.bk[b]>=1)return;if(ACC.includes(t)&&owned(b))return;if(DEP.includes(t)){hasDep=true;long.push({t:(t==='مسدودی سپرده'?'سپرده‌گذاری در ':'ایجاد میانگین حساب در ')+b,d:depTxt(l,t,d,x.share),lid:id,par:true});}
    else if(ACC.includes(t))acc.push({t:'افتتاح حساب در '+b,d:'یک حساب در '+b+' باز کن؛ آنلاین هم می‌شود.',lid:id});
    else if(REG.includes(t))prep.push({t:'ثبت‌نام در سامانه '+b,d:'در سامانه بانک ثبت‌نام کن تا کد پیگیری بگیری.',lid:id});
    else if(GU.includes(t))prep.push({t:'آماده کردن '+t+' برای '+b,d:t+' را قبل از درخواست آماده کن.',lid:id});
@@ -785,6 +785,12 @@ function roadmap(l){const h=haves();const steps=[];
  steps.push(['ثبت درخواست در سایت '+l.b,'با لینک رسمی بانک درخواست بده؛ قسطا هیچ مبلغی برای این مرحله نمی‌گیره.']);
  return steps.slice(0,6);}
 
+function depTxt(l,t,d,share){const E=s=>+en(s),ctx=[l.d||''].concat(l.kn||[]).join(' ');
+ const mm=d.match(/([0-9۰-۹]+)\s*(?:تا\s*([0-9۰-۹]+)\s*)?ماه/)||ctx.match(/(?:میانگین|سپرده|موجودی|رسوب|معدل)[^.]{0,40}?([0-9۰-۹]+)\s*(?:تا\s*([0-9۰-۹]+)\s*)?ماه/),yy=d.match(/([0-9۰-۹]+)\s*ساله/),pc=d.match(/([0-9۰-۹]+)\s*درصد/);
+ if(t==='مسدودی سپرده'&&pc&&E(pc[1])<=100){const p=E(pc[1]);return 'حدود '+fa(p)+'٪ از مبلغ وام (حدود '+mil(Math.round(share*p/100/1e6)*1e6)+' تومان) تا پایان اقساط نزد بانک بلوکه می‌ماند.';}
+ if(mm&&E(mm[1])<=24){const a=E(mm[1]),z=mm[2]?E(mm[2]):0;return (z?'بین '+fa(a)+' تا '+fa(z):'حداقل '+fa(a))+' ماه پول در حسابت نگه دار؛ هرچه مبلغ و مدت بیشتر باشد، سقف وام بالاتر می‌رود. از همین الان شروع کن.';}
+ if(yy)return 'این طرح حدود '+fa(E(yy[1]))+' سال سابقه سپرده‌گذاری لازم دارد؛ از همین الان شروع کن.';
+ return 'مدت و مبلغ دقیق را بانک اعلام نکرده؛ معمولاً ۳ تا ۶ ماه است. قبل از شروع، مقدار دقیق را از شعبه یا سامانه بانک بپرس.';}
 function chan(l){const t=[l.t,l.ty,l.d||''].concat((l.rq||[]).map(q=>q.join(' '))).join(' ');const on=/آنلاین|اپلیکیشن|غیرحضوری|غیر حضوری|اینترنتی|سامانه|اپ /.test(t)||['وام آنلاین','وام فوری'].includes(l.ty),inp=/شعبه|شعب|حضوری(?!.*غیر)|مراجعه/.test(t.replace(/غیر ?حضوری/g,''));if(on&&!inp)return 'on';if(inp&&!on)return 'in';if(on&&inp)return 'mix';if(/بلوبانک|امیدبانک|ایوا|ازکی|تارا|دیجی|کیپا|ونسی|بیت‌پین|ملّی‌گلد|همراه مکانیک|کیوبانک|ویپاد|اسنپ|لندو|طلاسی/.test(l.b)||['وام فوری','وام بدون ضامن','وام آنلاین'].includes(l.ty))return 'on';if(/ازدواج|فرزند/.test(l.ty+l.t))return 'mix';if(l.ty==='وام خرید کالا'&&/کارت/.test(l.t))return 'mix';return 'in';}
 const CHB={on:['آنلاین','ch-on','M5 12.5l4 4 10-10'],in:['حضوری در شعبه','ch-in','M4 21V9l8-5 8 5v12M9 21v-6h6v6'],mix:['آنلاین + حضوری','ch-mx','M4 12h16M12 4v16']};
 const chBadge=l=>{const k=chan(l);if(!k)return '';const c=CHB[k];return `<span class="pill ${c[1]} tg"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${c[2]}"/></svg>${c[0]}</span>`;};
