@@ -5,7 +5,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -151,7 +152,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 22.5,
@@ -298,7 +300,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -446,7 +449,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -633,7 +637,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -786,7 +791,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -928,7 +934,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -1074,7 +1081,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -1217,7 +1225,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -1363,7 +1372,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -1515,7 +1525,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -1669,7 +1680,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -1817,7 +1829,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -1944,7 +1957,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -2086,7 +2100,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 18.0,
@@ -2226,7 +2241,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 22.5,
@@ -2384,7 +2400,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام تعمیرات مسکن",
     "interest_rate_percent": 18.0,
@@ -2531,7 +2548,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 18.0,
@@ -2667,7 +2685,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -2813,7 +2832,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 23.0,
@@ -2956,7 +2976,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -3102,7 +3123,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -3245,7 +3267,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -3395,7 +3418,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -3545,7 +3569,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -3678,7 +3703,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -3817,7 +3843,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -3962,7 +3989,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -4107,7 +4135,8 @@
     "bank": {
       "name": "بانک سامان",
       "slug": "bank-saman",
-      "website": "https://www.sb24.ir"
+      "website": "https://www.sb24.ir",
+      "avatar": "avatars/bank-saman.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -4249,7 +4278,8 @@
     "bank": {
       "name": "بانک سامان",
       "slug": "bank-saman",
-      "website": "https://www.sb24.ir"
+      "website": "https://www.sb24.ir",
+      "avatar": "avatars/bank-saman.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -4385,7 +4415,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -4517,7 +4548,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 18.0,
@@ -4662,7 +4694,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -4807,7 +4840,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -4943,7 +4977,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -5097,7 +5132,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -5238,7 +5274,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -5381,7 +5418,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -5521,7 +5559,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 18.0,
@@ -5665,7 +5704,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -5820,7 +5860,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -5959,7 +6000,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -6100,7 +6142,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -6232,7 +6275,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "وام خودرو",
     "interest_rate_percent": 23.0,
@@ -6383,7 +6427,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -6522,7 +6567,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -6670,7 +6716,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -6819,7 +6866,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -6977,7 +7025,8 @@
     "bank": {
       "name": "بلوبانک",
       "slug": "blubank",
-      "website": "https://blubank.com"
+      "website": "https://blubank.com",
+      "avatar": "avatars/blubank.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": null,
@@ -7112,7 +7161,8 @@
     "bank": {
       "name": "های‌بانک (HiBank)",
       "slug": "hibank",
-      "website": "https://hibank.ir"
+      "website": "https://hibank.ir",
+      "avatar": null
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -7250,7 +7300,8 @@
     "bank": {
       "name": "های‌بانک (HiBank)",
       "slug": "hibank",
-      "website": "https://hibank.ir"
+      "website": "https://hibank.ir",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -7382,7 +7433,8 @@
     "bank": {
       "name": "بانکینو",
       "slug": "bankino",
-      "website": "https://bankino.ir"
+      "website": "https://bankino.ir",
+      "avatar": "avatars/bankino.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -7539,7 +7591,8 @@
     "bank": {
       "name": "بانکینو",
       "slug": "bankino",
-      "website": "https://bankino.ir"
+      "website": "https://bankino.ir",
+      "avatar": "avatars/bankino.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 2.0,
@@ -7664,7 +7717,8 @@
     "bank": {
       "name": "بانک سامان",
       "slug": "bank-saman",
-      "website": "https://www.sb24.ir"
+      "website": "https://www.sb24.ir",
+      "avatar": "avatars/bank-saman.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -7812,7 +7866,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -7962,7 +8017,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "تسهیلات جعاله",
     "interest_rate_percent": 18.0,
@@ -8119,7 +8175,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام ودیعه مسکن",
     "interest_rate_percent": 23.0,
@@ -8264,7 +8321,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -8423,7 +8481,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام تحصیلی",
     "interest_rate_percent": 4.0,
@@ -8573,7 +8632,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام تعمیرات مسکن",
     "interest_rate_percent": 18.0,
@@ -8716,7 +8776,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -8851,7 +8912,8 @@
     "bank": {
       "name": "ویپاد",
       "slug": "vipad",
-      "website": "https://www.vipad.ir"
+      "website": "https://www.vipad.ir",
+      "avatar": null
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -8977,7 +9039,8 @@
     "bank": {
       "name": "ایوا (نشان‌بانک)",
       "slug": "eva-bank",
-      "website": "https://neshanbank.ir"
+      "website": "https://neshanbank.ir",
+      "avatar": null
     },
     "loan_type": "وام سفر",
     "interest_rate_percent": 23.0,
@@ -9114,7 +9177,8 @@
     "bank": {
       "name": "ایوا (نشان‌بانک)",
       "slug": "eva-bank",
-      "website": "https://neshanbank.ir"
+      "website": "https://neshanbank.ir",
+      "avatar": null
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -9254,7 +9318,8 @@
     "bank": {
       "name": "همراه‌شهر پلاس",
       "slug": "hamrah-shahr-plus",
-      "website": "https://hamrahshahrplus.ir"
+      "website": "https://hamrahshahrplus.ir",
+      "avatar": "avatars/hamrah-shahr-plus.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -9399,7 +9464,8 @@
     "bank": {
       "name": "امیدبانک",
       "slug": "omidbank",
-      "website": "https://omidbank.ir"
+      "website": "https://omidbank.ir",
+      "avatar": "avatars/omidbank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -9543,7 +9609,8 @@
     "bank": {
       "name": "باجت",
       "slug": "bajet",
-      "website": "https://bajet.ir"
+      "website": "https://bajet.ir",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -9683,7 +9750,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -9826,7 +9894,8 @@
     "bank": {
       "name": "کیوبانک",
       "slug": "Qbank",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": null
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -9983,7 +10052,8 @@
     "bank": {
       "name": "بانکواره",
       "slug": "bankoareh",
-      "website": "https://bankvareh.ir"
+      "website": "https://bankvareh.ir",
+      "avatar": null
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -10108,7 +10178,8 @@
     "bank": {
       "name": "فرارفاه",
       "slug": "fararefah",
-      "website": "https://fararefah.ir"
+      "website": "https://fararefah.ir",
+      "avatar": null
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -10233,7 +10304,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 17.0,
@@ -10368,7 +10440,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": null,
@@ -10496,7 +10569,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام خودرو",
     "interest_rate_percent": 18.0,
@@ -10673,7 +10747,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 23.0,
@@ -10835,7 +10910,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -11026,7 +11102,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -11207,7 +11284,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 18.0,
@@ -11353,7 +11431,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 17.9,
@@ -11490,7 +11569,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -11639,7 +11719,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 18.0,
@@ -11777,7 +11858,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -11923,7 +12005,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 18.0,
@@ -12039,7 +12122,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام تحصیلی",
     "interest_rate_percent": 13.0,
@@ -12178,7 +12262,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -12295,7 +12380,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -12442,7 +12528,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 14.0,
@@ -12585,7 +12672,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -12732,7 +12820,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -12875,7 +12964,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -13014,7 +13104,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -13170,7 +13261,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -13327,7 +13419,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -13473,7 +13566,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -13630,7 +13724,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -13790,7 +13885,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 14.0,
@@ -13943,7 +14039,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -14093,7 +14190,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -14243,7 +14341,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام تعمیرات مسکن",
     "interest_rate_percent": 18.0,
@@ -14391,7 +14490,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 18.0,
@@ -14541,7 +14641,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -14696,7 +14797,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -14844,7 +14946,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -15000,7 +15103,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 0.0,
@@ -15132,7 +15236,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 23.0,
@@ -15277,7 +15382,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -15432,7 +15538,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 6.0,
@@ -15567,7 +15674,8 @@
     "bank": {
       "name": "بانک تجارت",
       "slug": "bank-tejarat",
-      "website": "https://www.tejaratbank.ir"
+      "website": "https://www.tejaratbank.ir",
+      "avatar": "avatars/bank-tejarat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -15700,7 +15808,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -15867,7 +15976,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -16035,7 +16145,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 2.0,
@@ -16189,7 +16300,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 5.0,
@@ -16353,7 +16465,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -16503,7 +16616,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 7.0,
@@ -16655,7 +16769,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 4.0,
@@ -16819,7 +16934,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -16951,7 +17067,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 18.0,
@@ -17097,7 +17214,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 0.0,
@@ -17249,7 +17367,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -17405,7 +17524,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات جعاله",
     "interest_rate_percent": 23.0,
@@ -17547,7 +17667,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام تعمیرات مسکن",
     "interest_rate_percent": 23.0,
@@ -17690,7 +17811,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -17828,7 +17950,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 18.0,
@@ -17968,7 +18091,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -18120,7 +18244,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 12.0,
@@ -18275,7 +18400,8 @@
     "bank": {
       "name": "ویپاد",
       "slug": "vipad",
-      "website": "https://www.vipad.ir"
+      "website": "https://www.vipad.ir",
+      "avatar": null
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -18411,7 +18537,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 7.5,
@@ -18574,7 +18701,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 4.0,
@@ -18713,7 +18841,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -18883,7 +19012,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 14.0,
@@ -19016,7 +19146,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 18.0,
@@ -19168,7 +19299,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -19307,7 +19439,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -19448,7 +19581,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -19589,7 +19723,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 0.0,
@@ -19736,7 +19871,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -19900,7 +20036,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -20069,7 +20206,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -20238,7 +20376,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -20381,7 +20520,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -20538,7 +20678,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 2.0,
@@ -20699,7 +20840,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 4.0,
@@ -20854,7 +20996,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -21015,7 +21158,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -21157,7 +21301,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -21267,7 +21412,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 4.0,
@@ -21421,7 +21567,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -21581,7 +21728,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 2.0,
@@ -21727,7 +21875,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -21887,7 +22036,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -22035,7 +22185,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 2.0,
@@ -22185,7 +22336,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -22326,7 +22478,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام سفر",
     "interest_rate_percent": 4.0,
@@ -22472,7 +22625,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -22619,7 +22773,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -22761,7 +22916,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 4.0,
@@ -22915,7 +23071,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 4.0,
@@ -23075,7 +23232,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -23236,7 +23394,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -23397,7 +23556,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 4.0,
@@ -23550,7 +23710,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -23707,7 +23868,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -23856,7 +24018,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 0.0,
@@ -24010,7 +24173,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام تحصیلی",
     "interest_rate_percent": 0.0,
@@ -24142,7 +24306,8 @@
     "bank": {
       "name": "بانکینو",
       "slug": "bankino",
-      "website": "https://bankino.ir"
+      "website": "https://bankino.ir",
+      "avatar": "avatars/bankino.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 2.0,
@@ -24278,7 +24443,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -24438,7 +24604,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -24597,7 +24764,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -24749,7 +24917,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 4.0,
@@ -24901,7 +25070,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 0.0,
@@ -25070,7 +25240,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 11.0,
@@ -25221,7 +25392,8 @@
     "bank": {
       "name": "بانک سینا",
       "slug": "bank-sina",
-      "website": "https://www.sinabank.ir"
+      "website": "https://www.sinabank.ir",
+      "avatar": "avatars/bank-sina.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 11.0,
@@ -25372,7 +25544,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -25509,7 +25682,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -25654,7 +25828,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -25813,7 +25988,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -25963,7 +26139,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -26101,7 +26278,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -26254,7 +26432,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -26397,7 +26576,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -26562,7 +26742,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -26716,7 +26897,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 4.0,
@@ -26862,7 +27044,8 @@
     "bank": {
       "name": "بانک پارسیان",
       "slug": "bank-parsian",
-      "website": "https://www.parsian-bank.ir"
+      "website": "https://www.parsian-bank.ir",
+      "avatar": "avatars/bank-parsian.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -27003,7 +27186,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -27147,7 +27331,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 14.0,
@@ -27305,7 +27490,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -27475,7 +27661,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -27634,7 +27821,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -27796,7 +27984,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -27950,7 +28139,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 14.0,
@@ -28113,7 +28303,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 5.0,
@@ -28271,7 +28462,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -28432,7 +28624,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 10.0,
@@ -28580,7 +28773,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -28729,7 +28923,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -28887,7 +29082,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -29033,7 +29229,8 @@
     "bank": {
       "name": "بانک گردشگری",
       "slug": "bank-gardeshgari",
-      "website": "https://www.tourismbank.ir"
+      "website": "https://www.tourismbank.ir",
+      "avatar": "avatars/bank-gardeshgari.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 2.0,
@@ -29176,7 +29373,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -29335,7 +29533,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -29515,7 +29714,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -29667,7 +29867,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -29823,7 +30024,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -29975,7 +30177,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -30121,7 +30324,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -30264,7 +30468,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -30408,7 +30613,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -30554,7 +30760,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -30720,7 +30927,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -30862,7 +31070,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 23.0,
@@ -31005,7 +31214,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -31155,7 +31365,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -31311,7 +31522,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -31446,7 +31658,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -31581,7 +31794,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -31701,7 +31915,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 22.5,
@@ -31820,7 +32035,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -31951,7 +32167,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 23.0,
@@ -32078,7 +32295,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -32222,7 +32440,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -32374,7 +32593,8 @@
     "bank": {
       "name": "بانک دی",
       "slug": "bank-day",
-      "website": "https://day24.ir"
+      "website": "https://day24.ir",
+      "avatar": "avatars/bank-day.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 8.0,
@@ -32521,7 +32741,8 @@
     "bank": {
       "name": "بانک دی",
       "slug": "bank-day",
-      "website": "https://day24.ir"
+      "website": "https://day24.ir",
+      "avatar": "avatars/bank-day.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -32670,7 +32891,8 @@
     "bank": {
       "name": "بانک دی",
       "slug": "bank-day",
-      "website": "https://day24.ir"
+      "website": "https://day24.ir",
+      "avatar": "avatars/bank-day.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -32840,7 +33062,8 @@
     "bank": {
       "name": "بانک دی",
       "slug": "bank-day",
-      "website": "https://day24.ir"
+      "website": "https://day24.ir",
+      "avatar": "avatars/bank-day.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -33000,7 +33223,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 16.0,
@@ -33163,7 +33387,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 10.0,
@@ -33298,7 +33523,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 16.0,
@@ -33459,7 +33685,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 22.0,
@@ -33632,7 +33859,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -33809,7 +34037,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 15.0,
@@ -33953,7 +34182,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -34102,7 +34332,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -34260,7 +34491,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -34415,7 +34647,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -34563,7 +34796,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -34692,7 +34926,8 @@
     "bank": {
       "name": "بانک سرمایه",
       "slug": "bank-sarmayeh",
-      "website": "https://sbank.ir"
+      "website": "https://sbank.ir",
+      "avatar": "avatars/bank-sarmayeh.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -34832,7 +35067,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 18.0,
@@ -34981,7 +35217,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -35126,7 +35363,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 2.0,
@@ -35271,7 +35509,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -35409,7 +35648,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -35545,7 +35785,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 0.0,
@@ -35669,7 +35910,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -35813,7 +36055,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "مبتنی بر اعتبار سنجی",
     "interest_rate_percent": 23.0,
@@ -35955,7 +36198,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -36090,7 +36334,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -36224,7 +36469,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -36360,7 +36606,8 @@
     "bank": {
       "name": "ونسی",
       "slug": "vency",
-      "website": "https://vency.ir"
+      "website": "https://vency.ir",
+      "avatar": "avatars/vency.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 24.0,
@@ -36501,7 +36748,8 @@
     "bank": {
       "name": "ونسی",
       "slug": "vency",
-      "website": "https://vency.ir"
+      "website": "https://vency.ir",
+      "avatar": "avatars/vency.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 24.0,
@@ -36623,7 +36871,8 @@
     "bank": {
       "name": "لندو",
       "slug": "lendo",
-      "website": "https://lendo.ir"
+      "website": "https://lendo.ir",
+      "avatar": "avatars/lendo.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -36771,7 +37020,8 @@
     "bank": {
       "name": "لندو",
       "slug": "lendo",
-      "website": "https://lendo.ir"
+      "website": "https://lendo.ir",
+      "avatar": "avatars/lendo.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 0.0,
@@ -36898,7 +37148,8 @@
     "bank": {
       "name": "اسنپ‌پی (SnappPay)",
       "slug": "snapp-pay",
-      "website": "https://snapppay.ir/"
+      "website": "https://snapppay.ir/",
+      "avatar": "avatars/snapp-pay.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 0.0,
@@ -37034,7 +37285,8 @@
     "bank": {
       "name": "اسنپ‌پی (SnappPay)",
       "slug": "snapp-pay",
-      "website": "https://snapppay.ir/"
+      "website": "https://snapppay.ir/",
+      "avatar": "avatars/snapp-pay.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -37182,7 +37434,8 @@
     "bank": {
       "name": "اسنپ‌پی (SnappPay)",
       "slug": "snapp-pay",
-      "website": "https://snapppay.ir/"
+      "website": "https://snapppay.ir/",
+      "avatar": "avatars/snapp-pay.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 0.0,
@@ -37303,7 +37556,8 @@
     "bank": {
       "name": "تارا",
       "slug": "tara",
-      "website": "https://tara360.ir/"
+      "website": "https://tara360.ir/",
+      "avatar": "avatars/tara.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 0.0,
@@ -37416,7 +37670,8 @@
     "bank": {
       "name": "تارا",
       "slug": "tara",
-      "website": "https://tara360.ir/"
+      "website": "https://tara360.ir/",
+      "avatar": "avatars/tara.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -37538,7 +37793,8 @@
     "bank": {
       "name": "ازکی‌وام",
       "slug": "azkivam",
-      "website": "https://azkivam.com/"
+      "website": "https://azkivam.com/",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -37678,7 +37934,8 @@
     "bank": {
       "name": "بیت‌پین",
       "slug": "bitpin-loan",
-      "website": "https://bitpin.ir/"
+      "website": "https://bitpin.ir/",
+      "avatar": "avatars/bitpin-loan.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": null,
@@ -37788,7 +38045,8 @@
     "bank": {
       "name": "وامیو",
       "slug": "vamio",
-      "website": "https://vamio.co/"
+      "website": "https://vamio.co/",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 22.0,
@@ -37913,7 +38171,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -38070,7 +38329,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -38233,7 +38493,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 23.0,
@@ -38384,7 +38645,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 4.0,
@@ -38532,7 +38794,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 17.5,
@@ -38661,7 +38924,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 9.0,
@@ -38830,7 +39094,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -38962,7 +39227,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -39096,7 +39362,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -39242,7 +39509,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -39386,7 +39654,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 0.0,
@@ -39511,7 +39780,8 @@
     "bank": {
       "name": "ملّی‌گلد",
       "slug": "melligold",
-      "website": "https://melligold.com"
+      "website": "https://melligold.com",
+      "avatar": null
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -39636,7 +39906,8 @@
     "bank": {
       "name": "میلی (Milli Gold)",
       "slug": "milli-gold",
-      "website": "https://milli.gold"
+      "website": "https://milli.gold",
+      "avatar": null
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -39765,7 +40036,8 @@
     "bank": {
       "name": "داریک (Daric)",
       "slug": "daric-gold",
-      "website": "https://daric.gold"
+      "website": "https://daric.gold",
+      "avatar": null
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -39893,7 +40165,8 @@
     "bank": {
       "name": "طلاسی (Talasea)",
       "slug": "talasea",
-      "website": "https://talasea.ir"
+      "website": "https://talasea.ir",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 22.0,
@@ -40034,7 +40307,8 @@
     "bank": {
       "name": "وال‌گلد (WallGold)",
       "slug": "wallgold",
-      "website": "https://wallgold.ir"
+      "website": "https://wallgold.ir",
+      "avatar": "avatars/wallgold.jpg"
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -40163,7 +40437,8 @@
     "bank": {
       "name": "وال‌گلد (WallGold)",
       "slug": "wallgold",
-      "website": "https://wallgold.ir"
+      "website": "https://wallgold.ir",
+      "avatar": "avatars/wallgold.jpg"
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -40296,7 +40571,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -40431,7 +40707,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 22.0,
@@ -40583,7 +40860,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "وام آنلاین",
     "interest_rate_percent": 23.0,
@@ -40736,7 +41014,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -40885,7 +41164,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -41026,7 +41306,8 @@
     "bank": {
       "name": "بانک ملل",
       "slug": "bank-melal",
-      "website": "https://melalbank.ir"
+      "website": "https://melalbank.ir",
+      "avatar": "avatars/bank-melal.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -41177,7 +41458,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 9.0,
@@ -41346,7 +41628,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 1.0,
@@ -41462,7 +41745,8 @@
     "bank": {
       "name": "بانک صنعت و معدن",
       "slug": "bank-sanat-va-madan",
-      "website": "https://www.bim.ir"
+      "website": "https://www.bim.ir",
+      "avatar": "avatars/bank-sanat-va-madan.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -41593,7 +41877,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -41745,7 +42030,8 @@
     "bank": {
       "name": "ویپاد",
       "slug": "vipad",
-      "website": "https://www.vipad.ir"
+      "website": "https://www.vipad.ir",
+      "avatar": null
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -41864,7 +42150,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -42018,7 +42305,8 @@
     "bank": {
       "name": "بانک پاسارگاد",
       "slug": "bank-pasargad",
-      "website": "https://www.bpi.ir"
+      "website": "https://www.bpi.ir",
+      "avatar": "avatars/bank-pasargad.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 23.0,
@@ -42194,7 +42482,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -42339,7 +42628,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 4.0,
@@ -42486,7 +42776,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -42625,7 +42916,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 8.0,
@@ -42782,7 +43074,8 @@
     "bank": {
       "name": "بانک سپه",
       "slug": "bank-sepah",
-      "website": "https://www.banksepah.ir"
+      "website": "https://www.banksepah.ir",
+      "avatar": "avatars/bank-sepah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -42921,7 +43214,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 18.0,
@@ -43072,7 +43366,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 18.0,
@@ -43222,7 +43517,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -43400,7 +43696,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -43547,7 +43844,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 20.0,
@@ -43687,7 +43985,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -43818,7 +44117,8 @@
     "bank": {
       "name": "بانک خاورمیانه",
       "slug": "bank-khavarmianeh",
-      "website": "https://www.mebank.ir"
+      "website": "https://www.mebank.ir",
+      "avatar": "avatars/bank-khavarmianeh.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -43954,7 +44254,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام خودرو",
     "interest_rate_percent": 23.0,
@@ -44102,7 +44403,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -44249,7 +44551,8 @@
     "bank": {
       "name": "بانک ایران زمین",
       "slug": "iran-zamin-bank",
-      "website": "https://www.izbank.ir"
+      "website": "https://www.izbank.ir",
+      "avatar": "avatars/iran-zamin-bank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -44388,7 +44691,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 2.0,
@@ -44539,7 +44843,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه رسالت",
       "slug": "bank-resalat",
-      "website": "https://www.resalatbank.ir"
+      "website": "https://www.resalatbank.ir",
+      "avatar": "avatars/bank-resalat.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -44675,7 +44980,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -44822,7 +45128,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام با وثیقه طلا",
     "interest_rate_percent": 23.0,
@@ -44960,7 +45267,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 5.0,
@@ -45099,7 +45407,8 @@
     "bank": {
       "name": "بانکینو",
       "slug": "bankino",
-      "website": "https://bankino.ir"
+      "website": "https://bankino.ir",
+      "avatar": "avatars/bankino.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 20.0,
@@ -45238,7 +45547,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 2.0,
@@ -45364,7 +45674,8 @@
     "bank": {
       "name": "کیوبانک",
       "slug": "Qbank",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": null
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 4.0,
@@ -45505,7 +45816,8 @@
     "bank": {
       "name": "کیوبانک",
       "slug": "Qbank",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": null
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -45634,7 +45946,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "مبتنی بر میانگین حساب",
     "interest_rate_percent": 4.0,
@@ -45785,7 +46098,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "وام با سپرده",
     "interest_rate_percent": 4.0,
@@ -45926,7 +46240,8 @@
     "bank": {
       "name": "بانک اقتصاد نوین",
       "slug": "bank-eghtesad-novin",
-      "website": "https://www.enbank.ir"
+      "website": "https://www.enbank.ir",
+      "avatar": "avatars/bank-eghtesad-novin.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -46065,7 +46380,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 21.0,
@@ -46237,7 +46553,8 @@
     "bank": {
       "name": "همراه مکانیک",
       "slug": "Hamrah-Mechanic",
-      "website": "https://www.hamrah-mechanic.com"
+      "website": "https://www.hamrah-mechanic.com",
+      "avatar": null
     },
     "loan_type": "وام خودرو",
     "interest_rate_percent": 23.0,
@@ -46374,7 +46691,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -46518,7 +46836,8 @@
     "bank": {
       "name": "ازکی‌وام",
       "slug": "azkivam",
-      "website": "https://azkivam.com/"
+      "website": "https://azkivam.com/",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": null,
@@ -46639,7 +46958,8 @@
     "bank": {
       "name": "بلوبانک",
       "slug": "blubank",
-      "website": "https://blubank.com"
+      "website": "https://blubank.com",
+      "avatar": "avatars/blubank.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 20.0,
@@ -46790,7 +47110,8 @@
     "bank": {
       "name": "بانک دی",
       "slug": "bank-day",
-      "website": "https://day24.ir"
+      "website": "https://day24.ir",
+      "avatar": "avatars/bank-day.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -46966,7 +47287,8 @@
     "bank": {
       "name": "بلوبانک",
       "slug": "blubank",
-      "website": "https://blubank.com"
+      "website": "https://blubank.com",
+      "avatar": "avatars/blubank.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 20.0,
@@ -47129,7 +47451,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -47299,7 +47622,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -47469,7 +47793,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -47635,7 +47960,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -47793,7 +48119,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -47946,7 +48273,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -48127,7 +48455,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -48305,7 +48634,8 @@
     "bank": {
       "name": "پست بانک ایران",
       "slug": "post-bank",
-      "website": "https://www.postbank.ir"
+      "website": "https://www.postbank.ir",
+      "avatar": "avatars/post-bank.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 18.0,
@@ -48446,7 +48776,8 @@
     "bank": {
       "name": "بانک قرض‌الحسنه مهر ایران",
       "slug": "bank-mehr",
-      "website": "https://www.qmb.ir"
+      "website": "https://www.qmb.ir",
+      "avatar": "avatars/bank-mehr.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -48621,7 +48952,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -48804,7 +49136,8 @@
     "bank": {
       "name": "بانک ملت",
       "slug": "bank-mellat",
-      "website": "https://www.bankmellat.ir"
+      "website": "https://www.bankmellat.ir",
+      "avatar": "avatars/bank-mellat.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 3.0,
@@ -48981,7 +49314,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام تحصیلی",
     "interest_rate_percent": 4.0,
@@ -49155,7 +49489,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -49329,7 +49664,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 4.0,
@@ -49493,7 +49829,8 @@
     "bank": {
       "name": "دیجی‌پی (DigiPay)",
       "slug": "digipay",
-      "website": "https://www.mydigipay.com"
+      "website": "https://www.mydigipay.com",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -49599,7 +49936,8 @@
     "bank": {
       "name": "بانک ملی ایران",
       "slug": "bank-melli",
-      "website": "https://www.bmi.ir"
+      "website": "https://www.bmi.ir",
+      "avatar": "avatars/bank-melli.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 4.0,
@@ -49712,7 +50050,8 @@
     "bank": {
       "name": "بانک صادرات ایران",
       "slug": "bank-saderat",
-      "website": "https://www.bsi.ir"
+      "website": "https://www.bsi.ir",
+      "avatar": "avatars/bank-saderat.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 4.0,
@@ -49809,7 +50148,8 @@
     "bank": {
       "name": "بانک آینده",
       "slug": "bank-ayandeh",
-      "website": "https://www.ba24.ir"
+      "website": "https://www.ba24.ir",
+      "avatar": "avatars/bank-ayandeh.jpg"
     },
     "loan_type": "وام فوری",
     "interest_rate_percent": 23.0,
@@ -49917,7 +50257,8 @@
     "bank": {
       "name": "بانک آینده",
       "slug": "bank-ayandeh",
-      "website": "https://www.ba24.ir"
+      "website": "https://www.ba24.ir",
+      "avatar": "avatars/bank-ayandeh.jpg"
     },
     "loan_type": "وام ازدواج",
     "interest_rate_percent": 4.0,
@@ -50018,7 +50359,8 @@
     "bank": {
       "name": "بانک آینده",
       "slug": "bank-ayandeh",
-      "website": "https://www.ba24.ir"
+      "website": "https://www.ba24.ir",
+      "avatar": "avatars/bank-ayandeh.jpg"
     },
     "loan_type": "وام کسب و کار",
     "interest_rate_percent": 23.0,
@@ -50111,7 +50453,8 @@
     "bank": {
       "name": "کیپا",
       "slug": "keepa",
-      "website": "https://keepa.ir"
+      "website": "https://keepa.ir",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -50210,7 +50553,8 @@
     "bank": {
       "name": "دیجی‌کالا",
       "slug": "digikala",
-      "website": "https://www.digikala.com"
+      "website": "https://www.digikala.com",
+      "avatar": null
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -50305,7 +50649,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -50466,7 +50811,8 @@
     "bank": {
       "name": "بانک کشاورزی",
       "slug": "bank-keshavarzi",
-      "website": "https://www.bki.ir"
+      "website": "https://www.bki.ir",
+      "avatar": "avatars/bank-keshavarzi.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -50649,7 +50995,8 @@
     "bank": {
       "name": "بانک سامان",
       "slug": "bank-saman",
-      "website": "https://www.sb24.ir"
+      "website": "https://www.sb24.ir",
+      "avatar": "avatars/bank-saman.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -50822,7 +51169,8 @@
     "bank": {
       "name": "بانک کارآفرین",
       "slug": "bank-karafarin",
-      "website": "https://www.karafarinbank.ir"
+      "website": "https://www.karafarinbank.ir",
+      "avatar": "avatars/bank-karafarin.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 23.0,
@@ -50986,7 +51334,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -51171,7 +51520,8 @@
     "bank": {
       "name": "بلوبانک",
       "slug": "blubank",
-      "website": "https://blubank.com"
+      "website": "https://blubank.com",
+      "avatar": "avatars/blubank.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 20.0,
@@ -51334,7 +51684,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -51514,7 +51865,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 6.0,
@@ -51685,7 +52037,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -51859,7 +52212,8 @@
     "bank": {
       "name": "بانک شهر",
       "slug": "bank-shahr",
-      "website": "https://www.shahr-bank.ir"
+      "website": "https://www.shahr-bank.ir",
+      "avatar": "avatars/bank-shahr.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -52037,7 +52391,8 @@
     "bank": {
       "name": "بانک سامان",
       "slug": "bank-saman",
-      "website": "https://www.sb24.ir"
+      "website": "https://www.sb24.ir",
+      "avatar": "avatars/bank-saman.jpg"
     },
     "loan_type": "وام بدون ضامن",
     "interest_rate_percent": 23.0,
@@ -52217,7 +52572,8 @@
     "bank": {
       "name": "بانک توسعه تعاون",
       "slug": "bank-tosee-taavon",
-      "website": "https://ttbank.ir"
+      "website": "https://ttbank.ir",
+      "avatar": "avatars/bank-tosee-taavon.jpg"
     },
     "loan_type": "تسهیلات قرض‌الحسنه",
     "interest_rate_percent": 4.0,
@@ -52391,7 +52747,8 @@
     "bank": {
       "name": "بانک رفاه کارگران",
       "slug": "bank-refah",
-      "website": "https://www.refah-bank.ir"
+      "website": "https://www.refah-bank.ir",
+      "avatar": "avatars/bank-refah.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 23.0,
@@ -52573,7 +52930,8 @@
     "bank": {
       "name": "بانک مسکن",
       "slug": "bank-maskan",
-      "website": "https://www.bank-maskan.ir"
+      "website": "https://www.bank-maskan.ir",
+      "avatar": "avatars/bank-maskan.jpg"
     },
     "loan_type": "وام مسکن",
     "interest_rate_percent": 4.0,
@@ -52751,7 +53109,8 @@
     "bank": {
       "name": "بانک مرکزی",
       "slug": "bank-markazi",
-      "website": "https://www.cbi.ir/"
+      "website": "https://www.cbi.ir/",
+      "avatar": "avatars/bank-markazi.jpg"
     },
     "loan_type": "وام نقدی",
     "interest_rate_percent": 15.0,
@@ -52940,7 +53299,8 @@
     "bank": {
       "name": "تارا",
       "slug": "tara",
-      "website": "https://tara360.ir/"
+      "website": "https://tara360.ir/",
+      "avatar": "avatars/tara.jpg"
     },
     "loan_type": "وام خرید کالا",
     "interest_rate_percent": 0.0,
