@@ -690,7 +690,6 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const accB=[...new Set(acc.map(s=>s.t.replace('افتتاح حساب در ','')))],regB=[...new Set(prep.filter(s=>/ثبت‌نام/.test(s.t)).map(s=>s.t.replace('ثبت‌نام در سامانه ','')))],docs=prep.filter(s=>!/ثبت‌نام/.test(s.t));
  const pre=[];if(accB.length)pre.push('حساب در '+accB.join('، ')+' باز کن');if(regB.length)pre.push('در سامانه '+regB.join('، ')+' ثبت‌نام کن');const DN={'معرفی ضامن':'ضامن','چک یا سفته':'چک یا سفته','ارائه وثیقه':'وثیقه','سند و وثیقه':'سند ملک'},dn=[...new Set(loans.flatMap(x=>x.r.l.rq.map(r=>r[0]).filter(t=>DN[t]).map(t=>DN[t])))];if(dn.length)pre.push(dn.join('، ')+' را آماده کن');
  const ob=[...new Set(loans.map(x=>x.r.l.b).filter(owned))];if(ob.length)steps.push({t:'حساب‌های فعلی‌ات به کار آمد',d:'چون در '+ob.join('، ')+' حساب داری، نیازی به افتتاح حساب نیست و این وام‌ها زودتر به دستت می‌رسد.',lid:null});
- if(GC<1)steps.push({t:'رتبه '+S.score+' و سقف پیشنهاد',d:'با رتبه فعلی‌ات بانک‌ها مبلغ کمتری تأیید می‌کنند؛ برای همین برنامه روی '+mil(N)+' چیده شده'+(S.guarN>=2&&haves().includes('guar')?'؛ داشتن دو ضامن این سقف را بالاتر برده':'')+'. با بهتر شدن رتبه، سقف بالاتر می‌رود.',lid:null});
  if(pre.length)steps.push({t:'کارهای اولیه',d:pre.join('؛ ')+'.',lid:null,par:accB.length>0});
  long.forEach(s=>steps.push(s));
  const lo=amtLow(),gap=Math.max(0,lo-total);
