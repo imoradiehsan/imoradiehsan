@@ -701,7 +701,6 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const used=new Set(L.map(x=>x.l.b)),bk=m.full.find(r=>!used.has(r.l.b)&&!NICHE.test(r.l.t)&&months(r.l)>=6);
  const fin=[];if(S.ics&&S.ics.mellatLeft)fin.push('با بخشی از وام اول، باقی‌مانده وام ملت را تسویه کن تا ماهی '+mil(S.ics.mellatInst)+' از قسط‌هایت کم شود');
  if(gap>0)fin.push('برای '+mil(gap)+' باقی‌مانده، اگر همسرت شرایط دارد او هم درخواست بدهد (این را از بانک بپرس)');
- if(bk)fin.push('اگر یکی رد شد، '+bk.l.t+' از '+NB(bk.l.b)+' جایگزین خوبی است');
  fin.push('قسط‌ها را سر وقت بده تا رتبه‌ات خراب نشود');
  steps.push({t:'بعد از دریافت',d:fin.join('. ')+'.',lid:null});
  return {loans,total,inst,single,steps,banks:loans.length,bud:BUD,alt,gc:GC,capN:N};}
