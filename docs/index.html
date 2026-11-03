@@ -783,7 +783,7 @@ function result(){const m=match(),best=m.full[0];
   <div class="notes accsec ${S.notesOpen?'on':''}" data-k="notesOpen"><button class="acch" style="display:flex;align-items:center;gap:10px" onclick="accTog(this)"><span class="si" style="width:36px;height:36px;border-radius:11px;display:grid;place-items:center">💡</span><b style="color:var(--ink)">نکات مهم</b><small style="margin-right:auto;color:var(--mut);font-size:12px">${fa(resNotes(m,best,road).length)} نکته</small><span class="chev">⌄</span></button><div class="acc"><ul class="accin">${resNotes(m,best,road).map(n=>`<li><b>${esc(n.t)}</b><p>${esc(n.d)}</p></li>`).join("")}</ul></div></div>
  </div>`;}
 
-function condU(l){const by={};(l.rq||[]).filter(r=>r[3]!=='step').forEach(r=>{const k=condLbl(r,l),s=typeof st==='function'?0:0;if(!by[k])by[k]=r;});return Object.values(by);}
+function condU(l){const by={};(l.rq||[]).filter(r=>r[3]!=='step'&&!/^(رعایت ضوابط بانک|مبلغ وام بر اساس شرایط متقاضی)$/.test(r[2])).forEach(r=>{const k=condLbl(r,l),s=typeof st==='function'?0:0;if(!by[k])by[k]=r;});return Object.values(by);}
 function roadmap(l){if(l.rm&&l.rm.length)return l.rm.map(r=>[r[1],r[2],r[0],r[3]]);const h=haves();const steps=[];
 
  const sn=new Set();l.rq.forEach(r=>{if(r[3]!=='step')return;const k=r[2]||r[0];if(sn.has(k))return;sn.add(k);steps.push([k,r[1]]);});
@@ -811,7 +811,10 @@ function loan(){const m=match(),l=LOANS.find(x=>x.i===S.detail)||m.full[0]?.l;if
  else if(/چک صیادی|سفته/.test(lb))need=H('chq');
  else if(/سند ملکی/.test(lb))need=H('col');
  else if(/جواز کسب|پروانه فعالیت/.test(lb))need=H('lic');
- if(need!==null)return need?Y:['wa','!','نداری'];if(S.score&&/چک برگشتی|رتبه مالی قابل قبول|اعتبارسنجی/.test(lb))return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];if(/مدارک هویتی/.test(lb))return ['ok','✓','تایید شد'];}if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa(userAge())+' سال'];
+ if(need!==null)return need?Y:['wa','!','نداری'];const I=S.ics||{};
+ if(/وام مشابه/.test(lb)&&I.active)return I.active.includes(l.b)?['wa','!','وام فعال از '+l.b+' داری']:['ok','✓','طبق ICS نداری'];
+ if(/پرداخت به‌موقع اقساط|چک برگشتی و بدهی معوق/.test(lb)&&I.overdue!=null)return (I.overdue===0&&!I.bounced)?['ok','✓','طبق ICS']:['wa','!','بدهی معوق داری'];
+ if(/توان بازپرداخت/.test(lb))return ['ok','✓','با قسط تو سازگار است'];if(S.score&&/چک برگشتی|رتبه مالی قابل قبول|اعتبارسنجی/.test(lb))return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];if(/مدارک هویتی/.test(lb))return ['ok','✓','تایید شد'];}if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa(userAge())+' سال'];
   if(t==='داشتن حساب در بانک'&&S.bk&&S.bk[l.b]!=null)return ['ok','✓','داری'];if(tag&&tag[0]==='dep'&&S.bk&&S.bk[l.b]>=1)return ['ok','✓','داری'];
   if(tag)return h.includes(tag[0])?['ok','✓','داری']:['wa','!','نداری'];
   if(t==='اعتبارسنجی'||t==='نداشتن بدهی و چک برگشتی')return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];
