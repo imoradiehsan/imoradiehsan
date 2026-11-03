@@ -801,7 +801,17 @@ const CHB={on:['آنلاین','ch-on','M5 12.5l4 4 10-10'],in:['حضوری در 
 const chBadge=l=>{const k=chan(l);if(!k)return '';const c=CHB[k];return `<span class="pill ${c[1]} tg"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="${c[2]}"/></svg>${c[0]}</span>`;};
 function loan(){const m=match(),l=LOANS.find(x=>x.i===S.detail)||m.full[0]?.l;if(!l)return home();const e=evaluate(l),h=haves();
  const MAP={guar:['معرفی ضامن'],dep:['میانگین حساب','مسدودی سپرده','میانگین موجودی','مدت انتظار'],chq:['چک یا سفته'],lic:['جواز کسب','پروانه فعالیت','مدارک کسب‌وکار','مدارک ثبتی'],sal:['حقوق‌بگیر بودن','مدارک شغلی و حقوقی'],col:['ارائه وثیقه','سند و وثیقه']};
- const st=t=>{const tag=Object.entries(MAP).find(([k,v])=>v.includes(t));const rr=(l.rq||[]).find(r=>r[0]===t);if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa(userAge())+' سال'];
+ const st=t=>{const tag=Object.entries(MAP).find(([k,v])=>v.includes(t));const rr=(l.rq||[]).find(r=>r[0]===t);{const lb=rr?rr[2]||'':'',H=x=>h.includes(x),Y=['ok','✓','داری'];let need=null;
+ if(/فیش حقوقی|گواهی درآمد|مدارک شغلی|حقوق‌بگیر/.test(lb))need=H('sal');
+ else if(/دو ضامن/.test(lb))need=H('guar')&&(S.guarN||1)>=2;
+ else if(/ضامن و سفته/.test(lb))need=H('guar')&&H('chq');
+ else if(/ضامن رسمی یا وثیقه/.test(lb))need=H('guar')||H('col');
+ else if(/وثیقه یا ضمانت/.test(lb))need=H('guar')||H('col')||H('chq');
+ else if(/^ضامن/.test(lb))need=H('guar');
+ else if(/چک صیادی|سفته/.test(lb))need=H('chq');
+ else if(/سند ملکی/.test(lb))need=H('col');
+ else if(/جواز کسب|پروانه فعالیت/.test(lb))need=H('lic');
+ if(need!==null)return need?Y:['wa','!','نداری'];if(S.score&&/چک برگشتی|رتبه مالی قابل قبول|اعتبارسنجی/.test(lb))return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];if(/مدارک هویتی/.test(lb))return ['ok','✓','تایید شد'];}if(rr&&/(^|\s)(سن|سنی)(\s|$)/.test(rr[2]))return ['ok','✓','سن شما '+fa(userAge())+' سال'];
   if(t==='داشتن حساب در بانک'&&S.bk&&S.bk[l.b]!=null)return ['ok','✓','داری'];if(tag&&tag[0]==='dep'&&S.bk&&S.bk[l.b]>=1)return ['ok','✓','داری'];
   if(tag)return h.includes(tag[0])?['ok','✓','داری']:['wa','!','نداری'];
   if(t==='اعتبارسنجی'||t==='نداشتن بدهی و چک برگشتی')return /^[AB]/.test(S.score)?['ok','✓','تایید شد']:['wa','!','بررسی شود'];
