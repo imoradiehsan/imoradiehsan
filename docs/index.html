@@ -655,9 +655,10 @@ function tu(s){return (s||'').replace(/شما/g,'تو').replace(/[^\s.،؛:()]+/
 function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD]/.test(S.score)&&haves().includes('guar')?.2:0)),N=Math.max(5e6,Math.round(amount()*GC/5e6)*5e6),pick=[],banks=new Set();
  const job=S.ans[5]!=null?Q[5].o[S.ans[5]][1]:null,sp=S.spec||[],OPEN={marr:['زوج','ازدواج'],child:['فرزندآوری'],isar:['ایثارگر','جانباز'],stu:['دانشجو']};
  const allow=new Set([].concat(...sp.map(k=>OPEN[k]||[]),job==='ret'?['بازنشست']:[]));
- const NICHE=new RegExp(['ویژه','کشاورز','هیئت علمی','بازنشست','فرهنگیان','کارکنان','اشتغال','ایثارگر','جانباز','دانشجو','طلاب','کارآفرینی','زوج','ازدواج','فرزندآوری','مسکن ملی'].filter(w=>!allow.has(w)).join('|'));
+ const NICHE=new RegExp(['ویژه','کشاورز','هیئت علمی','بازنشست','فرهنگیان','کارکنان','اشتغال','ایثارگر','جانباز','دانشجو','طلاب','کارآفرینی','زوج','ازدواج','فرزندآوری','مسکن ملی','مددجو','معلول','بهزیستی','کمیته امداد','زنان سرپرست','اشخاص حقوقی','سازمان طرف قرارداد'].filter(w=>!allow.has(w)).join('|'));
  const SPRX=allow.size?new RegExp([...allow].join('|')):null,owned=b=>S.bk&&S.bk[b]!=null;
- let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t)&&r.l.b!=='بانک مرکزی');
+ const longWait=l=>{if(owned(l.b)&&S.bk[l.b]>=1)return false;const t=(l.rq||[]).filter(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0])).map(r=>r[1]).join(' ');const y=t.match(/([0-9۰-۹]+)\s*سال/),mo=t.match(/([0-9۰-۹]+)\s*ماه/);return (y&&+en(y[1])>=1)||(mo&&+en(mo[1])>12);};
+ let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t+' '+(r.l.rq||[]).filter(q=>q[3]!=='step').map(q=>q[2]).join(' ')+' '+(r.l.rm||[]).filter(q=>q[0]==='شروع درخواست').map(q=>q[2]).join(' '))&&r.l.b!=='بانک مرکزی'&&!longWait(r.l));
  if(!pool.length)pool=m.full.slice();
  const fastP=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';pool=pool.map((r,i)=>({r,i,w:(SPRX&&SPRX.test(r.l.t)?-2:0)+(fastP&&owned(r.l.b)?-1:0)})).sort((a,b)=>a.w-b.w||a.i-b.i).map(x=>x.r);
  const K=S.cap||3;
