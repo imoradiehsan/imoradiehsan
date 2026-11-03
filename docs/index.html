@@ -685,6 +685,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const steps=[],lo=amtLow(),gap=Math.max(0,lo-total);
  // 1. goal
  steps.push({t:'هدف: '+mil(total)+' تومان',d:(L.length>1?L.map(x=>mil(x.share)+' از '+NB(x.l.b)).join(' + '):'یک وام از '+L[0].l.b)+'؛ قسط ماهانه حدود '+m5(inst)+' تومان.',lid:null});
+ if(S.ics&&S.ics.overdue>0)steps.push({t:'اول بدهی معوق را صاف کن',d:'طبق ICS حدود '+(S.ics.overdue<1e6?fa(Math.round(S.ics.overdue/1e3))+' هزار':mil(S.ics.overdue))+' تومان قسط عقب‌افتاده'+(S.ics.overBank?' در '+S.ics.overBank:'')+' داری؛ قبل از هر درخواستی پرداختش کن تا پرونده‌ات رد نشود.',lid:null});
  // 2. start + ask (parallel)
  const st0=L.map(x=>{if(owned(x.l.b))return NB(x.l.b)+': از حساب فعلی‌ات شروع کن';const s=SEC(x.l,'شروع درخواست').filter(r=>!DEPRX.test(r[1]));return s.length?NB(x.l.b)+': '+tu(S1(s[0][2])):null;}).filter(Boolean);
  const uk=L.map(x=>{const u=UNK(x.l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2]));return u.length?NB(x.l.b)+' ('+u.map(r=>tu(r[2]).replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرس\.?$/,'').replace(/\.$/,'')).join('، ')+')':null;}).filter(Boolean);
@@ -719,7 +720,7 @@ function shortNote(k){let s=k.split('.')[0].trim();if(s.length>110)s=s.slice(0,s
 function resNotes(m,best,road){const P=plan(m),out=[],N=(t,d)=>out.push({t,d}),NB=b=>b.replace(/^بانک /,'');
  const BAD=/نیست|جریمه|مسدود|فروش وثیقه|نمی‌توان|متفاوت باشد|قطعی نیست|راهنمای آموزشی|مراقب|منوط|قابل انتقال|نباید/;
  const GOOD=/سریع|زودتر|شانس|افزایش|بیشتر|بالاتر|حتماً|کفایت|بدون نیاز|کاهش/;
- const RULES=[[/بستگان|انتقال امتیاز/,'امتیاز وام بین بستگان قابل انتقال است'],[/کارمزد|ثابت/,'قسط ثابت و بی‌دردسر'],[/ضامن/,'ضامن مناسب، مسیر را کوتاه‌تر می‌کند'],[/سریع|زودتر|کاهش می‌یابد/,'راهی برای دریافت سریع‌تر'],[/میانگین|تراکنش/,'حساب فعال، سقف بالاتر'],[/خوش‌حسابی/,'خوش‌حسابی به سودت تمام می‌شود']];
+ const RULES=[[/بستگان|انتقال امتیاز/,'امتیاز وام بین بستگان قابل انتقال است'],[/کارمزد|ثابت/,'قسط ثابت و بی‌دردسر'],[/(?<!بدون )ضامن(?! خود)/,'ضامن مناسب، مسیر را کوتاه‌تر می‌کند'],[/سریع|زودتر|کاهش می‌یابد/,'راهی برای دریافت سریع‌تر'],[/میانگین|تراکنش|گردش حساب/,'حساب فعال، سقف بالاتر'],[/خوش‌حسابی/,'خوش‌حسابی به سودت تمام می‌شود']];
  const title=k=>{const r=RULES.find(r=>r[0].test(k));return r?r[1]:null;};
  const sent=k=>{let s=tu(k.split(/(?<=[.!؟])\s/)[0].trim().replace(/^در سال ۱۴۰۵،\s*/,'')).replace(/[.!؟]$/,'');if(s.length>110)s=s.split('؛')[0];if(s.length>110&&s.includes('،'))s=s.split('،').slice(-2).join('،').trim();return s+'.';};
  {const GD=P.loans.filter(x=>x.r.l.ty==='وام خرید کالا'||x.r.l.tg.includes('buy'));if(GD.length)N(GD.length>1?'این وام‌ها نقدی نیستند':'این وام نقدی نیست',GD.map(x=>'«'+x.r.l.t+'»').join(' و ')+' فقط در فروشگاه‌های طرف قرارداد بانک خرج می‌شود؛ قبلش لیست فروشگاه‌ها را ببین.');}
