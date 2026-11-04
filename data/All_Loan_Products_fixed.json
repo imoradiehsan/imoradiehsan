@@ -6269,6 +6269,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": null,
+      "table": null,
+      "source": null,
+      "source_date": null
     }
   },
   {
@@ -6402,6 +6410,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": null,
+      "table": null,
+      "source": null,
+      "source_date": null
     }
   },
   {
@@ -6560,6 +6576,28 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": 1200,
+      "per_million_by_term": {
+        "6": 1000,
+        "12": 1200,
+        "18": 1500
+      },
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": {
+        "6m-10000000": 10000,
+        "6m-20000000": 20000,
+        "12m-20000000": 24000,
+        "12m-30000000": 36000,
+        "12m-50000000": 60000,
+        "18m-50000000": 75000,
+        "18m-100000000": 150000
+      },
+      "note": "با حامی حدود ۱۰٪ کمتر",
+      "source": "tejaratnews.com (بازنشر milli.gold)",
+      "source_date": "۱۴۰۳/۱۰/۲۶"
     }
   },
   {
@@ -7729,6 +7767,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": null,
+      "source": null,
+      "source_date": null
     }
   },
   {
@@ -7872,6 +7918,20 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": 900,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": {
+        "10000000": 9000,
+        "20000000": 18000,
+        "30000000": 27000,
+        "40000000": 36000,
+        "50000000": 45000
+      },
+      "source": "vamgard.org/blog/vam-barayand-wepod-guide",
+      "source_date": "۱۴۰۵/۰۸/۰۳"
     }
   },
   {
@@ -21697,6 +21757,17 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": 3000,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": {
+        "10000000": 30000,
+        "30000000": 90000
+      },
+      "source": "tejaratnews.com / rade.ir",
+      "source_date": null
     }
   },
   {
@@ -23242,6 +23313,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": null,
+      "table": null,
+      "source": "banker.ir",
+      "source_date": "۱۴۰۵/۰۶/۱۸"
     }
   },
   {
@@ -37348,6 +37427,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": null,
+      "source": "rade.ir (جدول سکه به‌صورت تصویر)",
+      "source_date": "۱۴۰۵/۰۶/۲۳"
     }
   },
   {
@@ -38540,6 +38627,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": null,
+      "source": null,
+      "source_date": null
     }
   },
   {
@@ -39821,6 +39916,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": null,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": null,
+      "source": null,
+      "source_date": null
     }
   },
   {
@@ -45930,6 +46033,14 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "club",
+      "min_points": 500,
+      "rule": "با پرداخت قبض، خرید شارژ و کارت‌به‌کارت در اپ ۷۲۴ جمع می‌شود",
+      "table": null,
+      "source": "724.ir/loan",
+      "source_date": null
     }
   },
   {
@@ -51876,6 +51987,16 @@
       "issuer": null,
       "group": null,
       "match": null
+    },
+    "points": {
+      "type": "coin",
+      "per_million": 900,
+      "rule": "به ازای هر ۱۰۰ هزار تومان حداقل موجودی روزانه، روزی ۱ سکه",
+      "table": {
+        "50000000": 45000
+      },
+      "source": "rade.ir",
+      "source_date": "۱۴۰۵/۰۷/۲۸"
     }
   },
   {
