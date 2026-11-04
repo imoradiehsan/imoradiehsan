@@ -688,29 +688,23 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع|گردش حساب|پول.{0,20}حساب|در حساب بماند/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&(DEPRX.test(r[1])||/در حساب بماند|میانگین|موجودی|سپرده/.test(r[2]))));
  const L=loans.map(x=>({...x,l:x.r.l,dep:isDep(x.r.l)}));
  const steps=[],lo=amtLow(),gap=Math.max(0,lo-total);
- // 1. goal
- steps.push({t:'هدف: '+mil(total)+' تومان',d:(L.length>1?L.map(x=>'• '+mil(x.share)+' از '+NB(x.l.b)).join('\n')+'\n':'یک وام از '+L[0].l.b)+(L.length>1?'':'؛ ')+'قسط ماهانه حدود '+m5(inst)+' تومان.',lid:null});
- if(S.ics&&S.ics.overdue>0)steps.push({t:'اول بدهی معوق را صاف کن',d:'طبق ICS حدود '+(S.ics.overdue<1e6?fa(Math.round(S.ics.overdue/1e3))+' هزار':mil(S.ics.overdue))+' تومان قسط عقب‌افتاده'+(S.ics.overBank?' در '+S.ics.overBank:'')+' داری؛ قبل از هر درخواستی پرداختش کن تا پرونده‌ات رد نشود.',lid:null});
- L.filter(x=>x.l.el).forEach(x=>steps.push({t:'گرفتن معرفی‌نامه برای '+NB(x.l.b),d:'برای '+x.l.t+' اول از '+x.l.el.is+' معرفی‌نامه بگیر؛ بدون آن بانک درخواست را قبول نمی‌کند.',lid:null}));
- // 2. start + ask (parallel)
- const st0=L.map(x=>{if(owned(x.l.b))return NB(x.l.b)+': از حساب فعلی‌ات شروع کن';const s=SEC(x.l,'شروع درخواست').filter(r=>!DEPRX.test(r[1]));return s.length?NB(x.l.b)+': '+tu(S1(s[0][2])):null;}).filter(Boolean);
- const uk=L.map(x=>{const u=UNK(x.l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2]));return u.length?NB(x.l.b)+' ('+u.map(r=>tu(r[2]).replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرس\.?$/,'').replace(/\.$/,'')).join('، ')+')':null;}).filter(Boolean);
- if(st0.length||uk.length)steps.push({t:'کارهای اولیه',d:[st0.map(s=>'• '+s.replace(/[.؛]\s*$/,'')+'.').join('\n'),uk.length?'از بانک بپرس:\n'+uk.map(s=>'• '+s+'.').join('\n'):''].filter(Boolean).join('\n\n'),lid:null,par:L.length>1});
- // 3. deposit
- L.filter(x=>x.dep).forEach(x=>{const t=(x.l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(x.l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);const mx=(x.l.rm||[]).map(r=>r[2]).join(' ').match(/([0-9۰-۹]+)\s*برابر/),dAmt=mx&&+en(mx[1])>0?Math.ceil(x.share/+en(mx[1])/5e6)*5e6:0;steps.push({t:'خواباندن پول در '+NB(x.l.b),d:(dAmt?'حدود '+mil(dAmt)+' تومان در '+NB(x.l.b)+' بگذار؛ وام تا '+fa(+en(mx[1]))+' برابر همین مبلغ داده می‌شود. ':'')+(/^مدت و مبلغ دقیق/.test(z)?(dAmt?'مدتش را از بانک بپرس.':'همان مبلغ و مدتی که بانک گفت را در حسابت نگه دار.'):tu(S1(z))+'.')+' هم‌زمان بقیه کارها را جلو ببر.',lid:x.l.i,par:true});});
- // 4. docs & guarantee (short canonical labels)
- const RX=/مدارک|فیش|گواهی|ضامن|چک صیادی|سفته|سند ملکی|وثیقه|جواز/;
- const dg=L.map(x=>{const ls=[...new Set(condU(x.l).map(r=>condLbl(r,x.l)).filter(t=>RX.test(t)))];return ls.length?NB(x.l.b)+': '+ls.join('، '):null;}).filter(Boolean);
- if(dg.length)steps.push({t:'آماده کردن مدارک و ضامن',d:dg.map(s=>'• '+s+'.').join('\n')+(gMax===1&&L.filter(x=>needG(x.r)).length===1?' ضامنت را برای '+NB(L.find(x=>needG(x.r)).l.b)+' نگه دار.':''),lid:null});
- // 5. apply
+ const C1=s=>S1(s).replace(/[.؛]\s*$/,'');
+ if(S.ics&&S.ics.overdue>0)steps.push({t:'اول بدهی عقب‌افتاده را صاف کنید',d:'طبق ICS حدود '+(S.ics.overdue<1e6?fa(Math.round(S.ics.overdue/1e3))+' هزار':mil(S.ics.overdue))+' تومان قسط عقب‌افتاده'+(S.ics.overBank?' در '+S.ics.overBank:'')+' دارید. قبل از هر درخواستی پرداختش کنید تا پرونده‌تان رد نشود.',lid:null});
+ L.filter(x=>x.l.el).forEach(x=>steps.push({t:'معرفی‌نامه بگیرید',d:'برای '+x.l.t+' اول از '+x.l.el.is+' معرفی‌نامه بگیرید؛ بدون آن بانک درخواست را قبول نمی‌کند.',lid:null}));
  const ap=L.slice().sort((p,q)=>(p.dep-q.dep)||(p.r.e.y-q.r.e.y));
- ap.forEach((x,i)=>steps.push({t:'گرفتن '+x.l.t+' از '+NB(x.l.b),d:mil(x.share)+' تومان، قسط حدود '+m5(x.inst)+' در '+fa(months(x.l))+' ماه'+(x.r.e.y===0?'، بدون سود':'')+'.'+(x.dep?' بعد از تمام شدن دوره سپرده.':i>0?' هم‌زمان با قبلی.':''),lid:x.l.i}));
- // 6. finish + plan B
- const fin=[];if(S.ics&&S.ics.mellatLeft)fin.push('با بخشی از وام اول، باقی‌مانده وام ملت را تسویه کن تا ماهی '+mil(S.ics.mellatInst)+' از قسط‌هایت کم شود');
- if(gap>0)fin.push('برای '+mil(gap)+' باقی‌مانده، اگر همسرت شرایط دارد او هم درخواست بدهد (این را از بانک بپرس)');
- fin.push('قسط‌ها را سر وقت بده تا رتبه‌ات خراب نشود');
- steps.push({t:'بعد از دریافت',d:fin.map(s=>'• '+s+'.').join('\n'),lid:null});
- return {loans,total,inst,single,steps,banks:loans.length,bud:BUD,alt,gc:GC,capN:N};}
+ ap.forEach((x,i)=>{const l=x.l,ln=[];
+  if(owned(l.b))ln.push('از حساب فعلی‌تان در '+NB(l.b)+' شروع کنید.');
+  else{const s=SEC(l,'شروع درخواست').filter(r=>!DEPRX.test(r[1]+' '+r[2]));if(s.length)ln.push(C1(s[0][2])+'.');}
+  if(x.dep){const t=(l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);const mx=(l.rm||[]).map(r=>r[2]).join(' ').match(/([0-9۰-۹]+)\s*برابر/),dAmt=mx&&+en(mx[1])>0?Math.ceil(x.share/+en(mx[1])/5e6)*5e6:0;
+   ln.push(dAmt?'حدود '+mil(dAmt)+' تومان در حسابتان بگذارید؛ وام تا '+fa(+en(mx[1]))+' برابر همین مبلغ داده می‌شود.':/^مدت و مبلغ دقیق/.test(z)?'مدتی پول در حسابتان بماند؛ مبلغ و مدتش را از بانک بپرسید.':C1(z)+'.');}
+  const dg=[...new Set(condU(l).map(r=>condLbl(r,l)).filter(t=>/مدارک|فیش|گواهی|ضامن|چک صیادی|سفته|سند ملکی|وثیقه|جواز/.test(t)&&!/بدون/.test(t)))];
+  if(dg.length)ln.push('آماده کنید: '+dg.join('، ')+'.');
+  const uk=UNK(l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2])).map(r=>r[2].replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرسید\.?$/,'').replace(/\.$/,''));
+  if(uk.length&&!(x.dep&&uk.length===1&&/در حساب بماند|مبلغ و مدت/.test(uk[0])))ln.push('از بانک بپرسید: '+uk.join('، ')+'.');
+  ln.push('درخواست '+mil(x.share)+' تومان بدهید؛ قسطش حدود '+m5(x.inst)+' در '+fa(months(l))+' ماه'+(x.r.e.y===0?'، بدون سود':'')+'.');
+  const when=i===0?'':(x.dep&&ap.slice(0,i).some(y=>!y.dep)?'بعد از دوره سپرده':'هم‌زمان با قبلی');
+  steps.push({t:(ap.length>1?'وام '+NB(l.b):'گرفتن وام از '+NB(l.b))+(ap.length>1?'، '+l.t.replace(/^وام\s*/,''):''),d:ln.map(s=>'• '+s).join('\n'),lid:l.i,dep:x.dep,par:!!when&&when.startsWith('هم'),when});});
+ return {loans,total,inst,single,steps,banks:loans.length,bud:BUD,alt,gc:GC,capN:N,gap};}
 function rng(x,u=5e6){const lo=Math.max(u,Math.floor(x*.9/u)*u),hi=Math.ceil(x*1.1/u)*u;const f=v=>{const s=mil(v);return s};const a=mil(lo).replace(/ (میلیون|میلیارد)$/,''),un=mil(hi).match(/(میلیون|میلیارد)$/)[0];return lo>=hi?mil(hi):(mil(lo).endsWith(un)?a:mil(lo))+' تا '+mil(hi);}
 function amtLabel(){const a=S.ans[0];if(S.amt||a==null)return 'حدود '+mil(amount())+' تومان';const t=Q[0].o[a][0];return (t.startsWith('تا')||t.startsWith('بیشتر')?t:'بین '+t)+(t.includes('تومان')?'':' تومان');}
 function amtLow(){if(S.amt)return S.amt;const a=S.ans[0];return a>0?Q[0].o[a-1][1]*1e6:0;}
@@ -728,14 +722,16 @@ function resNotes(m,best,road){const P=plan(m),out=[],N=(t,d)=>out.push({t,d}),N
  const GOOD=/سریع|زودتر|شانس|افزایش|بیشتر|بالاتر|حتماً|کفایت|بدون نیاز|کاهش/;
  const RULES=[[/بستگان|انتقال امتیاز/,'امتیاز وام بین بستگان قابل انتقال است'],[/کارمزد|ثابت/,'قسط ثابت و بی‌دردسر'],[/(?<!بدون )ضامن(?! خود)/,'ضامن مناسب، مسیر را کوتاه‌تر می‌کند'],[/سریع|زودتر|کاهش می‌یابد/,'راهی برای دریافت سریع‌تر'],[/میانگین|تراکنش|گردش حساب/,'حساب فعال، سقف بالاتر'],[/خوش‌حسابی/,'خوش‌حسابی به سودت تمام می‌شود']];
  const title=k=>{const r=RULES.find(r=>r[0].test(k));return r?r[1]:null;};
- const sent=k=>{let s=tu(k.split(/(?<=[.!؟])\s/)[0].trim().replace(/^در سال ۱۴۰۵،\s*/,'')).replace(/[.!؟]$/,'');if(s.length>110)s=s.split('؛')[0];if(s.length>110&&s.includes('،'))s=s.split('،').slice(-2).join('،').trim();return s+'.';};
- {const GD=P.loans.filter(x=>x.r.l.ty==='وام خرید کالا'||x.r.l.tg.includes('buy'));if(GD.length)N(GD.length>1?'این وام‌ها نقدی نیستند':'این وام نقدی نیست',GD.map(x=>'«'+x.r.l.t+'»').join(' و ')+' فقط در فروشگاه‌های طرف قرارداد بانک خرج می‌شود؛ قبلش لیست فروشگاه‌ها را ببین.');}
- if(S.ics&&S.ics.exInst){N('قسط‌های فعلی‌ات را هم حساب کن','الان ماهی حدود '+mil(S.ics.exInst)+' قسط داری؛ با این وام‌ها می‌شود حدود '+mil(S.ics.exInst+P.inst)+'.');if(S.ics.endBank)N('یک قسط به‌زودی تمام می‌شود','وام '+S.ics.endBank+' '+S.ics.endWhen+' تمام می‌شود و ماهی '+mil(S.ics.endInst)+' آزاد می‌شود.');}
- if(S.ics&&S.ics.mellatLeft){N('درخواست‌ها را یکی‌یکی ثبت کن','با فاصله درخواست بده تا شانس تأیید بالاتر برود.');
+ const sent=k=>{let s=(k.split(/(?<=[.!؟])\s/)[0].trim().replace(/^در سال ۱۴۰۵،\s*/,'')).replace(/[.!؟]$/,'');if(s.length>110)s=s.split('؛')[0];if(s.length>110&&s.includes('،'))s=s.split('،').slice(-2).join('،').trim();return s+'.';};
+ {const GD=P.loans.filter(x=>x.r.l.ty==='وام خرید کالا'||x.r.l.tg.includes('buy'));if(GD.length)N(GD.length>1?'این وام‌ها نقدی نیستند':'این وام نقدی نیست',GD.map(x=>'«'+x.r.l.t+'»').join(' و ')+' فقط در فروشگاه‌های طرف قرارداد بانک خرج می‌شود؛ قبلش لیست فروشگاه‌ها را ببینید.');}
+ if(S.ics&&S.ics.exInst){N('قسط‌های فعلی‌تان را هم حساب کنید','الان ماهی حدود '+mil(S.ics.exInst)+' قسط دارید؛ با این وام‌ها می‌شود حدود '+mil(S.ics.exInst+P.inst)+'.');if(S.ics.endBank)N('یک قسط به‌زودی تمام می‌شود','وام '+S.ics.endBank+' '+S.ics.endWhen+' تمام می‌شود و ماهی '+mil(S.ics.endInst)+' از قسط‌هایتان کم می‌شود.');}
+ if(S.ics&&S.ics.mellatLeft){N('درخواست‌ها را با فاصله ثبت کنید','این‌طوری شانس تأیید بالاتر می‌رود.');
   N('یک قسط به‌زودی تمام می‌شود','وام ملت تا '+fa(S.ics.mellatLeft)+' ماه دیگر تمام می‌شود و ماهی '+mil(S.ics.mellatInst)+' آزاد می‌شود؛ آن موقع برای وام بعدی وقت خوبی است.');}
  P.loans.slice(0,3).forEach(x=>{const l=x.r.l,ks=(l.kn||[]).filter(k=>!BAD.test(k));const k=ks.find(k=>title(k)&&GOOD.test(k))||ks.find(k=>title(k));if(k&&!out.some(o=>o.t===title(k)))N(title(k),(P.loans.length>1?NB(l.b)+': ':'')+sent(k));});
- if(P.loans.some(x=>x.r.l.tg.includes('guar'))&&!out.some(o=>o.t.startsWith('ضامن')))N('ضامنت را از قبل هماهنگ کن','اگر ضامن از اول آماده باشد، پرونده زودتر جلو می‌رود.');
- if(S.score!=='A1')N('درهای بیشتری در راه است','با بهتر شدن رتبه‌ات، وام‌های بزرگ‌تر و ارزان‌تر هم باز می‌شوند.');
+ if(P.loans.some(x=>x.r.l.tg.includes('guar'))&&!out.some(o=>o.t.startsWith('ضامن')))N('ضامن را از قبل هماهنگ کنید','اگر ضامن از اول آماده باشد، پرونده زودتر جلو می‌رود.');
+ if(P.gap>0)N('برای باقی مبلغ','حدود '+mil(P.gap)+' کم دارید؛ اگر همسرتان هم شرایط دارد، او هم می‌تواند درخواست بدهد. این را از بانک بپرسید.');
+ N('قسط‌ها را سر وقت بدهید','تأخیر در قسط رتبه‌تان را پایین می‌آورد و وام بعدی را سخت‌تر می‌کند.');
+ if(S.score!=='A1')N('رتبه بهتر، وام بهتر','با بهتر شدن رتبه‌تان، وام‌های بزرگ‌تر و ارزان‌تر هم در دسترس می‌آیند.');
  return out.slice(0,4);}
 const GORDER=['E3','E2','E1','D3','D2','D1','C3','C2','C1','B3','B2','B1','A3','A2','A1'];
 const FIXALL=[['تسویه اقساط معوق','قسط‌های عقب‌افتاده را همین حالا پرداخت کن؛ بیشترین اثر را روی رتبه دارد.'],['رفع سوءاثر چک برگشتی','با واریز مبلغ چک یا گرفتن رضایت‌نامه، سوءاثر را از طریق بانک رفع کن.'],['پرداخت به‌موقع قسط‌های جاری','حتی یک روز تأخیر روی رتبه اثر می‌گذارد؛ پرداخت خودکار قسط‌ها را فعال کن.'],['کم کردن درخواست‌های اعتبار','تا رتبه‌ات درست نشده، درخواست وام و استعلام جدید ثبت نکن.'],['تسویه زودتر وام‌های کوچک','اگر وامی با چند قسط باقی‌مانده داری، زودتر تسویه‌اش کن تا بدهی فعالت کم شود.'],['استعلام دوباره رتبه','بعد از انجام این کارها، رتبه‌ات را دوباره استعلام کن و پیش ما برگرد.']];
@@ -787,7 +783,7 @@ function result(){const m=match(),best=m.full[0];
     <div class="tl" onclick="scrollToSec('.roadsec')"><span class="ticon">⤳</span>${fa(road.length)} قدم تا دریافت</div></div>
   </div>
   <div class="sec roadsec rsup"><div class="sh rhead"><span class="si">⤳</span><span class="rt"><b>نقشه راه رسیدن به کل وام</b><em>همه کارهایی که برای گرفتن <strong>${mil(P.total)} تومان</strong> باید به ترتیب انجام دهید</em><span class="rchips"><i>${fa(road.length)} قدم</i><i>${fa(P.banks)} بانک</i></span></span></div>
-   <div class="coll ${S.allRoad?'open':''}" data-h="324"><ol class="rd">${road.map((s,i)=>`<li><span class="n">${fa(i+1)}</span><b>${esc(s.t)}${s.par?' <span class="pill p-b">هم‌زمان شروع کن</span>':''}</b><p>${esc(s.d)}</p></li>`).join('')}</ol></div>
+   <div class="coll ${S.allRoad?'open':''}" data-h="324"><ol class="rd">${road.map((s,i)=>`<li><span class="n">${fa(i+1)}</span><b>${esc(s.t)}${s.when?` <span class="pill p-b">${s.when}</span>`:''}</b><p>${esc(s.d)}</p></li>`).join('')}</ol></div>
    <button class="more" onclick="tog(this,'allRoad')">${S.allRoad?'بستن ⌃':'ادامه مراحل ⌄'}</button></div>
   <div class="sec accsec ${S.loansOpen?'on':''}" data-k="loansOpen"><button class="sh acch" onclick="accTog(this)"><span class="si">🏛</span><b>${ordered.length>1?"وام‌های این مسیر":"وام این مسیر"}</b><small>${fa(ordered.length)} وام</small><span class="chev">⌄</span></button>
    <div class="acc"><div class="accin">${list.map((r,ri)=>`<button class="lrow" onclick="go('loan',{detail:${r.l.i}})">${logo(r.l.b)}<span class="lt"><b class="mq"><span>${esc(r.l.b)}</span></b><small class="lmeta">${(()=>{const x=P.loans.find(y=>y.r.l.i===r.l.i);return x?'<b>'+mil(x.share)+'</b><i></i>قسط '+m5(x.inst):esc(r.l.t);})()}</small></span><span class="go">جزئیات ‹</span></button>`).join('')}
@@ -805,8 +801,8 @@ function roadmap(l){if(l.rm&&l.rm.length)return l.rm.map(r=>[r[1],r[2],r[0],r[3]
 function depTxt(l,t,d,share){const E=s=>+en(s),ctx=[l.d||''].concat(l.kn||[]).join(' ');
  const mm=d.match(/([0-9۰-۹]+)\s*(?:تا\s*([0-9۰-۹]+)\s*)?ماه/)||ctx.match(/(?:میانگین|سپرده|موجودی|رسوب|معدل)[^.]{0,40}?([0-9۰-۹]+)\s*(?:تا\s*([0-9۰-۹]+)\s*)?ماه/),yy=d.match(/([0-9۰-۹]+)\s*ساله/),pc=d.match(/([0-9۰-۹]+)\s*درصد/);
  if(t==='مسدودی سپرده'&&pc&&E(pc[1])<=100){const p=E(pc[1]);return 'حدود '+fa(p)+'٪ از مبلغ وام (حدود '+mil(Math.round(share*p/100/1e6)*1e6)+' تومان) تا پایان اقساط نزد بانک بلوکه می‌ماند.';}
- if(mm&&E(mm[1])<=24){const a=E(mm[1]),z=mm[2]?E(mm[2]):0;return (z?'بین '+fa(a)+' تا '+fa(z):'حداقل '+fa(a))+' ماه پول در حسابت نگه دار؛ هرچه مبلغ و مدت بیشتر باشد، سقف وام بالاتر می‌رود. از همین الان شروع کن.';}
- if(yy)return 'این طرح حدود '+fa(E(yy[1]))+' سال سابقه سپرده‌گذاری لازم دارد؛ از همین الان شروع کن.';
+ if(mm&&E(mm[1])<=24){const a=E(mm[1]),z=mm[2]?E(mm[2]):0;return (z?'بین '+fa(a)+' تا '+fa(z):'حداقل '+fa(a))+' ماه پول در حسابتان نگه دارید؛ هرچه مبلغ و مدت بیشتر باشد، سقف وام بالاتر می‌رود.';}
+ if(yy)return 'این طرح حدود '+fa(E(yy[1]))+' سال سابقه سپرده‌گذاری لازم دارد.';
  return 'مدت و مبلغ دقیق را بانک اعلام نکرده؛ معمولاً ۳ تا ۶ ماه است. قبل از شروع، مقدار دقیق را از شعبه یا سامانه بانک بپرس.';}
 function chan(l){const rm=l.rm||[];if(rm.some(r=>!r[3]&&/آنلاین|حضوری|شعبه|روش ثبت|غیرحضوری/.test(r[1]+r[2])))return null;const R=rm.filter(r=>r[3]&&r[0]==='شروع درخواست').map(r=>r[1]+' '+r[2]).join(' ');if(R){const on=/آنلاین|اپلیکیشن|غیرحضوری|غیر حضوری|اینترنتی|سامانه|سایت|اپ |\.ir|\.com/.test(R),inp=/شعبه|شعب|حضوری|مراجعه/.test(rm.filter(r=>r[3]&&r[0]!=='بازپرداخت').map(r=>r[1]+' '+r[2]).join(' ').replace(/غیر ?حضوری/g,''));if(on&&inp)return 'mix';if(on)return 'on';if(inp)return 'in';}const t=[l.t,l.ty,l.d||''].concat((l.rq||[]).map(q=>q.join(' '))).join(' ');const on=/آنلاین|اپلیکیشن|غیرحضوری|غیر حضوری|اینترنتی|سامانه|اپ /.test(t)||['وام آنلاین','وام فوری'].includes(l.ty),inp=/شعبه|شعب|حضوری(?!.*غیر)|مراجعه/.test(t.replace(/غیر ?حضوری/g,''));if(on&&!inp)return 'on';if(inp&&!on)return 'in';if(on&&inp)return 'mix';if(/بلوبانک|امیدبانک|ایوا|ازکی|تارا|دیجی|کیپا|ونسی|بیت‌پین|ملّی‌گلد|همراه مکانیک|کیوبانک|ویپاد|اسنپ|لندو|طلاسی/.test(l.b)||['وام فوری','وام بدون ضامن','وام آنلاین'].includes(l.ty))return 'on';if(/ازدواج|فرزند/.test(l.ty+l.t))return 'mix';if(l.ty==='وام خرید کالا'&&/کارت/.test(l.t))return 'mix';return null;}
 const CHB={on:['آنلاین','ch-on','M5 12.5l4 4 10-10'],in:['حضوری در شعبه','ch-in','M4 21V9l8-5 8 5v12M9 21v-6h6v6'],mix:['آنلاین و حضوری','ch-mx','M4 12h16M12 4v16']};
