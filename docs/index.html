@@ -685,25 +685,31 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const total=loans.reduce((a,x)=>a+x.share,0),inst=loans.reduce((a,x)=>a+x.inst,0);
  const single=m.full[0]?pmt(Math.min(N,m.full[0].l.mx??N),23,48):inst;
  const NB=b=>b.replace(/^بانک /,''),S1=s=>(s||'').split(/(?<=[.؛])\s/)[0].replace(/[.؛]\s*$/,''),SEC=(l,s)=>(l.rm||[]).filter(r=>r[0]===s&&r[3]),UNK=l=>(l.rm||[]).filter(r=>!r[3]);
- const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع|گردش حساب|پول.{0,20}حساب|در حساب بماند/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&(DEPRX.test(r[1])||/در حساب بماند|میانگین|موجودی|سپرده/.test(r[2]))));
+ const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع|گردش حساب|پول.{0,20}حساب|در حساب بماند/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>(r[0]==='شروع درخواست'&&DEPRX.test(r[1]))||/در حساب بماند|میانگین حساب|میانگین موجودی/.test(r[2])));
  const L=loans.map(x=>({...x,l:x.r.l,dep:isDep(x.r.l)}));
  const steps=[],lo=amtLow(),gap=Math.max(0,lo-total);
  const C1=s=>S1(s).replace(/[.؛]\s*$/,'');
  if(S.ics&&S.ics.overdue>0)steps.push({t:'اول بدهی عقب‌افتاده را صاف کنید',d:'طبق ICS حدود '+(S.ics.overdue<1e6?fa(Math.round(S.ics.overdue/1e3))+' هزار':mil(S.ics.overdue))+' تومان قسط عقب‌افتاده'+(S.ics.overBank?' در '+S.ics.overBank:'')+' دارید. قبل از هر درخواستی پرداختش کنید تا پرونده‌تان رد نشود.',lid:null});
  L.filter(x=>x.l.el).forEach(x=>steps.push({t:'معرفی‌نامه بگیرید',d:'برای '+x.l.t+' اول از '+x.l.el.is+' معرفی‌نامه بگیرید؛ بدون آن بانک درخواست را قبول نمی‌کند.',lid:null}));
- const ap=L.slice().sort((p,q)=>(p.dep-q.dep)||(p.r.e.y-q.r.e.y));
+ const ap=L.slice().sort((p,q)=>(p.dep-q.dep)||(p.r.e.y-q.r.e.y)),M=ap.length>1,P=(x,s)=>(M?NB(x.l.b)+': ':'')+s,J=a=>a.map(s=>(M?'• ':'')+s).join('\n');
+ // 1. ask
+ const asks=ap.map(x=>{const u=UNK(x.l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2])).map(r=>r[2].replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرسید\.?$/,'').replace(/\.$/,'').replace(/وام دلخواه‌?تان|وام مورد ?نظرتان|مبلغ وامتان|وام دلخواه/g,'وام '+mil(x.share)+'ی'));return u.length?P(x,u.join('، ')+'.'):null;}).filter(Boolean);
+ if(asks.length)steps.push({t:'از بانک بپرسید',d:J(asks),lid:null});
+ // 2. deposit
+ const deps=ap.filter(x=>x.dep).map(x=>{const l=x.l,t=(l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);const mx=(l.rm||[]).map(r=>r[2]).join(' ').match(/([0-9۰-۹]+)\s*برابر/),dAmt=mx&&+en(mx[1])>0?Math.ceil(x.share/+en(mx[1])/5e6)*5e6:0;
+   return P(x,dAmt?'حدود '+mil(dAmt)+' تومان در حسابتان بگذارید؛ وام تا '+fa(+en(mx[1]))+' برابر همین مبلغ داده می‌شود.':/^مدت و مبلغ دقیق/.test(z)?'همان مبلغ و مدتی که بانک گفت، پول را در حسابتان نگه دارید.':C1(z)+'.');});
+ if(deps.length)steps.push({t:'پول را در حساب بگذارید',d:J(deps)+(deps.length&&ap.some(x=>!x.dep)?'\nدر این مدت بقیه کارها را جلو ببرید.':''),lid:null,when:ap.some(x=>!x.dep)?'هم‌زمان شروع کنید':''});
+ // 3. docs & guarantor
+ const docs=ap.map(x=>{const dg=[...new Set(condU(x.l).map(r=>condLbl(r,x.l)).filter(t=>/مدارک|فیش|گواهی|ضامن|چک صیادی|سفته|سند ملکی|وثیقه|جواز/.test(t)&&!/بدون/.test(t)))];return dg.length?P(x,dg.join('، ')+'.'):null;}).filter(Boolean);
+ if(docs.length)steps.push({t:'مدارک و ضامن را آماده کنید',d:J(docs)+(gMax===1&&L.filter(x=>needG(x.r)).length===1&&M?'\nضامنتان را برای '+NB(L.find(x=>needG(x.r)).l.b)+' نگه دارید.':''),lid:null});
+ // 4. apply, one step per loan
  ap.forEach((x,i)=>{const l=x.l,ln=[];
-  if(owned(l.b))ln.push('از حساب فعلی‌تان در '+NB(l.b)+' شروع کنید.');
+  if(owned(l.b))ln.push('از حساب فعلی‌تان در '+NB(l.b)+' درخواست بدهید.');
   else{const s=SEC(l,'شروع درخواست').filter(r=>!DEPRX.test(r[1]+' '+r[2]));if(s.length)ln.push(C1(s[0][2])+'.');}
-  if(x.dep){const t=(l.rq||[]).find(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]));const z=depTxt(l,t?t[0]:'میانگین حساب',t?t[1]:'',x.share);const mx=(l.rm||[]).map(r=>r[2]).join(' ').match(/([0-9۰-۹]+)\s*برابر/),dAmt=mx&&+en(mx[1])>0?Math.ceil(x.share/+en(mx[1])/5e6)*5e6:0;
-   ln.push(dAmt?'حدود '+mil(dAmt)+' تومان در حسابتان بگذارید؛ وام تا '+fa(+en(mx[1]))+' برابر همین مبلغ داده می‌شود.':/^مدت و مبلغ دقیق/.test(z)?'مدتی پول در حسابتان بماند؛ مبلغ و مدتش را از بانک بپرسید.':C1(z)+'.');}
-  const dg=[...new Set(condU(l).map(r=>condLbl(r,l)).filter(t=>/مدارک|فیش|گواهی|ضامن|چک صیادی|سفته|سند ملکی|وثیقه|جواز/.test(t)&&!/بدون/.test(t)))];
-  if(dg.length)ln.push('آماده کنید: '+dg.join('، ')+'.');
-  const uk=UNK(l).filter(r=>r[0]==='شروع درخواست'||DEPRX.test(r[1]+r[2])||/ضامن/.test(r[2])).map(r=>r[2].replace(/^اینکه\s*/,'').replace(/\s*را از (بانک|شعبه)[^.]*بپرسید\.?$/,'').replace(/\.$/,''));
-  if(uk.length&&!(x.dep&&uk.length===1&&/در حساب بماند|مبلغ و مدت/.test(uk[0])))ln.push('از بانک بپرسید: '+uk.join('، ')+'.');
-  ln.push('درخواست '+mil(x.share)+' تومان بدهید؛ قسطش حدود '+m5(x.inst)+' در '+fa(months(l))+' ماه'+(x.r.e.y===0?'، بدون سود':'')+'.');
+  ln.push(mil(x.share)+' تومان، قسط حدود '+m5(x.inst)+' در '+fa(months(l))+' ماه'+(x.r.e.y===0?'، بدون سود':'')+'.');
+  if(fastP&&x.dep)ln.push('وام سریعی که به این مبلغ برسد پیدا نشد؛ این وام سپرده می‌خواهد و کمی زمان می‌برد.');
   const when=i===0?'':(x.dep&&ap.slice(0,i).some(y=>!y.dep)?'بعد از دوره سپرده':'هم‌زمان با قبلی');
-  steps.push({t:(ap.length>1?'وام '+NB(l.b):'گرفتن وام از '+NB(l.b))+(ap.length>1?'، '+l.t.replace(/^وام\s*/,''):''),d:ln.map(s=>'• '+s).join('\n'),lid:l.i,dep:x.dep,par:!!when&&when.startsWith('هم'),when});});
+  steps.push({t:'درخواست '+l.t.replace(/^وام\s*/,'وام ')+(/^وام/.test(l.t)?'':'')+' '+(l.b.startsWith('بانک')?l.b:'از '+l.b),d:ln.join(' '),lid:l.i,dep:x.dep,when});});
  return {loans,total,inst,single,steps,banks:loans.length,bud:BUD,alt,gc:GC,capN:N,gap};}
 function rng(x,u=5e6){const lo=Math.max(u,Math.floor(x*.9/u)*u),hi=Math.ceil(x*1.1/u)*u;const f=v=>{const s=mil(v);return s};const a=mil(lo).replace(/ (میلیون|میلیارد)$/,''),un=mil(hi).match(/(میلیون|میلیارد)$/)[0];return lo>=hi?mil(hi):(mil(lo).endsWith(un)?a:mil(lo))+' تا '+mil(hi);}
 function amtLabel(){const a=S.ans[0];if(S.amt||a==null)return 'حدود '+mil(amount())+' تومان';const t=Q[0].o[a][0];return (t.startsWith('تا')||t.startsWith('بیشتر')?t:'بین '+t)+(t.includes('تومان')?'':' تومان');}
