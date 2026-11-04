@@ -660,12 +660,12 @@ function tu(s){return (s||'').replace(/شما/g,'تو').replace(/[^\s.،؛:()]+/
 function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD]/.test(S.score)&&haves().includes('guar')?.2:0)),N=Math.max(5e6,Math.round(amount()*GC/5e6)*5e6),pick=[],banks=new Set();
  const job=S.ans[5]!=null?Q[5].o[S.ans[5]][1]:null,sp=S.spec||[],OPEN={marr:['زوج','ازدواج'],child:['فرزندآوری'],isar:['ایثارگر','جانباز'],stu:['دانشجو'],aid:['مددجو','معلول','بهزیستی','کمیته امداد'],cult:['فرهنگیان','کارکنان','کادر']};
  const allow=new Set([].concat(...sp.map(k=>OPEN[k]||[]),job==='ret'?['بازنشست']:[]));
- const NICHE=new RegExp(['ویژه','کشاورز','هیئت علمی','بازنشست','فرهنگیان','کارکنان','اشتغال','ایثارگر','جانباز','دانشجو','طلاب','کارآفرینی','زوج','ازدواج','فرزندآوری','مسکن ملی','مددجو','معلول','بهزیستی','کمیته امداد','زنان سرپرست','اشخاص حقوقی','سازمان طرف قرارداد'].filter(w=>!allow.has(w)).join('|'));
+ const NICHE=new RegExp(['ویژه','کشاورز','هیئت علمی','بازنشست','فرهنگیان','کارکنان','اشتغال','ایثارگر','جانباز','دانشجو','طلاب','کارآفرینی','زوج','ازدواج','فرزندآوری','مسکن ملی','نیروگاه','خورشیدی','مددجو','معلول','بهزیستی','کمیته امداد','زنان سرپرست','اشخاص حقوقی','سازمان طرف قرارداد'].filter(w=>!allow.has(w)).join('|'));
  const SPRX=allow.size?new RegExp([...allow].join('|')):null,owned=b=>S.bk&&S.bk[b]!=null;
  const longWait=l=>{if(owned(l.b)&&S.bk[l.b]>=1)return false;const t=(l.rq||[]).filter(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0])).map(r=>r[1]).join(' ');const y=t.match(/([0-9۰-۹]+)\s*سال/),mo=t.match(/([0-9۰-۹]+)\s*ماه/);return (y&&+en(y[1])>=1)||(mo&&+en(mo[1])>12);};
  let pool=m.full.filter(r=>months(r.l)>=6&&!NICHE.test(r.l.t+' '+(r.l.rq||[]).filter(q=>q[3]!=='step').map(q=>q[2]).join(' ')+' '+(r.l.rm||[]).filter(q=>q[0]==='شروع درخواست').map(q=>q[2]).join(' '))&&r.l.b!=='بانک مرکزی'&&!longWait(r.l)&&(owned(r.l.b)||!((r.l.rq||[]).some(q=>/دریافت حقوق یا مستمری از همین بانک/.test(q[2]))||(r.l.rm||[]).some(q=>/حقوق یا مستمری را از/.test(q[2])))));
  if(!pool.length)pool=m.full.slice();
- const fastP=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';const needDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp);pool=pool.map((r,i)=>({r,i,w:(SPRX&&SPRX.test(r.l.t)?-2:0)+(fastP&&owned(r.l.b)?-1:0)+(fastP&&needDep(r.l)?5:0)})).sort((a,b)=>a.w-b.w||a.i-b.i).map(x=>x.r);
+ const fastP=S.ans[3]!=null&&Q[3].o[S.ans[3]][1]==='fast';const needDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&/در حساب بماند|میانگین|موجودی|سپرده/.test(r[2])));pool=pool.map((r,i)=>({r,i,w:(SPRX&&SPRX.test(r.l.t)?-2:0)+(fastP&&owned(r.l.b)?-1:0)+(fastP&&needDep(r.l)?5:0)})).sort((a,b)=>a.w-b.w||a.i-b.i).map(x=>x.r);
  const K=S.cap||3;
  if(K===1){const big=pool.filter(r=>(r.l.mx??Infinity)>=N);if(big.length)pool=big;}
  const a4=S.ans[4],BUD=a4!=null&&Q[4].o[a4][1]?Q[4].o[a4][1]*1e6:Infinity;
@@ -685,7 +685,7 @@ function plan(m){const GC=Math.min(1,(GRADE_CAP(S.score)||.2)+(S.guarN>=2&&/^[CD
  const total=loans.reduce((a,x)=>a+x.share,0),inst=loans.reduce((a,x)=>a+x.inst,0);
  const single=m.full[0]?pmt(Math.min(N,m.full[0].l.mx??N),23,48):inst;
  const NB=b=>b.replace(/^بانک /,''),S1=s=>(s||'').split(/(?<=[.؛])\s/)[0].replace(/[.؛]\s*$/,''),SEC=(l,s)=>(l.rm||[]).filter(r=>r[0]===s&&r[3]),UNK=l=>(l.rm||[]).filter(r=>!r[3]);
- const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع|گردش حساب|پول.{0,20}حساب|در حساب بماند/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&DEPRX.test(r[1])));
+ const DEPRX=/میانگین|سپرده|بلوکه|مسدود|موجودی|تودیع|گردش حساب|پول.{0,20}حساب|در حساب بماند/,isDep=l=>!(owned(l.b)&&S.bk[l.b]>=1)&&((l.rq||[]).some(r=>['میانگین حساب','میانگین موجودی','مسدودی سپرده','مدت انتظار'].includes(r[0]))||!!l.dp||(l.rm||[]).some(r=>r[0]==='شروع درخواست'&&(DEPRX.test(r[1])||/در حساب بماند|میانگین|موجودی|سپرده/.test(r[2]))));
  const L=loans.map(x=>({...x,l:x.r.l,dep:isDep(x.r.l)}));
  const steps=[],lo=amtLow(),gap=Math.max(0,lo-total);
  // 1. goal
