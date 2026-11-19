@@ -793,14 +793,14 @@ function IndustryPie({ rows }) {
                 <div className="flex items-center gap-2">
                   <i className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: color(sl, i) }} />
                   <span className="min-w-0 flex-1 leading-5">{sl.k}{sl.k === 'سایر' && <span className="text-muted"> ({fa(rest.length)} صنعت) {openRest ? '▴' : '▾'}</span>}</span>
-                  <b className="num shrink-0">{fa(sl.pct, 1)}٪</b>
+                  <b className="num w-12 shrink-0 text-left tabular-nums">{fa(sl.pct, 1)}٪</b>
                 </div>
                 <div className="mr-4.5 mt-1 h-1 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${sl.pct}%` }} transition={{ duration: .6, delay: i * .05 }} className="h-full rounded-full" style={{ background: color(sl, i) }} /></div>
               </button>
               <AnimatePresence initial={false}>{sl.k === 'سایر' && openRest && (
                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                  <div className="mr-6 space-y-1 border-r border-line py-1 pr-3 text-[11px]">
-                    {rest.map((x) => <div key={x.k} className="num flex justify-between gap-2"><span className="text-muted">{x.k}</span><span>{fa(x.pct, 1)}٪</span></div>)}
+                  <div className="mr-6 space-y-1 border-r border-line py-1 pl-2 pr-3 text-[11px]">
+                    {rest.map((x) => <div key={x.k} className="num flex items-center gap-2"><span className="min-w-0 flex-1 text-muted">{x.k}</span><span className="w-12 shrink-0 text-left tabular-nums">{fa(x.pct, 1)}٪</span></div>)}
                   </div>
                 </motion.div>
               )}</AnimatePresence>
