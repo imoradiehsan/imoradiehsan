@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart, { makeBars } from './TVChart'
+import { useSort, SortHead } from './sort'
 import SRChart from './SRChart'
 import RealPower from './RealPower'
 import { Intraday, RealLegal, Returns, Compare, Poll, Marquee } from './OverviewExtra'
@@ -462,11 +463,11 @@ function Drawer({ k, close, sym, d, openSym }) {
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
             {k !== 'holders' && k !== 'big' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
-            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' || k === 'big' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
+            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' || k === 'big' || k === 'history' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} openSym={openSym} />}
               {k === 'holders' && <Holders sym={sym} close={close} openSym={openSym} />}
               {k === 'big' && <HolderHistory sym={sym} close={close} openSym={openSym} />}
-              {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
+              {k === 'history' && <TradeHistory sym={sym} />}
               {k === 'real' && <RealPower sym={sym} />}
               {k === 'details' && <SymbolFlags sym={sym} />}
               {k === 'strategy' && ['کاورد کال روی ' + sym.s, 'خرید پله‌ای در نواحی حمایتی', 'معامله شکست مقاومت ۱'].map((t, i) => <div key={t} className="rounded-xl bg-surface2/40 p-3"><b>{t}</b><div className="mt-1 text-xs text-muted">ریسک: {['کم', 'متوسط', 'زیاد'][i]} · افق: {['۱ ماه', '۳ ماه', '۲ هفته'][i]}</div></div>)}
@@ -568,6 +569,7 @@ function Peers({ sym, openSym }) {
     const v = (x) => x[by] ?? -Infinity
     return peerRows(sym).sort((a, b) => (dir === 'desc' ? v(b) - v(a) : v(a) - v(b)))
   }, [sym, by, dir])
+  const [list, st, toggle] = useSort(rows, { s: (x) => x.s, p: (x) => x.chg, vol: (x) => x.vol, eps: (x) => x.eps, pe: (x) => x.pe, mc: (x) => x.mc, r: (x) => x.r1m })
   const pct = (v, cls = true) => <span className={`num ${cls ? (v >= 0 ? 'text-up' : 'text-down') : ''}`} dir="ltr">{v >= 0 ? '' : '−'}{fa(Math.abs(v), 2)}٪</span>
   const two = (a, b) => <div className="leading-5"><div>{a}</div><div className="text-muted">{b}</div></div>
   return (
@@ -581,13 +583,18 @@ function Peers({ sym, openSym }) {
         <table className="num w-full min-w-[500px] text-[11px]">
           <thead className="sticky top-0 z-10 bg-surface2/90 text-muted backdrop-blur">
             <tr className="text-center">
-              <th className="px-3 py-2.5 text-right font-normal">نماد</th><th className="font-normal">قیمت</th><th className="font-normal">{two('حجم', 'م. حجم')}</th>
-              <th className="font-normal">EPS</th><th className="font-normal">{two('P/E', 'P/S')}</th><th className="font-normal">ارزش بازار</th><th className="font-normal">{two('بازده ۱ ماهه', 'بازده ۱ ساله')}</th>
+              <th className="px-3 py-2.5 font-normal"><SortHead label="نماد" k="s" s={st} toggle={toggle} align="start" /></th>
+              <th className="font-normal"><SortHead label="قیمت" k="p" s={st} toggle={toggle} /></th>
+              <th className="font-normal"><SortHead label={two('حجم', 'م. حجم')} k="vol" s={st} toggle={toggle} /></th>
+              <th className="font-normal"><SortHead label="EPS" k="eps" s={st} toggle={toggle} /></th>
+              <th className="font-normal"><SortHead label={two('P/E', 'P/S')} k="pe" s={st} toggle={toggle} /></th>
+              <th className="font-normal"><SortHead label="ارزش بازار" k="mc" s={st} toggle={toggle} /></th>
+              <th className="font-normal"><SortHead label={two('بازده ۱ ماهه', 'بازده ۱ ساله')} k="r" s={st} toggle={toggle} /></th>
             </tr>
           </thead>
           <tbody>
             <AnimatePresence initial={false}>
-              {rows.map((x, i) => (
+              {list.map((x, i) => (
                 <motion.tr key={x.s} onClick={() => openSym(x.s)} layout transition={{ type: 'spring', stiffness: 400, damping: 36 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   className="cursor-pointer border-b border-line/50 text-center transition-colors hover:bg-surface2/40">
                   <td className="px-3 py-2.5 text-right"><div className="flex items-center gap-2"><i className={`h-2.5 w-2.5 rounded-sm ${x.chg >= 0 ? 'bg-up' : 'bg-down'}`} /><div><b className="text-sm">{x.s}</b><div className="text-[10px] text-muted">({x.mkt})</div></div></div></td>
@@ -760,6 +767,7 @@ function holderPortfolio(h, sym) {
 // donut + linked legend: hovering a row highlights its slice (and vice versa); "سایر" expands to its parts
 function IndustryPie({ rows }) {
   const total = rows.reduce((a, r) => a + r.v, 0)
+  const [prows, pst, ptog] = useSort(rows, { c: (r) => r.c, p: (r) => r.p, v: (r) => r.v, q: (r) => r.q })
   const by = Object.entries(rows.reduce((m, r) => ((m[r.ind] = (m[r.ind] || 0) + r.v), m), {})).map(([k, v]) => ({ k, v, pct: v / total * 100 })).sort((a, b) => b.pct - a.pct)
   const main = by.filter((x) => x.pct >= 10), rest = by.filter((x) => x.pct < 10)
   const slices = rest.length ? [...main, { k: 'سایر', v: rest.reduce((a, x) => a + x.v, 0), pct: rest.reduce((a, x) => a + x.pct, 0) }] : main
@@ -859,8 +867,11 @@ function HolderPage({ h, sym, hist, setHist, openSym }) {
                 <div>
                   {/* one flat list: hairline dividers instead of a box per row; ownership shown as a bar */}
                   <div className="overflow-hidden rounded-2xl border border-line">
-                    <div className="grid grid-cols-[1fr_78px_70px] gap-2 bg-surface2/50 px-4 py-2 text-[11px] text-muted"><span className="flex justify-between gap-2"><span>نماد</span><span>درصد مالکیت</span></span><span className="text-left">ارزش</span><span className="text-left">حجم</span></div>
-                    {rows.map((r, i) => {
+                    <div className="grid grid-cols-[1fr_78px_70px] gap-2 bg-surface2/50 px-4 py-2 text-[11px] text-muted">
+                      <span className="flex justify-between gap-2"><span><SortHead label="نماد" k="c" s={pst} toggle={ptog} align="start" /></span><span><SortHead label="درصد مالکیت" k="p" s={pst} toggle={ptog} align="end" /></span></span>
+                      <SortHead label="ارزش" k="v" s={pst} toggle={ptog} align="end" /><SortHead label="حجم" k="q" s={pst} toggle={ptog} align="end" />
+                    </div>
+                    {prows.map((r, i) => {
                       const maxP = Math.max(...rows.map((x) => x.p))
                       return (
                         <motion.div key={r.c} role="button" tabIndex={0} onClick={() => openSym(r.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(r.c)}
@@ -899,6 +910,7 @@ function Holders({ sym, close, openSym }) {
   const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
   const [sel, setSel] = useState(null)
   const [hist, setHist] = useState(false)
+  const [hlist, hst, htog] = useSort(list, { n: (h) => h.n, v: (h) => h.v, p: (h) => h.p })
   const back = () => (hist ? setHist(false) : setSel(null))
   const title = sel == null ? `سهامداران عمده ${sym.s}` : hist ? `سابقه معاملات ${list[sel].n}` : 'سهامدار عمده'
   return (
@@ -928,10 +940,10 @@ function Holders({ sym, close, openSym }) {
               <span className="text-muted">سهام شناور: <b className="text-ink">{fa(float, 2)}٪</b></span>
             </div>
             <div className="scroll-y min-h-0 flex-1 p-4">
-              <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><span>نام سهامدار</span><span className="text-center">حجم</span><span className="text-left">درصد</span></div>
+              <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><SortHead label="نام سهامدار" k="n" s={hst} toggle={htog} align="start" /><SortHead label="حجم" k="v" s={hst} toggle={htog} /><SortHead label="درصد" k="p" s={hst} toggle={htog} align="end" /></div>
               <div className="space-y-2">
-                {list.map((h, i) => (
-                  <motion.button key={h.n} onClick={() => { setHist(false); setSel(i) }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} whileTap={{ scale: .98 }}
+                {hlist.map((h, i) => (
+                  <motion.button key={h.n} onClick={() => { setHist(false); setSel(list.indexOf(h)) }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} whileTap={{ scale: .98 }}
                     className="grid w-full grid-cols-[1fr_80px_64px] items-center gap-2 rounded-2xl border border-line bg-surface2/25 px-3 py-3 text-right text-sm transition-colors hover:border-brand/40">
                     <span className="min-w-0 font-medium text-brand-light"><Marquee>{h.n}</Marquee></span>
                     <span className="num text-center text-xs" dir="ltr">{bigN(h.v)}</span>
@@ -1184,6 +1196,38 @@ function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
             </div>}
           </motion.div>) })()}</AnimatePresence>
       </div>
+    </div>
+  )
+}
+
+/* ---------- سابقه معاملات (روزانه) ---------- */
+function TradeHistory({ sym }) {
+  const rows = useMemo(() => {
+    const b = makeBars(sym, 86400).slice(-31)
+    return b.slice(1).map((x, i) => {
+      const prev = b[i].close, last = x.close * (1 + ((x.volume % 7) - 3) / 400)
+      return { t: x.time, v: x.volume, last, lastP: (last - prev) / prev * 100, close: x.close, closeP: (x.close - prev) / prev * 100 }
+    }).reverse()
+  }, [sym])
+  const [list, st, toggle] = useSort(rows, { t: (r) => r.t, v: (r) => r.v, last: (r) => r.last, close: (r) => r.close })
+  const pct = (v) => <span className={`text-[10px] ${v >= 0 ? 'text-up' : 'text-down'}`} dir="ltr">({v >= 0 ? '+' : '−'}{fa(Math.abs(v), 2)}٪)</span>
+  return (
+    <div className="scroll-y h-full">
+      <table className="num w-full text-xs">
+        <thead className="sticky top-0 z-10 bg-surface2 text-muted">
+          <tr>{[['t', 'تاریخ'], ['v', 'حجم'], ['last', 'آخرین'], ['close', 'پایانی']].map(([k, l]) => <th key={k} className="px-3 py-2.5 font-normal"><SortHead label={l} k={k} s={st} toggle={toggle} /></th>)}</tr>
+        </thead>
+        <tbody>
+          {list.map((r) => (
+            <motion.tr layout key={r.t} transition={{ type: 'spring', stiffness: 500, damping: 40 }} className="border-b border-line/50 text-center even:bg-surface2/30">
+              <td className="px-3 py-2.5 text-muted">{new Date(r.t * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</td>
+              <td dir="ltr">{fa(r.v)}</td>
+              <td><span className="flex items-center justify-center gap-1.5">{fa(Math.round(r.last))}{pct(r.lastP)}</span></td>
+              <td><span className="flex items-center justify-center gap-1.5"><b>{fa(Math.round(r.close))}</b>{pct(r.closeP)}</span></td>
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }

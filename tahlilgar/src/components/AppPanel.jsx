@@ -4,6 +4,7 @@ import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts'
 import { Search, Notification, Category, Chart, Wallet, Plus, Delete } from 'react-iconly'
 import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
+import { useSort, SortHead } from './sort'
 import { Marquee } from './OverviewExtra'
 
 const TABS = [
@@ -99,14 +100,15 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
 
 function Watch({ sym, setSym, open }) {
   const [q, setQ] = useState('')
-  const list = SYMBOLS.filter((x) => x.s.includes(q) || x.n.includes(q))
+  const found = SYMBOLS.filter((x) => x.s.includes(q) || x.n.includes(q))
+  const [list, st, toggle] = useSort(found, { s: (x) => x.s, p: (x) => x.p, c: (x) => x.c })
   return (
     <>
       <label className="mb-2 flex items-center gap-2 rounded-xl border border-line/70 bg-surface2/50 px-3 py-2 focus-within:border-brand/60">
         <Search set="light" size={18} primaryColor="currentColor" />
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="جستجوی نماد..." className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted" />
       </label>
-      <div className="mb-2 flex justify-between px-2 text-xs text-muted"><span>نماد</span><span>قیمت / تغییر</span></div>
+      <div className="mb-2 flex justify-between px-2 text-xs text-muted"><span><SortHead label="نماد" k="s" s={st} toggle={toggle} align="start" /></span><span className="flex gap-3"><SortHead label="قیمت" k="p" s={st} toggle={toggle} /><SortHead label="تغییر" k="c" s={st} toggle={toggle} /></span></div>
       <div className="space-y-1.5">
         {list.map((x) => (
           <motion.button key={x.s} onClick={() => setSym(x)} whileTap={{ scale: .98 }}
