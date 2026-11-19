@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
-import TVChart from './TVChart'
+import TVChart, { makeBars } from './TVChart'
 import SRChart from './SRChart'
 import RealPower from './RealPower'
 import { Intraday, RealLegal, Returns, Compare, Poll, Marquee } from './OverviewExtra'
@@ -18,7 +18,7 @@ const MENUS = [
 const TABS = ['نمای کلی', 'چارت', 'اخبار و اطلاعیه‌ها', 'حمایت/مقاومت', 'نظرات و تحلیل‌ها', 'تکنیکال']
 const LINKS = [
   ['peers', 'هم‌گروه‌ها', TwoUsers], ['strategy', 'استراتژی', Discovery], ['option', 'آپشن', Category], ['details', 'جزئیات نماد', InfoCircle],
-  ['real', 'قدرت حقیقی', Graph], ['history', 'سابقه معاملات', TimeCircle], ['big', 'عمده‌ها', People], ['holders', 'سهامداران', Work],
+  ['real', 'قدرت حقیقی', Graph], ['history', 'سابقه معاملات', TimeCircle], ['big', 'سابقه سهامداران', People], ['holders', 'سهامداران', Work],
 ]
 const ico = (I, s = 18) => <I set="light" size={s} primaryColor="currentColor" />
 
@@ -461,11 +461,11 @@ function Drawer({ k, close, sym, d, openSym }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
-            {k !== 'holders' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
-            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
+            {k !== 'holders' && k !== 'big' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
+            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' || k === 'big' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} openSym={openSym} />}
               {k === 'holders' && <Holders sym={sym} close={close} openSym={openSym} />}
-              {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
+              {k === 'big' && <HolderHistory sym={sym} close={close} openSym={openSym} />}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
               {k === 'real' && <RealPower sym={sym} />}
               {k === 'details' && <SymbolFlags sym={sym} />}
@@ -550,7 +550,7 @@ function Dropdown({ value, options, onChange }) {
       </button>
       <AnimatePresence>{open && (
         <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }}
-          className="absolute right-0 top-10 z-30 w-44 rounded-xl border border-line bg-surface p-1 shadow-2xl">
+          className="absolute right-0 top-10 z-30 max-h-64 w-full min-w-[11rem] overflow-y-auto rounded-xl border border-line bg-surface p-1 shadow-2xl">
           {options.map(([k, t]) => (
             <button key={String(k)} onClick={() => { onChange(k); setOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-right text-sm hover:bg-surface2 ${k === value ? 'text-brand-light' : ''}`}>
               {t}{k === value && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="m5 12 5 5 9-10" /></svg>}
@@ -608,7 +608,7 @@ function Peers({ sym, openSym }) {
 }
 
 /* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
-function Modal({ open, title, onClose, children, closeText = 'بستن' }) {
+function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false }) {
   useEffect(() => {
     if (!open) return
     const k = (e) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
@@ -620,10 +620,10 @@ function Modal({ open, title, onClose, children, closeText = 'بستن' }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
           <motion.div role="dialog" aria-modal="true" aria-label={title} initial={{ y: 60, opacity: 0, scale: .97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, scale: .97 }} transition={{ type: 'spring', stiffness: 360, damping: 32 }}
             className="relative m-3 flex max-h-[90vh] w-full max-w-xl flex-col gap-3">
-            <div className="flex min-h-0 flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl">
+            <div className={`flex min-h-0 flex-col rounded-3xl border border-line bg-surface shadow-2xl ${visible ? '' : 'overflow-hidden'}`}>
               <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
               <h3 className="px-5 pb-3 pt-4 text-center font-bold">{title}</h3>
-              <div className="scroll-y min-h-0 px-4 pb-4">{children}</div>
+              <div className={`min-h-0 px-4 pb-4 ${visible ? '' : 'scroll-y'}`}>{children}</div>
             </div>
             <motion.button whileTap={{ scale: .97 }} onClick={onClose} className="rounded-3xl border border-line bg-surface py-3.5 font-semibold shadow-2xl hover:border-brand/40">{closeText}</motion.button>
           </motion.div>
@@ -847,40 +847,7 @@ function HolderPage({ h, sym, hist, setHist, openSym }) {
         <motion.div key={hist ? 'h' : 'p'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
           {hist ? (
             <div className="space-y-2">
-              {trades.length ? trades.map((t, i) => {
-                const up = t.dP >= 0, col = up ? 'text-up' : 'text-down'
-                return (
-                  <motion.div key={i} role="button" tabIndex={0} onClick={() => openSym(t.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(t.c)} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num cursor-pointer space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs transition-colors hover:border-brand/50">
-                    <div className="flex items-center justify-between">
-                      <b className="text-sm text-brand-light">{t.c}</b>
-                      <span className="flex items-center gap-2">
-                        {t.tag && <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${t.tag === 'خروج کامل' ? 'bg-down/15 text-down' : 'bg-up/15 text-up'}`}>{t.tag}</span>}
-                        <span className="text-muted">{t.d}</span>
-                      </span>
-                    </div>
-                    {/* before → change → after: each value sits under its own label */}
-                    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-1.5 text-center">
-                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
-                        <div className="text-[10px] text-muted">حجم قدیم</div>
-                        <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.oldV)}</b>
-                        <div className="text-[10px] text-muted" dir="ltr">{fa(t.oldP, 3)}٪</div>
-                      </div>
-                      <span className="self-center text-muted">←</span>
-                      <div className={`rounded-xl px-2 py-2 ${up ? 'bg-up/10' : 'bg-down/10'}`}>
-                        <div className="text-[10px] text-muted">{up ? 'حجم خرید' : 'حجم فروش'}</div>
-                        <b className={`mt-0.5 block text-[13px] ${col}`} dir="ltr">{up ? '+' : '−'}{bigN(Math.abs(t.newV - t.oldV))}</b>
-                        <div className={`text-[10px] ${col}`} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</div>
-                      </div>
-                      <span className="self-center text-muted">←</span>
-                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
-                        <div className="text-[10px] text-muted">حجم جدید</div>
-                        <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.newV)}</b>
-                        <div className="text-[10px] text-muted" dir="ltr">{fa(t.newP, 3)}٪</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              }) : <Empty text="معامله‌ای برای این سهامدار ثبت نشده است." />}
+              {trades.length ? trades.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.c} onClick={() => openSym(t.c)} />) : <Empty text="معامله‌ای برای این سهامدار ثبت نشده است." />}
             </div>
           ) : (
             <>
@@ -964,12 +931,17 @@ function Holders({ sym, close, openSym }) {
   )
 }
 
-function HoldersHelp() {
-  const [open, setOpen] = useState(false), [acc, setAcc] = useState(0)
-  const items = [
+const HOLDERS_HELP = [
     ['این بخش چه اطلاعاتی را در اختیار ما می‌گذارد؟', 'در این صفحه لیست تمامی سهامداران عمده حقیقی و حقوقی نماد نمایش داده می‌شود. در کنار نام هر سهامدار عمده، تعداد و درصد سهام وی نسبت به تعداد و درصد کل سهام آن نماد نوشته شده است. همچنین مجموع سهام سهامداران عمده و سهام شناور (درصد سهامی که در اختیار معامله‌گران خرد است) قابل مشاهده است. درصد سهام شناور در این صفحه ممکن است با اطلاعات اعلام‌شده از طرف سازمان بورس متفاوت باشد؛ چرا که محاسبات این صفحه دقیق‌تر و به‌روزتر است.'],
     ['این بخش شامل چه امکاناتی می‌باشد؟', 'سهامداران عمده ممکن است در سایر شرکت‌ها نیز سهامدار باشند؛ با انتخاب هرکدام از این سهامداران عمده، می‌توانید سایر مالکیت‌های این سهامدار را نیز مشاهده کنید.'],
-  ]
+]
+const HISTORY_HELP = [
+  ['چرا سهامداران عمده اقدام به خرید و فروش سهام می‌کنند؟', 'انگیزه سهامداران عمده از خرید و فروش سهام شامل مواردی همچون داشتن حق رأی در تصمیم‌گیری‌های شرکت و افزایش قدرت مالکیت، ایجاد تعادل بین عرضه و تقاضا، حمایت از سهم، کسب سود و ... می‌باشد.'],
+  ['انگیزه اصلی معاملات سهامداران عمده را چگونه تشخیص دهیم؟', 'با بررسی روند معاملات هر سهامدار عمده بر روی نمودار می‌توانید به اهداف وی پی ببرید. اگر سهامدار عمده در قله اقدام به فروش و در کف اقدام به خرید نماید هدف وی کسب سود است، لذا بهتر است رفتار آن سهامدار عمده را زیر نظر گرفته و مطابق با آن اقدام به معامله کنیم.'],
+  ['این بخش شامل چه امکاناتی می‌باشد؟', 'برای حذف معاملات کم‌ارزش با حجم پایین می‌توانید از تنظیمات فیلتر استفاده کنید. همچنین در صورتی که قصد بررسی تحرکات سهامدار خاصی را داشته باشید می‌توانید از این گزینه استفاده کنید.\nنمایش نمودار این امکان را در اختیار ما قرار می‌دهد تا واکنش قیمت سهام به رفتار سهامدار عمده را شناسایی کنیم. در صورتی که روند ثابتی مشاهده شد می‌توان از آن برای نوسان‌گیری بهره برد.\nاین نکته را در نظر داشته باشید که اگر لیست سابقه سهامداران نماد را فیلتربندی کنید، نمودار نیز بر اساس پارامترهای فیلتر شما تنظیم می‌شود.'],
+]
+function HoldersHelp({ items = HOLDERS_HELP }) {
+  const [open, setOpen] = useState(false), [acc, setAcc] = useState(0)
   return (
     <>
       <button onClick={() => setOpen(true)} title="راهنما" className="btn-icon !rounded-full"><span className="text-sm font-bold">?</span></button>
@@ -981,12 +953,146 @@ function HoldersHelp() {
                 {q}<motion.svg animate={{ rotate: acc === i ? 180 : 0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
               </button>
               <AnimatePresence initial={false}>{acc === i && (
-                <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-4 pb-3 text-sm leading-7 text-muted">{a}</motion.p>
+                <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="whitespace-pre-line px-4 pb-3 text-sm leading-7 text-muted">{a}</motion.p>
               )}</AnimatePresence>
             </div>
           ))}
         </div>
       </Modal>
     </>
+  )
+}
+
+// one ownership change: old volume → traded volume → new volume, with exit/entry badge
+function TradeCard({ t, title, onClick, i = 0 }) {
+  const up = t.dP >= 0, col = up ? 'text-up' : 'text-down'
+  return (
+                  <motion.div role="button" tabIndex={0} onClick={onClick} onKeyDown={(e) => e.key === 'Enter' && onClick?.()} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num cursor-pointer space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs transition-colors hover:border-brand/50">
+                    <div className="flex items-center justify-between">
+                      <b className="min-w-0 text-sm text-brand-light"><Marquee>{title}</Marquee></b>
+                      <span className="flex items-center gap-2">
+                        {t.tag && <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${t.tag === 'خروج کامل' ? 'bg-down/15 text-down' : 'bg-up/15 text-up'}`}>{t.tag}</span>}
+                        <span className="text-muted">{t.d}</span>
+                      </span>
+                    </div>
+                    {/* before → change → after: each value sits under its own label */}
+                    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-1.5 text-center">
+                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
+                        <div className="text-[10px] text-muted">حجم قدیم</div>
+                        <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.oldV)}</b>
+                        <div className="text-[10px] text-muted" dir="ltr">{fa(t.oldP, 3)}٪</div>
+                      </div>
+                      <span className="self-center text-muted">←</span>
+                      <div className={`rounded-xl px-2 py-2 ${up ? 'bg-up/10' : 'bg-down/10'}`}>
+                        <div className="text-[10px] text-muted">{up ? 'حجم خرید' : 'حجم فروش'}</div>
+                        <b className={`mt-0.5 block text-[13px] ${col}`} dir="ltr">{up ? '+' : '−'}{bigN(Math.abs(t.newV - t.oldV))}</b>
+                        <div className={`text-[10px] ${col}`} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</div>
+                      </div>
+                      <span className="self-center text-muted">←</span>
+                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
+                        <div className="text-[10px] text-muted">حجم جدید</div>
+                        <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.newV)}</b>
+                        <div className="text-[10px] text-muted" dir="ltr">{fa(t.newP, 3)}٪</div>
+                      </div>
+                    </div>
+                  </motion.div>
+  )
+}
+
+/* ---------- سابقه سهامداران عمده نماد ---------- */
+function historyData(sym) {
+  let x = [...sym.s].reduce((a, c) => a * 41 + c.charCodeAt(0), 13) % 2147483647
+  const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+  const names = HOLDER_NAMES
+  return Array.from({ length: 14 }, (_, i) => {
+    const kind = r(), oldP = kind < .2 ? 0 : +(r() * 40 + .5).toFixed(3)
+    const newP = kind > .82 ? 0 : kind < .2 ? +(r() * 3 + .3).toFixed(3) : +Math.max(.01, oldP + (r() - .5) * 2.5).toFixed(3)
+    const per = 5e7
+    return { name: names[Math.floor(r() * names.length)], oldP, newP, dP: newP - oldP, oldV: oldP * per, newV: newP * per, day: i * 2 + Math.floor(r() * 2),
+      d: `۱۴۰۵/۰۸/${fa(Math.max(1, 27 - i * 2)).padStart(2, '۰')}`, tag: newP === 0 ? 'خروج کامل' : oldP === 0 ? 'ورود جدید' : null }
+  })
+}
+
+function HolderHistory({ sym, close, openSym }) {
+  const all = useMemo(() => historyData(sym), [sym])
+  const [chart, setChart] = useState(false)
+  const [sheet, setSheet] = useState(false)
+  const [f, setF] = useState({ name: 'all', pct: 'all', type: 'all' })
+  const [draft, setDraft] = useState(f)
+  const maxAbs = Math.max(...all.map((t) => Math.abs(t.dP)))
+  const steps = [1, .66, .5, .33, 0].map((k) => +(maxAbs * k).toFixed(2))
+  const list = all.filter((t) => (f.name === 'all' || t.name === f.name) && (f.pct === 'all' || Math.abs(t.dP) >= +f.pct) &&
+    (f.type === 'all' || (f.type === 'chg' ? !t.tag : t.tag === f.type)))
+  const active = Object.values(f).filter((v) => v !== 'all').length
+  const title = chart ? `نمودار سابقه سهامداران ${sym.s}` : `سابقه سهامداران ${sym.s}`
+  return (
+    <div className="flex h-full flex-col overflow-hidden">
+      <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-3">
+        <AnimatePresence initial={false}>{chart && (
+          <motion.button key="back" onClick={() => setChart(false)} title="بازگشت" initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 36 }} exit={{ opacity: 0, width: 0 }} className="grid h-9 shrink-0 place-items-center overflow-hidden rounded-xl hover:bg-surface2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </motion.button>
+        )}</AnimatePresence>
+        <b className="min-w-0 flex-1"><Marquee>{title}</Marquee></b>
+        <HoldersHelp items={HISTORY_HELP} />
+        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
+      </div>
+      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
+        <button onClick={() => { setDraft(f); setSheet(true) }} className={`btn ${active ? 'btn-on' : ''}`}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
+          {active ? `فیلتر شده (${fa(active)} مورد)` : 'تنظیمات فیلتر'}
+        </button>
+        {!chart && <button onClick={() => setChart(true)} className="btn btn-on">نمایش سابقه روی نمودار <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
+      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={chart ? 'c' : 'l'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
+          {chart ? <HistoryChart sym={sym} trades={list} /> : list.length
+            ? <div className="space-y-2">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} />)}</div>
+            : <Empty text="با این فیلترها معامله‌ای پیدا نشد." />}
+        </motion.div>
+      </AnimatePresence>
+      <Modal open={sheet} visible title="فیلتر سهامداران عمده" onClose={() => { setF(draft); setSheet(false) }} closeText="تایید">
+        <div className="space-y-3 pb-2 text-sm">
+          {[['name', 'نام', [['all', 'همه'], ...[...new Set(all.map((t) => t.name))].map((n) => [n, n])]],
+            ['pct', 'درصد معامله', [['all', 'همه'], ...steps.map((v) => [String(v), `بزرگتر از ${fa(v, 2)}٪`])]],
+            ['type', 'نوع تغییر', [['all', 'همه'], ['ورود جدید', 'ورود جدید'], ['خروج کامل', 'خروج کامل'], ['chg', 'افزایش یا کاهش درصد']]]].map(([k, label, opts]) => (
+            <div key={k} className="flex items-center gap-3">
+              <span className="w-24 shrink-0 text-muted">{label}:</span>
+              <div className="min-w-0 flex-1 [&_.btn]:w-full [&>div>div]:w-full"><Dropdown value={draft[k]} options={opts} onChange={(v) => setDraft({ ...draft, [k]: v })} /></div>
+            </div>
+          ))}
+          {Object.values(draft).some((v) => v !== 'all') && <button onClick={() => setDraft({ name: 'all', pct: 'all', type: 'all' })} className="text-xs text-brand-light hover:underline">پاک کردن فیلترها</button>}
+        </div>
+      </Modal>
+    </div>
+  )
+}
+
+// price line with buy (▲) / sell (▼) markers on the days each filtered holder traded
+function HistoryChart({ sym, trades }) {
+  const bars = useMemo(() => makeBars(sym, 86400).slice(-32), [sym])
+  const [hover, setHover] = useState(null)
+  const W = 460, H = 260, pl = 8, pr = 52, pt = 14, pb = 26
+  const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high))
+  const X = (i) => pl + (bars.length - 1 - i) / (bars.length - 1) * (W - pl - pr), Y = (v) => pt + (1 - (v - lo) / (hi - lo)) * (H - pt - pb)
+  const idx = (t) => Math.min(bars.length - 1, Math.max(0, bars.length - 1 - t.day))
+  const line = bars.map((b, i) => `${i ? 'L' : 'M'}${X(bars.length - 1 - i)},${Y(b.close)}`).join('')
+  return (
+    <div>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ direction: 'ltr' }}>
+        {[0, .25, .5, .75, 1].map((k) => { const v = lo + (hi - lo) * k; return <g key={k}><line x1={pl} x2={W - pr} y1={Y(v)} y2={Y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={W - pr + 6} y={Y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{fa(Math.round(v))}</text></g> })}
+        <motion.path d={line} fill="none" stroke="#3C7CFF" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
+        {trades.map((t, k) => { const i = idx(t), b = bars[i], up = t.dP >= 0, x = X(bars.length - 1 - i), y = up ? Y(b.low) + 12 : Y(b.high) - 12
+          return <g key={k} onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} className="cursor-pointer">
+            <motion.path initial={{ scale: 0 }} animate={{ scale: hover === k ? 1.4 : 1 }} style={{ originX: `${x}px`, originY: `${y}px` }} d={up ? `M${x},${y - 7} L${x + 6},${y + 4} L${x - 6},${y + 4} Z` : `M${x},${y + 7} L${x + 6},${y - 4} L${x - 6},${y - 4} Z`} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} />
+          </g> })}
+        {[0, 8, 16, 24, 31].map((i) => <text key={i} x={X(bars.length - 1 - i)} y={H - 8} fontSize="10" textAnchor="middle" fill="rgb(var(--muted))">{new Date(bars[i].time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { month: '2-digit', day: '2-digit' })}</text>)}
+      </svg>
+      <div className="mt-2 min-h-[64px] rounded-xl bg-surface2/50 p-3 text-xs">
+        {hover == null ? <span className="text-muted">برای دیدن جزئیات، ماوس را روی علامت‌های ▲ خرید و ▼ فروش ببرید. ({fa(trades.length)} معامله)</span> : (() => { const t = trades[hover], up = t.dP >= 0; return (
+          <div className="num space-y-1"><div className="flex justify-between"><b className="text-brand-light">{t.name}</b><span className="text-muted">{t.d}</span></div>
+            <div className="flex justify-between"><span>{up ? 'خرید' : 'فروش'} <b className={up ? 'text-up' : 'text-down'} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</b></span><span className="text-muted">{fa(t.oldP, 3)}٪ ← {fa(t.newP, 3)}٪</span></div></div>) })()}
+      </div>
+    </div>
   )
 }
