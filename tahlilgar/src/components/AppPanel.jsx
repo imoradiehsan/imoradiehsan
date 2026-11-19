@@ -203,7 +203,7 @@ function HoldingPage({ h, nav }) {
   const rows = [['تعداد سهم', fa(h.q)], ['میانگین خرید', fa(h.avg) + ' ریال'], ['قیمت روز', fa(h.x.p) + ' ریال'], ['ارزش روز', fa(h.val / 10) + ' تومان'], ['سود / زیان', fa(((h.x.p - h.avg) * h.q) / 10) + ' تومان']]
   return (
     <div className="space-y-4">
-      <div className={`rounded-3xl p-5 text-white ${h.pl >= 0 ? 'bg-gradient-to-br from-emerald-500 to-emerald-700' : 'bg-gradient-to-br from-rose-500 to-rose-700'}`}>
+      <div className={`rounded-3xl p-5 text-white ${h.pl >= 0 ? 'bg-gradient-to-br from-emerald-600 to-emerald-800' : 'bg-gradient-to-br from-rose-600 to-rose-800'}`}>
         <div className="text-sm opacity-80">بازده این سهم</div>
         <div className="num text-3xl font-bold" dir="ltr" style={{ textAlign: 'right' }}>{h.pl >= 0 ? '+' : '−'}{fa(Math.abs(h.pl), 2)}٪</div>
       </div>

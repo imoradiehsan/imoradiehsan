@@ -5,6 +5,7 @@ import { fa } from '../data/market'
 
 function rnd(s) { let x = [...s].reduce((a, c) => a * 37 + c.charCodeAt(0), 11) % 2147483647; return () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646 }
 const css = (n) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim().replace(/ /g, ',')})`
+const cssa = (n, a) => css(n).replace('rgb(', 'rgba(').replace(')', `,${a})`)
 const big = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : n >= 1e3 ? fa(n / 1e3, 1) + ' K' : fa(n)
 
 // Text that doesn't fit its box scrolls back and forth (marquee); short text stays still
@@ -79,14 +80,14 @@ export function Intraday({ sym, dark }) {
       localization: { priceFormatter: (p) => fa(p), timeFormatter: (t) => new Date(t * 1000).toISOString().slice(11, 16) },
       handleScroll: false, handleScale: false,
     })
-    const up = '#26c281', down = '#f0506e', col = sym.c >= 0 ? up : down
+    const up = css('up'), down = css('down'), col = sym.c >= 0 ? up : down
     const s = mode === 'خطی'
-      ? ch.addAreaSeries({ lineColor: col, topColor: col + '40', bottomColor: col + '00', lineWidth: 2, lastPriceAnimation: 1, crosshairMarkerRadius: 5 })
+      ? ch.addAreaSeries({ lineColor: col, topColor: cssa(sym.c >= 0 ? 'up' : 'down', .25), bottomColor: cssa(sym.c >= 0 ? 'up' : 'down', 0), lineWidth: 2, lastPriceAnimation: 1, crosshairMarkerRadius: 5 })
       : ch.addCandlestickSeries({ upColor: up, downColor: down, wickUpColor: up, wickDownColor: down, borderVisible: false })
     s.setData(mode === 'خطی' ? data.map((d) => ({ time: d.time, value: d.close })) : data)
     const v = ch.addHistogramSeries({ priceScaleId: 'v', priceFormat: { type: 'volume' }, lastValueVisible: false, priceLineVisible: false })
     v.priceScale().applyOptions({ scaleMargins: { top: .75, bottom: 0 } })
-    v.setData(data.map((d) => ({ time: d.time, value: d.v, color: d.close >= d.open ? 'rgba(38,194,129,.5)' : 'rgba(240,80,110,.5)' })))
+    v.setData(data.map((d) => ({ time: d.time, value: d.v, color: d.close >= d.open ? cssa('up', .5) : cssa('down', .5) })))
     ch.timeScale().fitContent()
     // hover card: time + OHLC (candles) or price (line) + volume
     ch.subscribeCrosshairMove((pt) => {
@@ -240,7 +241,7 @@ export function Poll({ sym }) {
       <motion.button whileTap={{ scale: .97 }} onClick={() => setVote(mine ? null : k)}
         className={`relative flex flex-1 items-center justify-between overflow-hidden rounded-xl border p-4 transition-colors ${mine ? (good ? 'border-up' : 'border-down') : 'border-line hover:border-muted'}`}>
         <motion.span initial={{ width: 0 }} animate={{ width: vote ? `${pct}%` : '0%' }} transition={{ duration: .6 }} className={`absolute inset-y-0 right-0 ${good ? 'bg-up/15' : 'bg-down/15'}`} />
-        <span className={`relative flex h-7 items-center gap-2 text-lg font-extrabold ${good ? 'text-up' : 'text-down'}`}>{good ? '↗' : '↘'} {label}<AnimatePresence>{mine && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className={`rounded-full px-2 py-0.5 text-[10px] text-white ${good ? 'bg-up' : 'bg-down'}`}>رأی شما</motion.span>}</AnimatePresence></span>
+        <span className={`relative flex h-7 items-center gap-2 text-lg font-extrabold ${good ? 'text-up' : 'text-down'}`}>{good ? '↗' : '↘'} {label}<AnimatePresence>{mine && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className={`rounded-full px-2 py-0.5 text-[10px] text-on-signal ${good ? 'bg-up' : 'bg-down'}`}>رأی شما</motion.span>}</AnimatePresence></span>
         <motion.span animate={{ opacity: vote ? 1 : 0 }} className="relative flex items-baseline gap-2" aria-hidden={!vote}><span className="num text-[11px] text-muted">{fa(n)} نفر</span><b className="num text-xl">{fa(pct)}٪</b></motion.span>
       </motion.button>
     )

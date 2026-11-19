@@ -11,12 +11,12 @@
 :root {
   --bg: 241 244 251; --surface: 255 255 255; --surface2: 234 239 250;
   --line: 220 227 242; --ink: 15 23 42; --muted: 100 116 139;
-  --up: 22 163 74; --down: 220 38 38;
+  --up: 14 124 66; --down: 200 30 52; --on-signal: 255 255 255;
 }
 .dark {
   --bg: 7 10 20; --surface: 15 20 36; --surface2: 24 31 54;
   --line: 36 45 74; --ink: 236 240 250; --muted: 132 144 175;
-  --up: 52 211 153; --down: 248 113 113;
+  --up: 52 211 153; --down: 255 107 120; --on-signal: 7 10 20;
 }
 html, body { font-family: IRANYekanX, Tahoma, sans-serif; font-feature-settings: "ss02"; }
 body { @apply bg-bg text-ink transition-colors duration-500; }

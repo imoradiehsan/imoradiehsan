@@ -508,7 +508,7 @@ function SymbolFlags({ sym }) {
             className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition-colors ${on[i] ? 'border-brand/40 bg-brand/10' : 'border-line bg-surface2/30'} ${tip === i ? 'border-brand/70' : ''}`}>
             <span className="text-xs font-semibold">{t}</span>
             <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: .15 + i * .04, type: 'spring', stiffness: 400, damping: 15 }}
-              className={`grid h-5 w-5 place-items-center rounded-full text-white ${on[i] ? 'bg-brand' : 'bg-down'}`} aria-label={on[i] ? 'دارد' : 'ندارد'}>
+              className={`grid h-5 w-5 place-items-center rounded-full ${on[i] ? 'bg-brand text-white' : 'bg-down text-on-signal'}`} aria-label={on[i] ? 'دارد' : 'ندارد'}>
               {on[i]
                 ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5 9-10" /></svg>
                 : <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>}
@@ -855,18 +855,30 @@ function HolderPage({ h, sym, hist, setHist, openSym }) {
             </div>
           ) : (
             <>
-              <div className="mb-2 grid grid-cols-[1fr_76px_70px_64px] px-3 text-[11px] text-muted"><span>نماد</span><span className="text-center">ارزش</span><span className="text-center">حجم</span><span className="text-left">٪ مالکیت</span></div>
               {rows.length ? (
-                <div className="space-y-2">
-                  {rows.map((r, i) => (
-                    <motion.div key={r.c} role="button" tabIndex={0} onClick={() => openSym(r.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(r.c)} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }}
-                      className={`num cursor-pointer transition-colors hover:border-brand/50 hover:bg-brand/5 grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs border-line bg-surface2/25`}>
-                      <b className="text-sm text-brand-light">{r.c}</b>
-                      <span className="text-center" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
-                      <span className="text-center" dir="ltr">{bigN(r.q)}</span>
-                      <span className="text-left font-bold" dir="ltr">{fa(r.p, 3)}٪</span>
-                    </motion.div>
-                  ))}
+                <div>
+                  {/* one flat list: hairline dividers instead of a box per row; ownership shown as a bar */}
+                  <div className="overflow-hidden rounded-2xl border border-line">
+                    <div className="grid grid-cols-[1fr_78px_70px] gap-2 bg-surface2/50 px-4 py-2 text-[11px] text-muted"><span>نماد / مالکیت</span><span className="text-left">ارزش</span><span className="text-left">حجم</span></div>
+                    {rows.map((r, i) => {
+                      const maxP = Math.max(...rows.map((x) => x.p))
+                      return (
+                        <motion.div key={r.c} role="button" tabIndex={0} onClick={() => openSym(r.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(r.c)}
+                          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * .03 }}
+                          className="num group grid cursor-pointer grid-cols-[1fr_78px_70px] items-center gap-2 border-t border-line/60 px-4 py-3 text-xs transition-colors hover:bg-brand/5">
+                          <div className="min-w-0">
+                            <div className="flex items-center justify-between gap-2">
+                              <b className="text-sm text-brand-light group-hover:underline">{r.c}</b>
+                              <span className="font-bold" dir="ltr">{fa(r.p, 3)}٪</span>
+                            </div>
+                            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${r.p / maxP * 100}%` }} transition={{ duration: .5, delay: i * .03 }} className="h-full rounded-full bg-brand" /></div>
+                          </div>
+                          <span className="text-left font-semibold" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
+                          <span className="text-left text-muted" dir="ltr">{bigN(r.q)}</span>
+                        </motion.div>
+                      )
+                    })}
+                  </div>
                   <IndustryPie rows={rows} />
                 </div>
               ) : <Empty text="این سهامدار مالکیت عمده دیگری در بازار ندارد." />}
@@ -1141,8 +1153,8 @@ function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
             ? <motion.path key={range} d={line} fill="none" stroke="#3C7CFF" strokeWidth="2.5" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
             : bars.map((b, i) => { const c = b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'; return <g key={i}><line x1={X(i)} x2={X(i)} y1={Y(b.high)} y2={Y(b.low)} stroke={c} /><rect x={X(i) - step * .32} width={step * .64} y={Y(Math.max(b.open, b.close))} height={Math.max(1, Math.abs(Y(b.open) - Y(b.close)))} fill={c} /></g> })}
           {ci != null && <g pointerEvents="none">
-            <line x1={X(ci)} x2={X(ci)} y1={pt} y2={H - pb} stroke="rgba(240,80,110,.75)" />
-            <line x1={pl} x2={W - pr} y1={Y(bars[ci].close)} y2={Y(bars[ci].close)} stroke="rgba(240,80,110,.75)" />
+            <line x1={X(ci)} x2={X(ci)} y1={pt} y2={H - pb} stroke="rgb(var(--down) / .75)" />
+            <line x1={pl} x2={W - pr} y1={Y(bars[ci].close)} y2={Y(bars[ci].close)} stroke="rgb(var(--down) / .75)" />
             <rect x={W - pr + 2} y={Y(bars[ci].close) - 9} width={pr - 4} height="18" rx="5" fill="rgb(var(--down))" />
             <text x={W - pr + pr / 2} y={Y(bars[ci].close) + 4} fontSize="10" fontWeight="700" textAnchor="middle" fill="#fff">{fa(Math.round(bars[ci].close))}</text>
           </g>}

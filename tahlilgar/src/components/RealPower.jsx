@@ -61,7 +61,7 @@ function Pane({ ctx, id, title, h, max, min = 0, fmt, children, tip }) {
           {ticksX.map((i) => <line key={i} x1={X(i)} x2={X(i)} y1={0} y2={h} stroke="rgb(var(--line))" strokeDasharray="3 4" opacity=".6" />)}
           <line x1={padL + cw} x2={padL + cw} y1={0} y2={h} stroke="rgb(var(--muted))" opacity=".5" />
           {children(y)}
-          {hd && <line x1={X(hover)} x2={X(hover)} y1={0} y2={h} stroke="rgba(240,80,110,.7)" />}
+          {hd && <line x1={X(hover)} x2={X(hover)} y1={0} y2={h} stroke="rgb(var(--down) / .7)" />}
         </svg>
         <AnimatePresence>{hd && tip && active && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }}
@@ -136,7 +136,7 @@ export default function RealPower({ sym }) {
             {type === 'line'
               ? <motion.path key={range + adj} d={data.map((d, i) => `${i ? 'L' : 'M'}${X(i)},${y(d.c)}`).join('')} fill="none" stroke="#3C7CFF" strokeWidth="2.5" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
               : data.map((d, i) => { const col = d.c >= d.o ? UP : DOWN; return <g key={i}><line x1={X(i)} x2={X(i)} y1={y(d.h)} y2={y(d.l)} stroke={col} /><rect x={X(i) - step * .3} width={step * .6} y={y(Math.max(d.o, d.c))} height={Math.max(1, Math.abs(y(d.o) - y(d.c)))} fill={col} /></g> })}
-            {hd && <><line x1={padL} x2={padL + cw} y1={y(hd.c)} y2={y(hd.c)} stroke="rgba(240,80,110,.7)" /><circle cx={X(hover)} cy={y(hd.c)} r="4" fill="#3C7CFF" stroke="rgb(var(--surface))" strokeWidth="2" /></>}
+            {hd && <><line x1={padL} x2={padL + cw} y1={y(hd.c)} y2={y(hd.c)} stroke="rgb(var(--down) / .7)" /><circle cx={X(hover)} cy={y(hd.c)} r="4" fill="#3C7CFF" stroke="rgb(var(--surface))" strokeWidth="2" /></>}
           </>}
         </Pane>
         <Pane ctx={ctx} id={1} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقیقی`} h={hSub} max={vmaxR} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.real.b)], ['تعداد خرید', fa(d.real.bn)], ['حجم فروش', short(d.real.s)], ['تعداد فروش', fa(d.real.sn)]]}>{(y) => bars2(y, realV)}</Pane>

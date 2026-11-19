@@ -47,6 +47,7 @@ const boll = (d, n = 20, m = 2) => d.map((b, i) => { if (i < n - 1) return null;
 const vwap = (d) => { let pv = 0, v = 0; return d.map((b) => { pv += ((b.high + b.low + b.close) / 3) * b.volume; v += b.volume; return { time: b.time, value: pv / v } }) }
 const faDate = (t, withTime) => new Date(t * 1000).toLocaleString('fa-IR-u-ca-persian', withTime ? { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' } : { year: 'numeric', month: 'short', day: 'numeric' })
 const css = (n) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim().replace(/ /g, ',')})`
+const cssa = (n, a) => css(n).replace('rgb(', 'rgba(').replace(')', `,${a})`)
 
 function Icon({ children, size = 20 }) { return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">{children}</svg> }
 
@@ -121,7 +122,7 @@ export default function TVChart({ sym, dark, technical = false }) {
     const c = chart.current
     if (main.current) c.removeSeries(main.current)
     extra.current.forEach((s) => c.removeSeries(s)); extra.current = []
-    const up = '#26c281', down = '#f0506e'
+    const up = css('up'), down = css('down')
     let s
     const ohlc = bars.map(({ time, open, high, low, close }) => ({ time, open, high, low, close }))
     const line = bars.map((b) => ({ time: b.time, value: b.close }))
@@ -130,14 +131,14 @@ export default function TVChart({ sym, dark, technical = false }) {
     if (type === 'bar') s = c.addBarSeries({ upColor: up, downColor: down, thinBars: false })
     if (type === 'line') s = c.addLineSeries({ color: '#3C7CFF', lineWidth: 2 })
     if (type === 'area') s = c.addAreaSeries({ lineColor: '#3C7CFF', topColor: 'rgba(60,124,255,.45)', bottomColor: 'rgba(32,71,255,0)', lineWidth: 2 })
-    if (type === 'baseline') s = c.addBaselineSeries({ baseValue: { type: 'price', price: bars[0].close }, topLineColor: up, bottomLineColor: down, topFillColor1: 'rgba(38,194,129,.3)', bottomFillColor2: 'rgba(240,80,110,.3)' })
+    if (type === 'baseline') s = c.addBaselineSeries({ baseValue: { type: 'price', price: bars[0].close }, topLineColor: up, bottomLineColor: down, topFillColor1: cssa('up', .3), bottomFillColor2: cssa('down', .3) })
     s.setData(['candle', 'hollow', 'bar'].includes(type) ? ohlc : line)
     main.current = s
     const add = (x) => { extra.current.push(x); return x }
     if (inds.includes('vol')) {
       const v = add(c.addHistogramSeries({ priceScaleId: 'vol', priceFormat: { type: 'volume' }, lastValueVisible: false, priceLineVisible: false }))
       v.priceScale().applyOptions({ scaleMargins: { top: .82, bottom: 0 } })
-      v.setData(bars.map((b) => ({ time: b.time, value: b.volume, color: b.close >= b.open ? 'rgba(38,194,129,.35)' : 'rgba(240,80,110,.35)' })))
+      v.setData(bars.map((b) => ({ time: b.time, value: b.volume, color: b.close >= b.open ? cssa('up', .35) : cssa('down', .35) })))
     }
     const opt = (color, w = 1.5) => ({ color, lineWidth: w, lastValueVisible: false, priceLineVisible: false, crosshairMarkerVisible: false })
     if (inds.includes('ma20')) add(c.addLineSeries(opt('#f59e0b'))).setData(sma(bars, 20))
@@ -162,7 +163,7 @@ export default function TVChart({ sym, dark, technical = false }) {
     c.timeScale().setVisibleLogicalRange({ from: bars.length - 120, to: bars.length + 6 })
     setTick((x) => x + 1)
     return () => c.unsubscribeCrosshairMove(onMove)
-  }, [bars, type, inds])
+  }, [bars, type, inds, dark])
 
   // drawings reset on symbol / interval change
   useEffect(() => { setDrawings([]); setPending(null) }, [sym, interval])
@@ -202,18 +203,18 @@ export default function TVChart({ sym, dark, technical = false }) {
     if (d.type === 'rect') return <rect key={k} x={Math.min(A.x, B.x)} y={Math.min(A.y, B.y)} width={Math.abs(B.x - A.x)} height={Math.abs(B.y - A.y)} fill="rgba(60,124,255,.12)" stroke={col} strokeWidth="1.5" />
     if (d.type === 'fib') {
       const x1 = Math.min(A.x, B.x), x2 = Math.max(A.x, B.x)
-      return <g key={k}>{FIB.map((f, i) => { const price = d.b.price + (d.a.price - d.b.price) * f, y = main.current.priceToCoordinate(price); const cols = ['#f0506e', '#f59e0b', '#26c281', '#3C7CFF', '#22d3ee', '#a855f7', '#94a3b8']; return y == null ? null : <g key={f}><rect x={x1} y={y} width={x2 - x1} height={i < FIB.length - 1 ? Math.max(0, (main.current.priceToCoordinate(d.b.price + (d.a.price - d.b.price) * FIB[i + 1]) ?? y) - y) : 0} fill={cols[i]} opacity=".07" /><line x1={x1} x2={x2} y1={y} y2={y} stroke={cols[i]} strokeWidth="1" /><text x={x1 + 4} y={y - 3} fontSize="10" fill={cols[i]}>{f} ({fa(price)})</text></g> })}</g>
+      return <g key={k}>{FIB.map((f, i) => { const price = d.b.price + (d.a.price - d.b.price) * f, y = main.current.priceToCoordinate(price); const cols = [css('down'), '#f59e0b', css('up'), '#3C7CFF', '#22d3ee', '#a855f7', '#94a3b8']; return y == null ? null : <g key={f}><rect x={x1} y={y} width={x2 - x1} height={i < FIB.length - 1 ? Math.max(0, (main.current.priceToCoordinate(d.b.price + (d.a.price - d.b.price) * FIB[i + 1]) ?? y) - y) : 0} fill={cols[i]} opacity=".07" /><line x1={x1} x2={x2} y1={y} y2={y} stroke={cols[i]} strokeWidth="1" /><text x={x1 + 4} y={y - 3} fontSize="10" fill={cols[i]}>{f} ({fa(price)})</text></g> })}</g>
     }
     if (d.type === 'measure') {
       const pct = ((d.b.price - d.a.price) / d.a.price) * 100, bars_ = d.b.logical - d.a.logical, upm = pct >= 0
-      const fill = upm ? 'rgba(38,194,129,.15)' : 'rgba(240,80,110,.15)', st = upm ? '#26c281' : '#f0506e'
+      const fill = upm ? cssa('up', .15) : cssa('down', .15), st = upm ? css('up') : css('down')
       return <g key={k}><rect x={Math.min(A.x, B.x)} y={Math.min(A.y, B.y)} width={Math.abs(B.x - A.x)} height={Math.abs(B.y - A.y)} fill={fill} stroke={st} />
         <foreignObject x={(A.x + B.x) / 2 - 70} y={Math.max(A.y, B.y) + 6} width="140" height="44"><div dir="rtl" style={{ background: st, color: '#fff', borderRadius: 8, fontSize: 11, padding: '4px 6px', textAlign: 'center', lineHeight: 1.5 }}>{fa(d.b.price - d.a.price)} ({upm ? '+' : '−'}{fa(Math.abs(pct), 2)}٪)<br />{fa(Math.abs(bars_))} کندل</div></foreignObject></g>
     }
   }
 
   const chg = legend ? legend.close - legend.prev : 0
-  const legendCol = chg >= 0 ? 'text-[#26c281]' : 'text-[#f0506e]'
+  const legendCol = chg >= 0 ? 'text-up' : 'text-down'
   const typeLabel = TYPES.find((x) => x.k === type).t
 
   return (
@@ -331,10 +332,10 @@ function OscPane({ kind, setKind, bars, mainChart, dark }) {
     })
     const o = (color, w = 1.5) => ({ color, lineWidth: w, priceLineVisible: false, lastValueVisible: true })
     if (!hidden) {
-      if (kind === 'adx') { const a = calcADX(bars); c.addLineSeries(o('#f59e0b', 2)).setData(a.adx); c.addLineSeries(o('#3C7CFF')).setData(a.pdi); c.addLineSeries(o('#f0506e')).setData(a.mdi)
-        const g = c.addLineSeries({ ...o('rgba(0,0,0,0)'), lastValueVisible: false }); g.setData(a.adx); g.createPriceLine({ price: 20, color: 'rgba(240,80,110,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: false }) }
-      if (kind === 'rsi') { const s = c.addLineSeries(o('#a855f7', 2)); s.setData(calcRSI(bars)); s.createPriceLine({ price: 70, color: 'rgba(240,80,110,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: true }); s.createPriceLine({ price: 30, color: 'rgba(38,194,129,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: true }) }
-      if (kind === 'macd') { const m = calcMACD(bars); c.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false }).setData(m.map((x) => ({ time: x.time, value: x.h, color: x.h >= 0 ? 'rgba(38,194,129,.5)' : 'rgba(240,80,110,.5)' }))); c.addLineSeries(o('#3C7CFF')).setData(m.map((x) => ({ time: x.time, value: x.m }))); c.addLineSeries(o('#f59e0b')).setData(m.map((x) => ({ time: x.time, value: x.s }))) }
+      if (kind === 'adx') { const a = calcADX(bars); c.addLineSeries(o('#f59e0b', 2)).setData(a.adx); c.addLineSeries(o('#3C7CFF')).setData(a.pdi); c.addLineSeries(o(css('down'))).setData(a.mdi)
+        const g = c.addLineSeries({ ...o('rgba(0,0,0,0)'), lastValueVisible: false }); g.setData(a.adx); g.createPriceLine({ price: 20, color: cssa('down', .6), lineStyle: 2, lineWidth: 1, axisLabelVisible: false }) }
+      if (kind === 'rsi') { const s = c.addLineSeries(o('#a855f7', 2)); s.setData(calcRSI(bars)); s.createPriceLine({ price: 70, color: cssa('down', .6), lineStyle: 2, lineWidth: 1, axisLabelVisible: true }); s.createPriceLine({ price: 30, color: cssa('up', .6), lineStyle: 2, lineWidth: 1, axisLabelVisible: true }) }
+      if (kind === 'macd') { const m = calcMACD(bars); c.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false }).setData(m.map((x) => ({ time: x.time, value: x.h, color: x.h >= 0 ? cssa('up', .5) : cssa('down', .5) }))); c.addLineSeries(o('#3C7CFF')).setData(m.map((x) => ({ time: x.time, value: x.m }))); c.addLineSeries(o('#f59e0b')).setData(m.map((x) => ({ time: x.time, value: x.s }))) }
     }
     // keep both charts scrolled/zoomed together and the same price-axis width
     mainChart.current.applyOptions({ rightPriceScale: { minimumWidth: 64 } })

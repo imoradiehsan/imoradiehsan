@@ -7,6 +7,7 @@ import { fa } from '../data/market'
 
 const RANGES = [['۱ ماه', 22], ['۲ ماه', 44], ['۳ ماه', 66], ['۶ ماه', 130], ['۹ ماه', 195], ['۱ سال', 260], ['۲ سال', 320]]
 const css = (n) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim().replace(/ /g, ',')})`
+const cssa = (n, a) => css(n).replace('rgb(', 'rgba(').replace(')', `,${a})`)
 
 // swing highs / lows that were touched at least twice → support & resistance
 function findLevels(bars, last) {
@@ -49,12 +50,12 @@ export default function SRChart({ sym, dark }) {
     })
     const s = type === 'خطی'
       ? c.addLineSeries({ color: '#7aa2ff', lineWidth: 2 })
-      : c.addCandlestickSeries({ upColor: '#26c281', downColor: '#f0506e', wickUpColor: '#26c281', wickDownColor: '#f0506e', borderVisible: false })
+      : c.addCandlestickSeries({ upColor: css('up'), downColor: css('down'), wickUpColor: css('up'), wickDownColor: css('down'), borderVisible: false })
     s.setData(type === 'خطی' ? bars.map((b) => ({ time: b.time, value: b.close })) : bars)
     const v = c.addHistogramSeries({ priceScaleId: 'v', priceFormat: { type: 'volume' }, lastValueVisible: false, priceLineVisible: false })
     v.priceScale().applyOptions({ scaleMargins: { top: .78, bottom: 0 } })
-    v.setData(bars.map((b) => ({ time: b.time, value: b.volume, color: b.close >= b.open ? 'rgba(38,194,129,.45)' : 'rgba(240,80,110,.45)' })))
-    levels.forEach((l) => s.createPriceLine({ price: l.price, color: l.kind === 'مقاومت' ? '#f0506e' : '#26c281', lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: `${l.kind} (${fa(l.touches)} برخورد)` }))
+    v.setData(bars.map((b) => ({ time: b.time, value: b.volume, color: b.close >= b.open ? cssa('up', .45) : cssa('down', .45) })))
+    levels.forEach((l) => s.createPriceLine({ price: l.price, color: l.kind === 'مقاومت' ? css('down') : css('up'), lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: `${l.kind} (${fa(l.touches)} برخورد)` }))
     c.timeScale().fitContent()
     return () => c.remove()
   }, [bars, type, log, levels, dark])
