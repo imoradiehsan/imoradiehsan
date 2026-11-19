@@ -971,8 +971,8 @@ function HoldersHelp({ items = HOLDERS_HELP }) {
 function TradeCard({ t, title, onClick, i = 0 }) {
   const up = t.dP >= 0, col = up ? 'text-up' : 'text-down'
   return (
-                  <motion.div role="button" tabIndex={0} onClick={onClick} onKeyDown={(e) => e.key === 'Enter' && onClick?.()} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num cursor-pointer space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs transition-colors hover:border-brand/50">
-                    <div className="flex items-center justify-between">
+                  <motion.div role="button" tabIndex={0} onClick={onClick} onKeyDown={(e) => e.key === 'Enter' && onClick?.()} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num cursor-pointer space-y-3 rounded-2xl border border-line bg-surface2/25 p-4 text-xs transition-colors hover:border-brand/50">
+                    <div className="flex items-center justify-between gap-3">
                       <b className="min-w-0 text-sm text-brand-light"><Marquee>{title}</Marquee></b>
                       <span className="flex items-center gap-2">
                         {t.tag && <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${t.tag === 'خروج کامل' ? 'bg-down/15 text-down' : 'bg-up/15 text-up'}`}>{t.tag}</span>}
@@ -980,20 +980,20 @@ function TradeCard({ t, title, onClick, i = 0 }) {
                       </span>
                     </div>
                     {/* before → change → after: each value sits under its own label */}
-                    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-1.5 text-center">
-                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
+                    <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-2 text-center">
+                      <div className="rounded-xl bg-surface2/50 px-2 py-2.5">
                         <div className="text-[10px] text-muted">حجم قدیم</div>
                         <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.oldV)}</b>
                         <div className="text-[10px] text-muted" dir="ltr">{fa(t.oldP, 3)}٪</div>
                       </div>
                       <span className="self-center text-muted">←</span>
-                      <div className={`rounded-xl px-2 py-2 ${up ? 'bg-up/10' : 'bg-down/10'}`}>
+                      <div className={`rounded-xl px-2 py-2.5 ${up ? 'bg-up/10' : 'bg-down/10'}`}>
                         <div className="text-[10px] text-muted">{up ? 'حجم خرید' : 'حجم فروش'}</div>
                         <b className={`mt-0.5 block text-[13px] ${col}`} dir="ltr">{up ? '+' : '−'}{bigN(Math.abs(t.newV - t.oldV))}</b>
                         <div className={`text-[10px] ${col}`} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</div>
                       </div>
                       <span className="self-center text-muted">←</span>
-                      <div className="rounded-xl bg-surface2/50 px-2 py-2">
+                      <div className="rounded-xl bg-surface2/50 px-2 py-2.5">
                         <div className="text-[10px] text-muted">حجم جدید</div>
                         <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.newV)}</b>
                         <div className="text-[10px] text-muted" dir="ltr">{fa(t.newP, 3)}٪</div>
@@ -1068,7 +1068,7 @@ function HolderHistory({ sym, close, openSym }) {
           {view === 'chart' && <HistoryChart sym={sym} trades={list} type={ctype} setType={setCtype} filter={filterBtn(false)} onPick={openHolder} />}
           {view === 'holder' && <HolderPage h={holder} sym={sym} hist={hist} setHist={setHist} openSym={openSym} />}
           {view === 'list' && (list.length
-            ? <div className="space-y-2">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} onClick={() => openHolder(t.name)} />)}</div>
+            ? <div className="space-y-3">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} onClick={() => openHolder(t.name)} />)}</div>
             : <Empty text="با این فیلترها معامله‌ای پیدا نشد." />)}
         </motion.div>
       </AnimatePresence>
