@@ -167,8 +167,7 @@ export default function SitePanel({ sym, dark, setDark }) {
 }
 
 function Overview({ sym, d, open, dark }) {
-  const [rows, setRows] = useState(true)
-  const [cum, setCum] = useState(false)
+  const [modal, setModal] = useState(null)   // 'rows' | 'depth'
   return (
     <>
       <Card className="!p-0 overflow-hidden">
@@ -185,8 +184,10 @@ function Overview({ sym, d, open, dark }) {
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Card className="flex flex-col" title="دفتر سفارش" actions={<><Pill on={rows} onClick={() => setRows(!rows)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg> ردیف‌های عرضه و تقاضا</Pill><Pill on={cum} onClick={() => setCum(!cum)}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
-          <OrderBook d={d} prev={d.prev} rows={rows} cum={cum} />
+        <Card className="flex flex-col" title="دفتر سفارش" actions={<><Pill on={modal === 'rows'} onClick={() => setModal('rows')}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg> ردیف‌های عرضه و تقاضا</Pill><Pill on={modal === 'depth'} onClick={() => setModal('depth')}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
+          <OrderBook d={d} prev={d.prev} rows cum={false} />
+          <Modal open={modal === 'rows'} title="ردیف‌های عرضه و تقاضا" onClose={() => setModal(null)}><FullBook sym={sym} prev={d.prev} /></Modal>
+          <Modal open={modal === 'depth'} title="نمودار تجمعی ردیف‌ها" onClose={() => setModal(null)}><DepthChart sym={sym} /></Modal>
         </Card>
         <div className="flex flex-col gap-4">
           <Card title="دامنه قیمت امروز"><Range sym={sym} d={d} /></Card>
@@ -448,10 +449,10 @@ function Drawer({ k, close, sym, d }) {
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-            className="fixed inset-y-0 left-0 z-50 flex w-full max-w-md flex-col border-r border-line bg-surface shadow-2xl">
-            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{DRAWER_TITLES[k]} · {sym.s}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
+            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl ${k === 'peers' ? 'max-w-3xl' : 'max-w-md'}`}>
+            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
             <div className="scroll-y flex-1 space-y-2 p-4 text-sm">
-              {k === 'peers' && d.peers.map((x) => <div key={x.s} className="flex justify-between rounded-xl bg-surface2/40 p-3"><div><b>{x.s}</b><div className="text-xs text-muted">{x.n}</div></div><div className="text-left"><div className="num">{fa(x.p)}</div><Change c={x.c} className="!text-xs" /></div></div>)}
+              {k === 'peers' && <Peers sym={sym} />}
               {k === 'holders' && d.holders.map((h) => <div key={h.n} className="rounded-xl bg-surface2/40 p-3"><div className="flex justify-between"><span>{h.n}</span><b className="num">{fa(h.p, 2)}٪</b></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${h.p * 2.5}%` }} className="h-full bg-brand" /></div><div className={`num mt-1 text-xs ${h.d >= 0 ? 'text-up' : 'text-down'}`}>تغییر امروز: {h.d >= 0 ? '+' : '−'}{fa(Math.abs(h.d))} سهم</div></div>)}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
@@ -510,6 +511,205 @@ function SymbolFlags({ sym }) {
       <div className="flex justify-center gap-4 text-[11px] text-muted">
         <span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-brand" />دارد</span>
         <span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-down" />ندارد</span>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- مقایسه هم‌گروه‌ها ---------- */
+const PEER_POOL = ['فولاد', 'فملی', 'کگل', 'فخوز', 'ذوب', 'فاسمین', 'کچاد', 'فسپا', 'فلامی', 'فجهان', 'شپنا', 'شبندر', 'شتران', 'فارس', 'پارسان', 'شپدیس', 'وبملت', 'وتجارت', 'وبصادر', 'وپاسار', 'خودرو', 'خساپا', 'خگستر', 'رمپنا', 'شستا', 'وغدیر', 'تاپیکو']
+const SORTS = [['chg', 'درصد آخرین قیمت'], ['pe', 'P/E'], ['eps', 'EPS'], ['ps', 'P/S'], ['mc', 'ارزش بازار'], ['r1m', 'بازده ۱ ماهه'], ['r1y', 'بازده ۱ ساله']]
+const tri = (n) => n >= 1e12 ? fa(n / 1e12, 1) + ' T' : n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : fa(n)
+function peerRows(sym) {
+  let x = [...sym.s].reduce((a, c) => a * 31 + c.charCodeAt(0), 3) % 2147483647
+  const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+  return PEER_POOL.filter((s) => s !== sym.s).slice(0, 16).map((s) => {
+    const p = Math.round(1000 + r() * 30000), chg = (r() - .3) * 6, eps = Math.round((r() - .1) * 4000)
+    return { s, mkt: ['بورس', 'فرابورس', 'فرابورس پایه'][Math.floor(r() * 3)], p, chg, vol: Math.round(r() * 1.2e8), avg: Math.round(r() * 1e8),
+      eps, pe: eps > 0 ? p / eps : null, ps: r() > .5 ? .5 + r() * 4 : null, mc: Math.round((1 + r() * 600) * 1e12), r1m: (r() - .25) * 40, r1y: (r() - .1) * 400 }
+  })
+}
+function Dropdown({ value, options, onChange }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="relative">
+      <button onClick={() => setOpen(!open)} className={`btn min-w-[120px] justify-between ${open ? 'btn-on' : ''}`}>
+        {options.find((o) => o[0] === value)[1]}
+        <motion.svg animate={{ rotate: open ? 180 : 0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
+      </button>
+      <AnimatePresence>{open && (
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }}
+          className="absolute right-0 top-10 z-30 w-44 rounded-xl border border-line bg-surface p-1 shadow-2xl">
+          {options.map(([k, t]) => (
+            <button key={String(k)} onClick={() => { onChange(k); setOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-right text-sm hover:bg-surface2 ${k === value ? 'text-brand-light' : ''}`}>
+              {t}{k === value && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="m5 12 5 5 9-10" /></svg>}
+            </button>
+          ))}
+        </motion.div>
+      )}</AnimatePresence>
+    </div>
+  )
+}
+function Peers({ sym }) {
+  const [by, setBy] = useState('mc')
+  const [dir, setDir] = useState('desc')
+  const rows = useMemo(() => {
+    const v = (x) => x[by] ?? -Infinity
+    return peerRows(sym).sort((a, b) => (dir === 'desc' ? v(b) - v(a) : v(a) - v(b)))
+  }, [sym, by, dir])
+  const pct = (v, cls = true) => <span className={`num ${cls ? (v >= 0 ? 'text-up' : 'text-down') : ''}`} dir="ltr">{v >= 0 ? '' : '−'}{fa(Math.abs(v), 2)}٪</span>
+  const two = (a, b) => <div className="leading-5"><div>{a}</div><div className="text-muted">{b}</div></div>
+  return (
+    <div className="-m-4 flex h-full flex-col">
+      <div className="flex items-center gap-2 border-b border-line px-4 py-3 text-sm">
+        <span className="text-muted">ترتیب بر حسب:</span>
+        <Dropdown value={by} options={SORTS} onChange={setBy} />
+        <Dropdown value={dir} options={[['desc', 'نزولی'], ['asc', 'صعودی']]} onChange={setDir} />
+      </div>
+      <div className="overflow-x-auto">
+        <table className="num w-full min-w-[640px] text-xs">
+          <thead className="sticky top-0 z-10 bg-surface2/90 text-muted backdrop-blur">
+            <tr className="text-center">
+              <th className="px-3 py-2.5 text-right font-normal">نماد</th><th className="font-normal">قیمت</th><th className="font-normal">{two('حجم', 'م. حجم')}</th>
+              <th className="font-normal">EPS</th><th className="font-normal">{two('P/E', 'P/S')}</th><th className="font-normal">ارزش بازار</th><th className="font-normal">{two('بازده ۱ ماهه', 'بازده ۱ ساله')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <AnimatePresence initial={false}>
+              {rows.map((x, i) => (
+                <motion.tr key={x.s} layout transition={{ type: 'spring', stiffness: 400, damping: 36 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="border-b border-line/50 text-center transition-colors hover:bg-surface2/40">
+                  <td className="px-3 py-2.5 text-right"><div className="flex items-center gap-2"><i className={`h-2.5 w-2.5 rounded-sm ${x.chg >= 0 ? 'bg-up' : 'bg-down'}`} /><div><b className="text-sm">{x.s}</b><div className="text-[10px] text-muted">({x.mkt})</div></div></div></td>
+                  <td>{two(<b>{fa(x.p)}</b>, pct(x.chg))}</td>
+                  <td>{two(tri(x.vol), tri(x.avg))}</td>
+                  <td className={x.eps < 0 ? 'text-down' : ''}>{fa(x.eps)}</td>
+                  <td>{two(x.pe ? fa(x.pe, 2) : '-', x.ps ? fa(x.ps, 2) : '-')}</td>
+                  <td>{tri(x.mc)}</td>
+                  <td>{two(pct(x.r1m), pct(x.r1y))}</td>
+                </motion.tr>
+              ))}
+            </AnimatePresence>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
+function Modal({ open, title, onClose, children }) {
+  useEffect(() => {
+    if (!open) return
+    const k = (e) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
+  }, [open])
+  return (
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <motion.div role="dialog" aria-modal="true" aria-label={title} initial={{ y: 60, opacity: 0, scale: .97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, scale: .97 }} transition={{ type: 'spring', stiffness: 360, damping: 32 }}
+            className="relative m-3 flex max-h-[90vh] w-full max-w-xl flex-col gap-3">
+            <div className="flex min-h-0 flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-2xl">
+              <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
+              <h3 className="px-5 pb-3 pt-4 text-center font-bold">{title}</h3>
+              <div className="scroll-y min-h-0 px-4 pb-4">{children}</div>
+            </div>
+            <motion.button whileTap={{ scale: .97 }} onClick={onClose} className="rounded-3xl border border-line bg-surface py-3.5 font-semibold shadow-2xl hover:border-brand/40">بستن</motion.button>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  )
+}
+
+function deepBook(sym) {
+  let x = [...sym.s].reduce((a, c) => a * 17 + c.charCodeAt(0), 5) % 2147483647
+  const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+  const tick = Math.max(1, Math.round(sym.p * 0.0006))
+  let bp = sym.p, ap = sym.p + tick
+  const bids = Array.from({ length: 14 }, () => { const row = { p: bp, q: Math.round(r() < .3 ? r() * 3e6 : r() * 6e5) + 1000, n: 1 + Math.floor(r() * 5) }; bp -= tick * (1 + Math.floor(r() * 4)); return row })
+  const asks = Array.from({ length: 16 }, () => { const row = { p: ap, q: Math.round(r() < .3 ? r() * 3e6 : r() * 6e5) + 1000, n: 1 + Math.floor(r() * 5) }; ap += tick * (1 + Math.floor(r() * 5)); return row })
+  return { bids, asks }
+}
+
+function FullBook({ sym, prev }) {
+  const { bids, asks } = useMemo(() => deepBook(sym), [sym])
+  const n = Math.max(bids.length, asks.length), mx = Math.max(...bids.map((b) => b.q), ...asks.map((a) => a.q))
+  const pc = (p) => { const v = (p - prev) / prev * 100; return <div className={`text-[10px] ${v >= 0 ? 'text-up' : 'text-down'}`} dir="ltr">{v >= 0 ? '+' : '−'}{fa(Math.abs(v), 2)}٪</div> }
+  const Vol = ({ q, buy }) => (
+    <td className="px-1 py-1"><div className={`relative flex h-7 items-center ${buy ? 'justify-end' : 'justify-start'}`}>
+      <motion.span initial={{ width: 0 }} animate={{ width: `${Math.max(3, q / mx * 100)}%` }} transition={{ duration: .5 }} className={`absolute inset-y-0 rounded-lg ${buy ? 'left-0 bg-up/20' : 'right-0 bg-down/20'}`} />
+      <span className="relative px-1.5" dir="ltr">{fa(q)}</span></div></td>
+  )
+  const empty = <><td className="py-3 text-muted/50">۰</td><td className="text-muted/50">۰</td><td className="text-muted/50">۰</td></>
+  return (
+    <div className="overflow-x-auto">
+      <table className="num w-full min-w-[460px] table-fixed text-center text-xs">
+        <thead>
+          <tr className="text-sm font-bold"><th colSpan={3} className="border-b-2 border-up pb-2 text-up">تقاضا</th><th colSpan={3} className="border-b-2 border-down pb-2 text-down">عرضه</th></tr>
+          <tr className="text-muted">{['تعداد', 'حجم', 'قیمت', 'قیمت', 'حجم', 'تعداد'].map((h, i) => <th key={i} className={`py-2 font-normal ${i === 3 ? 'border-r border-line' : ''}`}>{h}</th>)}</tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: n }, (_, i) => { const b = bids[i], a = asks[i]; return (
+            <motion.tr key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * .02 }} className="hover:bg-surface2/40">
+              {b ? <><td>{fa(b.n)}</td><Vol q={b.q} buy /><td className="leading-tight"><b>{fa(b.p)}</b>{pc(b.p)}</td></> : empty}
+              {a ? <><td className="border-r border-line leading-tight"><b>{fa(a.p)}</b>{pc(a.p)}</td><Vol q={a.q} /><td>{fa(a.n)}</td></> : <><td className="border-r border-line py-3 text-muted/50">۰</td><td className="text-muted/50">۰</td><td className="text-muted/50">۰</td></>}
+            </motion.tr>) })}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function DepthChart({ sym }) {
+  const { bids, asks } = useMemo(() => deepBook(sym), [sym])
+  const [hover, setHover] = useState(null)
+  let cb = 0, ca = 0
+  const B = bids.map((b) => ({ p: b.p, v: (cb += b.q) })), A = asks.map((a) => ({ p: a.p, v: (ca += a.q) }))
+  const W = 520, H = 300, pl = 44, pr = 44, pt = 16, pb = 44
+  const lo = B.at(-1).p, hi = A.at(-1).p, vmax = Math.max(cb, ca) * 1.08
+  const x = (p) => pl + (p - lo) / (hi - lo) * (W - pl - pr), y = (v) => pt + (1 - v / vmax) * (H - pt - pb)
+  const mid = (bids[0].p + asks[0].p) / 2
+  // step paths: bids accumulate leftwards from best bid, asks rightwards from best ask
+  const step = (pts) => pts.map((q, i) => (i ? `L${x(q.p)},${y(pts[i - 1].v)} L${x(q.p)},${y(q.v)}` : `M${x(q.p)},${y(0)} L${x(q.p)},${y(q.v)}`)).join(' ')
+  const bPath = step(B), aPath = step(A)
+  const yt = Array.from({ length: 6 }, (_, i) => vmax / 6 * (i + 1) * .95)
+  const xt = Array.from({ length: 7 }, (_, i) => lo + (hi - lo) * i / 6)
+  const vfmt = (v) => fa(v / 1e6, 1) + ' M'
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect(), px = (e.clientX - r.left) / r.width * W
+    const price = lo + (px - pl) / (W - pl - pr) * (hi - lo)
+    const side = price <= mid ? B.filter((q) => q.p >= price).at(-1) : A.filter((q) => q.p <= price).at(-1)
+    setHover(side ? { ...side, buy: price <= mid } : null)
+  }
+  return (
+    <div dir="ltr">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
+        <defs>
+          <linearGradient id="dg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgb(var(--up))" stopOpacity=".45" /><stop offset="1" stopColor="rgb(var(--up))" stopOpacity=".03" /></linearGradient>
+          <linearGradient id="dr" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgb(var(--down))" stopOpacity=".45" /><stop offset="1" stopColor="rgb(var(--down))" stopOpacity=".03" /></linearGradient>
+        </defs>
+        {yt.map((v) => <g key={v}><line x1={pl} x2={W - pr} y1={y(v)} y2={y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" />
+          <text x={pl - 6} y={y(v) + 4} fontSize="10" textAnchor="end" fill="rgb(var(--muted))">{vfmt(v)}</text><text x={W - pr + 6} y={y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{vfmt(v)}</text></g>)}
+        {xt.map((p) => <g key={p}><line x1={x(p)} x2={x(p)} y1={pt} y2={H - pb} stroke="rgb(var(--line))" strokeDasharray="3 4" />
+          <text x={x(p)} y={H - pb + 16} fontSize="10" textAnchor="end" fill="rgb(var(--muted))" transform={`rotate(-40 ${x(p)} ${H - pb + 16})`}>{fa(p)}</text></g>)}
+        <line x1={pl} x2={pl} y1={pt} y2={H - pb} stroke="rgb(var(--muted))" /><line x1={W - pr} x2={W - pr} y1={pt} y2={H - pb} stroke="rgb(var(--muted))" /><line x1={pl} x2={W - pr} y1={H - pb} y2={H - pb} stroke="rgb(var(--muted))" />
+        <motion.path d={`${bPath} L${x(B.at(-1).p)},${y(0)} Z`} fill="url(#dg)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6 }} />
+        <motion.path d={bPath} fill="none" stroke="rgb(var(--up))" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .9 }} />
+        <motion.path d={`${aPath} L${x(A.at(-1).p)},${y(0)} Z`} fill="url(#dr)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6 }} />
+        <motion.path d={aPath} fill="none" stroke="rgb(var(--down))" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .9 }} />
+        <line x1={x(mid)} x2={x(mid)} y1={pt} y2={H - pb} stroke="rgb(var(--muted))" strokeWidth="1.5" strokeDasharray="8 6" />
+        <text x={x(mid) + 5} y={pt + 12} fontSize="11" fill="rgb(var(--muted))">{fa(Math.round(mid))}</text>
+        {hover && <g pointerEvents="none">
+          <circle cx={x(hover.p)} cy={y(hover.v)} r="5" fill={hover.buy ? 'rgb(var(--up))' : 'rgb(var(--down))'} stroke="rgb(var(--surface))" strokeWidth="2" />
+          <rect x={Math.min(W - pr - 120, Math.max(pl, x(hover.p) - 60))} y={Math.max(pt, y(hover.v) - 46)} width="120" height="36" rx="8" fill="rgb(var(--surface2))" stroke="rgb(var(--line))" />
+          <text x={Math.min(W - pr - 60, Math.max(pl + 60, x(hover.p)))} y={Math.max(pt, y(hover.v) - 46) + 15} fontSize="11" textAnchor="middle" fill="rgb(var(--ink))">{fa(hover.p)}</text>
+          <text x={Math.min(W - pr - 60, Math.max(pl + 60, x(hover.p)))} y={Math.max(pt, y(hover.v) - 46) + 29} fontSize="10" textAnchor="middle" fill={hover.buy ? 'rgb(var(--up))' : 'rgb(var(--down))'}>{(hover.buy ? 'تقاضا ' : 'عرضه ') + vfmt(hover.v)}</text>
+        </g>}
+      </svg>
+      <div className="mt-1 flex justify-center gap-5 text-xs text-muted" dir="rtl">
+        <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-up" />تقاضای تجمعی</span>
+        <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-down" />عرضه تجمعی</span>
       </div>
     </div>
   )

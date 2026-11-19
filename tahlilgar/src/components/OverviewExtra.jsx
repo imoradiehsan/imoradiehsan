@@ -61,6 +61,7 @@ function Underline({ items, value, onChange, id }) {
 /* ---------- روند معاملات امروز (intraday) ---------- */
 export function Intraday({ sym, dark }) {
   const [mode, setMode] = useState('خطی')
+  const [tip, setTip] = useState(null)
   const host = useRef(null)
   const data = useMemo(() => {
     const r = rnd(sym.s + 'i'); const prev = sym.p / (1 + sym.c / 100); let c = prev * (1 + (r() - .3) * .01)
@@ -87,11 +88,32 @@ export function Intraday({ sym, dark }) {
     v.priceScale().applyOptions({ scaleMargins: { top: .75, bottom: 0 } })
     v.setData(data.map((d) => ({ time: d.time, value: d.v, color: d.close >= d.open ? 'rgba(38,194,129,.5)' : 'rgba(240,80,110,.5)' })))
     ch.timeScale().fitContent()
+    // hover card: time + OHLC (candles) or price (line) + volume
+    ch.subscribeCrosshairMove((pt) => {
+      if (!pt.time || !pt.point) return setTip(null)
+      const d = data.find((x) => x.time === pt.time); if (!d) return setTip(null)
+      setTip({ ...d, x: pt.point.x, y: pt.point.y, w: host.current.clientWidth })
+    })
     return () => ch.remove()
   }, [data, mode, dark])
   return (
     <Card className="flex flex-col" title="روند معاملات امروز" actions={<Seg id="intra" items={['خطی', 'شمعی']} value={mode} onChange={setMode} icons={{ 'خطی': <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>, 'شمعی': <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg> }} />}>
-      <div ref={host} className="min-h-64 flex-1" dir="ltr" />
+      <div className="relative min-h-64 flex-1" dir="ltr" onMouseLeave={() => setTip(null)}>
+        <div ref={host} className="absolute inset-0" />
+        <AnimatePresence>{tip && (
+          <motion.div initial={{ opacity: 0, scale: .95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: .12 }}
+            style={{ left: tip.x > tip.w / 2 ? tip.x - 152 : tip.x + 16, top: 8 }}
+            className="pointer-events-none absolute z-10 w-36 rounded-xl border border-line bg-surface2/95 p-2.5 text-xs shadow-2xl backdrop-blur" dir="rtl">
+            <div className="num mb-1.5 border-b border-line pb-1.5 text-center font-bold text-brand-light" dir="ltr">{new Date(tip.time * 1000).toISOString().slice(11, 16)}</div>
+            {(mode === 'شمعی'
+              ? [['اولین', tip.open], ['آخرین', tip.close], ['بیشترین', tip.high], ['کمترین', tip.low], ['حجم', tip.v]]
+              : [['قیمت', tip.close], ['حجم', tip.v]]
+            ).map(([k, v]) => (
+              <div key={k} className="flex justify-between py-0.5"><span className="text-muted">{k}:</span><b className="num">{fa(Math.round(v))}</b></div>
+            ))}
+          </motion.div>
+        )}</AnimatePresence>
+      </div>
     </Card>
   )
 }
@@ -153,13 +175,36 @@ function BarRow({ label, v, max }) {
     </div>
   )
 }
+// Info icon: hover or click opens an explanation of the three return types
+function ReturnsInfo() {
+  const [open, setOpen] = useState(false), [pinned, setPinned] = useState(false)
+  const close = () => { setOpen(false); setPinned(false) }
+  return (
+    <span className="relative inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => !pinned && setOpen(false)}>
+      <button aria-label="توضیح انواع بازده" onClick={() => { setPinned(true); setOpen(true) }}
+        className={`grid h-5 w-5 place-items-center rounded-full border text-[11px] transition-colors ${open ? 'border-brand bg-brand text-white' : 'border-muted text-muted hover:border-brand hover:text-brand-light'}`}>?</button>
+      <AnimatePresence>{open && (
+        <motion.div initial={{ opacity: 0, y: 6, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: .97 }} transition={{ duration: .15 }}
+          className="absolute right-0 top-full z-40 mt-2 w-80 overflow-hidden rounded-2xl border border-line bg-surface2 text-right text-xs font-normal leading-6 shadow-2xl">
+          <div className="space-y-2 p-4 text-ink">
+            <p><b className="text-brand-light">بازده تقویمی:</b> تغییر نسبت به روزهای تقویمی. مثلاً بازده ۱ ماهه تقویمی تغییر قیمت نسبت به همین روز در ماه قبل است.</p>
+            <p><b className="text-brand-light">بازده معاملاتی:</b> تغییر نسبت به روزهای معاملاتی (روزهایی که بازار باز است). مثلاً بازده ۱ ماهه معاملاتی تغییر نسبت به ۳۰ کندل قبل است.</p>
+            <p><b className="text-brand-light">بازده ابتدای دوره:</b> تغییر نسبت به ابتدای همان دوره. مثلاً بازده ۱ ماهه ابتدای دوره تغییر نسبت به روز اول ماه جاری است.</p>
+          </div>
+          <button onClick={close} className="w-full border-t border-line py-2.5 text-sm font-bold text-brand-light transition-colors hover:bg-brand/10">فهمیدم</button>
+        </motion.div>
+      )}</AnimatePresence>
+    </span>
+  )
+}
+
 export function Returns({ sym }) {
   const [mode, setMode] = useState('تقویمی')
   const r = rnd(sym.s + mode)
   const rows = [['۱ هفته', 1], ['۱ ماهه', 2], ['۳ ماهه', 3.5], ['۶ ماهه', 5], ['۱ ساله', 7], ['۲ ساله', 10]].map(([t, k]) => [t, sym.c * k * 0.9 + (r() - 0.35) * k * 4])
   const max = Math.max(...rows.map((x) => Math.abs(x[1])))
   return (
-    <Card title={<span className="flex items-center gap-1.5">بازدهی نماد <span title="بازدهی بر اساس قیمت پایانی" className="grid h-4 w-4 cursor-help place-items-center rounded-full border border-muted text-[10px] text-muted">؟</span></span>}>
+    <Card title={<span className="flex items-center gap-1.5">بازدهی نماد <ReturnsInfo /></span>}>
       <Underline id="ret" items={['تقویمی', 'معاملاتی', 'ابتدای دوره']} value={mode} onChange={setMode} />
       <AnimatePresence mode="wait"><motion.div key={mode} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">{rows.map(([t, v]) => <BarRow key={t} label={t} v={v} max={max} />)}</motion.div></AnimatePresence>
     </Card>
