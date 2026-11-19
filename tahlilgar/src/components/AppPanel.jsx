@@ -4,6 +4,7 @@ import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts'
 import { Search, Notification, Category, Chart, Wallet, Plus, Delete } from 'react-iconly'
 import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
+import { Marquee } from './OverviewExtra'
 
 const TABS = [
   { k: 'watch', t: 'دیده‌بان', I: Category },
@@ -115,7 +116,7 @@ function Watch({ sym, setSym, open }) {
             <span className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface2 text-xs font-bold text-brand-light">{x.s.slice(0, 2)}</span>
             <span className="relative min-w-0 flex-1">
               <span className="block font-semibold">{x.s}</span>
-              <span className="block truncate text-xs text-muted">{x.n}</span>
+              <Marquee className="text-xs text-muted">{x.n}</Marquee>
             </span>
             <span className="relative h-8 w-14" dir="ltr">
               <ResponsiveContainer><LineChart data={x.spark}><YAxis hide domain={['dataMin', 'dataMax']} /><Line dataKey="v" dot={false} strokeWidth={1.6} isAnimationActive={false} stroke={x.c >= 0 ? 'rgb(var(--up))' : 'rgb(var(--down))'} /></LineChart></ResponsiveContainer>

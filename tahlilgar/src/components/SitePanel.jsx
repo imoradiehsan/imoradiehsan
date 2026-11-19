@@ -266,26 +266,64 @@ function Range({ sym, d }) {
   )
 }
 
+// Hover / focus tooltip with a short explanation of each metric
+function Tip({ label, tip }) {
+  const [open, setOpen] = useState(false)
+  const [align, setAlign] = useState('center')
+  // keep the bubble inside the scrolling panel: flip its anchor near either edge
+  const show = (e) => {
+    const r = e.currentTarget.getBoundingClientRect(), box = e.currentTarget.closest('.scroll-y')?.getBoundingClientRect() || { left: 0, right: innerWidth }
+    const mid = (r.left + r.right) / 2
+    setAlign(mid + 112 > box.right ? 'right' : mid - 112 < box.left ? 'left' : 'center'); setOpen(true)
+  }
+  const pos = { center: 'left-1/2 -translate-x-1/2', right: 'right-0', left: 'left-0' }[align]
+  const arrow = { center: 'left-1/2 -translate-x-1/2', right: 'right-4', left: 'left-4' }[align]
+  return (
+    <span className="relative inline-flex" onMouseEnter={show} onMouseLeave={() => setOpen(false)} onFocus={show} onBlur={() => setOpen(false)}>
+      <span tabIndex={0} className="cursor-help border-b border-dotted border-muted/60 text-xs text-muted outline-none">{label}</span>
+      <span className={`pointer-events-none absolute bottom-full z-40 mb-2 w-52 ${pos}`}>
+        <AnimatePresence>{open && (
+          <motion.span role="tooltip" initial={{ opacity: 0, y: 4, scale: .96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 4, scale: .96 }} transition={{ duration: .14 }}
+            className="relative block rounded-xl border border-line bg-surface2 px-3 py-2 text-right text-xs font-normal leading-6 text-ink shadow-2xl">
+            <b className="mb-0.5 block text-brand-light">{label}</b>{tip}
+            <i className={`absolute top-full -mt-1 h-2 w-2 rotate-45 border-b border-r border-line bg-surface2 ${arrow}`} />
+          </motion.span>
+        )}</AnimatePresence>
+      </span>
+    </span>
+  )
+}
+
+const TIPS = {
+  'ارزش بازار': 'قیمت فعلی سهم ضرب در تعداد کل سهام؛ اندازه شرکت در بازار را نشان می‌دهد.',
+  'P/E': 'نسبت قیمت به سود هر سهم؛ نشان می‌دهد بازار چند برابر سود سالانه برای سهم پول می‌دهد.',
+  'EPS': 'سود خالص هر سهم در یک سال (ریال)؛ سود شرکت تقسیم بر تعداد سهام.',
+  'P/E گروه': 'میانگین P/E شرکت‌های هم‌صنعت؛ برای مقایسه ارزان یا گران بودن سهم نسبت به گروه.',
+  'P/S': 'نسبت ارزش بازار به فروش سالانه؛ برای شرکت‌های کم‌سود یا زیان‌ده کاربرد دارد.',
+  'سهام شناور': 'درصدی از سهام که در دست سهامداران خرد است و در بازار معامله می‌شود.',
+  'تعداد سهام': 'تعداد کل سهام منتشرشده شرکت.',
+}
+
 function Fundamentals({ d }) {
   const f = Object.fromEntries(d.fundamentals)
-  const Cell = ({ k, label = k, tip, big, className = '' }) => (
-    <div className={`flex flex-col items-center justify-center gap-1 bg-surface px-2 py-3.5 text-center ${className}`}>
-      <span title={tip} className="cursor-help border-b border-dotted border-muted/60 text-xs text-muted">{label}</span>
-      <b className={`num ${big ? 'text-xl' : 'text-[15px]'}`}>{f[k]}</b>
+  const Cell = ({ k, label = k }) => (
+    <div className="flex flex-col items-center justify-center gap-1 bg-surface px-2 py-3.5 text-center">
+      <Tip label={label} tip={TIPS[k]} />
+      <b className="num text-[15px]">{f[k]}</b>
     </div>
   )
   const [num, unit] = String(f['ارزش بازار']).split(' ')
   return (
-    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4">
-      <div className="col-span-2 flex flex-col items-center justify-center gap-1 bg-brand/10 px-2 py-3.5 text-center">
-        <span title="قیمت × تعداد سهام" className="cursor-help border-b border-dotted border-muted/60 text-xs text-muted">ارزش بازار</span>
+    <div className="grid grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
+      <div className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-tr-xl bg-brand/10 px-2 py-3.5 text-center">
+        <Tip label="ارزش بازار" tip={TIPS['ارزش بازار']} />
         <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
       </div>
-      <Cell k="P/E" tip="قیمت به سود هر سهم" />
-      <Cell k="EPS" tip="سود هر سهم (ریال)" />
-      <Cell k="P/E گروه" tip="میانگین P/E صنعت" />
-      <Cell k="P/S" tip="قیمت به فروش" />
-      <Cell k="سهام شناور" label="درصد شناور" tip="سهام قابل معامله" />
+      <Cell k="P/E" />
+      <Cell k="EPS" />
+      <Cell k="P/E گروه" />
+      <Cell k="P/S" />
+      <Cell k="سهام شناور" label="درصد شناور" />
       <Cell k="تعداد سهام" />
     </div>
   )

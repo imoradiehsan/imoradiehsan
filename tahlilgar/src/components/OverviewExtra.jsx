@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createChart } from 'lightweight-charts'
 import { fa } from '../data/market'
@@ -6,6 +6,25 @@ import { fa } from '../data/market'
 function rnd(s) { let x = [...s].reduce((a, c) => a * 37 + c.charCodeAt(0), 11) % 2147483647; return () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646 }
 const css = (n) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim().replace(/ /g, ',')})`
 const big = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : n >= 1e3 ? fa(n / 1e3, 1) + ' K' : fa(n)
+
+// Text that doesn't fit its box scrolls back and forth (marquee); short text stays still
+export function Marquee({ children, className = '' }) {
+  const box = useRef(null), inner = useRef(null)
+  const [shift, setShift] = useState(0)
+  useLayoutEffect(() => {
+    const measure = () => setShift(Math.max(0, inner.current.scrollWidth - box.current.clientWidth))
+    measure(); const ro = new ResizeObserver(measure); ro.observe(box.current); return () => ro.disconnect()
+  }, [children])
+  return (
+    <span ref={box} className={`block overflow-hidden whitespace-nowrap ${className}`} title={typeof children === 'string' ? children : undefined}
+      style={shift ? { maskImage: 'linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)', WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)' } : undefined}>
+      <motion.span ref={inner} className="inline-block" animate={shift ? { x: [0, shift, shift, 0, 0] } : { x: 0 }}
+        transition={shift ? { duration: 2 + shift / 25, times: [0, .4, .5, .9, 1], repeat: Infinity, ease: 'linear', repeatDelay: .6 } : { duration: 0 }}>
+        {children}
+      </motion.span>
+    </span>
+  )
+}
 
 export function Card({ title, actions, children, className = '' }) {
   return (
@@ -129,7 +148,7 @@ function BarRow({ label, v, max }) {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-xs">
       <div className="flex h-7 justify-end rounded-md bg-surface2/40">{pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, v / max * 100)}%` }} className="num flex items-center rounded-md bg-up/25 px-2 font-bold text-ink" dir="ltr">+{fa(v, 2)}٪</motion.div>}</div>
-      <span className="w-24 truncate text-center text-sm text-muted">{label}</span>
+      <Marquee className="w-24 text-center text-sm text-muted">{label}</Marquee>
       <div className="flex h-7 justify-start rounded-md bg-surface2/40">{!pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, Math.abs(v) / max * 100)}%` }} className="num flex items-center justify-end rounded-md bg-down/25 px-2 font-bold text-ink" dir="ltr">{fa(v, 2)}٪</motion.div>}</div>
     </div>
   )
