@@ -1,0 +1,52 @@
+@font-face {
+  font-family: 'IRANYekanX';
+  src: url('/fonts/IRANYekanX.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-display: swap;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 241 244 251; --surface: 255 255 255; --surface2: 234 239 250;
+  --line: 220 227 242; --ink: 15 23 42; --muted: 100 116 139;
+  --up: 14 124 66; --down: 200 30 52; --on-signal: 255 255 255;
+}
+.dark {
+  --bg: 7 10 20; --surface: 15 20 36; --surface2: 24 31 54;
+  --line: 36 45 74; --ink: 236 240 250; --muted: 132 144 175;
+  --up: 52 211 153; --down: 255 107 120; --on-signal: 7 10 20;
+}
+html, body { font-family: IRANYekanX, Tahoma, sans-serif; font-feature-settings: "ss02"; }
+body { @apply bg-bg text-ink transition-colors duration-500; }
+
+.card {
+  @apply rounded-[28px] border border-line/70 bg-surface/80 backdrop-blur-xl p-5;
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -30px rgba(0,0,0,.5);
+}
+.chip { @apply rounded-full px-3.5 py-1.5 text-sm text-muted transition-colors hover:text-ink; }
+.icon-btn {
+  @apply grid h-11 w-11 place-items-center rounded-full border border-line/70 bg-surface/80 text-muted
+         transition-all hover:text-brand-light hover:border-brand/50 active:scale-90;
+}
+.num { font-feature-settings: "ss02", "tnum"; }
+::-webkit-scrollbar { width: 6px; height: 6px }
+::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 9px }
+.scroll-y { overflow-y: auto; scrollbar-gutter: stable; }
+@media (min-width: 1024px) { html, body, #root { height: 100%; overflow: hidden } }
+[data-drag] [data-content] { transition: none !important; }
+
+/* ---- Button system: one look for every small control ---- */
+@layer components {
+  .btn { @apply inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-xl border border-line bg-surface2/40 px-3 text-xs font-medium text-muted transition-all duration-150 hover:border-brand/40 hover:text-ink active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60; }
+  .btn-on { @apply border-brand/60 bg-brand/15 font-bold text-brand-light hover:text-brand-light; }
+  .btn-icon { @apply inline-grid h-8 w-8 place-items-center rounded-xl border border-line bg-surface2/40 text-muted transition-all hover:border-brand/40 hover:text-ink active:scale-90; }
+  .seg { @apply inline-flex h-8 items-center gap-0.5 rounded-xl border border-line bg-surface2/40 p-0.5; }
+  .seg-item { @apply relative inline-flex h-full items-center gap-1 rounded-[10px] px-3 text-xs text-muted transition-colors hover:text-ink; }
+}
+
+/* While a drawer or dialog is open, the page behind it can't scroll; only the overlay can. */
+html.lock .scroll-y:not([data-overlay] .scroll-y) { overflow: hidden !important; }
+html.lock { overflow: hidden; overscroll-behavior: none; }
+[data-overlay], [data-overlay] .scroll-y { overscroll-behavior: contain; }
