@@ -807,7 +807,7 @@ function HolderPage({ h, sym, hist, setHist }) {
       <div className="border-b border-line bg-surface2/40 px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <b className="text-sm leading-6">{h.n}</b>
-          {!hist && <button onClick={() => setHist(true)} className="btn btn-on shrink-0">سابقه معاملات <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
+          {<button onClick={() => setHist(true)} tabIndex={hist ? -1 : 0} aria-hidden={hist} className={`btn btn-on shrink-0 transition-opacity ${hist ? 'pointer-events-none invisible opacity-0' : ''}`}>سابقه معاملات <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
         </div>
         <div className="num mt-1 flex items-center gap-2 text-xs text-muted">تعداد شرکت: <b className="text-ink">{fa(rows.length)}</b><i className="h-3 w-px bg-line" />ارزش کل سرمایه در سهام: <b className="text-ink" dir="ltr">{bigN(total).replace('B', 'B').replace(/^(.*)$/, (m) => total >= 1e12 ? fa(total / 1e12, 1) + ' T' : m)}</b></div>
       </div>
