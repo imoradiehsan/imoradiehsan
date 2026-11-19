@@ -100,14 +100,13 @@ export default function RealPower({ sym }) {
 
   return (
     <div className="-m-4 flex h-full flex-col">
-      <div className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-3">
+      <div className="flex shrink-0 items-center gap-2 overflow-x-auto whitespace-nowrap border-b border-line px-4 py-2.5 [&_.seg-item]:px-2.5">
         <Seg id="rp-type" value={type} set={setType} items={[['line', 'خطی'], ['candle', 'شمعی']]} />
         <Seg id="rp-unit" value={unit} set={setUnit} items={[['vol', 'حجم'], ['pct', 'درصد']]} />
         <Seg id="rp-adj" value={adj} set={setAdj} items={[[true, 'تعدیل شده'], [false, 'تعدیل نشده']]} />
         <div className="flex-1" />
-        <span className="flex items-center gap-3 text-[11px] text-muted"><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-up" />خرید</span><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-down" />فروش</span></span>
+        <Seg id="rp-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} />
       </div>
-      <div className="overflow-x-auto border-b border-line px-4 py-2"><Seg id="rp-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} /></div>
       <div ref={box} className="min-h-0 flex-1 select-none overflow-hidden" dir="ltr" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
         <Pane ctx={ctx} id={0} title={sym.s} h={hPrice} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => type === 'candle' ? [['اولین', fa(Math.round(d.o))], ['آخرین', fa(Math.round(d.c))], ['بیشترین', fa(Math.round(d.h))], ['کمترین', fa(Math.round(d.l))], ['حجم', fa(d.v)]] : [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
           {(y) => <>
