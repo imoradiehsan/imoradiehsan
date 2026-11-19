@@ -6,7 +6,7 @@ import SRChart from './SRChart'
 import RealPower from './RealPower'
 import { Intraday, RealLegal, Returns, Compare, Poll, Marquee } from './OverviewExtra'
 import { Change } from './Count'
-import { fa } from '../data/market'
+import { fa, SYMBOLS } from '../data/market'
 import { symbolData } from '../data/symbol'
 
 const MENUS = [
@@ -34,7 +34,17 @@ const Pill = ({ on, onClick, children }) => (
   <button onClick={onClick} className={`btn ${on ? 'btn-on' : ''}`}>{children}</button>
 )
 
-export default function SitePanel({ sym, dark, setDark }) {
+// open any ticker as the active symbol (falls back to a sample profile for tickers outside the watchlist)
+function toSymbol(code) {
+  const hit = SYMBOLS.find((y) => y.s === code)
+  if (hit) return hit
+  const seed = [...code].reduce((a, c) => a * 31 + c.charCodeAt(0), 1)
+  const p = 1000 + (seed % 9000), c = ((seed % 700) - 300) / 100
+  const ind = (PORTFOLIO_POOL.find(([x]) => x === code) || [0, 'سایر'])[1]
+  return { s: code, n: code, p, c, ind, pe: 4 + (seed % 90) / 10, mc: fa(20 + seed % 300) + ' همت', vol: fa(20 + seed % 200) + ' م', spark: SYMBOLS[seed % SYMBOLS.length].spark }
+}
+
+export default function SitePanel({ sym, dark, setDark, setSym }) {
   const [tab, setTab] = useState('نمای کلی')
   const [menu, setMenu] = useState(null)
   const [drawer, setDrawer] = useState(null)
@@ -162,7 +172,7 @@ export default function SitePanel({ sym, dark, setDark }) {
         </AnimatePresence>
       </div>
 
-      <Drawer k={drawer} close={() => setDrawer(null)} sym={sym} d={d} />
+      <Drawer k={drawer} close={() => setDrawer(null)} sym={sym} d={d} openSym={(code) => { setDrawer(null); setTab('نمای کلی'); setSym(toSymbol(code)) }} />
     </section>
   )
 }
@@ -443,7 +453,7 @@ function Opinions({ d }) {
 }
 
 const DRAWER_TITLES = Object.fromEntries(LINKS.map(([k, t]) => [k, t]))
-function Drawer({ k, close, sym, d }) {
+function Drawer({ k, close, sym, d, openSym }) {
   return (
     <AnimatePresence>
       {k && (
@@ -453,8 +463,8 @@ function Drawer({ k, close, sym, d }) {
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
             {k !== 'holders' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
             <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
-              {k === 'peers' && <Peers sym={sym} />}
-              {k === 'holders' && <Holders sym={sym} close={close} />}
+              {k === 'peers' && <Peers sym={sym} openSym={openSym} />}
+              {k === 'holders' && <Holders sym={sym} close={close} openSym={openSym} />}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
               {k === 'real' && <RealPower sym={sym} />}
@@ -551,7 +561,7 @@ function Dropdown({ value, options, onChange }) {
     </div>
   )
 }
-function Peers({ sym }) {
+function Peers({ sym, openSym }) {
   const [by, setBy] = useState('mc')
   const [dir, setDir] = useState('desc')
   const rows = useMemo(() => {
@@ -578,8 +588,8 @@ function Peers({ sym }) {
           <tbody>
             <AnimatePresence initial={false}>
               {rows.map((x, i) => (
-                <motion.tr key={x.s} layout transition={{ type: 'spring', stiffness: 400, damping: 36 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  className="border-b border-line/50 text-center transition-colors hover:bg-surface2/40">
+                <motion.tr key={x.s} onClick={() => openSym(x.s)} layout transition={{ type: 'spring', stiffness: 400, damping: 36 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  className="cursor-pointer border-b border-line/50 text-center transition-colors hover:bg-surface2/40">
                   <td className="px-3 py-2.5 text-right"><div className="flex items-center gap-2"><i className={`h-2.5 w-2.5 rounded-sm ${x.chg >= 0 ? 'bg-up' : 'bg-down'}`} /><div><b className="text-sm">{x.s}</b><div className="text-[10px] text-muted">({x.mkt})</div></div></div></td>
                   <td>{two(<b>{fa(x.p)}</b>, pct(x.chg))}</td>
                   <td>{two(tri(x.vol), tri(x.avg))}</td>
@@ -802,7 +812,7 @@ function IndustryPie({ rows }) {
   )
 }
 
-function HolderPage({ h, sym, hist, setHist }) {
+function HolderPage({ h, sym, hist, setHist, openSym }) {
   const rows = useMemo(() => holderPortfolio(h, sym), [h, sym])
   const total = rows.reduce((a, r) => a + r.v, 0)
   // ownership changes: old/new holding, delta, and a badge for full exit / new entry
@@ -840,7 +850,7 @@ function HolderPage({ h, sym, hist, setHist }) {
               {trades.length ? trades.map((t, i) => {
                 const up = t.dP >= 0, col = up ? 'text-up' : 'text-down'
                 return (
-                  <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs">
+                  <motion.div key={i} role="button" tabIndex={0} onClick={() => openSym(t.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(t.c)} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num cursor-pointer space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs transition-colors hover:border-brand/50">
                     <div className="flex items-center justify-between">
                       <b className="text-sm text-brand-light">{t.c}</b>
                       <span className="flex items-center gap-2">
@@ -878,8 +888,8 @@ function HolderPage({ h, sym, hist, setHist }) {
               {rows.length ? (
                 <div className="space-y-2">
                   {rows.map((r, i) => (
-                    <motion.div key={r.c} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }}
-                      className={`num grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs border-line bg-surface2/25`}>
+                    <motion.div key={r.c} role="button" tabIndex={0} onClick={() => openSym(r.c)} onKeyDown={(e) => e.key === 'Enter' && openSym(r.c)} whileTap={{ scale: .98 }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }}
+                      className={`num cursor-pointer transition-colors hover:border-brand/50 hover:bg-brand/5 grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs border-line bg-surface2/25`}>
                       <b className="text-sm text-brand-light">{r.c}</b>
                       <span className="text-center" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
                       <span className="text-center" dir="ltr">{bigN(r.q)}</span>
@@ -902,7 +912,7 @@ const Empty = ({ text }) => (
   </div>
 )
 
-function Holders({ sym, close }) {
+function Holders({ sym, close, openSym }) {
   const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
   const [sel, setSel] = useState(null)
   const [hist, setHist] = useState(false)
@@ -926,7 +936,7 @@ function Holders({ sym, close }) {
       <AnimatePresence mode="wait" initial={false}>
         {sel != null ? (
           <motion.div key="page" className="min-h-0 flex-1" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>
-            <HolderPage h={list[sel]} sym={sym} hist={hist} setHist={setHist} />
+            <HolderPage h={list[sel]} sym={sym} hist={hist} setHist={setHist} openSym={openSym} />
           </motion.div>
         ) : (
           <motion.div key="list" className="flex min-h-0 flex-1 flex-col" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ duration: .22 }}>

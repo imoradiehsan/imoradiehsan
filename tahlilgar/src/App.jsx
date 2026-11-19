@@ -72,7 +72,7 @@ export default function App() {
         )}
       </div>
 
-      <SitePanel sym={sym} dark={dark} setDark={setDark} />
+      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} />
     </div>
   )
 }
