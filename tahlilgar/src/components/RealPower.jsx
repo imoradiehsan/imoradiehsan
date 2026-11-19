@@ -99,7 +99,7 @@ export default function RealPower({ sym }) {
         <Seg id="rp-adj" value={adj} set={setAdj} items={[[true, 'تعدیل شده'], [false, 'تعدیل نشده']]} />
       </div>
       <div ref={box} className="scroll-y min-h-0 flex-1 select-none" dir="ltr" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
-        <Pane ctx={ctx} title={sym.s} h={220} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
+        <Pane ctx={ctx} title={sym.s} h={220} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => type === 'candle' ? [['اولین', fa(Math.round(d.o))], ['آخرین', fa(Math.round(d.c))], ['بیشترین', fa(Math.round(d.h))], ['کمترین', fa(Math.round(d.l))], ['حجم', fa(d.v)]] : [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
           {(y) => <>
             {data.map((d, i) => { const hgt = d.v / vmax * 50; return <rect key={'v' + i} x={X(i) - step * .3} width={step * .6} y={y(pmin - pad) - hgt} height={hgt} fill={d.c >= d.o ? UP : DOWN} opacity=".35" /> })}
             {type === 'line'
