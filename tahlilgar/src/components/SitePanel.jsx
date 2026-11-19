@@ -804,13 +804,17 @@ function HolderPage({ h, sym, hist, setHist }) {
   }, [rows, h])
   return (
     <div className="flex h-full flex-col">
+      <AnimatePresence initial={false}>{!hist && (
+        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: .2 }} className="shrink-0 overflow-hidden">
       <div className="border-b border-line bg-surface2/40 px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <b className="text-sm leading-6">{h.n}</b>
-          {<button onClick={() => setHist(true)} tabIndex={hist ? -1 : 0} aria-hidden={hist} className={`btn btn-on shrink-0 transition-opacity ${hist ? 'pointer-events-none invisible opacity-0' : ''}`}>سابقه معاملات <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
+          {<button onClick={() => setHist(true)} className="btn btn-on shrink-0">سابقه معاملات <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
         </div>
         <div className="num mt-1 flex items-center gap-2 text-xs text-muted">تعداد شرکت: <b className="text-ink">{fa(rows.length)}</b><i className="h-3 w-px bg-line" />ارزش کل سرمایه در سهام: <b className="text-ink" dir="ltr">{bigN(total).replace('B', 'B').replace(/^(.*)$/, (m) => total >= 1e12 ? fa(total / 1e12, 1) + ' T' : m)}</b></div>
       </div>
+        </motion.div>
+      )}</AnimatePresence>
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={hist ? 'h' : 'p'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
           {hist ? (
