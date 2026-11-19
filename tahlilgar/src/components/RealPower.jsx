@@ -20,6 +20,28 @@ function Seg({ items, value, set, id }) {
   )
 }
 
+function RangeDrop({ value, set }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="relative">
+      <button onClick={() => setOpen(!open)} className={`btn min-w-[96px] justify-between ${open ? 'btn-on' : ''}`}>
+        {value}
+        <motion.svg animate={{ rotate: open ? 180 : 0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
+      </button>
+      <AnimatePresence>{open && (
+        <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }}
+          className="absolute left-0 top-10 z-30 w-32 rounded-xl border border-line bg-surface p-1 shadow-2xl" dir="rtl">
+          {RANGES.map(([t]) => (
+            <button key={t} onClick={() => { set(t); setOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-right text-sm hover:bg-surface2 ${t === value ? 'text-brand-light' : ''}`}>
+              {t}{t === value && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="m5 12 5 5 9-10" /></svg>}
+            </button>
+          ))}
+        </motion.div>
+      )}</AnimatePresence>
+    </div>
+  )
+}
+
 function nice(max) { const p = 10 ** Math.floor(Math.log10(max || 1)), m = max / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p }
 
 // generic pane (top-level so it is not remounted on every hover): y scale, grid, right axis, hover line, tooltip
@@ -100,12 +122,12 @@ export default function RealPower({ sym }) {
 
   return (
     <div className="-m-4 flex h-full flex-col">
-      <div className="flex shrink-0 items-center gap-2 overflow-x-auto whitespace-nowrap border-b border-line px-4 py-2.5 [&_.seg-item]:px-2.5">
+      <div className="relative z-20 flex shrink-0 flex-wrap items-center gap-2 border-b border-line px-4 py-2.5">
         <Seg id="rp-type" value={type} set={setType} items={[['line', 'خطی'], ['candle', 'شمعی']]} />
         <Seg id="rp-unit" value={unit} set={setUnit} items={[['vol', 'حجم'], ['pct', 'درصد']]} />
         <Seg id="rp-adj" value={adj} set={setAdj} items={[[true, 'تعدیل شده'], [false, 'تعدیل نشده']]} />
         <div className="flex-1" />
-        <Seg id="rp-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} />
+        <RangeDrop value={range} set={setRange} />
       </div>
       <div ref={box} className="min-h-0 flex-1 select-none overflow-hidden" dir="ltr" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
         <Pane ctx={ctx} id={0} title={sym.s} h={hPrice} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => type === 'candle' ? [['اولین', fa(Math.round(d.o))], ['آخرین', fa(Math.round(d.c))], ['بیشترین', fa(Math.round(d.h))], ['کمترین', fa(Math.round(d.l))], ['حجم', fa(d.v)]] : [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
