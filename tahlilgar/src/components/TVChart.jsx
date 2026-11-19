@@ -29,7 +29,7 @@ const TOOLS = [
 const FIB = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1]
 
 function seedRand(s) { let x = s; return () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646 }
-function makeBars(sym, sec) {
+export function makeBars(sym, sec) {
   const n = 320, r = seedRand(sym.s.length * 977 + sec % 9973)
   const vol = { 900: .006, 3600: .01, 14400: .016, 86400: .025, 604800: .05 }[sec]
   const end = Math.floor(Date.UTC(2026, 10, 19, 8, 30) / 1000)
@@ -62,7 +62,7 @@ function Menu({ label, open, setOpen, children, w = 'w-52' }) {
   )
 }
 
-export default function TVChart({ sym, dark }) {
+export default function TVChart({ sym, dark, technical = false }) {
   const wrap = useRef(null), host = useRef(null), chart = useRef(null), main = useRef(null), extra = useRef([]), hlines = useRef([])
   const [interval, setInterval_] = useState('1D')
   const [type, setType] = useState('candle')
@@ -77,6 +77,9 @@ export default function TVChart({ sym, dark }) {
   const [legend, setLegend] = useState(null)
   const [tick, setTick] = useState(0)
   const [indSearch, setIndSearch] = useState('')
+  const [osc, setOsc] = useState(technical ? 'adx' : null)
+  const [ready, setReady] = useState(false)
+  const [log, setLog] = useState(false)
 
   const sec = INTERVALS.find((x) => x.k === interval).sec
   const bars = useMemo(() => makeBars(sym, sec), [sym, sec])
@@ -92,6 +95,7 @@ export default function TVChart({ sym, dark }) {
       localization: { priceFormatter: (p) => fa(p), timeFormatter: (t) => faDate(t, true) },
     })
     chart.current = c
+    setReady(true)
     const bump = () => setTick((x) => x + 1)
     c.timeScale().subscribeVisibleLogicalRangeChange(bump)
     const ro = new ResizeObserver(bump); ro.observe(host.current)
@@ -110,6 +114,7 @@ export default function TVChart({ sym, dark }) {
   }, [dark, sec])
 
   useEffect(() => { chart.current.applyOptions({ crosshair: { mode: magnet ? CrosshairMode.Magnet : CrosshairMode.Normal } }) }, [magnet])
+  useEffect(() => { chart.current?.applyOptions({ rightPriceScale: { mode: log ? 1 : 0 }, timeScale: { visible: !osc } }) }, [log, osc, ready])
 
   // series
   useEffect(() => {
@@ -241,8 +246,9 @@ export default function TVChart({ sym, dark }) {
       </div>
 
       <div className="flex min-h-0 flex-1 bg-surface">
+        <div className="flex min-w-0 flex-1 flex-col">
         {/* Chart area */}
-        <div className="relative min-w-0 flex-1" dir="ltr">
+        <div className="relative min-h-0 min-w-0 flex-1" dir="ltr">
           <div ref={host} className="absolute inset-0" />
           <svg data-tick={tick} className={`absolute inset-0 h-full w-full ${tool === 'cursor' ? 'pointer-events-none' : 'cursor-crosshair'}`}
             onClick={onClick} onMouseMove={(e) => pending && setMouse(toPoint(e))} onContextMenu={(e) => { e.preventDefault(); setPending(null); setTool('cursor') }}>
@@ -262,6 +268,18 @@ export default function TVChart({ sym, dark }) {
           {tool !== 'cursor' && <div className="pointer-events-none absolute bottom-10 left-1/2 z-10 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-xs text-white shadow-glow" dir="rtl">{pending ? 'نقطه دوم را انتخاب کنید · کلیک راست برای لغو' : `${TOOLS.find((x) => x.k === tool).t}: روی چارت کلیک کنید`}</div>}
         </div>
 
+        {osc && ready && <OscPane key={osc + sym.s + interval} kind={osc} setKind={setOsc} bars={bars} mainChart={chart} dark={dark} />}
+        {technical && (
+          <div className="flex h-9 shrink-0 items-center justify-between border-t border-line/70 px-3 text-xs text-muted">
+            <span>{sym.s} · {INTERVALS.find((x) => x.k === interval).t}</span>
+            <div className="flex items-center gap-1">
+              {!osc && <button onClick={() => setOsc('adx')} className="rounded-md px-2 py-1 hover:bg-surface2 hover:text-ink">+ اسیلاتور</button>}
+              <button onClick={() => setLog(!log)} className={`rounded-md px-2 py-1 font-bold ${log ? 'bg-brand/15 text-brand-light' : 'hover:bg-surface2 hover:text-ink'}`} dir="ltr">log</button>
+            </div>
+          </div>
+        )}
+        </div>
+
         {/* Drawing tools rail */}
         <div className="flex w-11 shrink-0 flex-col items-center gap-0.5 border-r border-line/70 py-2">
           {TOOLS.map((x) => (
@@ -276,6 +294,68 @@ export default function TVChart({ sym, dark }) {
           <button title="حذف همه ترسیم‌ها" onClick={() => { setDrawings([]); setPending(null) }} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-down/15 hover:text-down"><Icon><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" /></Icon></button>
           {drawings.length > 0 && <span className="num mt-1 text-[10px] text-muted">{fa(drawings.length)}</span>}
         </div>
+      </div>
+    </div>
+  )
+}
+
+/* ---------- Oscillator pane (synced with the main chart) ---------- */
+function calcRSI(b, n = 14) { let g = 0, l = 0; return b.map((x, i) => { if (!i) return null; const d = x.close - b[i - 1].close; g = (g * (n - 1) + Math.max(d, 0)) / n; l = (l * (n - 1) + Math.max(-d, 0)) / n; return i < n ? null : { time: x.time, value: 100 - 100 / (1 + g / (l || 1e-9)) } }).filter(Boolean) }
+function calcADX(b, n = 14) {
+  let tr = 0, pdm = 0, mdm = 0, adx = null; const out = { adx: [], pdi: [], mdi: [] }
+  b.forEach((x, i) => {
+    if (!i) return
+    const p = b[i - 1], up = x.high - p.high, dn = p.low - x.low
+    const t = Math.max(x.high - x.low, Math.abs(x.high - p.close), Math.abs(x.low - p.close))
+    tr = tr - tr / n + t; pdm = pdm - pdm / n + (up > dn && up > 0 ? up : 0); mdm = mdm - mdm / n + (dn > up && dn > 0 ? dn : 0)
+    const pdi = 100 * pdm / tr, mdi = 100 * mdm / tr, dx = 100 * Math.abs(pdi - mdi) / ((pdi + mdi) || 1)
+    adx = adx == null ? dx : (adx * (n - 1) + dx) / n
+    if (i >= n) { out.adx.push({ time: x.time, value: adx }); out.pdi.push({ time: x.time, value: pdi }); out.mdi.push({ time: x.time, value: mdi }) }
+  })
+  return out
+}
+function calcMACD(b) { const e = (n) => { const k = 2 / (n + 1); let v; return b.map((x) => (v = v == null ? x.close : x.close * k + v * (1 - k))) }; const f = e(12), sl = e(26), m = f.map((v, i) => v - sl[i]); let sg; const k = 2 / 10; return b.map((x, i) => { sg = sg == null ? m[i] : m[i] * k + sg * (1 - k); return { time: x.time, m: m[i], s: sg, h: m[i] - sg } }).slice(26) }
+
+const OSC = { adx: 'ADX (14, 14)', rsi: 'RSI (14)', macd: 'MACD (12, 26, 9)' }
+function OscPane({ kind, setKind, bars, mainChart, dark }) {
+  const host = useRef(null)
+  const [hidden, setHidden] = useState(false)
+  const [menu, setMenu] = useState(false)
+  useEffect(() => {
+    const c = createChart(host.current, {
+      autoSize: true, layout: { background: { color: 'transparent' }, textColor: css('muted'), fontFamily: 'IRANYekanX', fontSize: 11 },
+      grid: { vertLines: { color: css('line').replace('rgb', 'rgba').replace(')', ',.35)') }, horzLines: { color: css('line').replace('rgb', 'rgba').replace(')', ',.35)') } },
+      rightPriceScale: { borderVisible: false, minimumWidth: 64 }, timeScale: { borderVisible: false, timeVisible: true, tickMarkFormatter: (t) => new Date(t * 1000).toLocaleDateString('fa-IR-u-ca-persian', { month: 'short', day: 'numeric' }) },
+      localization: { priceFormatter: (p) => fa(p, 1), timeFormatter: (t) => faDate(t, true) },
+      crosshair: { vertLine: { labelBackgroundColor: '#2E62FF' }, horzLine: { labelBackgroundColor: '#2E62FF' } },
+    })
+    const o = (color, w = 1.5) => ({ color, lineWidth: w, priceLineVisible: false, lastValueVisible: true })
+    if (!hidden) {
+      if (kind === 'adx') { const a = calcADX(bars); c.addLineSeries(o('#f59e0b', 2)).setData(a.adx); c.addLineSeries(o('#3C7CFF')).setData(a.pdi); c.addLineSeries(o('#f0506e')).setData(a.mdi)
+        const g = c.addLineSeries({ ...o('rgba(0,0,0,0)'), lastValueVisible: false }); g.setData(a.adx); g.createPriceLine({ price: 20, color: 'rgba(240,80,110,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: false }) }
+      if (kind === 'rsi') { const s = c.addLineSeries(o('#a855f7', 2)); s.setData(calcRSI(bars)); s.createPriceLine({ price: 70, color: 'rgba(240,80,110,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: true }); s.createPriceLine({ price: 30, color: 'rgba(38,194,129,.6)', lineStyle: 2, lineWidth: 1, axisLabelVisible: true }) }
+      if (kind === 'macd') { const m = calcMACD(bars); c.addHistogramSeries({ priceLineVisible: false, lastValueVisible: false }).setData(m.map((x) => ({ time: x.time, value: x.h, color: x.h >= 0 ? 'rgba(38,194,129,.5)' : 'rgba(240,80,110,.5)' }))); c.addLineSeries(o('#3C7CFF')).setData(m.map((x) => ({ time: x.time, value: x.m }))); c.addLineSeries(o('#f59e0b')).setData(m.map((x) => ({ time: x.time, value: x.s }))) }
+    }
+    // keep both charts scrolled/zoomed together and the same price-axis width
+    mainChart.current.applyOptions({ rightPriceScale: { minimumWidth: 64 } })
+    let lock = false
+    const a2b = (r) => { if (lock || !r) return; lock = true; c.timeScale().setVisibleLogicalRange(r); lock = false }
+    const b2a = (r) => { if (lock || !r) return; lock = true; mainChart.current.timeScale().setVisibleLogicalRange(r); lock = false }
+    mainChart.current.timeScale().subscribeVisibleLogicalRangeChange(a2b)
+    c.timeScale().subscribeVisibleLogicalRangeChange(b2a)
+    a2b(mainChart.current.timeScale().getVisibleLogicalRange())
+    return () => { mainChart.current?.timeScale().unsubscribeVisibleLogicalRangeChange(a2b); c.remove() }
+  }, [kind, bars, hidden, dark])
+  return (
+    <div className="relative h-[30%] min-h-[120px] shrink-0 border-t-2 border-line" dir="ltr">
+      <div ref={host} className="absolute inset-0" />
+      <div className="absolute left-2 top-1.5 z-10 flex items-center gap-1 rounded-lg bg-surface/80 px-2 py-0.5 text-xs backdrop-blur">
+        <div className="relative">
+          <button onClick={() => setMenu(!menu)} className="font-semibold hover:text-brand-light">{OSC[kind]}</button>
+          {menu && <div className="absolute left-0 top-6 z-20 w-40 rounded-lg border border-line bg-surface p-1 shadow-xl">{Object.entries(OSC).map(([k, t]) => <button key={k} onClick={() => { setKind(k); setMenu(false) }} className={`block w-full rounded px-2 py-1.5 text-left hover:bg-surface2 ${k === kind ? 'text-brand-light' : ''}`}>{t}</button>)}</div>}
+        </div>
+        <button title={hidden ? 'نمایش' : 'پنهان'} onClick={() => setHidden(!hidden)} className={`grid h-5 w-5 place-items-center rounded hover:bg-surface2 ${hidden ? 'text-brand-light' : 'text-muted'}`}><Icon size={13}><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></Icon></button>
+        <button title="حذف" onClick={() => setKind(null)} className="grid h-5 w-5 place-items-center rounded text-muted hover:bg-surface2 hover:text-down"><Icon size={13}><path d="M6 6l12 12M18 6 6 18" /></Icon></button>
       </div>
     </div>
   )

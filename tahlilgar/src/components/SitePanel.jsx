@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart from './TVChart'
+import SRChart from './SRChart'
 import { Intraday, RealLegal, Returns, Compare, Poll } from './OverviewExtra'
 import { Change } from './Count'
 import { fa } from '../data/market'
@@ -42,7 +43,7 @@ export default function SitePanel({ sym, dark, setDark }) {
   // Chart tab: scrolling snaps the tab bar to the top, and the chart then fills everything below it
   const scroller = useRef(null), tabsBar = useRef(null)
   const [fill, setFill] = useState(600)
-  const isChart = tab === 'چارت'
+  const isChart = ['چارت', 'حمایت/مقاومت', 'تکنیکال'].includes(tab)
   useEffect(() => {
     const sc = scroller.current, bar = tabsBar.current
     const measure = () => setFill(sc.clientHeight - bar.offsetHeight)
@@ -148,11 +149,11 @@ export default function SitePanel({ sym, dark, setDark }) {
         <AnimatePresence mode="wait">
           <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className={isChart ? '' : 'space-y-4 p-5'}>
             {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
-            {isChart && <div data-chart style={{ height: Math.max(360, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} /></div>}
+            {tab === 'چارت' && <div data-chart style={{ height: Math.max(360, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
-            {tab === 'حمایت/مقاومت' && <Levels sym={sym} d={d} />}
+            {tab === 'حمایت/مقاومت' && <div data-chart style={{ height: Math.max(360, fill) }}><SRChart sym={sym} dark={dark} /></div>}
             {tab === 'نظرات و تحلیل‌ها' && <Opinions d={d} />}
-            {tab === 'تکنیکال' && <Technical d={d} />}
+            {tab === 'تکنیکال' && <div data-chart style={{ height: Math.max(420, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} technical /></div>}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -379,42 +380,29 @@ function Real({ d }) {
 }
 
 function News({ d }) {
-  const [f, setF] = useState('همه')
-  const list = d.news.filter((n) => f === 'همه' || n[2] === f)
+  const [open, setOpen] = useState(null)
+  const [more, setMore] = useState(false)
+  const list = more ? d.news : d.news.slice(0, 3)
   return (
     <>
-      <div className="flex gap-2">{['همه', 'اطلاعیه', 'خبر', 'تحلیل', 'ناظر'].map((t) => <Pill key={t} on={f === t} onClick={() => setF(t)}>{t}</Pill>)}</div>
-      <div className="divide-y divide-line/60 rounded-2xl border border-line">
-        {list.map(([t, src, type, at]) => (
-          <motion.a layout key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-start gap-3 p-4 transition-colors hover:bg-surface2/40">
-            <span className={`mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl ${type === 'اطلاعیه' ? 'bg-amber-400/15 text-amber-400' : type === 'ناظر' ? 'bg-down/15 text-down' : 'bg-brand/15 text-brand-light'}`}>{ico(Paper)}</span>
-            <div className="flex-1"><div className="font-semibold">{t}</div><div className="mt-1 text-xs text-muted">{src} · {type} · {at}</div></div>
-          </motion.a>
+      <div className="flex items-center justify-between">
+        <h3 className="font-bold">اخبار و اطلاعیه‌ها</h3>
+        <button onClick={() => setMore(!more)} className="flex items-center gap-1 text-sm text-brand-light hover:underline">{more ? 'کمتر' : 'بیشتر'} <motion.span animate={{ rotate: more ? 90 : 0 }}>‹</motion.span></button>
+      </div>
+      <AnimatePresence initial={false}>
+        {list.map((n, i) => (
+          <motion.article key={n.t} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, height: 0 }} transition={{ delay: i * .04 }}
+            onClick={() => setOpen(open === i ? null : i)} className="cursor-pointer rounded-2xl border border-line bg-surface2/25 p-4 transition-colors hover:border-brand/40">
+            <h4 className="font-bold">{n.t}</h4>
+            <p className={`mt-2 text-sm leading-7 text-muted ${open === i ? '' : 'line-clamp-2'}`}>{n.b}</p>
+            <div className="mt-3 flex items-center justify-between text-xs">
+              <span className={`flex items-center gap-1.5 font-semibold ${n.k === 'پیام ناظر' ? 'text-amber-400' : 'text-brand-light'}`}>{ico(Paper, 15)}{n.k}</span>
+              <span className="num text-muted" dir="ltr">{n.at}</span>
+            </div>
+          </motion.article>
         ))}
-      </div>
+      </AnimatePresence>
     </>
-  )
-}
-
-function Levels({ sym, d }) {
-  return (
-    <Card title="سطوح حمایت و مقاومت" actions={<span className="text-xs text-muted">بر اساس سقف و کف‌های روزانه</span>}>
-      <div className="space-y-2">
-        {d.levels.map((l, i) => {
-          const res = l.t.startsWith('مقاومت')
-          return (
-            <motion.div key={l.t} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * .05 }}
-              className={`flex items-center gap-3 rounded-xl p-3 ${l.cur ? 'border border-brand/60 bg-brand/10' : 'bg-surface2/40'}`}>
-              <span className={`w-20 text-sm font-semibold ${l.cur ? 'text-brand-light' : res ? 'text-down' : 'text-up'}`}>{l.t}</span>
-              <span className="num w-20 font-bold">{fa(l.p)}</span>
-              {!l.cur && <><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${l.str}%` }} className={`h-full ${res ? 'bg-down' : 'bg-up'}`} /></div>
-                <span className="num w-24 text-left text-xs text-muted">فاصله {fa(Math.abs((l.p - sym.p) / sym.p * 100), 1)}٪</span></>}
-              {l.cur && <span className="flex-1 text-left text-xs text-muted">قیمت لحظه‌ای</span>}
-            </motion.div>
-          )
-        })}
-      </div>
-    </Card>
   )
 }
 
@@ -448,39 +436,6 @@ function Opinions({ d }) {
         ))}
       </AnimatePresence>
     </>
-  )
-}
-
-function Gauge({ title, v, id }) {
-  const [s, n, b] = v, total = s + n + b, score = (b - s) / total
-  const label = score > .5 ? 'خرید قوی' : score > .1 ? 'خرید' : score < -.5 ? 'فروش قوی' : score < -.1 ? 'فروش' : 'خنثی'
-  const col = score > .1 ? 'text-up' : score < -.1 ? 'text-down' : 'text-muted'
-  const ang = score * 90
-  return (
-    <Card className="text-center">
-      <h4 className="mb-2 text-sm font-semibold">{title}</h4>
-      <svg viewBox="0 0 200 110" className="mx-auto w-full max-w-[220px]">
-        <defs><linearGradient id={'gauge' + id} x1="0" x2="1"><stop offset="0" stopColor="rgb(var(--down))" /><stop offset=".5" stopColor="rgb(var(--muted))" /><stop offset="1" stopColor="rgb(var(--up))" /></linearGradient></defs>
-        <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke={`url(#gauge${id})`} strokeWidth="12" strokeLinecap="round" opacity=".85" />
-        <motion.g initial={{ rotate: 0 }} animate={{ rotate: ang }} transition={{ type: 'spring', stiffness: 60, damping: 10 }} style={{ originX: '100px', originY: '100px' }}>
-          <line x1="100" y1="100" x2="100" y2="34" stroke="rgb(var(--ink))" strokeWidth="3" strokeLinecap="round" />
-        </motion.g>
-        <circle cx="100" cy="100" r="6" fill="rgb(var(--ink))" />
-      </svg>
-      <div className={`text-lg font-extrabold ${col}`}>{label}</div>
-      <div className="num mt-2 flex justify-center gap-4 text-xs"><span className="text-down">فروش {fa(s)}</span><span className="text-muted">خنثی {fa(n)}</span><span className="text-up">خرید {fa(b)}</span></div>
-    </Card>
-  )
-}
-
-function Technical({ d }) {
-  const sum = d.tech.osc.map((v, i) => v + d.tech.ma[i])
-  return (
-    <div className="grid gap-4 md:grid-cols-3">
-      <Gauge id={1} title="اسیلاتورها" v={d.tech.osc} />
-      <Gauge id={2} title="خلاصه" v={sum} />
-      <Gauge id={3} title="میانگین‌های متحرک" v={d.tech.ma} />
-    </div>
   )
 }
 
