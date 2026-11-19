@@ -155,7 +155,7 @@ function Overview({ sym, d, open, dark }) {
         </Card>
         <div className="flex flex-col gap-4">
           <Card title="دامنه قیمت امروز"><Range sym={sym} d={d} /></Card>
-          <Card className="flex flex-1 flex-col" title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
+          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
             <Fundamentals d={d} />
           </Card>
         </div>
@@ -182,8 +182,8 @@ function OrderBook({ d, prev, rows, cum }) {
   const pct = (p) => { const v = pc(p); return (v >= 0 ? '+' : '−') + fa(Math.abs(v), 2) + '٪' }
   // Volume bars grow outward from the price columns in the middle
   const Vol = ({ v, w, buy }) => (
-    <td className="px-0.5 py-1.5">
-      <div className={`relative flex h-8 items-center ${buy ? 'justify-end' : 'justify-start'}`}>
+    <td className="px-0.5 py-1">
+      <div className={`relative flex h-7 items-center ${buy ? 'justify-end' : 'justify-start'}`}>
         <motion.span initial={{ width: 0 }} animate={{ width: `${Math.max(4, w)}%` }} transition={{ duration: .5, ease: 'easeOut' }}
           className={`absolute inset-y-0 rounded-lg ${buy ? 'left-0 bg-up/20' : 'right-0 bg-down/20'}`} />
         <span className="relative whitespace-nowrap px-1.5 font-semibold" dir="ltr">{vol(v)}</span>
@@ -191,31 +191,31 @@ function OrderBook({ d, prev, rows, cum }) {
     </td>
   )
   return (
-    <div className="overflow-x-auto">
-      <div className="min-w-[360px]">
+    <div className="flex flex-1 flex-col overflow-x-auto">
+      <div className="flex min-w-[360px] flex-1 flex-col">
         <div className="grid grid-cols-2 text-center font-bold">
-          <div className="border-b-2 border-up pb-2 text-up">تقاضا</div>
-          <div className="border-b-2 border-down pb-2 text-down">عرضه</div>
+          <div className="border-b-2 border-up pb-1.5 text-up">تقاضا</div>
+          <div className="border-b-2 border-down pb-1.5 text-down">عرضه</div>
         </div>
         <table className="num w-full table-fixed text-center text-sm">
-          <thead className="text-xs text-muted"><tr>{['تعداد', 'حجم', 'قیمت', 'قیمت', 'حجم', 'تعداد'].map((h, i) => <th key={i} className="py-3 font-normal">{h}</th>)}</tr></thead>
+          <thead className="text-xs text-muted"><tr>{['تعداد', 'حجم', 'قیمت', 'قیمت', 'حجم', 'تعداد'].map((h, i) => <th key={i} className="py-2 font-normal">{h}</th>)}</tr></thead>
           <tbody>
             {data.map((r, i) => (
               <motion.tr key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="transition-colors hover:bg-surface2/40">
-                <td className="py-1.5">{fa(r.bn)}</td>
+                <td className="py-1">{fa(r.bn)}</td>
                 <Vol v={r.bq} w={((cum ? r.cb : r.bq) / mx) * 100} buy />
-                <td className="leading-tight"><b className="text-[15px]">{fa(r.bp)}</b><div className="text-[11px] text-up" dir="ltr">{pct(r.bp)}</div></td>
-                <td className="leading-tight"><b className="text-[15px]">{fa(r.ap)}</b><div className="text-[11px] text-down" dir="ltr">{pct(r.ap)}</div></td>
+                <td className="leading-tight"><b className="text-sm">{fa(r.bp)}</b><div className="text-[10px] text-up" dir="ltr">{pct(r.bp)}</div></td>
+                <td className="leading-tight"><b className="text-sm">{fa(r.ap)}</b><div className="text-[10px] text-down" dir="ltr">{pct(r.ap)}</div></td>
                 <Vol v={r.aq} w={((cum ? r.ca : r.aq) / mx) * 100} />
                 <td>{fa(r.an)}</td>
               </motion.tr>
             ))}
           </tbody>
         </table>
-        <div className="my-3 flex items-center gap-3 text-xs text-muted"><i className="flex-1 border-t border-dashed border-line" />جمع سفارش‌ها<i className="flex-1 border-t border-dashed border-line" /></div>
+        <div className="mb-2 mt-auto flex items-center gap-3 pt-2 text-xs text-muted"><i className="flex-1 border-t border-dashed border-line" />جمع سفارش‌ها<i className="flex-1 border-t border-dashed border-line" /></div>
         <div className="num grid grid-cols-2 overflow-hidden rounded-xl text-[15px] font-bold">
-          <div className="grid grid-cols-2 bg-up/10 py-3 text-center text-up"><span>{fa(data.reduce((a, r) => a + r.bn, 0))}</span><span>{fa(data.at(-1).cb)}</span></div>
-          <div className="grid grid-cols-2 bg-down/10 py-3 text-center text-down"><span>{fa(data.at(-1).ca)}</span><span>{fa(data.reduce((a, r) => a + r.an, 0))}</span></div>
+          <div className="grid grid-cols-2 bg-up/10 py-2 text-center text-up"><span>{fa(data.reduce((a, r) => a + r.bn, 0))}</span><span>{fa(data.at(-1).cb)}</span></div>
+          <div className="grid grid-cols-2 bg-down/10 py-2 text-center text-down"><span>{fa(data.at(-1).ca)}</span><span>{fa(data.reduce((a, r) => a + r.an, 0))}</span></div>
         </div>
       </div>
     </div>
@@ -314,7 +314,7 @@ function Fundamentals({ d }) {
   )
   const [num, unit] = String(f['ارزش بازار']).split(' ')
   return (
-    <div className="grid flex-1 auto-rows-fr grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
       <div className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-tr-xl bg-brand/10 px-2 py-3.5 text-center">
         <Tip label="ارزش بازار" tip={TIPS['ارزش بازار']} />
         <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
