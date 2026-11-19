@@ -29,7 +29,6 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
     <aside className="flex w-full bg-surface lg:h-full lg:w-auto lg:shrink-0">
       {/* Side rail — like an app's nav bar, pinned to the screen edge */}
       <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
-        <img src="./logo.png" alt="تحلیلگر بورس" className="mb-3 h-9 w-9 rounded-xl" />
         {TABS.map(({ k, t, I }) => (
           <button key={k} title={t} onClick={() => { if (tab === k) setCollapsed(!collapsed); else { goTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
             {tab === k && !collapsed && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
