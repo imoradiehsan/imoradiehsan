@@ -198,10 +198,15 @@ export default function Opinions({ sym }) {
   const ME = 'احسان_مرادی'
   const [tab, setTab] = useState('latest')
   // keep the latest/featured/analysis tabs floating right under the symbol's sticky tab bar
-  const tabsRef = useRef(null), [barH, setBarH] = useState(0), [stuck, setStuck] = useState(false)
+  const tabsRef = useRef(null), [barH, setBarH] = useState(0), [stuck, setStuck] = useState(false), [fabHidden, setFabHidden] = useState(false)
   useEffect(() => {
     const sc = tabsRef.current?.closest('.scroll-y'); if (!sc) return
-    const on = () => setStuck(tabsRef.current.getBoundingClientRect().bottom <= sc.getBoundingClientRect().top + barH + 1)
+    let last = sc.scrollTop
+    // pinned pill when the tabs have scrolled away; compose button hides while scrolling down and returns on scroll up
+    const on = () => {
+      setStuck(tabsRef.current.getBoundingClientRect().bottom <= sc.getBoundingClientRect().top + barH + 1)
+      const y = sc.scrollTop; if (Math.abs(y - last) > 6) { setFabHidden(y > last && y > 80); last = y }
+    }
     on(); sc.addEventListener('scroll', on, { passive: true }); return () => sc.removeEventListener('scroll', on)
   }, [barH])
   useEffect(() => { const bar = document.querySelector('[data-symtabs]'); if (!bar) return; const m = () => setBarH(bar.offsetHeight); m(); const ro = new ResizeObserver(m); ro.observe(bar); return () => ro.disconnect() }, [])
@@ -273,8 +278,11 @@ export default function Opinions({ sym }) {
         {!list.length && <p className="py-12 text-center text-sm text-muted">هنوز موردی ثبت نشده است.</p>}
       </div>
       {/* compose */}
-      <motion.button whileHover={{ scale: 1.06 }} whileTap={{ scale: .92 }} onClick={() => { setDraft({ t: '', kind: tab === 'analysis' ? 'تحلیل' : 'نظر' }); setSheet('write') }} aria-label="نوشتن نظر"
-        className="sticky bottom-4 left-4 z-20 float-left -mt-14 ml-4 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">{Ico.pen}</motion.button>
+      <div className="pointer-events-none sticky bottom-0 z-20 h-0">
+        <motion.button animate={{ y: fabHidden ? 120 : 0, opacity: fabHidden ? 0 : 1 }} transition={{ type: 'spring', stiffness: 420, damping: 32 }} whileHover={{ scale: 1.06 }} whileTap={{ scale: .92 }}
+          onClick={() => { setDraft({ t: '', kind: tab === 'analysis' ? 'تحلیل' : 'نظر' }); setSheet('write') }} aria-label="نوشتن نظر"
+          className="pointer-events-auto absolute bottom-5 left-5 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">{Ico.pen}</motion.button>
+      </div>
 
       {/* post menu */}
       <AnimatePresence>{menu && (
