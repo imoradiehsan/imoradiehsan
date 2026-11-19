@@ -1112,6 +1112,7 @@ function HistoryChart({ sym, trades, type, onPick }) {
   const line = bars.map((b, i) => `${i ? 'L' : 'M'}${X(i)},${Y(b.close)}`).join('')
   const ticks = bars.map((_, i) => i).filter((i) => i % Math.ceil(bars.length / 6) === 0)
   const hv = hover != null ? trades[hover] : null
+  const ci = hv ? idx(hv) : cross
   return (
     <div className="flex h-full flex-col">
       <div ref={box} className="relative min-h-0 flex-1" dir="ltr" onMouseLeave={() => setCross(null)}
@@ -1125,31 +1126,29 @@ function HistoryChart({ sym, trades, type, onPick }) {
           {type === 'line'
             ? <motion.path key={range} d={line} fill="none" stroke="#3C7CFF" strokeWidth="2.5" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
             : bars.map((b, i) => { const c = b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'; return <g key={i}><line x1={X(i)} x2={X(i)} y1={Y(b.high)} y2={Y(b.low)} stroke={c} /><rect x={X(i) - step * .32} width={step * .64} y={Y(Math.max(b.open, b.close))} height={Math.max(1, Math.abs(Y(b.open) - Y(b.close)))} fill={c} /></g> })}
-          {cross != null && hover == null && <g pointerEvents="none">
-            <line x1={X(cross)} x2={X(cross)} y1={pt} y2={H - pb} stroke="rgba(240,80,110,.75)" />
-            <line x1={pl} x2={W - pr} y1={Y(bars[cross].close)} y2={Y(bars[cross].close)} stroke="rgba(240,80,110,.75)" />
-            <rect x={W - pr + 2} y={Y(bars[cross].close) - 9} width={pr - 4} height="18" rx="5" fill="rgb(var(--down))" />
-            <text x={W - pr + pr / 2} y={Y(bars[cross].close) + 4} fontSize="10" fontWeight="700" textAnchor="middle" fill="#fff">{fa(Math.round(bars[cross].close))}</text>
+          {ci != null && <g pointerEvents="none">
+            <line x1={X(ci)} x2={X(ci)} y1={pt} y2={H - pb} stroke="rgba(240,80,110,.75)" />
+            <line x1={pl} x2={W - pr} y1={Y(bars[ci].close)} y2={Y(bars[ci].close)} stroke="rgba(240,80,110,.75)" />
+            <rect x={W - pr + 2} y={Y(bars[ci].close) - 9} width={pr - 4} height="18" rx="5" fill="rgb(var(--down))" />
+            <text x={W - pr + pr / 2} y={Y(bars[ci].close) + 4} fontSize="10" fontWeight="700" textAnchor="middle" fill="#fff">{fa(Math.round(bars[ci].close))}</text>
           </g>}
           {trades.map((t, k) => { const i = idx(t); if (t.day >= bars.length) return null; const up = t.dP >= 0, x = X(i), y = Y(bars[i].close) + (up ? 14 : -14)
             return <motion.circle key={k} cx={x} cy={y} initial={{ r: 0 }} animate={{ r: hover === k ? 9 : 6 }} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} stroke="rgb(var(--ink))" strokeWidth="2"
               onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => onPick(t.name)} className="cursor-pointer" /> })}
         </svg>
-        <AnimatePresence>{cross != null && hover == null && (() => { const b = bars[cross], x = X(cross); return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }} style={{ left: x > W / 2 ? x - 150 : x + 14, top: Math.min(H - 150, Math.max(8, Y(b.close) + 14)) }}
-            className="num pointer-events-none absolute z-10 w-36 rounded-xl border border-line bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
+        <AnimatePresence>{ci != null && (() => { const b = bars[ci], x = X(ci); return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }} style={{ left: x > W / 2 ? x - (hv ? 228 : 150) : x + 14, top: Math.min(H - (hv ? 190 : 150), Math.max(8, Y(b.close) + 14)) }}
+            className={`num pointer-events-none absolute z-10 rounded-xl border bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur ${hv ? 'w-52 border-brand/40' : 'w-36 border-line'}`} dir="rtl">
             <div className="mb-1 border-b border-line pb-1 text-center font-bold text-brand-light">{new Date(b.time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</div>
-            {(type === 'line' ? [['قیمت', b.close], ['حجم', b.volume]] : [['اولین', b.open], ['آخرین', b.close], ['بیشترین', b.high], ['کمترین', b.low], ['حجم', b.volume]]).map(([k, v]) => (
+            {(type === 'line' || hv ? [['قیمت', b.close], ['حجم', b.volume]] : [['اولین', b.open], ['آخرین', b.close], ['بیشترین', b.high], ['کمترین', b.low], ['حجم', b.volume]]).map(([k, v]) => (
               <div key={k} className="flex justify-between py-0.5"><span className="text-muted">{k}:</span><b>{fa(Math.round(v))}</b></div>
             ))}
-          </motion.div>) })()}</AnimatePresence>
-        <AnimatePresence>{hv && (() => { const i = idx(hv), x = X(i); return (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ left: x > W / 2 ? x - 200 : x + 16, top: 12 }}
-            className="num pointer-events-none absolute z-10 w-48 rounded-xl border border-line bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
-            <div className="mb-1 flex justify-between"><span className="text-muted">{hv.d}</span>{hv.tag && <span className={hv.tag === 'خروج کامل' ? 'text-down' : 'text-up'}>{hv.tag}</span>}</div>
-            <b className="block text-brand-light">{hv.name}</b>
-            <div className="mt-1 flex justify-between"><span>{hv.dP >= 0 ? 'خرید' : 'فروش'}</span><b className={hv.dP >= 0 ? 'text-up' : 'text-down'} dir="ltr">{hv.dP >= 0 ? '+' : '−'}{fa(Math.abs(hv.dP), 3)}٪</b></div>
-            <div className="mt-1 text-[10px] text-muted">برای دیدن سهامدار کلیک کنید</div>
+            {hv && <div className="mt-1 space-y-1 border-t border-line pt-1.5">
+              <b className="block text-[12px] leading-5">{hv.name}</b>
+              <div className="flex justify-between"><span className="text-muted">درصد {hv.dP >= 0 ? 'خرید' : 'فروش'}:</span><b className={hv.dP >= 0 ? 'text-up' : 'text-down'} dir="ltr">{hv.dP >= 0 ? '+' : '−'}{fa(Math.abs(hv.dP), 3)}٪</b></div>
+              {hv.tag && <div className={`text-[10px] font-bold ${hv.tag === 'خروج کامل' ? 'text-down' : 'text-up'}`}>{hv.tag}</div>}
+              <div className="text-[10px] text-muted">برای دیدن سهامدار کلیک کنید</div>
+            </div>}
           </motion.div>) })()}</AnimatePresence>
       </div>
       <div className="shrink-0 overflow-x-auto border-t border-line px-3 py-2.5 [&_.seg-item]:px-2.5">
