@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'IRANYekanX';
+  src: url('/fonts/IRANYekanX.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-display: swap;
+}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 241 244 251; --surface: 255 255 255; --surface2: 234 239 250;
+  --line: 220 227 242; --ink: 15 23 42; --muted: 100 116 139;
+  --up: 22 163 74; --down: 220 38 38;
+}
+.dark {
+  --bg: 7 10 20; --surface: 15 20 36; --surface2: 24 31 54;
+  --line: 36 45 74; --ink: 236 240 250; --muted: 132 144 175;
+  --up: 52 211 153; --down: 248 113 113;
+}
+html, body { font-family: IRANYekanX, Tahoma, sans-serif; font-feature-settings: "ss02"; }
+body { @apply bg-bg text-ink transition-colors duration-500; }
+.dark body {
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(46,98,255,.22), transparent 60%),
+    radial-gradient(700px 500px at 0% 110%, rgba(32,71,255,.15), transparent 60%),
+    rgb(var(--bg));
+  background-attachment: fixed;
+}
+.card {
+  @apply rounded-[28px] border border-line/70 bg-surface/80 backdrop-blur-xl p-5;
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -30px rgba(0,0,0,.5);
+}
+.chip { @apply rounded-full px-3.5 py-1.5 text-sm text-muted transition-colors hover:text-ink; }
+.icon-btn {
+  @apply grid h-11 w-11 place-items-center rounded-full border border-line/70 bg-surface/80 text-muted
+         transition-all hover:text-brand-light hover:border-brand/50 active:scale-90;
+}
+.num { font-feature-settings: "ss02", "tnum"; }
+::-webkit-scrollbar { width: 6px; height: 6px }
+::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 9px }
