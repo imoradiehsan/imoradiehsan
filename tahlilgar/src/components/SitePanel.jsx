@@ -552,7 +552,7 @@ function peerRows(sym) {
       eps, pe: eps > 0 ? p / eps : null, ps: r() > .5 ? .5 + r() * 4 : null, mc: Math.round((1 + r() * 600) * 1e12), r1m: (r() - .25) * 40, r1y: (r() - .1) * 400 }
   })
 }
-function Dropdown({ value, options, onChange }) {
+export function Dropdown({ value, options, onChange }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="relative">
@@ -626,7 +626,7 @@ function Peers({ sym, openSym }) {
 }
 
 /* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
-function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false, actions, primary = false }) {
+export function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false, actions, primary = false }) {
   useScrollLock(open)
   useEffect(() => {
     if (!open) return

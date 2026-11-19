@@ -6,6 +6,7 @@ import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
 import { useSort, SortHead } from './sort'
 import { Marquee } from './OverviewExtra'
+import Watchlist from './Watchlist'
 
 const TABS = [
   { k: 'watch', t: 'دیده‌بان', I: Category },
@@ -76,7 +77,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
         </div>
 
         <AnimatePresence mode="popLayout" initial={false} custom={dir}>
-          <motion.div key={pageKey} custom={dir} className="scroll-y min-h-0 flex-1 bg-surface" initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * 40 }} transition={{ duration: .22, ease: [.2, .8, .2, 1] }}>
+          <motion.div key={pageKey} custom={dir} className={`min-h-0 flex-1 bg-surface ${!page && (tab === 'watch' || tab === 'port') ? 'relative overflow-hidden' : 'scroll-y'}`} initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * 40 }} transition={{ duration: .22, ease: [.2, .8, .2, 1] }}>
             {page ? (
               <div className="p-4">
                 {page.k === 'symbol' && <SymbolPage x={page.x} nav={nav} />}
@@ -84,10 +85,11 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
                 {page.k === 'newAlert' && <NewAlert x={page.x} onSave={(a) => { setAlerts((al) => [...al, a]); back() }} />}
               </div>
             ) : tab === 'watch' ? (
-              <div className="p-2"><Watch sym={sym} setSym={setSym} open={(x) => { setSym(x); push({ k: 'symbol', title: x.s, x }) }} /></div>
+              <Watchlist sym={sym} setSym={setSym} initial="watch" />
+            ) : tab === 'port' ? (
+              <Watchlist sym={sym} setSym={setSym} initial="port" />
             ) : (
               <div className="p-4">
-                {tab === 'port' && <Portfolio open={(h) => { setSym(h.x); push({ k: 'holding', title: h.s, h }) }} />}
                 {tab === 'alert' && <Alerts al={alerts} setAl={setAlerts} add={() => push({ k: 'newAlert', title: 'هشدار جدید' })} />}
               </div>
             )}
