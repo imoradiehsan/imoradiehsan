@@ -177,21 +177,17 @@ function BarRow({ label, v, max }) {
 }
 // Info icon: hover or click opens an explanation of the three return types
 function ReturnsInfo() {
-  const [open, setOpen] = useState(false), [pinned, setPinned] = useState(false)
-  const close = () => { setOpen(false); setPinned(false) }
+  const [open, setOpen] = useState(false)
   return (
-    <span className="relative inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => !pinned && setOpen(false)}>
-      <button aria-label="توضیح انواع بازده" onClick={() => { setPinned(true); setOpen(true) }}
+    <span className="relative inline-flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button aria-label="توضیح انواع بازده" onClick={() => setOpen(!open)} onFocus={() => setOpen(true)} onBlur={() => setOpen(false)}
         className={`grid h-5 w-5 place-items-center rounded-full border text-[11px] transition-colors ${open ? 'border-brand bg-brand text-white' : 'border-muted text-muted hover:border-brand hover:text-brand-light'}`}>?</button>
       <AnimatePresence>{open && (
-        <motion.div initial={{ opacity: 0, y: 6, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: .97 }} transition={{ duration: .15 }}
-          className="absolute right-0 top-full z-40 mt-2 w-80 overflow-hidden rounded-2xl border border-line bg-surface2 text-right text-xs font-normal leading-6 shadow-2xl">
-          <div className="space-y-2 p-4 text-ink">
-            <p><b className="text-brand-light">بازده تقویمی:</b> تغییر نسبت به روزهای تقویمی. مثلاً بازده ۱ ماهه تقویمی تغییر قیمت نسبت به همین روز در ماه قبل است.</p>
-            <p><b className="text-brand-light">بازده معاملاتی:</b> تغییر نسبت به روزهای معاملاتی (روزهایی که بازار باز است). مثلاً بازده ۱ ماهه معاملاتی تغییر نسبت به ۳۰ کندل قبل است.</p>
-            <p><b className="text-brand-light">بازده ابتدای دوره:</b> تغییر نسبت به ابتدای همان دوره. مثلاً بازده ۱ ماهه ابتدای دوره تغییر نسبت به روز اول ماه جاری است.</p>
-          </div>
-          <button onClick={close} className="w-full border-t border-line py-2.5 text-sm font-bold text-brand-light transition-colors hover:bg-brand/10">فهمیدم</button>
+        <motion.div role="tooltip" initial={{ opacity: 0, y: 6, scale: .97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: .97 }} transition={{ duration: .15 }}
+          className="pointer-events-none absolute right-0 top-full z-40 mt-2 w-80 space-y-2 rounded-2xl border border-line bg-surface2 p-4 text-right text-xs font-normal leading-6 text-ink shadow-2xl">
+          <p><b className="text-brand-light">بازده تقویمی:</b> تغییر نسبت به روزهای تقویمی. مثلاً بازده ۱ ماهه تقویمی تغییر قیمت نسبت به همین روز در ماه قبل است.</p>
+          <p><b className="text-brand-light">بازده معاملاتی:</b> تغییر نسبت به روزهای معاملاتی (روزهایی که بازار باز است). مثلاً بازده ۱ ماهه معاملاتی تغییر نسبت به ۳۰ کندل قبل است.</p>
+          <p><b className="text-brand-light">بازده ابتدای دوره:</b> تغییر نسبت به ابتدای همان دوره. مثلاً بازده ۱ ماهه ابتدای دوره تغییر نسبت به روز اول ماه جاری است.</p>
         </motion.div>
       )}</AnimatePresence>
     </span>
