@@ -415,13 +415,14 @@ function StrategyFab({ onClick }) {
   const [wide, setWide] = useState(true), [hover, setHover] = useState(false)
   useEffect(() => { const t = setTimeout(() => setWide(false), 3000); return () => clearTimeout(t) }, [])
   const open = wide || hover
+  // pure CSS max-width/opacity transition: GPU-friendly, no per-frame layout measuring
   return (
-    <motion.button layout onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} onFocus={() => setHover(true)} onBlur={() => setHover(false)}
+    <button onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} onFocus={() => setHover(true)} onBlur={() => setHover(false)}
       aria-label="اجرای استراتژی" title="اجرای استراتژی"
-      className="flex h-9 shrink-0 items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-2 text-sm font-bold text-white shadow-glow" transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
+      className="flex h-9 shrink-0 items-center overflow-hidden rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-2 text-sm font-bold text-white shadow-glow transition-transform active:scale-95">
       {I.play}
-      <AnimatePresence initial={false}>{open && <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="whitespace-nowrap pl-1">اجرای استراتژی</motion.span>}</AnimatePresence>
-    </motion.button>
+      <span className={`overflow-hidden whitespace-nowrap transition-[max-width,opacity,padding] duration-300 ease-out ${open ? 'max-w-[8rem] pr-1.5 opacity-100' : 'max-w-0 pr-0 opacity-0'}`}>اجرای استراتژی</span>
+    </button>
   )
 }
 
