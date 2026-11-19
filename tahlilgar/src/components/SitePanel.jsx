@@ -456,7 +456,7 @@ function Drawer({ k, close, sym, d }) {
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
               {k === 'real' && <Real d={d} />}
-              {k === 'details' && [['نام کامل', sym.n], ['نماد', sym.s], ['بازار', d.market], ['صنعت', sym.ind], ['آستانه مجاز', `${fa(d.limLo)} تا ${fa(d.limHi)}`], ['قیمت پایانی دیروز', fa(d.prev)], ...d.fundamentals].map(([a, b]) => <div key={a} className="flex justify-between border-b border-line/50 py-2.5"><span className="text-muted">{a}</span><b className="num">{b}</b></div>)}
+              {k === 'details' && <SymbolFlags sym={sym} />}
               {k === 'strategy' && ['کاورد کال روی ' + sym.s, 'خرید پله‌ای در نواحی حمایتی', 'معامله شکست مقاومت ۱'].map((t, i) => <div key={t} className="rounded-xl bg-surface2/40 p-3"><b>{t}</b><div className="mt-1 text-xs text-muted">ریسک: {['کم', 'متوسط', 'زیاد'][i]} · افق: {['۱ ماه', '۳ ماه', '۲ هفته'][i]}</div></div>)}
               {k === 'option' && [0.95, 1, 1.05, 1.1].map((m) => <div key={m} className="num flex justify-between rounded-xl bg-surface2/40 p-3"><span>ض{sym.s.slice(0, 3)}{fa(Math.round(sym.p * m / 100))}</span><span>اعمال {fa(Math.round(sym.p * m))}</span><b className="text-brand-light">{fa(Math.round(sym.p * .06 / m))}</b></div>)}
             </div>
@@ -464,5 +464,53 @@ function Drawer({ k, close, sym, d }) {
         </>
       )}
     </AnimatePresence>
+  )
+}
+
+/* ---------- جزئیات نماد: وضعیت سیگنال‌ها ---------- */
+const FLAGS = [
+  ['حمایت/مقاومت', 'قیمت نزدیک یکی از سطوح مهم حمایت یا مقاومت است.'],
+  ['واگرایی', 'بین روند قیمت و اندیکاتورهایی مثل RSI یا MACD واگرایی دیده می‌شود.'],
+  ['الگو', 'یک الگوی کلاسیک (مثل مثلث، سر و شانه یا پرچم) روی نمودار شناسایی شده است.'],
+  ['مجمع', 'مجمع عمومی نماد به‌زودی برگزار می‌شود.'],
+  ['پولبک', 'قیمت پس از شکست یک سطح، به آن برگشته و در حال تست مجدد است.'],
+  ['مستعد رشد', 'ترکیب حجم، روند و قدرت خریدار نشانه احتمال رشد است.'],
+  ['حجم مشکوک', 'حجم معاملات امروز به‌طور غیرعادی بیشتر از میانگین ماهانه است.'],
+  ['جمع شدن صف', 'صف خرید یا فروش نماد در حال جمع شدن است.'],
+  ['صف فردا', 'احتمال تشکیل صف در جلسه معاملاتی فردا وجود دارد.'],
+]
+function SymbolFlags({ sym }) {
+  const seed = [...sym.s].reduce((a, c) => a + c.charCodeAt(0), 0)
+  const on = FLAGS.map((_, i) => ((seed * (i + 3) * 7919) % 100) < (sym.c > 0 ? 45 : 30))
+  const [tip, setTip] = useState(null)
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between text-xs text-muted">
+        <span>وضعیت سیگنال‌های {sym.s}</span>
+        <span className="num"><b className="text-brand-light">{fa(on.filter(Boolean).length)}</b> از {fa(FLAGS.length)} فعال</span>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {FLAGS.map(([t, desc], i) => (
+          <motion.button key={t} initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * .04 }}
+            onMouseEnter={() => setTip(i)} onMouseLeave={() => setTip(null)} onFocus={() => setTip(i)} onBlur={() => setTip(null)}
+            className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition-colors ${on[i] ? 'border-brand/40 bg-brand/10' : 'border-line bg-surface2/30'} ${tip === i ? 'border-brand/70' : ''}`}>
+            <span className="text-xs font-semibold">{t}</span>
+            <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: .15 + i * .04, type: 'spring', stiffness: 400, damping: 15 }}
+              className={`grid h-5 w-5 place-items-center rounded-full text-white ${on[i] ? 'bg-brand' : 'bg-down'}`} aria-label={on[i] ? 'دارد' : 'ندارد'}>
+              {on[i]
+                ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 5 5 9-10" /></svg>
+                : <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>}
+            </motion.span>
+          </motion.button>
+        ))}
+      </div>
+      <div className="min-h-[52px] rounded-xl bg-surface2/40 p-3 text-xs leading-6 text-muted">
+        {tip == null ? 'برای دیدن توضیح هر مورد، ماوس را روی آن ببرید.' : <><b className="text-ink">{FLAGS[tip][0]}: </b>{FLAGS[tip][1]}</>}
+      </div>
+      <div className="flex justify-center gap-4 text-[11px] text-muted">
+        <span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-brand" />دارد</span>
+        <span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-full bg-down" />ندارد</span>
+      </div>
+    </div>
   )
 }
