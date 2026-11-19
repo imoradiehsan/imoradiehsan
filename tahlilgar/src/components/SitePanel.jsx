@@ -4,7 +4,7 @@ import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discover
 import TVChart from './TVChart'
 import SRChart from './SRChart'
 import RealPower from './RealPower'
-import { Intraday, RealLegal, Returns, Compare, Poll } from './OverviewExtra'
+import { Intraday, RealLegal, Returns, Compare, Poll, Marquee } from './OverviewExtra'
 import { Change } from './Count'
 import { fa } from '../data/market'
 import { symbolData } from '../data/symbol'
@@ -451,10 +451,10 @@ function Drawer({ k, close, sym, d }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
-            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
-            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' ? 'flex min-h-0 flex-col overflow-hidden' : 'scroll-y'}`}>
+            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>
+            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} />}
-              {k === 'holders' && d.holders.map((h) => <div key={h.n} className="rounded-xl bg-surface2/40 p-3"><div className="flex justify-between"><span>{h.n}</span><b className="num">{fa(h.p, 2)}٪</b></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${h.p * 2.5}%` }} className="h-full bg-brand" /></div><div className={`num mt-1 text-xs ${h.d >= 0 ? 'text-up' : 'text-down'}`}>تغییر امروز: {h.d >= 0 ? '+' : '−'}{fa(Math.abs(h.d))} سهم</div></div>)}
+              {k === 'holders' && <Holders sym={sym} />}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
               {k === 'real' && <RealPower sym={sym} />}
@@ -598,7 +598,7 @@ function Peers({ sym }) {
 }
 
 /* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
-function Modal({ open, title, onClose, children }) {
+function Modal({ open, title, onClose, children, closeText = 'بستن' }) {
   useEffect(() => {
     if (!open) return
     const k = (e) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
@@ -615,7 +615,7 @@ function Modal({ open, title, onClose, children }) {
               <h3 className="px-5 pb-3 pt-4 text-center font-bold">{title}</h3>
               <div className="scroll-y min-h-0 px-4 pb-4">{children}</div>
             </div>
-            <motion.button whileTap={{ scale: .97 }} onClick={onClose} className="rounded-3xl border border-line bg-surface py-3.5 font-semibold shadow-2xl hover:border-brand/40">بستن</motion.button>
+            <motion.button whileTap={{ scale: .97 }} onClick={onClose} className="rounded-3xl border border-line bg-surface py-3.5 font-semibold shadow-2xl hover:border-brand/40">{closeText}</motion.button>
           </motion.div>
         </div>
       )}
@@ -713,5 +713,84 @@ function DepthChart({ sym }) {
         <span className="flex items-center gap-1.5"><i className="h-2.5 w-2.5 rounded-sm bg-down" />عرضه تجمعی</span>
       </div>
     </div>
+  )
+}
+
+/* ---------- سهامداران عمده ---------- */
+const HOLDER_NAMES = ['صندوق س. بازارگردانی امید لوتوس پارسیان', 'سبد-شرکت سرمایه‌گذاری PRX', 'صندوق س. در اوراق بهادار با درآمد ثابت تصمیم', 'شخص حقیقی', 'شرکت سرمایه‌گذاری گروه صنایع بهشهر ایران-سهامی', 'صندوق بازنشستگی کشوری', 'شرکت سرمایه‌گذاری تأمین اجتماعی']
+const OTHER_CO = ['فملی', 'شپنا', 'وبملت', 'خودرو', 'کگل', 'فارس', 'شستا', 'رمپنا']
+function holdersData(sym) {
+  let x = [...sym.s].reduce((a, c) => a * 23 + c.charCodeAt(0), 7) % 2147483647
+  const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+  const shares = (2 + r() * 8) * 1e9
+  const list = HOLDER_NAMES.slice(0, 5).map((n, i) => { const p = +(Math.max(.5, (6 - i * 1.1) * (.6 + r() * .8))).toFixed(3); return { n, p, v: shares * p / 100, d: Math.round((r() - .5) * 6e6),
+    others: OTHER_CO.filter((c) => c !== sym.s).filter(() => r() > .55).slice(0, 4).map((c) => ({ c, p: +(r() * 5 + .2).toFixed(2) })) } })
+  const sum = list.reduce((a, h) => a + h.p, 0)
+  return { list, sum, float: 100 - sum }
+}
+const bigN = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : fa(Math.round(n))
+
+function Holders({ sym }) {
+  const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
+  const [open, setOpen] = useState(null)
+  return (
+    <div className="-m-4 flex h-full flex-col">
+      <div className="num flex items-center justify-between border-b border-line bg-surface2/40 px-4 py-3 text-xs">
+        <span className="text-muted">مجموع سهم سهامداران عمده: <b className="text-ink">{fa(sum, 2)}٪</b></span>
+        <span className="text-muted">سهام شناور: <b className="text-ink">{fa(float, 2)}٪</b></span>
+      </div>
+      <div className="scroll-y min-h-0 flex-1 p-4">
+        <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><span>نام سهامدار</span><span className="text-center">حجم</span><span className="text-left">درصد</span></div>
+        <div className="space-y-2">
+          {list.map((h, i) => (
+            <motion.div key={h.n} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} className={`overflow-hidden rounded-2xl border transition-colors ${open === i ? 'border-brand/50 bg-brand/5' : 'border-line bg-surface2/25 hover:border-brand/30'}`}>
+              <button onClick={() => setOpen(open === i ? null : i)} className="grid w-full grid-cols-[1fr_80px_64px] items-center gap-2 px-3 py-3 text-right text-sm">
+                <span className="flex min-w-0 items-center gap-1.5 font-medium text-brand-light"><motion.span animate={{ rotate: open === i ? 90 : 0 }} className="text-xs text-muted">‹</motion.span><Marquee>{h.n}</Marquee></span>
+                <span className="num text-center text-xs" dir="ltr">{bigN(h.v)}</span>
+                <span className="num text-left text-xs font-bold" dir="ltr">{fa(h.p, 3)}٪</span>
+              </button>
+              <AnimatePresence initial={false}>{open === i && (
+                <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
+                  <div className="space-y-2 border-t border-line/60 px-3 py-3 text-xs">
+                    <div className="num flex justify-between text-muted"><span>تغییر امروز</span><b className={h.d >= 0 ? 'text-up' : 'text-down'}><span dir="ltr">{h.d >= 0 ? '+' : '−'}{fa(Math.abs(h.d))}</span> سهم</b></div>
+                    <div className="font-semibold">سایر مالکیت‌های این سهامدار</div>
+                    {h.others.length ? h.others.map((o) => (
+                      <div key={o.c} className="num flex items-center justify-between rounded-lg bg-surface2/50 px-3 py-2"><b>{o.c}</b><span>{fa(o.p, 2)}٪</span></div>
+                    )) : <div className="text-muted">مالکیت عمده دیگری ثبت نشده است.</div>}
+                  </div>
+                </motion.div>
+              )}</AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function HoldersHelp() {
+  const [open, setOpen] = useState(false), [acc, setAcc] = useState(0)
+  const items = [
+    ['این بخش چه اطلاعاتی را در اختیار ما می‌گذارد؟', 'در این صفحه لیست تمامی سهامداران عمده حقیقی و حقوقی نماد نمایش داده می‌شود. در کنار نام هر سهامدار عمده، تعداد و درصد سهام وی نسبت به تعداد و درصد کل سهام آن نماد نوشته شده است. همچنین مجموع سهام سهامداران عمده و سهام شناور (درصد سهامی که در اختیار معامله‌گران خرد است) قابل مشاهده است. درصد سهام شناور در این صفحه ممکن است با اطلاعات اعلام‌شده از طرف سازمان بورس متفاوت باشد؛ چرا که محاسبات این صفحه دقیق‌تر و به‌روزتر است.'],
+    ['این بخش شامل چه امکاناتی می‌باشد؟', 'سهامداران عمده ممکن است در سایر شرکت‌ها نیز سهامدار باشند؛ با انتخاب هرکدام از این سهامداران عمده، می‌توانید سایر مالکیت‌های این سهامدار را نیز مشاهده کنید.'],
+  ]
+  return (
+    <>
+      <button onClick={() => setOpen(true)} title="راهنما" className="btn-icon !rounded-full"><span className="text-sm font-bold">?</span></button>
+      <Modal open={open} title="راهنما" onClose={() => setOpen(false)} closeText="متوجه شدم">
+        <div className="space-y-2">
+          {items.map(([q, a], i) => (
+            <div key={q} className={`overflow-hidden rounded-2xl border ${acc === i ? 'border-brand/40' : 'border-line'}`}>
+              <button onClick={() => setAcc(acc === i ? null : i)} className="flex w-full items-center justify-between px-4 py-3 text-right text-sm font-semibold">
+                {q}<motion.svg animate={{ rotate: acc === i ? 180 : 0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
+              </button>
+              <AnimatePresence initial={false}>{acc === i && (
+                <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-4 pb-3 text-sm leading-7 text-muted">{a}</motion.p>
+              )}</AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </Modal>
+    </>
   )
 }
