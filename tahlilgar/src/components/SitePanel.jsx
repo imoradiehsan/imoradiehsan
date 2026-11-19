@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart from './TVChart'
 import SRChart from './SRChart'
+import RealPower from './RealPower'
 import { Intraday, RealLegal, Returns, Compare, Poll } from './OverviewExtra'
 import { Change } from './Count'
 import { fa } from '../data/market'
@@ -449,14 +450,14 @@ function Drawer({ k, close, sym, d }) {
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl ${k === 'peers' ? 'max-w-3xl' : 'max-w-md'}`}>
-            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
-            <div className="scroll-y flex-1 space-y-2 p-4 text-sm">
+            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl ${k === 'peers' || k === 'real' ? 'max-w-3xl' : 'max-w-md'}`}>
+            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
+            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' ? 'flex min-h-0 flex-col overflow-hidden' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} />}
               {k === 'holders' && d.holders.map((h) => <div key={h.n} className="rounded-xl bg-surface2/40 p-3"><div className="flex justify-between"><span>{h.n}</span><b className="num">{fa(h.p, 2)}٪</b></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${h.p * 2.5}%` }} className="h-full bg-brand" /></div><div className={`num mt-1 text-xs ${h.d >= 0 ? 'text-up' : 'text-down'}`}>تغییر امروز: {h.d >= 0 ? '+' : '−'}{fa(Math.abs(h.d))} سهم</div></div>)}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
-              {k === 'real' && <Real d={d} />}
+              {k === 'real' && <RealPower sym={sym} />}
               {k === 'details' && <SymbolFlags sym={sym} />}
               {k === 'strategy' && ['کاورد کال روی ' + sym.s, 'خرید پله‌ای در نواحی حمایتی', 'معامله شکست مقاومت ۱'].map((t, i) => <div key={t} className="rounded-xl bg-surface2/40 p-3"><b>{t}</b><div className="mt-1 text-xs text-muted">ریسک: {['کم', 'متوسط', 'زیاد'][i]} · افق: {['۱ ماه', '۳ ماه', '۲ هفته'][i]}</div></div>)}
               {k === 'option' && [0.95, 1, 1.05, 1.1].map((m) => <div key={m} className="num flex justify-between rounded-xl bg-surface2/40 p-3"><span>ض{sym.s.slice(0, 3)}{fa(Math.round(sym.p * m / 100))}</span><span>اعمال {fa(Math.round(sym.p * m))}</span><b className="text-brand-light">{fa(Math.round(sym.p * .06 / m))}</b></div>)}
