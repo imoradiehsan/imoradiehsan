@@ -452,7 +452,7 @@ function Drawer({ k, close, sym, d }) {
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
             <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>
-            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden' : 'scroll-y'}`}>
+            <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} />}
               {k === 'holders' && <Holders sym={sym} />}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
@@ -561,7 +561,7 @@ function Peers({ sym }) {
   const pct = (v, cls = true) => <span className={`num ${cls ? (v >= 0 ? 'text-up' : 'text-down') : ''}`} dir="ltr">{v >= 0 ? '' : '−'}{fa(Math.abs(v), 2)}٪</span>
   const two = (a, b) => <div className="leading-5"><div>{a}</div><div className="text-muted">{b}</div></div>
   return (
-    <div className="-m-4 flex h-full flex-col">
+    <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b border-line px-4 py-3 text-sm">
         <span className="text-muted">ترتیب بر حسب:</span>
         <Dropdown value={by} options={SORTS} onChange={setBy} />
@@ -842,7 +842,7 @@ function Holders({ sym }) {
   const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
   const [sel, setSel] = useState(null)
   return (
-    <div className="-m-4 flex h-full flex-col overflow-hidden">
+    <div className="flex h-full flex-col overflow-hidden">
       <AnimatePresence mode="wait" initial={false}>
         {sel != null ? (
           <motion.div key="page" className="h-full" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>

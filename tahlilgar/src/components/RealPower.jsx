@@ -121,7 +121,7 @@ export default function RealPower({ sym }) {
   const vmax = Math.max(...data.map((d) => d.v)), perMax = nice(Math.max(...data.flatMap((d) => [d.pb, d.ps])))
 
   return (
-    <div className="-m-4 flex h-full flex-col">
+    <div className="flex h-full flex-col">
       <div className="relative z-20 flex shrink-0 items-center gap-1.5 border-b border-line px-3 py-2.5 [&_.seg-item]:px-2">
         <Seg id="rp-type" value={type} set={setType} items={[['line', 'خطی'], ['candle', 'شمعی']]} />
         <Seg id="rp-unit" value={unit} set={setUnit} items={[['vol', 'حجم'], ['pct', 'درصد']]} />
