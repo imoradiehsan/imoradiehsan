@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { ComposedChart, Bar, Line, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, LineChart } from 'recharts'
 import { useState } from 'react'
-import { MoreCircle, EditSquare, Category } from 'react-iconly'
 import { fa } from '../data/market'
 
 function seeded(s) { let x = [...s].reduce((a, c) => a + c.charCodeAt(0), 0); return () => ((x = (x * 9301 + 49297) % 233280) / 233280) }
@@ -15,16 +14,10 @@ export default function SymbolDetails({ sym }) {
   const inc = years.map((y, i) => { const rev = 40 + i * 12 + r() * 20; const ni = rev * (0.15 + r() * 0.15); return { y, rev: Math.round(rev), ni: Math.round(ni), m: +(ni / rev * 100).toFixed(1) } })
   const payout = Math.round(45 + r() * 40)
   const season = Array.from({ length: 12 }, (_, i) => ({ i, a: 100 + i * 2 + r() * 8, b: 100 + i * 1.2 + r() * 10, c: 100 - i + r() * 9 }))
-  const box = 'px-4 py-4 border-b border-line/70'
+  const box = 'rounded-2xl border border-line/60 bg-surface2/30 p-4'
 
   return (
-    <div>
-      <div className="sticky top-0 z-10 flex items-center gap-2 border-b border-line bg-surface/95 px-4 py-2.5 backdrop-blur">
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-brand/15 text-xs font-bold text-brand-light">{sym.s.slice(0, 2)}</span>
-        <b className="flex-1">{sym.s}</b>
-        {[Category, EditSquare, MoreCircle].map((I, k) => <button key={k} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><I set="light" size={18} primaryColor="currentColor" /></button>)}
-      </div>
-
+    <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
       <section className={box}>
         <h4 className="mb-3 text-sm font-semibold">بازدهی</h4>
         <div className="grid grid-cols-3 gap-1.5">
@@ -80,7 +73,7 @@ export default function SymbolDetails({ sym }) {
         </dl>
       </section>
 
-      <section className="px-4 py-4">
+      <section className={box}>
         <h4 className="mb-2 text-sm font-semibold">فصلی بودن (۳ سال اخیر)</h4>
         <div className="h-36" dir="ltr">
           <ResponsiveContainer>

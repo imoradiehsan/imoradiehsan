@@ -4,7 +4,6 @@ import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts'
 import { Search, Notification, Category, Chart, Wallet, Buy, Plus, Delete } from 'react-iconly'
 import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
-import SymbolDetails from './SymbolDetails'
 
 const TABS = [
   { k: 'watch', t: 'دیده‌بان', I: Category },
@@ -13,16 +12,16 @@ const TABS = [
   { k: 'alert', t: 'هشدار', I: Notification },
 ]
 
-export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder }) {
+export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder, collapsed, setCollapsed }) {
   return (
-    <aside className="flex w-full bg-surface lg:h-full lg:w-[var(--right-w)] lg:shrink-0 lg:overflow-hidden lg:transition-[width] lg:duration-300 lg:ease-out">
+    <aside className="flex w-full bg-surface lg:h-full lg:w-auto lg:shrink-0">
       {/* Side rail — like an app's nav bar, pinned to the screen edge */}
       <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
         <img src="./logo.png" alt="تحلیلگر بورس" className="mb-3 h-9 w-9 rounded-xl" />
         {TABS.map(({ k, t, I }) => (
-          <button key={k} title={t} onClick={() => setTab(k)} className="group relative grid h-11 w-11 place-items-center">
-            {tab === k && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
-            <span className={`relative ${tab === k ? 'text-brand-light' : 'text-muted group-hover:text-ink'}`}><I set={tab === k ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
+          <button key={k} title={t} onClick={() => { if (tab === k) setCollapsed(!collapsed); else { setTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
+            {tab === k && !collapsed && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+            <span className={`relative ${tab === k && !collapsed ? 'text-brand-light' : 'text-muted group-hover:text-ink'}`}><I set={tab === k && !collapsed ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
             <span className="pointer-events-none absolute left-full z-20 ml-2 whitespace-nowrap rounded-lg bg-surface2 px-2 py-1 text-xs opacity-0 transition group-hover:opacity-100">{t}</span>
           </button>
         ))}
@@ -30,7 +29,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder })
         <button title="تنظیمات" className="grid h-11 w-11 place-items-center text-muted hover:text-ink"><Category set="light" size={22} primaryColor="currentColor" /></button>
       </nav>
 
-      <div className="flex min-w-0 flex-1 flex-col lg:min-h-0">
+      <div data-content className="flex min-w-0 flex-1 flex-col lg:min-h-0 lg:w-[var(--right-w)] lg:flex-none lg:overflow-hidden lg:transition-[width] lg:duration-300 lg:ease-out">
         {/* App bar */}
         <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-4">
           <div className="flex-1 leading-tight">
@@ -44,11 +43,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder })
         <AnimatePresence mode="wait">
           <motion.div key={tab} className="flex min-h-0 flex-1 flex-col" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: .18 }}>
             {tab === 'watch' ? (
-              <>
-                <div className="scroll-y max-h-[320px] p-2 lg:h-[42%] lg:max-h-none"><Watch sym={sym} setSym={setSym} /></div>
-                <div className="h-1.5 shrink-0 bg-bg" />
-                <div className="scroll-y min-h-0 flex-1"><SymbolDetails sym={sym} /></div>
-              </>
+              <div className="scroll-y min-h-0 flex-1 p-2"><Watch sym={sym} setSym={setSym} /></div>
             ) : (
               <div className="scroll-y min-h-0 flex-1 p-4">
                 {tab === 'order' && <Order sym={sym} addOrder={addOrder} />}

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Chart, Graph, Activity } from 'react-iconly'
-import Candles from './Candles'
+import TVChart from './TVChart'
+import SymbolDetails from './SymbolDetails'
 import Count, { Change } from './Count'
 import { candles, orderBook, fa, SYMBOLS } from '../data/market'
 
@@ -10,12 +11,8 @@ const TF = ['۱ روز', '۱ هفته', '۱ ماه', '۳ ماه', '۱ سال']
 
 export default function SitePanel({ sym, dark, setDark, openOrder }) {
   const [nav, setNav] = useState('چارت')
-  const [tf, setTf] = useState('۱ ماه')
-  const [type, setType] = useState('candle')
-  const [ma, setMa] = useState(true)
   const [info, setInfo] = useState('depth')
   const [fav, setFav] = useState(false)
-  const data = useMemo(() => candles(sym, tf), [sym, tf])
 
   return (
     <section className="flex min-w-0 flex-1 flex-col bg-surface lg:h-full">
@@ -77,30 +74,8 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Chart toolbar */}
-      <div className="flex flex-wrap items-center gap-2 px-5 py-3">
-        <div className="flex rounded-xl border border-line/70 bg-surface2/40 p-1">
-          {TF.map((t) => (
-            <button key={t} onClick={() => setTf(t)} className="relative rounded-lg px-3 py-1.5 text-xs">
-              {tf === t && <motion.span layoutId="tf" className="absolute inset-0 rounded-lg bg-brand" />}
-              <span className={`relative ${tf === t ? 'font-semibold text-white' : 'text-muted'}`}>{t}</span>
-            </button>
-          ))}
-        </div>
-        <div className="flex rounded-xl border border-line/70 bg-surface2/40 p-1">
-          {[['candle', 'شمعی', Chart], ['area', 'خطی', Graph]].map(([k, t, I]) => (
-            <button key={k} onClick={() => setType(k)} className={`flex items-center gap-1 rounded-lg px-3 py-1.5 text-xs transition-colors ${type === k ? 'bg-surface2 text-ink' : 'text-muted'}`}>
-              <I set="light" size={14} primaryColor="currentColor" />{t}
-            </button>
-          ))}
-        </div>
-        <button onClick={() => setMa(!ma)} className={`flex items-center gap-1 rounded-xl border px-3 py-2 text-xs transition-colors ${ma ? 'border-amber-400/60 text-amber-400' : 'border-line/70 text-muted'}`}>
-          <Activity set="light" size={14} primaryColor="currentColor" /> میانگین متحرک
-        </button>
-      </div>
-
-      <div className="mx-5 h-[62vh] min-h-[340px] rounded-2xl border border-line/60 bg-bg/40">
-        <Candles key={sym.s + tf} data={data} type={type} showMA={ma} />
+      <div className="mx-5 mt-4 h-[66vh] min-h-[380px] overflow-hidden rounded-2xl border border-line/60">
+        <TVChart sym={sym} dark={dark} />
       </div>
 
       {/* Info tabs */}
@@ -117,6 +92,10 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
             {info === 'fund' && <Fund sym={sym} />}
           </motion.div>
         </AnimatePresence>
+      </div>
+      <div className="border-t border-line px-5 py-5">
+        <h3 className="mb-3 font-semibold">نمای کلی {sym.s}</h3>
+        <SymbolDetails sym={sym} />
       </div>
       <Extra sym={sym} />
       </div>

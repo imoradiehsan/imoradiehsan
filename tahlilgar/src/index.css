@@ -35,4 +35,4 @@ body { @apply bg-bg text-ink transition-colors duration-500; }
 ::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 9px }
 .scroll-y { overflow-y: auto; scrollbar-gutter: stable; }
 @media (min-width: 1024px) { html, body, #root { height: 100%; overflow: hidden } }
-[data-drag] aside { transition: none !important; }
+[data-drag] [data-content] { transition: none !important; }

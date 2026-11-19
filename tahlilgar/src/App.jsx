@@ -3,7 +3,7 @@ import AppPanel from './components/AppPanel'
 import SitePanel from './components/SitePanel'
 import { SYMBOLS } from './data/market'
 
-const MIN_RIGHT = 320, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400, SNAP = 200
+const RAIL = 60, MIN_RIGHT = 300, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400, SNAP = 200
 const load = () => { try { return +localStorage.getItem('rightW') || DEFAULT } catch { return DEFAULT } }
 
 export default function App() {
@@ -21,15 +21,15 @@ export default function App() {
   // Right panel is pinned to the right edge, so its width = distance from pointer to that edge
   const clamp = (w) => {
     const total = root.current?.clientWidth || window.innerWidth
-    return Math.round(Math.min(MAX_RIGHT, total - MIN_LEFT, Math.max(MIN_RIGHT, w)))
+    return Math.round(Math.min(MAX_RIGHT, total - MIN_LEFT - RAIL, Math.max(MIN_RIGHT, w)))
   }
   useEffect(() => {
     if (!drag) return
     const move = (e) => {
       const r = root.current.getBoundingClientRect()
-      const raw = r.right - e.clientX
+      const raw = r.right - e.clientX - RAIL
       // Past the snap point the right panel docks away and the left panel goes full screen
-      if (raw < SNAP) { setCollapsed(true); setRightW(startW.current) }
+      if (raw < SNAP - RAIL) { setCollapsed(true); setRightW(startW.current) }
       else { setCollapsed(false); setRightW(clamp(raw)) }
     }
     const up = () => setDrag(false)
@@ -50,7 +50,7 @@ export default function App() {
 
   return (
     <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': (collapsed ? 0 : rightW) + 'px' }} data-drag={drag || undefined}>
-      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} />
+      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} collapsed={collapsed} setCollapsed={(c) => { if (!c && collapsed) setRightW((w) => clamp(w)); setCollapsed(c) }} />
 
       {/* Splitter: hover → blue, drag → resize, double-click → reset, arrows for keyboard */}
       <div
@@ -66,12 +66,6 @@ export default function App() {
         <span className={`absolute left-1/2 top-1/2 z-20 flex h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-full transition-opacity ${drag ? 'bg-brand-light opacity-100' : 'bg-brand opacity-0 group-hover:opacity-100'}`}>
           <i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" />
         </span>
-        {collapsed && !drag && (
-          <button onClick={() => setCollapsed(false)} onPointerDown={(e) => e.stopPropagation()} title="باز کردن پنل"
-            className="absolute right-1 top-1/2 z-30 grid h-14 w-5 -translate-y-1/2 place-items-center rounded-l-lg bg-brand text-white shadow-glow">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="m9 6 6 6-6 6" transform="rotate(180 12 12)" /></svg>
-          </button>
-        )}
         {drag && (
           <span className="num absolute right-3 top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-lg bg-brand px-2 py-1 text-xs text-white shadow-glow">
             {collapsed ? 'رها کنید: تمام صفحه' : rightW.toLocaleString('fa-IR') + ' پیکسل'}
