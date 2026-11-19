@@ -730,40 +730,146 @@ function holdersData(sym) {
 }
 const bigN = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : fa(Math.round(n))
 
+const PORTFOLIO_POOL = [
+  ['هامون', 'صندوق سرمایه‌گذاری قابل معامله'], ['تاپیکو', 'رایانه و فعالیت‌های وابسته به آن'], ['رتاپ', 'رایانه و فعالیت‌های وابسته به آن'], ['وبملت', 'بانک‌ها و موسسات اعتباری'],
+  ['ونوین', 'بانک‌ها و موسسات اعتباری'], ['وپارس', 'بانک‌ها و موسسات اعتباری'], ['شوینده', 'محصولات شیمیایی'], ['غچین', 'محصولات غذایی و آشامیدنی'], ['قنیشا', 'قند و شکر'],
+  ['شستا', 'سرمایه‌گذاری‌ها'], ['فولاد', 'فلزات اساسی'], ['فملی', 'فلزات اساسی'], ['کگل', 'استخراج کانه‌های فلزی'], ['شپنا', 'فراورده‌های نفتی'], ['هوشمند', 'صندوق سرمایه‌گذاری قابل معامله'], ['عرش', 'صندوق سرمایه‌گذاری قابل معامله'],
+]
+function holderPortfolio(h, sym) {
+  if (h.n === 'شخص حقیقی') return []
+  let x = [...h.n].reduce((a, c) => a * 29 + c.charCodeAt(0), 11) % 2147483647
+  const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+  const picks = PORTFOLIO_POOL.filter(([c]) => c !== sym.s).filter(() => r() > .55).slice(0, 2 + Math.floor(r() * 8))
+  return [{ c: sym.s, ind: sym.ind, v: h.v * sym.p, q: h.v, p: h.p }, ...picks.map(([c, ind]) => { const q = (1 + r() * 200) * 1e6; return { c, ind, q, v: q * (800 + r() * 20000), p: +(1 + r() * 4).toFixed(3) } })].sort((a, b) => b.v - a.v)
+}
+
+// pie with outside labels; slices under 10% are grouped into "سایر" and listed underneath
+function IndustryPie({ rows }) {
+  const total = rows.reduce((a, r) => a + r.v, 0)
+  const by = Object.entries(rows.reduce((m, r) => ((m[r.ind] = (m[r.ind] || 0) + r.v), m), {})).map(([k, v]) => ({ k, pct: v / total * 100 })).sort((a, b) => b.pct - a.pct)
+  const main = by.filter((x) => x.pct >= 10), rest = by.filter((x) => x.pct < 10)
+  const slices = rest.length ? [...main, { k: 'سایر', pct: rest.reduce((a, x) => a + x.pct, 0) }] : main
+  const R = 62, cx = 180, cy = 95, cols = ['#2E62FF', '#3C7CFF', '#6b8cff', '#93acff', '#1f44c9']
+  let ang = -Math.PI / 2
+  return (
+    <div className="mt-4 rounded-2xl border border-line bg-surface2/25 p-3">
+      <div className="mb-1 text-xs font-semibold text-muted">ترکیب صنایع پرتفوی</div>
+      <svg viewBox="0 0 360 190" className="w-full" style={{ direction: 'ltr' }}>
+        {slices.map((sl, i) => {
+          const a0 = ang, a1 = (ang += sl.pct / 100 * Math.PI * 2), mid = (a0 + a1) / 2, large = a1 - a0 > Math.PI ? 1 : 0
+          const p = (a, rr = R) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]
+          const d = slices.length === 1 ? `M${cx - R},${cy} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 ${-R * 2},0` : `M${cx},${cy} L${p(a0)} A${R},${R} 0 ${large} 1 ${p(a1)} Z`
+          const [lx, ly] = p(mid, R + 14), right = Math.cos(mid) >= 0
+          return (
+            <g key={sl.k}>
+              <motion.path d={d} fill={cols[i % cols.length]} stroke="rgb(var(--surface))" strokeWidth="1.5" initial={{ opacity: 0, scale: .6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * .08, type: 'spring', stiffness: 200, damping: 18 }} style={{ originX: `${cx}px`, originY: `${cy}px` }} />
+              <line x1={p(mid, R)[0]} y1={p(mid, R)[1]} x2={lx} y2={ly} stroke="rgb(var(--muted))" />
+              <text x={lx + (right ? 4 : -4)} y={ly - 2} fontSize="10" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--ink))">{fa(sl.pct, 1)}٪</text>
+              <text x={lx + (right ? 4 : -4)} y={ly + 11} fontSize="9" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--muted))">{sl.k.length > 20 ? sl.k.slice(0, 19) + '…' : sl.k}</text>
+            </g>
+          )
+        })}
+      </svg>
+      {rest.length > 0 && (
+        <div className="mt-1 space-y-1 border-t border-line/60 pt-2 text-xs">
+          <div className="font-semibold text-muted">سایر:</div>
+          {rest.map((x) => <div key={x.k} className="num flex gap-3"><span className="w-10 text-muted">{fa(x.pct, 1)}٪</span><span>{x.k}</span></div>)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function HolderPage({ h, sym, back }) {
+  const rows = useMemo(() => holderPortfolio(h, sym), [h, sym])
+  const [hist, setHist] = useState(false)
+  const total = rows.reduce((a, r) => a + r.v, 0)
+  const trades = useMemo(() => rows.slice(0, 6).map((r, i) => ({ c: r.c, side: i % 3 === 1 ? 'فروش' : 'خرید', q: Math.round(r.q * (.02 + i * .01)), d: `۰۵/۰۸/${fa(26 - i * 3)}` })), [rows])
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center gap-2 border-b border-line px-3 py-2.5">
+        <button onClick={hist ? () => setHist(false) : back} title="بازگشت" className="btn-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+        <b className="text-sm">{hist ? 'سابقه معاملات' : 'سهامدار عمده'}</b>
+      </div>
+      <div className="border-b border-line bg-surface2/40 px-4 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <b className="text-sm leading-6">{h.n}</b>
+          {!hist && <button onClick={() => setHist(true)} className="btn btn-on shrink-0">سابقه معاملات <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
+        </div>
+        <div className="num mt-1 flex items-center gap-2 text-xs text-muted">تعداد شرکت: <b className="text-ink">{fa(rows.length)}</b><i className="h-3 w-px bg-line" />ارزش کل سرمایه در سهام: <b className="text-ink" dir="ltr">{bigN(total).replace('B', 'B').replace(/^(.*)$/, (m) => total >= 1e12 ? fa(total / 1e12, 1) + ' T' : m)}</b></div>
+      </div>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={hist ? 'h' : 'p'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
+          {hist ? (
+            <div className="space-y-2">
+              {trades.length ? trades.map((t, i) => (
+                <div key={i} className="num grid grid-cols-4 items-center rounded-2xl border border-line bg-surface2/25 px-3 py-3 text-xs">
+                  <b className="text-sm text-brand-light">{t.c}</b><span className={t.side === 'خرید' ? 'text-up' : 'text-down'}>{t.side}</span><span dir="ltr" className="text-center">{bigN(t.q)}</span><span className="text-left text-muted">{t.d}</span>
+                </div>
+              )) : <Empty text="معامله‌ای برای این سهامدار ثبت نشده است." />}
+            </div>
+          ) : (
+            <>
+              <div className="mb-2 grid grid-cols-[1fr_76px_70px_64px] px-3 text-[11px] text-muted"><span>نماد</span><span className="text-center">ارزش</span><span className="text-center">حجم</span><span className="text-left">٪ مالکیت</span></div>
+              {rows.length ? (
+                <div className="space-y-2">
+                  {rows.map((r, i) => (
+                    <motion.div key={r.c} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }}
+                      className={`num grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs ${r.c === sym.s ? 'border-brand/50 bg-brand/10' : 'border-line bg-surface2/25'}`}>
+                      <b className="text-sm text-brand-light">{r.c}</b>
+                      <span className="text-center" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
+                      <span className="text-center" dir="ltr">{bigN(r.q)}</span>
+                      <span className="text-left font-bold" dir="ltr">{fa(r.p, 3)}٪</span>
+                    </motion.div>
+                  ))}
+                  <IndustryPie rows={rows} />
+                </div>
+              ) : <Empty text="این سهامدار مالکیت عمده دیگری در بازار ندارد." />}
+            </>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  )
+}
+const Empty = ({ text }) => (
+  <div className="flex flex-col items-center gap-2 py-16 text-center text-sm text-muted">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><path d="M3 7h18v12H3z" /><path d="M8 7V5h8v2M3 12h18" /></svg>{text}
+  </div>
+)
+
 function Holders({ sym }) {
   const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
-  const [open, setOpen] = useState(null)
+  const [sel, setSel] = useState(null)
   return (
-    <div className="-m-4 flex h-full flex-col">
-      <div className="num flex items-center justify-between border-b border-line bg-surface2/40 px-4 py-3 text-xs">
-        <span className="text-muted">مجموع سهم سهامداران عمده: <b className="text-ink">{fa(sum, 2)}٪</b></span>
-        <span className="text-muted">سهام شناور: <b className="text-ink">{fa(float, 2)}٪</b></span>
-      </div>
-      <div className="scroll-y min-h-0 flex-1 p-4">
-        <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><span>نام سهامدار</span><span className="text-center">حجم</span><span className="text-left">درصد</span></div>
-        <div className="space-y-2">
-          {list.map((h, i) => (
-            <motion.div key={h.n} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} className={`overflow-hidden rounded-2xl border transition-colors ${open === i ? 'border-brand/50 bg-brand/5' : 'border-line bg-surface2/25 hover:border-brand/30'}`}>
-              <button onClick={() => setOpen(open === i ? null : i)} className="grid w-full grid-cols-[1fr_80px_64px] items-center gap-2 px-3 py-3 text-right text-sm">
-                <span className="flex min-w-0 items-center gap-1.5 font-medium text-brand-light"><motion.span animate={{ rotate: open === i ? 90 : 0 }} className="text-xs text-muted">‹</motion.span><Marquee>{h.n}</Marquee></span>
-                <span className="num text-center text-xs" dir="ltr">{bigN(h.v)}</span>
-                <span className="num text-left text-xs font-bold" dir="ltr">{fa(h.p, 3)}٪</span>
-              </button>
-              <AnimatePresence initial={false}>{open === i && (
-                <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="overflow-hidden">
-                  <div className="space-y-2 border-t border-line/60 px-3 py-3 text-xs">
-                    <div className="num flex justify-between text-muted"><span>تغییر امروز</span><b className={h.d >= 0 ? 'text-up' : 'text-down'}><span dir="ltr">{h.d >= 0 ? '+' : '−'}{fa(Math.abs(h.d))}</span> سهم</b></div>
-                    <div className="font-semibold">سایر مالکیت‌های این سهامدار</div>
-                    {h.others.length ? h.others.map((o) => (
-                      <div key={o.c} className="num flex items-center justify-between rounded-lg bg-surface2/50 px-3 py-2"><b>{o.c}</b><span>{fa(o.p, 2)}٪</span></div>
-                    )) : <div className="text-muted">مالکیت عمده دیگری ثبت نشده است.</div>}
-                  </div>
-                </motion.div>
-              )}</AnimatePresence>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+    <div className="-m-4 flex h-full flex-col overflow-hidden">
+      <AnimatePresence mode="wait" initial={false}>
+        {sel != null ? (
+          <motion.div key="page" className="h-full" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>
+            <HolderPage h={list[sel]} sym={sym} back={() => setSel(null)} />
+          </motion.div>
+        ) : (
+          <motion.div key="list" className="flex h-full flex-col" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ duration: .22 }}>
+            <div className="num flex items-center justify-between border-b border-line bg-surface2/40 px-4 py-3 text-xs">
+              <span className="text-muted">مجموع سهم سهامداران عمده: <b className="text-ink">{fa(sum, 2)}٪</b></span>
+              <span className="text-muted">سهام شناور: <b className="text-ink">{fa(float, 2)}٪</b></span>
+            </div>
+            <div className="scroll-y min-h-0 flex-1 p-4">
+              <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><span>نام سهامدار</span><span className="text-center">حجم</span><span className="text-left">درصد</span></div>
+              <div className="space-y-2">
+                {list.map((h, i) => (
+                  <motion.button key={h.n} onClick={() => setSel(i)} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} whileTap={{ scale: .98 }}
+                    className="grid w-full grid-cols-[1fr_80px_64px] items-center gap-2 rounded-2xl border border-line bg-surface2/25 px-3 py-3 text-right text-sm transition-colors hover:border-brand/40">
+                    <span className="min-w-0 font-medium text-brand-light"><Marquee>{h.n}</Marquee></span>
+                    <span className="num text-center text-xs" dir="ltr">{bigN(h.v)}</span>
+                    <span className="num text-left text-xs font-bold" dir="ltr">{fa(h.p, 3)}٪</span>
+                  </motion.button>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
