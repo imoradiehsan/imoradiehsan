@@ -1102,6 +1102,7 @@ function HistoryChart({ sym, trades, type, onPick }) {
   const box = useRef(null); const [W, setW] = useState(480), [H, setH] = useState(500)
   useEffect(() => { const ro = new ResizeObserver(([e]) => { setW(e.contentRect.width); setH(e.contentRect.height) }); ro.observe(box.current); return () => ro.disconnect() }, [])
   const [hover, setHover] = useState(null)
+  const [cross, setCross] = useState(null)   // index of the bar under the mouse
   const pl = 8, pr = 52, pt = 14, pb = 34, volH = (H - pt - pb) * .16
   const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high)), pad = (hi - lo) * .06
   const step = (W - pl - pr) / bars.length, X = (i) => pl + i * step + step / 2
@@ -1113,7 +1114,8 @@ function HistoryChart({ sym, trades, type, onPick }) {
   const hv = hover != null ? trades[hover] : null
   return (
     <div className="flex h-full flex-col">
-      <div ref={box} className="relative min-h-0 flex-1" dir="ltr">
+      <div ref={box} className="relative min-h-0 flex-1" dir="ltr" onMouseLeave={() => setCross(null)}
+        onMouseMove={(e) => { const r = box.current.getBoundingClientRect(); const i = Math.floor((e.clientX - r.left - pl) / step); setCross(i >= 0 && i < bars.length ? i : null) }}>
         <svg width={W} height={H} className="absolute inset-0">
           {[0, .25, .5, .75, 1].map((k) => { const v = lo + (hi - lo) * k; return <g key={k}><line x1={pl} x2={W - pr} y1={Y(v)} y2={Y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={W - pr + 6} y={Y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{fa(Math.round(v))}</text></g> })}
           {ticks.map((i) => <g key={i}><line x1={X(i)} x2={X(i)} y1={pt} y2={H - pb} stroke="rgb(var(--line))" strokeDasharray="3 4" opacity=".6" />
@@ -1123,10 +1125,24 @@ function HistoryChart({ sym, trades, type, onPick }) {
           {type === 'line'
             ? <motion.path key={range} d={line} fill="none" stroke="#3C7CFF" strokeWidth="2.5" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
             : bars.map((b, i) => { const c = b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'; return <g key={i}><line x1={X(i)} x2={X(i)} y1={Y(b.high)} y2={Y(b.low)} stroke={c} /><rect x={X(i) - step * .32} width={step * .64} y={Y(Math.max(b.open, b.close))} height={Math.max(1, Math.abs(Y(b.open) - Y(b.close)))} fill={c} /></g> })}
+          {cross != null && hover == null && <g pointerEvents="none">
+            <line x1={X(cross)} x2={X(cross)} y1={pt} y2={H - pb} stroke="rgba(240,80,110,.75)" />
+            <line x1={pl} x2={W - pr} y1={Y(bars[cross].close)} y2={Y(bars[cross].close)} stroke="rgba(240,80,110,.75)" />
+            <rect x={W - pr + 2} y={Y(bars[cross].close) - 9} width={pr - 4} height="18" rx="5" fill="rgb(var(--down))" />
+            <text x={W - pr + pr / 2} y={Y(bars[cross].close) + 4} fontSize="10" fontWeight="700" textAnchor="middle" fill="#fff">{fa(Math.round(bars[cross].close))}</text>
+          </g>}
           {trades.map((t, k) => { const i = idx(t); if (t.day >= bars.length) return null; const up = t.dP >= 0, x = X(i), y = Y(bars[i].close) + (up ? 14 : -14)
             return <motion.circle key={k} cx={x} cy={y} initial={{ r: 0 }} animate={{ r: hover === k ? 9 : 6 }} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} stroke="rgb(var(--ink))" strokeWidth="2"
               onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => onPick(t.name)} className="cursor-pointer" /> })}
         </svg>
+        <AnimatePresence>{cross != null && hover == null && (() => { const b = bars[cross], x = X(cross); return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }} style={{ left: x > W / 2 ? x - 150 : x + 14, top: Math.min(H - 150, Math.max(8, Y(b.close) + 14)) }}
+            className="num pointer-events-none absolute z-10 w-36 rounded-xl border border-line bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
+            <div className="mb-1 border-b border-line pb-1 text-center font-bold text-brand-light">{new Date(b.time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</div>
+            {(type === 'line' ? [['قیمت', b.close], ['حجم', b.volume]] : [['اولین', b.open], ['آخرین', b.close], ['بیشترین', b.high], ['کمترین', b.low], ['حجم', b.volume]]).map(([k, v]) => (
+              <div key={k} className="flex justify-between py-0.5"><span className="text-muted">{k}:</span><b>{fa(Math.round(v))}</b></div>
+            ))}
+          </motion.div>) })()}</AnimatePresence>
         <AnimatePresence>{hv && (() => { const i = idx(hv), x = X(i); return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ left: x > W / 2 ? x - 200 : x + 16, top: 12 }}
             className="num pointer-events-none absolute z-10 w-48 rounded-xl border border-line bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
