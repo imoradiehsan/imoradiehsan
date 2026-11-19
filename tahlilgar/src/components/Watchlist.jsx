@@ -330,39 +330,66 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   )
 }
 
+// manage lists: pick with a radio, rename inline, drag the handle to reorder, add from a dashed row; "تایید" applies the pick
 function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دیده‌بان', extra }) {
-  const [move, setMove] = useState(false)
-  const [dlg, setDlg] = useState(null)   // { mode: 'new' | 'rename' | 'delete', id }
-  const [name, setName] = useState('')
-  const ok = () => {
-    if (dlg.mode === 'new') { const id = 'l' + Date.now(); setLists([...lists, { id, name: name.trim(), items: [] }]) }
-    if (dlg.mode === 'rename') setLists(lists.map((l) => (l.id === dlg.id ? { ...l, name: name.trim() } : l)))
-    if (dlg.mode === 'delete') { setLists(lists.filter((l) => l.id !== dlg.id)); if (cur === dlg.id) setCur(lists[0].id) }
-    setDlg(null)
-  }
-  const row = (l) => (
-    <div className="flex items-center gap-2 rounded-xl border border-line bg-surface2/30 px-3 py-2.5 text-sm">
-      {move && <span className="cursor-grab text-muted">{I.grip}</span>}
-      <button disabled={move} onClick={() => { setCur(l.id); close() }} className={`min-w-0 flex-1 text-right ${cur === l.id ? 'font-bold text-brand-light' : ''}`}>{l.name} <span className="num font-normal text-muted">({fa(l.items.length)})</span></button>
-      {!l.fixed && !move && <>
-        <button onClick={() => { setName(l.name); setDlg({ mode: 'rename', id: l.id }) }} title="تغییر نام" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.edit}</button>
-        <button onClick={() => setDlg({ mode: 'delete', id: l.id })} title="حذف" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-down/15 hover:text-down">{I.trash}</button>
-      </>}
-    </div>
-  )
+  const [pick, setPick] = useState(cur)
+  const [edit, setEdit] = useState(null), [name, setName] = useState('')
+  const [adding, setAdding] = useState(false), [newName, setNewName] = useState('')
+  const [delId, setDelId] = useState(null)
+  useEffect(() => { if (open) { setPick(cur); setEdit(null); setAdding(false) } }, [open])
+  const saveEdit = () => { if (name.trim()) setLists(lists.map((l) => (l.id === edit ? { ...l, name: name.trim() } : l))); setEdit(null) }
+  const saveNew = () => { if (newName.trim()) { const id = 'l' + Date.now(); setLists([...lists, { id, name: newName.trim(), items: [] }]); setPick(id) } setAdding(false); setNewName('') }
+  const confirmDel = () => { const rest = lists.filter((l) => l.id !== delId); setLists(rest); if (pick === delId) setPick(rest[0].id); if (cur === delId) setCur(rest[0].id); setDelId(null) }
+  const field = 'h-9 min-w-0 flex-1 rounded-lg border border-brand/50 bg-surface2 px-3 text-sm outline-none'
   return (
-    <Modal open={open} title={kind === 'پرتفوی' ? 'پرتفوی‌ها' : 'دیده‌بان‌ها'} onClose={() => { setMove(false); close() }}
-      actions={<>
-        <button onClick={() => setMove(!move)} className={`h-11 rounded-xl border px-4 text-sm font-semibold ${move ? 'border-brand/60 text-brand-light' : 'border-line text-muted hover:text-ink'}`}>{move ? 'پایان جابجایی' : 'جابجایی'}</button>
-        <motion.button whileTap={{ scale: .97 }} onClick={() => { setName(''); setDlg({ mode: 'new' }) }} className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">{I.plus} {kind === 'پرتفوی' ? 'افزودن پرتفوی' : 'ساخت دیده‌بان جدید'}</motion.button>
-      </>}>
-      {move
-        ? <Reorder.Group axis="y" values={lists} onReorder={setLists} className="space-y-2">{lists.map((l) => <Reorder.Item key={l.id} value={l}>{row(l)}</Reorder.Item>)}</Reorder.Group>
-        : <div className="space-y-2">{lists.map((l) => <div key={l.id}>{row(l)}</div>)}</div>}
+    <Modal open={open} title={kind === 'پرتفوی' ? 'پرتفوی‌ها' : 'دیده‌بان‌ها'} onClose={close}
+      actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { setCur(pick); close() }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">تایید</motion.button>}>
+      <Reorder.Group axis="y" values={lists} onReorder={setLists} className="space-y-2">
+        {lists.map((l) => <ListRow key={l.id} l={l} on={pick === l.id} pick={() => setPick(l.id)} editing={edit === l.id}
+          editField={<input autoFocus value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') { e.stopPropagation(); setEdit(null) } }} onBlur={saveEdit} className={field} />}
+          onEdit={() => { setEdit(l.id); setName(l.name) }} onDelete={() => setDelId(l.id)} />)}
+      </Reorder.Group>
+      <AnimatePresence initial={false}>
+        {adding ? (
+          <motion.div key="new" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-2 flex items-center gap-2 rounded-xl border border-brand/50 bg-brand/5 px-3 py-2">
+            <input autoFocus value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveNew(); if (e.key === 'Escape') { e.stopPropagation(); setAdding(false); setNewName('') } }} placeholder={`نام ${kind} جدید`} className={field} />
+            <button onClick={saveNew} disabled={!newName.trim()} className="btn btn-on !h-9 disabled:opacity-40">افزودن</button>
+            <button onClick={() => { setAdding(false); setNewName('') }} aria-label="انصراف" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2">×</button>
+          </motion.div>
+        ) : (
+          <motion.button key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setAdding(true)}
+            className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-line py-3 text-sm text-muted transition-colors hover:border-brand/60 hover:text-brand-light">
+            {I.plus} {kind === 'پرتفوی' ? 'پرتفوی جدید' : 'دیده‌بان جدید'}
+          </motion.button>
+        )}
+      </AnimatePresence>
       {extra}
-      <Dialog open={!!dlg && dlg.mode !== 'delete'} title={`نام ${kind}`} input value={name} setValue={setName} placeholder={`نام ${kind} را وارد کنید...`} onOk={ok} onCancel={() => setDlg(null)} />
-      <Dialog open={dlg?.mode === 'delete'} title={`حذف ${kind}`} text={`آیا از حذف ${kind} «${lists.find((l) => l.id === dlg?.id)?.name ?? ''}» مطمئن هستید؟`} okText="حذف" danger onOk={ok} onCancel={() => setDlg(null)} />
+      <Dialog open={!!delId} title={`حذف ${kind}`} text={`آیا از حذف ${kind} «${lists.find((l) => l.id === delId)?.name ?? ''}» مطمئن هستید؟`} okText="حذف" danger onOk={confirmDel} onCancel={() => setDelId(null)} />
     </Modal>
+  )
+}
+
+function ListRow({ l, on, pick, editing, editField, onEdit, onDelete }) {
+  const controls = useDragControls()
+  return (
+    <Reorder.Item value={l} dragListener={false} dragControls={controls} whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}
+      className={`flex items-center gap-2 rounded-xl border px-2 py-2 text-sm transition-colors ${on ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30'}`}>
+      <span onPointerDown={(e) => controls.start(e)} title="برای جابجایی بکشید" className="grid h-8 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted hover:text-ink active:cursor-grabbing">{I.grip}</span>
+      {editing ? editField : (
+        <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 py-1">
+          <input type="radio" checked={on} onChange={pick} className="sr-only" />
+          <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-colors ${on ? 'border-brand' : 'border-line'}`}>{on && <motion.i layoutId="radio-dot" className="h-2.5 w-2.5 rounded-full bg-brand" />}</span>
+          <span className={`truncate ${on ? 'font-bold' : ''}`}>{l.name}</span>
+          <span className="num shrink-0 text-xs text-muted">({fa(l.items.length)})</span>
+        </label>
+      )}
+      {!editing && <>
+        <button onClick={onEdit} title="تغییر نام" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.edit}</button>
+        {l.fixed
+          ? <span className="w-8" title="فهرست پیش‌فرض قابل حذف نیست" />
+          : <button onClick={onDelete} title="حذف" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-down/15 hover:text-down">{I.trash}</button>}
+      </>}
+    </Reorder.Item>
   )
 }
 
