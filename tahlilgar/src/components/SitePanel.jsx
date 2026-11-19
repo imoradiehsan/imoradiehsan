@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Chart, Graph, Activity } from 'react-iconly'
 import Candles from './Candles'
 import Count, { Change } from './Count'
-import { candles, orderBook, fa } from '../data/market'
+import { candles, orderBook, fa, SYMBOLS } from '../data/market'
 
 const NAV = ['بازار', 'چارت', 'تحلیل‌ها', 'اخبار', 'دیده‌بان', 'آموزش']
 const TF = ['۱ روز', '۱ هفته', '۱ ماه', '۳ ماه', '۱ سال']
@@ -18,14 +18,15 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
   const data = useMemo(() => candles(sym, tf), [sym, tf])
 
   return (
-    <section className="panel flex min-w-0 flex-1 flex-col overflow-hidden">
+    <section className="flex min-w-0 flex-1 flex-col bg-surface lg:h-full">
       {/* Site header */}
-      <header className="flex items-center gap-4 border-b border-line/70 px-5 py-3">
+      <header className="flex h-14 shrink-0 items-center gap-4 border-b border-line px-5">
+        <img src="./logo.png" alt="" className="h-8 w-8 rounded-lg" /><span className="hidden font-bold xl:block">تحلیلگر بورس</span>
         <nav className="hidden items-center gap-1 md:flex">
           {NAV.map((n) => (
             <button key={n} onClick={() => setNav(n)} className={`relative px-3 py-2 text-sm transition-colors ${nav === n ? 'font-semibold text-ink' : 'text-muted hover:text-ink'}`}>
               {n}
-              {nav === n && <motion.span layoutId="nav-u" className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-brand-light" />}
+              {nav === n && <motion.span layoutId="nav-u" className="absolute inset-x-3 -bottom-[11px] h-0.5 rounded-full bg-brand-light" />}
             </button>
           ))}
         </nav>
@@ -46,6 +47,7 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
         </button>
       </header>
 
+      <div className="scroll-y min-h-0 flex-1">
       {/* Symbol summary */}
       <AnimatePresence mode="wait">
         <motion.div key={sym.s} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: .25 }}
@@ -97,7 +99,7 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
         </button>
       </div>
 
-      <div className="mx-5 min-h-[300px] flex-1 rounded-2xl border border-line/60 bg-bg/40">
+      <div className="mx-5 h-[62vh] min-h-[340px] rounded-2xl border border-line/60 bg-bg/40">
         <Candles key={sym.s + tf} data={data} type={type} showMA={ma} />
       </div>
 
@@ -115,6 +117,8 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
             {info === 'fund' && <Fund sym={sym} />}
           </motion.div>
         </AnimatePresence>
+      </div>
+      <Extra sym={sym} />
       </div>
     </section>
   )
@@ -162,6 +166,41 @@ function Fund({ sym }) {
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
       {items.map(([k, v]) => <div key={k} className="rounded-2xl bg-surface2/40 p-3"><div className="text-xs text-muted">{k}</div><div className="num mt-0.5 font-semibold">{v}</div></div>)}
+    </div>
+  )
+}
+
+function Extra({ sym }) {
+  const news = [
+    [`افزایش ${fa(12)}٪ فروش ماهانه ${sym.s}`, 'کدال · ۲ ساعت پیش'],
+    ['ورود ۱٬۲۰۰ میلیارد تومان پول حقیقی به بازار', 'بازار · ۴ ساعت پیش'],
+    [`تحلیل تکنیکال ${sym.s}: شکست مقاومت کلیدی`, 'تحلیل‌ها · دیروز'],
+    ['نرخ بهره بین بانکی ثابت ماند', 'اقتصاد کلان · دیروز'],
+  ]
+  const peers = SYMBOLS.filter((x) => x.ind === sym.ind && x.s !== sym.s).concat(SYMBOLS.filter((x) => x.ind !== sym.ind)).slice(0, 4)
+  return (
+    <div className="grid gap-4 border-t border-line px-5 py-5 xl:grid-cols-2">
+      <div>
+        <h3 className="mb-3 font-semibold">آخرین اخبار و اطلاعیه‌ها</h3>
+        <div className="divide-y divide-line/60">
+          {news.map(([t, m]) => (
+            <a key={t} href="#" onClick={(e) => e.preventDefault()} className="block py-3 transition-colors hover:text-brand-light">
+              <div className="text-sm font-medium">{t}</div><div className="mt-1 text-xs text-muted">{m}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+      <div>
+        <h3 className="mb-3 font-semibold">نمادهای هم‌گروه</h3>
+        <div className="grid grid-cols-2 gap-2">
+          {peers.map((x) => (
+            <div key={x.s} className="rounded-2xl border border-line/60 bg-surface2/40 p-3">
+              <div className="flex justify-between"><b>{x.s}</b><Change c={x.c} className="!text-xs" /></div>
+              <div className="num mt-1 text-sm text-muted">{fa(x.p)} ریال</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

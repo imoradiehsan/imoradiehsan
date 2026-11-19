@@ -10,7 +10,7 @@ export default function App() {
   const [orders, setOrders] = useState([])
   useEffect(() => { document.documentElement.classList.toggle('dark', dark) }, [dark])
   return (
-    <div className="flex flex-col gap-3 p-3 lg:h-screen lg:max-h-full lg:flex-row">
+    <div className="flex flex-col gap-[3px] bg-bg lg:h-full lg:flex-row">
       <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} />
       <SitePanel sym={sym} dark={dark} setDark={setDark} openOrder={() => setTab('order')} />
     </div>

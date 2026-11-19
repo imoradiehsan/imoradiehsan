@@ -4,6 +4,7 @@ import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts'
 import { Search, Notification, Category, Chart, Wallet, Buy, Plus, Delete } from 'react-iconly'
 import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
+import SymbolDetails from './SymbolDetails'
 
 const TABS = [
   { k: 'watch', t: 'دیده‌بان', I: Category },
@@ -14,39 +15,50 @@ const TABS = [
 
 export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder }) {
   return (
-    <aside className="panel flex w-full flex-col overflow-hidden lg:w-[380px] lg:shrink-0">
-      {/* App bar */}
-      <div className="flex items-center gap-3 border-b border-line/70 px-4 py-3">
-        <img src="./logo.png" alt="" className="h-9 w-9 rounded-xl" />
-        <div className="flex-1 leading-tight">
-          <div className="font-bold">تحلیلگر بورس</div>
-          <div className="flex items-center gap-1.5 text-xs text-muted"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-up" />بازار باز است</div>
-        </div>
-        <button className="icon-btn !h-9 !w-9"><Search set="light" size={18} primaryColor="currentColor" /></button>
-        <button className="icon-btn relative !h-9 !w-9"><Notification set="light" size={18} primaryColor="currentColor" /><span className="absolute left-2 top-2 h-1.5 w-1.5 rounded-full bg-brand-light" /></button>
-      </div>
+    <aside className="flex w-full bg-surface lg:h-full lg:w-[400px] lg:shrink-0">
+      {/* Side rail — like an app's nav bar, pinned to the screen edge */}
+      <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
+        <img src="./logo.png" alt="تحلیلگر بورس" className="mb-3 h-9 w-9 rounded-xl" />
+        {TABS.map(({ k, t, I }) => (
+          <button key={k} title={t} onClick={() => setTab(k)} className="group relative grid h-11 w-11 place-items-center">
+            {tab === k && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+            <span className={`relative ${tab === k ? 'text-brand-light' : 'text-muted group-hover:text-ink'}`}><I set={tab === k ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
+            <span className="pointer-events-none absolute left-full z-20 ml-2 whitespace-nowrap rounded-lg bg-surface2 px-2 py-1 text-xs opacity-0 transition group-hover:opacity-100">{t}</span>
+          </button>
+        ))}
+        <div className="flex-1" />
+        <button title="تنظیمات" className="grid h-11 w-11 place-items-center text-muted hover:text-ink"><Category set="light" size={22} primaryColor="currentColor" /></button>
+      </nav>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4">
+      <div className="flex min-w-0 flex-1 flex-col lg:min-h-0">
+        {/* App bar */}
+        <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-4">
+          <div className="flex-1 leading-tight">
+            <div className="font-bold">{TABS.find((x) => x.k === tab).t}</div>
+            <div className="flex items-center gap-1.5 text-[11px] text-muted"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-up" />بازار باز است</div>
+          </div>
+          <button className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><Plus set="light" size={20} primaryColor="currentColor" /></button>
+          <button className="relative grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><Notification set="light" size={20} primaryColor="currentColor" /><span className="absolute left-2 top-2 h-1.5 w-1.5 rounded-full bg-brand-light" /></button>
+        </div>
+
         <AnimatePresence mode="wait">
-          <motion.div key={tab} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }} transition={{ duration: .22 }}>
-            {tab === 'watch' && <Watch sym={sym} setSym={setSym} />}
-            {tab === 'order' && <Order sym={sym} addOrder={addOrder} />}
-            {tab === 'port' && <Portfolio setSym={setSym} />}
-            {tab === 'alert' && <Alerts orders={orders} />}
+          <motion.div key={tab} className="flex min-h-0 flex-1 flex-col" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: .18 }}>
+            {tab === 'watch' ? (
+              <>
+                <div className="scroll-y max-h-[320px] p-2 lg:h-[42%] lg:max-h-none"><Watch sym={sym} setSym={setSym} /></div>
+                <div className="h-1.5 shrink-0 bg-bg" />
+                <div className="scroll-y min-h-0 flex-1"><SymbolDetails sym={sym} /></div>
+              </>
+            ) : (
+              <div className="scroll-y min-h-0 flex-1 p-4">
+                {tab === 'order' && <Order sym={sym} addOrder={addOrder} />}
+                {tab === 'port' && <Portfolio setSym={setSym} />}
+                {tab === 'alert' && <Alerts orders={orders} />}
+              </div>
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
-
-      {/* Bottom app nav */}
-      <nav className="grid grid-cols-4 border-t border-line/70 p-2">
-        {TABS.map(({ k, t, I }) => (
-          <button key={k} onClick={() => setTab(k)} className="relative flex flex-col items-center gap-1 rounded-2xl py-2 text-xs">
-            {tab === k && <motion.span layoutId="tab" className="absolute inset-0 rounded-2xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
-            <span className={`relative ${tab === k ? 'text-brand-light' : 'text-muted'}`}><I set={tab === k ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
-            <span className={`relative ${tab === k ? 'font-semibold text-ink' : 'text-muted'}`}>{t}</span>
-          </button>
-        ))}
-      </nav>
     </aside>
   )
 }
@@ -56,7 +68,7 @@ function Watch({ sym, setSym }) {
   const list = SYMBOLS.filter((x) => x.s.includes(q) || x.n.includes(q))
   return (
     <>
-      <label className="mb-3 flex items-center gap-2 rounded-2xl border border-line/70 bg-surface2/50 px-3 py-2.5 focus-within:border-brand/60">
+      <label className="mb-2 flex items-center gap-2 rounded-xl border border-line/70 bg-surface2/50 px-3 py-2 focus-within:border-brand/60">
         <Search set="light" size={18} primaryColor="currentColor" />
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="جستجوی نماد..." className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted" />
       </label>
@@ -64,9 +76,9 @@ function Watch({ sym, setSym }) {
       <div className="space-y-1.5">
         {list.map((x) => (
           <motion.button key={x.s} onClick={() => setSym(x)} whileTap={{ scale: .98 }}
-            className={`relative flex w-full items-center gap-3 rounded-2xl p-2.5 text-right transition-colors ${sym.s === x.s ? '' : 'hover:bg-surface2/60'}`}>
-            {sym.s === x.s && <motion.span layoutId="sel" className="absolute inset-0 rounded-2xl border border-brand/50 bg-brand/10" />}
-            <span className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-surface2 text-xs font-bold text-brand-light">{x.s.slice(0, 2)}</span>
+            className={`relative flex w-full items-center gap-3 rounded-xl px-2 py-1.5 text-right transition-colors ${sym.s === x.s ? '' : 'hover:bg-surface2/60'}`}>
+            {sym.s === x.s && <motion.span layoutId="sel" className="absolute inset-0 rounded-xl border border-brand/50 bg-brand/10" />}
+            <span className="relative grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface2 text-xs font-bold text-brand-light">{x.s.slice(0, 2)}</span>
             <span className="relative min-w-0 flex-1">
               <span className="block font-semibold">{x.s}</span>
               <span className="block truncate text-xs text-muted">{x.n}</span>

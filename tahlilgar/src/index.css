@@ -20,13 +20,7 @@
 }
 html, body { font-family: IRANYekanX, Tahoma, sans-serif; font-feature-settings: "ss02"; }
 body { @apply bg-bg text-ink transition-colors duration-500; }
-.dark body {
-  background:
-    radial-gradient(900px 500px at 85% -10%, rgba(46,98,255,.22), transparent 60%),
-    radial-gradient(700px 500px at 0% 110%, rgba(32,71,255,.15), transparent 60%),
-    rgb(var(--bg));
-  background-attachment: fixed;
-}
+
 .card {
   @apply rounded-[28px] border border-line/70 bg-surface/80 backdrop-blur-xl p-5;
   box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -30px rgba(0,0,0,.5);
@@ -39,8 +33,5 @@ body { @apply bg-bg text-ink transition-colors duration-500; }
 .num { font-feature-settings: "ss02", "tnum"; }
 ::-webkit-scrollbar { width: 6px; height: 6px }
 ::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 9px }
-.panel {
-  @apply rounded-[24px] border border-line/70 bg-surface/80 backdrop-blur-xl;
-  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -30px rgba(0,0,0,.5);
-}
-@media (min-width: 1024px) { .panel { height: 100% } }
+.scroll-y { overflow-y: auto; scrollbar-gutter: stable; }
+@media (min-width: 1024px) { html, body, #root { height: 100%; overflow: hidden } }
