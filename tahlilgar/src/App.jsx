@@ -3,7 +3,7 @@ import AppPanel from './components/AppPanel'
 import SitePanel from './components/SitePanel'
 import { SYMBOLS } from './data/market'
 
-const MIN_RIGHT = 320, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400
+const MIN_RIGHT = 320, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400, SNAP = 200
 const load = () => { try { return +localStorage.getItem('rightW') || DEFAULT } catch { return DEFAULT } }
 
 export default function App() {
@@ -13,7 +13,9 @@ export default function App() {
   const [orders, setOrders] = useState([])
   const [rightW, setRightW] = useState(load)
   const [drag, setDrag] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
   const root = useRef(null)
+  const startW = useRef(DEFAULT)
   useEffect(() => { document.documentElement.classList.toggle('dark', dark) }, [dark])
 
   // Right panel is pinned to the right edge, so its width = distance from pointer to that edge
@@ -25,7 +27,10 @@ export default function App() {
     if (!drag) return
     const move = (e) => {
       const r = root.current.getBoundingClientRect()
-      setRightW(clamp(r.right - e.clientX))
+      const raw = r.right - e.clientX
+      // Past the snap point the right panel docks away and the left panel goes full screen
+      if (raw < SNAP) { setCollapsed(true); setRightW(startW.current) }
+      else { setCollapsed(false); setRightW(clamp(raw)) }
     }
     const up = () => setDrag(false)
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
@@ -44,16 +49,16 @@ export default function App() {
   const nudge = (d) => setRightW((w) => clamp(w + d))
 
   return (
-    <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': rightW + 'px' }}>
+    <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': (collapsed ? 0 : rightW) + 'px' }} data-drag={drag || undefined}>
       <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} />
 
       {/* Splitter: hover → blue, drag → resize, double-click → reset, arrows for keyboard */}
       <div
         role="separator" aria-orientation="vertical" aria-label="تغییر اندازه پنل‌ها" tabIndex={0}
         aria-valuenow={rightW} aria-valuemin={MIN_RIGHT} aria-valuemax={MAX_RIGHT}
-        onPointerDown={(e) => { e.preventDefault(); setDrag(true) }}
-        onDoubleClick={() => setRightW(clamp(DEFAULT))}
-        onKeyDown={(e) => { if (e.key === 'ArrowRight') nudge(-20); if (e.key === 'ArrowLeft') nudge(20) }}
+        onPointerDown={(e) => { e.preventDefault(); if (!collapsed) startW.current = rightW; setDrag(true) }}
+        onDoubleClick={() => { setCollapsed(false); setRightW(clamp(DEFAULT)) }}
+        onKeyDown={(e) => { if (e.key === 'ArrowRight') { if (rightW <= MIN_RIGHT) setCollapsed(true); else nudge(-20) } if (e.key === 'ArrowLeft') { if (collapsed) setCollapsed(false); else nudge(20) } }}
         className="group relative hidden w-[3px] shrink-0 cursor-col-resize bg-bg outline-none lg:block"
       >
         <span className="absolute inset-y-0 -left-1.5 -right-1.5 z-20" />
@@ -61,9 +66,15 @@ export default function App() {
         <span className={`absolute left-1/2 top-1/2 z-20 flex h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-full transition-opacity ${drag ? 'bg-brand-light opacity-100' : 'bg-brand opacity-0 group-hover:opacity-100'}`}>
           <i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" />
         </span>
+        {collapsed && !drag && (
+          <button onClick={() => setCollapsed(false)} onPointerDown={(e) => e.stopPropagation()} title="باز کردن پنل"
+            className="absolute right-1 top-1/2 z-30 grid h-14 w-5 -translate-y-1/2 place-items-center rounded-l-lg bg-brand text-white shadow-glow">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="m9 6 6 6-6 6" transform="rotate(180 12 12)" /></svg>
+          </button>
+        )}
         {drag && (
           <span className="num absolute right-3 top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-lg bg-brand px-2 py-1 text-xs text-white shadow-glow">
-            {rightW.toLocaleString('fa-IR')} پیکسل
+            {collapsed ? 'رها کنید: تمام صفحه' : rightW.toLocaleString('fa-IR') + ' پیکسل'}
           </span>
         )}
       </div>
