@@ -53,23 +53,25 @@ export default function SitePanel({ sym, dark, setDark }) {
   useEffect(() => {
     if (!isChart) return
     const sc = scroller.current, snapTop = () => tabsBar.current.offsetTop
-    let busy = false
-    const go = (top) => { busy = true; sc.scrollTo({ top, behavior: 'smooth' }); setTimeout(() => (busy = false), 450) }
+    let busy = false, last = sc.scrollTop
+    const go = (top) => { busy = true; sc.scrollTo({ top, behavior: 'smooth' }); setTimeout(() => { busy = false; last = sc.scrollTop }, 500) }
+    // capture phase: runs before the chart sees the wheel, so even a tiny scroll snaps first
     const onWheel = (e) => {
-      if (e.target.closest('[data-chart]')) return            // wheel over the chart zooms it
-      const t = snapTop()
-      if (e.deltaY > 0 && sc.scrollTop < t - 1) { e.preventDefault(); if (!busy) go(t) }
-      else if (e.deltaY < 0 && sc.scrollTop > 0 && sc.scrollTop <= t + 1) { e.preventDefault(); if (!busy) go(0) }
+      const t = snapTop(), snapped = sc.scrollTop >= t - 1
+      if (!snapped && e.deltaY > 0) { e.preventDefault(); e.stopPropagation(); if (!busy) go(t); return }
+      if (busy) { e.preventDefault(); e.stopPropagation(); return }
+      if (snapped && e.deltaY < 0 && !e.target.closest('[data-chart]')) { e.preventDefault(); if (sc.scrollTop <= t + 1) go(0) }
     }
-    let y0 = null
-    const onTouchStart = (e) => { y0 = e.touches[0].clientY }
-    const onTouchEnd = (e) => {
-      if (y0 == null) return; const dy = y0 - e.changedTouches[0].clientY, t = snapTop(); y0 = null
-      if (dy > 30 && sc.scrollTop < t) go(t); else if (dy < -30 && sc.scrollTop <= t + 1) go(0)
+    // scrollbar drag / keyboard / touch momentum: any movement in the header zone snaps
+    const onScroll = () => {
+      if (busy) return
+      const t = snapTop(), y = sc.scrollTop
+      if (y > 0 && y < t - 1) go(y > last ? t : 0)
+      last = y
     }
-    sc.addEventListener('wheel', onWheel, { passive: false })
-    sc.addEventListener('touchstart', onTouchStart, { passive: true }); sc.addEventListener('touchend', onTouchEnd)
-    return () => { sc.removeEventListener('wheel', onWheel); sc.removeEventListener('touchstart', onTouchStart); sc.removeEventListener('touchend', onTouchEnd) }
+    sc.addEventListener('wheel', onWheel, { passive: false, capture: true })
+    sc.addEventListener('scroll', onScroll, { passive: true })
+    return () => { sc.removeEventListener('wheel', onWheel, { capture: true }); sc.removeEventListener('scroll', onScroll) }
   }, [isChart])
   const chg = sym.p - d.prev
 
