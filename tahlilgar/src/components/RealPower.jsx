@@ -23,13 +23,17 @@ function Seg({ items, value, set, id }) {
 function nice(max) { const p = 10 ** Math.floor(Math.log10(max || 1)), m = max / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p }
 
 // generic pane (top-level so it is not remounted on every hover): y scale, grid, right axis, hover line, tooltip
-function Pane({ ctx, title, h, max, min = 0, fmt, children, tip }) {
-  const { W, padL, cw, X, ticksX, hover, hd } = ctx
+function Pane({ ctx, id, title, h, max, min = 0, fmt, children, tip }) {
+  const { W, padL, cw, X, ticksX, hover, hd, pane, setPane } = ctx
+  const active = pane === id
     const y = (v) => 6 + (1 - (v - min) / (max - min || 1)) * (h - 12)
     const ticks = Array.from({ length: 4 }, (_, k) => min + (max - min) * (k + 1) / 4)
     return (
-      <div className="relative border-b border-line/60 pb-1 pt-6">
-        <div className="absolute right-2 top-1 text-xs font-semibold text-muted">{title}</div>
+      <div className="relative border-b border-line/60 pb-1 pt-6" onMouseEnter={() => setPane(id)}>
+        <div className="absolute inset-x-2 top-1 flex items-center gap-3 overflow-hidden whitespace-nowrap text-xs" dir="rtl">
+          <span className="font-semibold text-muted">{title}</span>
+          {hd && tip && !active && tip(hd).map(([k, v]) => <span key={k} className="text-[11px] text-muted">{k}: <b className="num text-ink" dir="ltr">{v}</b></span>)}
+        </div>
         <svg width={W} height={h} className="block overflow-visible">
           {ticks.map((t) => <g key={t}><line x1={padL} x2={padL + cw} y1={y(t)} y2={y(t)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={padL + cw + 6} y={y(t) + 4} fontSize="10" fill="rgb(var(--muted))">{fmt(t)}</text></g>)}
           {ticksX.map((i) => <line key={i} x1={X(i)} x2={X(i)} y1={0} y2={h} stroke="rgb(var(--line))" strokeDasharray="3 4" opacity=".6" />)}
@@ -37,9 +41,9 @@ function Pane({ ctx, title, h, max, min = 0, fmt, children, tip }) {
           {children(y)}
           {hd && <line x1={X(hover)} x2={X(hover)} y1={0} y2={h} stroke="rgba(240,80,110,.7)" />}
         </svg>
-        <AnimatePresence>{hd && tip && (
+        <AnimatePresence>{hd && tip && active && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }}
-            style={{ left: X(hover) > W / 2 ? X(hover) - 172 : X(hover) + 14, top: 26 }}
+            style={{ left: X(hover) > W / 2 ? X(hover) - 172 : X(hover) + 14, top: 24 }}
             className="pointer-events-none absolute z-10 w-40 rounded-xl border border-line bg-surface2/95 p-2 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
             <div className="num mb-1 border-b border-line pb-1 text-center font-bold text-brand-light">{pdate(hd.t)}</div>
             {tip(hd).map(([k, v]) => <div key={k} className="flex justify-between py-0.5"><span className="text-muted">{k}:</span><b className="num" dir="ltr">{v}</b></div>)}
@@ -52,8 +56,10 @@ function Pane({ ctx, title, h, max, min = 0, fmt, children, tip }) {
 export default function RealPower({ sym }) {
   const [type, setType] = useState('line'), [unit, setUnit] = useState('vol'), [adj, setAdj] = useState(true), [range, setRange] = useState('۱ ماه')
   const [hover, setHover] = useState(null)
-  const box = useRef(null); const [W, setW] = useState(640)
-  useEffect(() => { const ro = new ResizeObserver(([e]) => setW(e.contentRect.width)); ro.observe(box.current); return () => ro.disconnect() }, [])
+  const box = useRef(null); const [W, setW] = useState(640), [H, setH] = useState(700)
+  useEffect(() => { const ro = new ResizeObserver(([e]) => { setW(e.contentRect.width); setH(e.contentRect.height) }); ro.observe(box.current); return () => ro.disconnect() }, [])
+  // fit all four panes into the visible height: 34px date axis + ~29px title/padding per pane
+  const avail = Math.max(320, H - 34 - 4 * 29), hPrice = Math.round(avail * .34), hSub = Math.round(avail * .22)
 
   const n = RANGES.find((r) => r[0] === range)[1]
   const all = useMemo(() => makeBars(sym, 86400), [sym])
@@ -76,7 +82,8 @@ export default function RealPower({ sym }) {
   const hd = hover != null ? data[hover] : null
   const ticksX = data.map((d, i) => i).filter((i) => i % Math.ceil(data.length / 7) === 0)
 
-  const ctx = { W, padL, cw, X, ticksX, hover, hd }
+  const [pane, setPane] = useState(0)
+  const ctx = { W, padL, cw, X, ticksX, hover, hd, pane, setPane }
   const bars2 = (y, vals) => vals.map(([a, b], i) => {
     const w = Math.max(1.5, step * .36), base = y(0)
     return <g key={i} opacity={hover == null || hover === i ? 1 : .55}>
@@ -97,9 +104,12 @@ export default function RealPower({ sym }) {
         <Seg id="rp-type" value={type} set={setType} items={[['line', 'خطی'], ['candle', 'شمعی']]} />
         <Seg id="rp-unit" value={unit} set={setUnit} items={[['vol', 'حجم'], ['pct', 'درصد']]} />
         <Seg id="rp-adj" value={adj} set={setAdj} items={[[true, 'تعدیل شده'], [false, 'تعدیل نشده']]} />
+        <div className="flex-1" />
+        <span className="flex items-center gap-3 text-[11px] text-muted"><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-up" />خرید</span><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-down" />فروش</span></span>
       </div>
-      <div ref={box} className="scroll-y min-h-0 flex-1 select-none" dir="ltr" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
-        <Pane ctx={ctx} title={sym.s} h={220} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => type === 'candle' ? [['اولین', fa(Math.round(d.o))], ['آخرین', fa(Math.round(d.c))], ['بیشترین', fa(Math.round(d.h))], ['کمترین', fa(Math.round(d.l))], ['حجم', fa(d.v)]] : [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
+      <div className="overflow-x-auto border-b border-line px-4 py-2"><Seg id="rp-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} /></div>
+      <div ref={box} className="min-h-0 flex-1 select-none overflow-hidden" dir="ltr" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
+        <Pane ctx={ctx} id={0} title={sym.s} h={hPrice} min={pmin - pad} max={pmax + pad} fmt={(t) => fa(Math.round(t))} tip={(d) => type === 'candle' ? [['اولین', fa(Math.round(d.o))], ['آخرین', fa(Math.round(d.c))], ['بیشترین', fa(Math.round(d.h))], ['کمترین', fa(Math.round(d.l))], ['حجم', fa(d.v)]] : [['قیمت', fa(Math.round(d.c))], ['حجم', fa(d.v)]]}>
           {(y) => <>
             {data.map((d, i) => { const hgt = d.v / vmax * 50; return <rect key={'v' + i} x={X(i) - step * .3} width={step * .6} y={y(pmin - pad) - hgt} height={hgt} fill={d.c >= d.o ? UP : DOWN} opacity=".35" /> })}
             {type === 'line'
@@ -108,17 +118,13 @@ export default function RealPower({ sym }) {
             {hd && <><line x1={padL} x2={padL + cw} y1={y(hd.c)} y2={y(hd.c)} stroke="rgba(240,80,110,.7)" /><circle cx={X(hover)} cy={y(hd.c)} r="4" fill="#3C7CFF" stroke="rgb(var(--surface))" strokeWidth="2" /></>}
           </>}
         </Pane>
-        <Pane ctx={ctx} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقیقی`} h={130} max={vmaxR} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.real.b)], ['تعداد خرید', fa(d.real.bn)], ['حجم فروش', short(d.real.s)], ['تعداد فروش', fa(d.real.sn)]]}>{(y) => bars2(y, realV)}</Pane>
-        <Pane ctx={ctx} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقوقی`} h={130} max={vmaxL} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.legal.b)], ['تعداد خرید', fa(d.legal.bn)], ['حجم فروش', short(d.legal.s)], ['تعداد فروش', fa(d.legal.sn)]]}>{(y) => bars2(y, legalV)}</Pane>
-        <Pane ctx={ctx} title="سرانه حجم معامله شده حقیقی" h={130} max={perMax} fmt={short} tip={(d) => [['سرانه حجم خریدار', fa(Math.round(d.pb))], ['سرانه حجم فروشنده', fa(Math.round(d.ps))], ['قدرت خریدار', fa(d.pb / d.ps, 2)]]}>{(y) => bars2(y, data.map((d) => [d.pb, d.ps]))}</Pane>
+        <Pane ctx={ctx} id={1} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقیقی`} h={hSub} max={vmaxR} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.real.b)], ['تعداد خرید', fa(d.real.bn)], ['حجم فروش', short(d.real.s)], ['تعداد فروش', fa(d.real.sn)]]}>{(y) => bars2(y, realV)}</Pane>
+        <Pane ctx={ctx} id={2} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقوقی`} h={hSub} max={vmaxL} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.legal.b)], ['تعداد خرید', fa(d.legal.bn)], ['حجم فروش', short(d.legal.s)], ['تعداد فروش', fa(d.legal.sn)]]}>{(y) => bars2(y, legalV)}</Pane>
+        <Pane ctx={ctx} id={3} title="سرانه حجم معامله شده حقیقی" h={hSub} max={perMax} fmt={short} tip={(d) => [['سرانه حجم خریدار', fa(Math.round(d.pb))], ['سرانه حجم فروشنده', fa(Math.round(d.ps))], ['قدرت خریدار', fa(d.pb / d.ps, 2)]]}>{(y) => bars2(y, data.map((d) => [d.pb, d.ps]))}</Pane>
         <svg width={W} height={34} className="block">
           {ticksX.map((i) => <text key={i} x={X(i)} y={14} fontSize="10" fill="rgb(var(--muted))" textAnchor="end" transform={`rotate(-30 ${X(i)} 14)`}>{pdate(data[i].t)}</text>)}
         </svg>
       </div>
-      <div className="flex items-center justify-center gap-4 border-t border-line px-4 py-1.5 text-[11px] text-muted">
-        <span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-up" />خرید</span><span className="flex items-center gap-1"><i className="h-2.5 w-2.5 rounded-sm bg-down" />فروش</span>
-      </div>
-      <div className="overflow-x-auto border-t border-line px-4 py-2.5"><Seg id="rp-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} /></div>
     </div>
   )
 }
