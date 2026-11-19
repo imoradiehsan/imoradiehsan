@@ -59,15 +59,21 @@ export default function SRChart({ sym, dark }) {
     return () => c.remove()
   }, [bars, type, log, levels, dark])
 
-  const tb = (on) => `flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs transition-colors ${on ? 'font-bold text-brand-light' : 'text-muted hover:text-ink'}`
+  const Seg = ({ items, value, set, id }) => (
+    <div className="seg">{items.map(([k, t, icon]) => (
+      <button key={t} onClick={() => set(k)} className="seg-item">
+        {value === k && <motion.span layoutId={id} className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
+        <span className={`relative flex items-center gap-1 ${value === k ? 'font-bold text-brand-light' : ''}`}>{icon}{t}</span>
+      </button>
+    ))}</div>
+  )
   return (
     <div ref={wrap} className="flex h-full flex-col bg-surface">
-      <div className="flex shrink-0 flex-wrap items-center gap-1 border-b border-line/70 px-3 py-1.5">
-        {['شمعی', 'خطی'].map((t) => <button key={t} onClick={() => setType(t)} className={tb(type === t)}>{t === 'شمعی' ? '▥' : '〰'} {t}</button>)}
-        <i className="mx-1 h-5 w-px bg-line" />
-        {[[false, 'بدون تعدیل'], [true, 'تعدیل افزایش سرمایه']].map(([k, t]) => <button key={t} onClick={() => setAdj(k)} className={tb(adj === k)}>{t}</button>)}
+      <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line/70 px-3 py-2">
+        <Seg id="sr-type" value={type} set={setType} items={[['شمعی', 'شمعی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>], ['خطی', 'خطی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>]]} />
+        <Seg id="sr-adj" value={adj} set={setAdj} items={[[false, 'بدون تعدیل'], [true, 'تعدیل افزایش سرمایه']]} />
         <div className="flex-1" />
-        <button title="تمام صفحه" onClick={() => (document.fullscreenElement ? document.exitFullscreen() : wrap.current.requestFullscreen?.().catch(() => {}))} className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">⛶</button>
+        <button title="تمام صفحه" onClick={() => (document.fullscreenElement ? document.exitFullscreen() : wrap.current.requestFullscreen?.().catch(() => {}))} className="btn-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button>
       </div>
       <AnimatePresence initial={false}>
         {levels.length === 0 && (
@@ -90,14 +96,9 @@ export default function SRChart({ sym, dark }) {
           ))}
         </div>
       )}
-      <div className="flex h-10 shrink-0 items-center justify-between border-t border-line/70 px-3">
-        <div className="flex gap-0.5">{RANGES.map(([t]) => (
-          <button key={t} onClick={() => setRange(t)} className="relative rounded-md px-2.5 py-1 text-xs">
-            {range === t && <motion.span layoutId="sr-range" className="absolute inset-0 rounded-md bg-surface2 ring-1 ring-line" />}
-            <span className={`relative ${range === t ? 'font-bold text-ink' : 'text-muted'}`}>{t}</span>
-          </button>
-        ))}</div>
-        <button onClick={() => setLog(!log)} className={`rounded-md px-2 py-1 text-xs font-bold ${log ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2'}`}>log</button>
+      <div className="flex h-12 shrink-0 items-center justify-between gap-2 overflow-x-auto border-t border-line/70 px-3">
+        <Seg id="sr-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} />
+        <button onClick={() => setLog(!log)} className={`btn ${log ? 'btn-on' : ''}`}>log</button>
       </div>
     </div>
   )

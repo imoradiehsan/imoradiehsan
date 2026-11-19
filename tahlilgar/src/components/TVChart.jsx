@@ -270,11 +270,11 @@ export default function TVChart({ sym, dark, technical = false }) {
 
         {osc && ready && <OscPane key={osc + sym.s + interval} kind={osc} setKind={setOsc} bars={bars} mainChart={chart} dark={dark} />}
         {technical && (
-          <div className="flex h-9 shrink-0 items-center justify-between border-t border-line/70 px-3 text-xs text-muted">
+          <div className="flex h-11 shrink-0 items-center justify-between border-t border-line/70 px-3 text-xs text-muted">
             <span>{sym.s} · {INTERVALS.find((x) => x.k === interval).t}</span>
             <div className="flex items-center gap-1">
-              {!osc && <button onClick={() => setOsc('adx')} className="rounded-md px-2 py-1 hover:bg-surface2 hover:text-ink">+ اسیلاتور</button>}
-              <button onClick={() => setLog(!log)} className={`rounded-md px-2 py-1 font-bold ${log ? 'bg-brand/15 text-brand-light' : 'hover:bg-surface2 hover:text-ink'}`} dir="ltr">log</button>
+              {!osc && <button onClick={() => setOsc('adx')} className="btn !h-7">+ اسیلاتور</button>}
+              <button onClick={() => setLog(!log)} className={`btn !h-7 ${log ? 'btn-on' : ''}`} dir="ltr">log</button>
             </div>
           </div>
         )}

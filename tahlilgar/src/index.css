@@ -36,3 +36,12 @@ body { @apply bg-bg text-ink transition-colors duration-500; }
 .scroll-y { overflow-y: auto; scrollbar-gutter: stable; }
 @media (min-width: 1024px) { html, body, #root { height: 100%; overflow: hidden } }
 [data-drag] [data-content] { transition: none !important; }
+
+/* ---- Button system: one look for every small control ---- */
+@layer components {
+  .btn { @apply inline-flex h-8 items-center gap-1.5 whitespace-nowrap rounded-xl border border-line bg-surface2/40 px-3 text-xs font-medium text-muted transition-all duration-150 hover:border-brand/40 hover:text-ink active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60; }
+  .btn-on { @apply border-brand/60 bg-brand/15 font-bold text-brand-light hover:text-brand-light; }
+  .btn-icon { @apply inline-grid h-8 w-8 place-items-center rounded-xl border border-line bg-surface2/40 text-muted transition-all hover:border-brand/40 hover:text-ink active:scale-90; }
+  .seg { @apply inline-flex h-8 items-center gap-0.5 rounded-xl border border-line bg-surface2/40 p-0.5; }
+  .seg-item { @apply relative inline-flex h-full items-center gap-1 rounded-[10px] px-3 text-xs text-muted transition-colors hover:text-ink; }
+}

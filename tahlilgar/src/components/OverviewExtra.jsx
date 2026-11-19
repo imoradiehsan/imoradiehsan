@@ -36,11 +36,11 @@ export function Card({ title, actions, children, className = '' }) {
 }
 function Seg({ items, value, onChange, id, icons = {} }) {
   return (
-    <div className="flex rounded-xl border border-line bg-surface2/40 p-0.5">
+    <div className="seg">
       {items.map((t) => (
-        <button key={t} onClick={() => onChange(t)} className="relative rounded-lg px-3 py-1 text-xs">
-          {value === t && <motion.span layoutId={id} className="absolute inset-0 rounded-lg bg-surface2 ring-1 ring-line" />}
-          <span className={`relative flex items-center gap-1 ${value === t ? 'font-bold text-ink' : 'text-muted'}`}>{icons[t]}{t}</span>
+        <button key={t} onClick={() => onChange(t)} className="seg-item">
+          {value === t && <motion.span layoutId={id} className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+          <span className={`relative flex items-center gap-1 ${value === t ? 'font-bold text-brand-light' : ''}`}>{icons[t]}{t}</span>
         </button>
       ))}
     </div>
@@ -176,8 +176,8 @@ export function Compare({ sym }) {
   return (
     <Card title="مقایسه با صنعت و شاخص" actions={
       <div className="relative">
-        <button onClick={() => setOpen(!open)} className="flex items-center gap-1 rounded-lg border border-line px-3 py-1 text-xs">{period} <motion.span animate={{ rotate: open ? 180 : 0 }}>⌄</motion.span></button>
-        <AnimatePresence>{open && <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute left-0 top-8 z-30 w-28 rounded-xl border border-line bg-surface p-1 shadow-xl">
+        <button onClick={() => setOpen(!open)} className={`btn ${open ? 'btn-on' : ''}`}>{period}<motion.span animate={{ rotate: open ? 180 : 0 }} className="grid"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></svg></motion.span></button>
+        <AnimatePresence>{open && <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute left-0 top-10 z-30 w-28 rounded-xl border border-line bg-surface p-1 shadow-xl">
           {['۱ هفته', '۱ ماه', '۳ ماه', '۱ سال'].map((p) => <button key={p} onClick={() => { setPeriod(p); setOpen(false) }} className={`block w-full rounded-lg px-3 py-1.5 text-right text-xs hover:bg-surface2 ${p === period ? 'text-brand-light' : ''}`}>{p}</button>)}
         </motion.div>}</AnimatePresence>
       </div>}>

@@ -30,7 +30,7 @@ function Card({ title, actions, children, className = '' }) {
   )
 }
 const Pill = ({ on, onClick, children }) => (
-  <button onClick={onClick} className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs transition-colors ${on ? 'border-brand/60 bg-brand/15 text-brand-light' : 'border-line text-muted hover:text-ink'}`}>{children}</button>
+  <button onClick={onClick} className={`btn ${on ? 'btn-on' : ''}`}>{children}</button>
 )
 
 export default function SitePanel({ sym, dark, setDark }) {
@@ -188,7 +188,7 @@ function Overview({ sym, d, open, dark }) {
         </Card>
         <div className="flex flex-col gap-4">
           <Card title="دامنه قیمت امروز"><Range sym={sym} d={d} /></Card>
-          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
+          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="btn btn-on">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
             <Fundamentals d={d} />
           </Card>
         </div>
