@@ -381,13 +381,11 @@ function Real({ d }) {
 
 function News({ d }) {
   const [open, setOpen] = useState(null)
-  const [more, setMore] = useState(false)
-  const list = more ? d.news : d.news.slice(0, 3)
+  const list = d.news
   return (
     <>
       <div className="flex items-center justify-between">
         <h3 className="font-bold">اخبار و اطلاعیه‌ها</h3>
-        <button onClick={() => setMore(!more)} className="flex items-center gap-1 text-sm text-brand-light hover:underline">{more ? 'کمتر' : 'بیشتر'} <motion.span animate={{ rotate: more ? 90 : 0 }}>‹</motion.span></button>
       </div>
       <AnimatePresence initial={false}>
         {list.map((n, i) => (
