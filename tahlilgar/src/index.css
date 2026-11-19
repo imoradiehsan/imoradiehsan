@@ -45,3 +45,8 @@ body { @apply bg-bg text-ink transition-colors duration-500; }
   .seg { @apply inline-flex h-8 items-center gap-0.5 rounded-xl border border-line bg-surface2/40 p-0.5; }
   .seg-item { @apply relative inline-flex h-full items-center gap-1 rounded-[10px] px-3 text-xs text-muted transition-colors hover:text-ink; }
 }
+
+/* While a drawer or dialog is open, the page behind it can't scroll; only the overlay can. */
+html.lock .scroll-y:not([data-overlay] .scroll-y) { overflow: hidden !important; }
+html.lock { overflow: hidden; overscroll-behavior: none; }
+[data-overlay], [data-overlay] .scroll-y { overscroll-behavior: contain; }

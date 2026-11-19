@@ -36,6 +36,16 @@ const Pill = ({ on, onClick, children }) => (
 )
 
 // open any ticker as the active symbol (falls back to a sample profile for tickers outside the watchlist)
+// ref-counted page scroll lock shared by drawers and dialogs
+let locks = 0
+function useScrollLock(on) {
+  useEffect(() => {
+    if (!on) return
+    if (locks++ === 0) document.documentElement.classList.add('lock')
+    return () => { if (--locks === 0) document.documentElement.classList.remove('lock') }
+  }, [on])
+}
+
 function toSymbol(code) {
   const hit = SYMBOLS.find((y) => y.s === code)
   if (hit) return hit
@@ -455,13 +465,14 @@ function Opinions({ d }) {
 
 const DRAWER_TITLES = Object.fromEntries(LINKS.map(([k, t]) => [k, t]))
 function Drawer({ k, close, sym, d, openSym }) {
+  useScrollLock(!!k)
   return (
     <AnimatePresence>
       {k && (
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
+            data-overlay className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
             {k !== 'holders' && k !== 'big' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
             <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' || k === 'big' || k === 'history' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} openSym={openSym} />}
@@ -616,6 +627,7 @@ function Peers({ sym, openSym }) {
 
 /* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
 function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false, actions, primary = false }) {
+  useScrollLock(open)
   useEffect(() => {
     if (!open) return
     const k = (e) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
@@ -626,7 +638,7 @@ function Modal({ open, title, onClose, children, closeText = 'بستن', visible
       {open && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
-          <motion.div role="dialog" aria-modal="true" aria-label={title} initial={{ y: 60, opacity: 0, scale: .97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, scale: .97 }} transition={{ type: 'spring', stiffness: 360, damping: 32 }}
+          <motion.div data-overlay role="dialog" aria-modal="true" aria-label={title} initial={{ y: 60, opacity: 0, scale: .97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, scale: .97 }} transition={{ type: 'spring', stiffness: 360, damping: 32 }}
             className={`relative flex max-h-[90vh] w-full max-w-xl flex-col rounded-t-3xl border border-line bg-surface shadow-2xl sm:m-3 sm:rounded-3xl ${visible ? '' : 'overflow-hidden'}`}>
             <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
             <div className="flex items-center gap-3 border-b border-line px-5 py-3.5">
