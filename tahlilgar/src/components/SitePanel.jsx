@@ -12,10 +12,35 @@ import { fa, SYMBOLS } from '../data/market'
 import { symbolData } from '../data/symbol'
 
 const MENUS = [
-  ['امکانات', ['دیده‌بان هوشمند', 'فیلترنویسی', 'هشدارهای قیمتی', 'مقایسه نمادها']],
-  ['بازارها', ['بورس تهران', 'فرابورس', 'صندوق‌ها', 'اوراق بدهی', 'آپشن']],
-  ['دسترسی سریع', ['نقشه بازار', 'شاخص‌ها', 'ورود و خروج پول', 'تقویم مجامع']],
-  ['سایر', ['آموزش', 'درباره ما', 'تماس با ما']],
+  ['امکانات', [
+    ['map', 'نقشه بازار', 'نمای رنگی همه نمادها بر اساس تغییر قیمت', Category],
+    ['alert', 'هشدار', 'اطلاع از رسیدن قیمت و اندیکاتورها به هدف', Notification],
+    ['filter', 'فیلتر', 'پیدا کردن نمادها با شرط‌های دلخواه', Discovery],
+    ['strategy', 'استراتژی', 'استراتژی‌های آماده و شخصی معاملاتی', Activity],
+    ['holders', 'سهامدار عمده', 'سهامداران عمده و معاملات‌شان در هر نماد', Work],
+    ['watch', 'دیده‌بان', 'لیست نمادهای زیر نظر شما', Show],
+    ['vport', 'پرتفوی مجازی', 'تمرین معامله بدون ریسک با پول مجازی', Graph],
+  ]],
+  ['بازارها', [
+    ['bourse', 'بورس', 'بورس و فرابورس تهران', Chart],
+    ['option', 'آپشن', 'قراردادهای اختیار معامله', Category],
+    ['crypto', 'ارز دیجیتال', 'بیت‌کوین، اتریوم و رمزارزها', Activity],
+    ['forex', 'جفت ارزها', 'بازار فارکس و نرخ ارزها', TwoUsers],
+    ['global', 'بازار جهانی', 'شاخص‌ها، کالاها و سهام جهانی', Discovery],
+  ]],
+  ['دسترسی سریع', [
+    ['trend', 'روند بازار', 'شاخص کل، ورود و خروج پول', Graph],
+    ['optmap', 'نقشه بازار آپشن', 'نمای رنگی قراردادهای اختیار', Category],
+    ['latest', 'آخرین تحلیل‌ها', 'تازه‌ترین تحلیل‌های کاربران', Paper],
+    ['support', 'پشتیبانی', 'گفت‌وگو با تیم پشتیبانی', Chat],
+  ]],
+  ['سایر', [
+    ['news', 'اخبار', 'اخبار و اطلاعیه‌های بازار', Paper],
+    ['social', 'شبکه اجتماعی', 'دیدگاه‌ها و استوری‌های فعالان بازار', Chat],
+    ['learn', 'آموزش', 'مقاله‌ها و دوره‌های آموزشی', InfoCircle],
+    ['about', 'درباره ما', 'آشنایی با تحلیل‌گر بورس', People],
+    ['rules', 'قوانین و مقررات', 'شرایط استفاده و حریم خصوصی', EditSquare],
+  ]],
 ]
 const TABS = ['نمای کلی', 'چارت', 'اخبار و اطلاعیه‌ها', 'حمایت/مقاومت', 'نظرات و تحلیل‌ها', 'تکنیکال']
 const LINKS = [
@@ -60,6 +85,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
   const [tab, setTab] = useState('نمای کلی')
   const [menu, setMenu] = useState(null)
   const [drawer, setDrawer] = useState(null)
+  const [page, setPage] = useState(null)
   const [fav, setFav] = useState(false)
   const d = useMemo(() => symbolData(sym), [sym])
 
@@ -99,7 +125,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
   const chg = sym.p - d.prev
 
   return (
-    <section className="flex min-w-0 flex-1 flex-col bg-surface lg:h-full" onClick={() => menu && setMenu(null)}>
+    <section className="relative flex min-w-0 flex-1 flex-col bg-surface lg:h-full" onClick={() => menu && setMenu(null)}>
       {/* Site header */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4" onClick={(e) => e.stopPropagation()}>
         <img src="./logo.png" alt="" className="h-8 w-8 rounded-lg" />
@@ -115,8 +141,14 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
                 {t}<motion.span animate={{ rotate: menu === t ? 180 : 0 }}>{ico(ChevronDown, 14)}</motion.span>
               </button>
               <AnimatePresence>{menu === t && (
-                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }} className="absolute right-0 top-11 z-50 w-48 rounded-xl border border-line bg-surface p-1 shadow-2xl">
-                  {items.map((i) => <button key={i} onClick={() => setMenu(null)} className="block w-full rounded-lg px-3 py-2 text-right text-sm hover:bg-surface2">{i}</button>)}
+                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }} className={`absolute right-0 top-11 z-50 grid gap-1 rounded-2xl border border-line bg-surface p-2 shadow-2xl ${items.length > 5 ? 'w-[560px] grid-cols-2' : 'w-72'}`}>
+                  {items.map(([k, label, desc, I], n) => (
+                    <motion.button key={k} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: n * .025 }} onClick={() => { setMenu(null); k === 'option' ? (setPage(null), setDrawer('option')) : setPage(k) }}
+                      className={`group flex items-start gap-3 rounded-xl p-2.5 text-right transition-colors hover:bg-surface2 ${page === k ? 'bg-surface2' : ''}`}>
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand-light transition-colors group-hover:bg-brand group-hover:text-white">{ico(I, 18)}</span>
+                      <span className="min-w-0"><b className="block text-sm">{label}</b><span className="mt-0.5 block text-[11px] leading-5 text-muted">{desc}</span></span>
+                    </motion.button>
+                  ))}
                 </motion.div>
               )}</AnimatePresence>
             </div>
@@ -184,6 +216,13 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
         </AnimatePresence>
       </div>
 
+      <AnimatePresence>{page && (
+        <motion.div key={page} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ duration: .2 }} className="absolute inset-x-0 bottom-0 top-14 z-30 flex flex-col bg-surface">
+          {page === 'holders'
+            ? <MajorHolders close={() => setPage(null)} openSym={(code) => { setPage(null); setTab('نمای کلی'); setSym(toSymbol(code)) }} />
+            : <SoonPage k={page} close={() => setPage(null)} />}
+        </motion.div>
+      )}</AnimatePresence>
       <Drawer k={drawer} close={() => setDrawer(null)} sym={sym} d={d} openSym={(code) => { setDrawer(null); setTab('نمای کلی'); setSym(toSymbol(code)) }} />
     </section>
   )
@@ -1210,5 +1249,65 @@ function TradeHistory({ sym }) {
         ))}
       </div>
     </div>
+  )
+}
+
+const MENU_ITEMS = Object.fromEntries(MENUS.flatMap(([g, items]) => items.map(([k, label, desc, I]) => [k, { g, label, desc, I }])))
+function PageBar({ title, close, children }) {
+  return (
+    <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-4">
+      <button onClick={close} title="بازگشت به نماد" className="grid h-9 w-9 place-items-center rounded-xl hover:bg-surface2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </button>
+      <b className="min-w-0 flex-1 truncate">{title}</b>{children}
+    </div>
+  )
+}
+function SoonPage({ k, close }) {
+  const m = MENU_ITEMS[k]
+  return (
+    <>
+      <PageBar title={m.label} close={close} />
+      <div className="grid flex-1 place-items-center p-8 text-center">
+        <motion.div initial={{ scale: .9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
+          <span className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-brand/10 text-brand-light">{ico(m.I, 36)}</span>
+          <h2 className="mt-5 text-xl font-extrabold">{m.label}</h2>
+          <p className="mt-2 text-sm text-muted">{m.desc}</p>
+          <span className="mt-5 inline-block rounded-full border border-line px-4 py-1.5 text-xs text-muted">{m.g} · به‌زودی</span>
+        </motion.div>
+      </div>
+    </>
+  )
+}
+// Standalone major-holders page: pick a symbol first, then browse its holders
+function MajorHolders({ close, openSym }) {
+  const [q, setQ] = useState('')
+  const [pick, setPick] = useState(null)
+  const list = SYMBOLS.filter((x) => !q || x.s.includes(q) || x.n.includes(q))
+  if (pick) return <Holders sym={pick} close={() => setPick(null)} openSym={openSym} />
+  return (
+    <>
+      <PageBar title="سهامداران عمده" close={close}><HoldersHelp /></PageBar>
+      <div className="scroll-y min-h-0 flex-1">
+        <div className="mx-auto max-w-3xl p-5">
+          <h2 className="text-lg font-extrabold">نماد را انتخاب کنید</h2>
+          <p className="mt-1 text-sm text-muted">برای دیدن سهامداران عمده و معاملات‌شان، ابتدا نماد موردنظر را جست‌وجو یا انتخاب کنید.</p>
+          <label className="mt-4 flex h-12 items-center gap-2 rounded-2xl border border-line bg-surface2/40 px-4 focus-within:border-brand/60">
+            {ico(Search, 18)}<input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="نام یا نماد شرکت…" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted" />
+          </label>
+          <div className="mt-5 grid gap-2 sm:grid-cols-2">
+            {list.map((x, i) => (
+              <motion.button key={x.s} onClick={() => setPick(x)} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .02 }} whileTap={{ scale: .98 }}
+                className="flex items-center gap-3 rounded-2xl border border-line bg-surface2/25 p-3 text-right transition-colors hover:border-brand/50">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white text-sm font-extrabold text-brand-dark">{x.s.slice(0, 2)}</span>
+                <span className="min-w-0 flex-1"><b className="block">{x.s}</b><span className="block truncate text-xs text-muted">{x.n}</span></span>
+                <span className="text-[11px] text-muted">{x.ind}</span>
+              </motion.button>
+            ))}
+            {!list.length && <p className="col-span-full py-10 text-center text-sm text-muted">نمادی پیدا نشد.</p>}
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
