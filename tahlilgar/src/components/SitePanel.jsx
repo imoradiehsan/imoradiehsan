@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart from './TVChart'
@@ -38,6 +38,37 @@ export default function SitePanel({ sym, dark, setDark }) {
   const [drawer, setDrawer] = useState(null)
   const [fav, setFav] = useState(false)
   const d = useMemo(() => symbolData(sym), [sym])
+
+  // Chart tab: scrolling snaps the tab bar to the top, and the chart then fills everything below it
+  const scroller = useRef(null), tabsBar = useRef(null)
+  const [fill, setFill] = useState(600)
+  const isChart = tab === 'چارت'
+  useEffect(() => {
+    const sc = scroller.current, bar = tabsBar.current
+    const measure = () => setFill(sc.clientHeight - bar.offsetHeight)
+    measure(); const ro = new ResizeObserver(measure); ro.observe(sc); return () => ro.disconnect()
+  }, [])
+  useEffect(() => {
+    if (!isChart) return
+    const sc = scroller.current, snapTop = () => tabsBar.current.offsetTop
+    let busy = false
+    const go = (top) => { busy = true; sc.scrollTo({ top, behavior: 'smooth' }); setTimeout(() => (busy = false), 450) }
+    const onWheel = (e) => {
+      if (e.target.closest('[data-chart]')) return            // wheel over the chart zooms it
+      const t = snapTop()
+      if (e.deltaY > 0 && sc.scrollTop < t - 1) { e.preventDefault(); if (!busy) go(t) }
+      else if (e.deltaY < 0 && sc.scrollTop > 0 && sc.scrollTop <= t + 1) { e.preventDefault(); if (!busy) go(0) }
+    }
+    let y0 = null
+    const onTouchStart = (e) => { y0 = e.touches[0].clientY }
+    const onTouchEnd = (e) => {
+      if (y0 == null) return; const dy = y0 - e.changedTouches[0].clientY, t = snapTop(); y0 = null
+      if (dy > 30 && sc.scrollTop < t) go(t); else if (dy < -30 && sc.scrollTop <= t + 1) go(0)
+    }
+    sc.addEventListener('wheel', onWheel, { passive: false })
+    sc.addEventListener('touchstart', onTouchStart, { passive: true }); sc.addEventListener('touchend', onTouchEnd)
+    return () => { sc.removeEventListener('wheel', onWheel); sc.removeEventListener('touchstart', onTouchStart); sc.removeEventListener('touchend', onTouchEnd) }
+  }, [isChart])
   const chg = sym.p - d.prev
 
   return (
@@ -73,7 +104,7 @@ export default function SitePanel({ sym, dark, setDark }) {
         <motion.button whileHover={{ y: -1 }} whileTap={{ scale: .95 }} className="whitespace-nowrap rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-4 py-2 text-sm font-bold text-white shadow-glow">ارتقای اشتراک</motion.button>
       </header>
 
-      <div className="scroll-y min-h-0 flex-1">
+      <div ref={scroller} className="scroll-y min-h-0 flex-1">
         {/* Breadcrumb + symbol header */}
         <AnimatePresence mode="wait">
           <motion.div key={sym.s} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: .22 }} className="px-5 pt-4">
@@ -106,7 +137,7 @@ export default function SitePanel({ sym, dark, setDark }) {
         </AnimatePresence>
 
         {/* Symbol tabs */}
-        <div className="sticky top-0 z-20 mt-4 flex gap-1 overflow-x-auto border-b border-line bg-surface/95 px-5 backdrop-blur">
+        <div ref={tabsBar} className="sticky top-0 z-20 mt-4 flex gap-1 overflow-x-auto border-b border-line bg-surface/95 px-5 backdrop-blur">
           {TABS.map((t) => (
             <button key={t} onClick={() => setTab(t)} className={`relative whitespace-nowrap px-3 py-3 text-sm transition-colors ${tab === t ? 'font-bold text-ink' : 'text-muted hover:text-ink'}`}>
               {t}{tab === t && <motion.span layoutId="sym-tab" className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-brand-light" />}
@@ -115,9 +146,9 @@ export default function SitePanel({ sym, dark, setDark }) {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className="space-y-4 p-5">
+          <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className={isChart ? '' : 'space-y-4 p-5'}>
             {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
-            {tab === 'چارت' && <div className="h-[72vh] min-h-[420px] overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} /></div>}
+            {isChart && <div data-chart style={{ height: Math.max(360, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
             {tab === 'حمایت/مقاومت' && <Levels sym={sym} d={d} />}
             {tab === 'نظرات و تحلیل‌ها' && <Opinions d={d} />}
