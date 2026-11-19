@@ -150,7 +150,7 @@ function Overview({ sym, d, open, dark }) {
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Card title="دفتر سفارش" actions={<><Pill on={rows} onClick={() => setRows(!rows)}>☰ ردیف‌های عرضه و تقاضا</Pill><Pill on={cum} onClick={() => setCum(!cum)}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
+        <Card title="دفتر سفارش" actions={<><Pill on={rows} onClick={() => setRows(!rows)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg> ردیف‌های عرضه و تقاضا</Pill><Pill on={cum} onClick={() => setCum(!cum)}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
           <OrderBook d={d} prev={d.prev} rows={rows} cum={cum} />
         </Card>
         <div className="space-y-4">
@@ -180,28 +180,45 @@ function OrderBook({ d, prev, rows, cum }) {
   const data = book.map((r) => ({ ...r, cb: (cb += r.bq), ca: (ca += r.aq) }))
   const mx = Math.max(...data.flatMap((r) => cum ? [r.cb, r.ca] : [r.bq, r.aq]))
   const pc = (p) => ((p - prev) / prev) * 100
+  const vol = (n) => n >= 1e5 ? fa(n / 1000, 1) + ' K' : fa(n)
+  const pct = (p) => { const v = pc(p); return (v >= 0 ? '+' : '−') + fa(Math.abs(v), 2) + '٪' }
+  // Volume bars grow outward from the price columns in the middle
+  const Vol = ({ v, w, buy }) => (
+    <td className="px-0.5 py-1.5">
+      <div className={`relative flex h-8 items-center ${buy ? 'justify-end' : 'justify-start'}`}>
+        <motion.span initial={{ width: 0 }} animate={{ width: `${Math.max(4, w)}%` }} transition={{ duration: .5, ease: 'easeOut' }}
+          className={`absolute inset-y-0 rounded-lg ${buy ? 'left-0 bg-up/20' : 'right-0 bg-down/20'}`} />
+        <span className="relative whitespace-nowrap px-1.5 font-semibold" dir="ltr">{vol(v)}</span>
+      </div>
+    </td>
+  )
   return (
     <div className="overflow-x-auto">
-      <div className="grid min-w-[480px] grid-cols-2 text-center text-sm font-bold"><div className="border-b-2 border-up pb-2 text-up">تقاضا</div><div className="border-b-2 border-down pb-2 text-down">عرضه</div></div>
-      <table className="num w-full min-w-[480px] text-center text-xs">
-        <thead className="text-muted"><tr>{['تعداد', 'حجم', 'قیمت', 'قیمت', 'حجم', 'تعداد'].map((h, i) => <th key={i} className="py-2.5 font-normal">{h}</th>)}</tr></thead>
-        <tbody>
-          {data.map((r, i) => (
-            <motion.tr key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * .04 }} className="border-t border-line/40">
-              <td className="py-2">{fa(r.bn)}</td>
-              <td className="relative"><motion.span initial={{ width: 0 }} animate={{ width: `${((cum ? r.cb : r.bq) / mx) * 100}%` }} className="absolute inset-y-1 right-0 rounded bg-up/20" /><span className="relative">{fa(r.bq / 1000, 1)} هزار</span></td>
-              <td><b>{fa(r.bp)}</b><div className="text-[10px] text-up">{fa(pc(r.bp), 2)}٪</div></td>
-              <td><b>{fa(r.ap)}</b><div className="text-[10px] text-down">{fa(pc(r.ap), 2)}٪</div></td>
-              <td className="relative"><motion.span initial={{ width: 0 }} animate={{ width: `${((cum ? r.ca : r.aq) / mx) * 100}%` }} className="absolute inset-y-1 left-0 rounded bg-down/20" /><span className="relative">{fa(r.aq / 1000, 1)} هزار</span></td>
-              <td>{fa(r.an)}</td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="mt-3 border-t border-dashed border-line pt-2 text-center text-[11px] text-muted">جمع سفارش‌ها</div>
-      <div className="num mt-2 grid min-w-[480px] grid-cols-2 overflow-hidden rounded-xl text-sm font-bold">
-        <div className="flex justify-between bg-up/10 px-4 py-2.5 text-up"><span>{fa(data.reduce((a, r) => a + r.bn, 0))}</span><span>{fa(data.at(-1).cb)}</span></div>
-        <div className="flex justify-between bg-down/10 px-4 py-2.5 text-down"><span>{fa(data.at(-1).ca)}</span><span>{fa(data.reduce((a, r) => a + r.an, 0))}</span></div>
+      <div className="min-w-[360px]">
+        <div className="grid grid-cols-2 text-center font-bold">
+          <div className="border-b-2 border-up pb-2 text-up">تقاضا</div>
+          <div className="border-b-2 border-down pb-2 text-down">عرضه</div>
+        </div>
+        <table className="num w-full table-fixed text-center text-sm">
+          <thead className="text-xs text-muted"><tr>{['تعداد', 'حجم', 'قیمت', 'قیمت', 'حجم', 'تعداد'].map((h, i) => <th key={i} className="py-3 font-normal">{h}</th>)}</tr></thead>
+          <tbody>
+            {data.map((r, i) => (
+              <motion.tr key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="transition-colors hover:bg-surface2/40">
+                <td className="py-1.5">{fa(r.bn)}</td>
+                <Vol v={r.bq} w={((cum ? r.cb : r.bq) / mx) * 100} buy />
+                <td className="leading-tight"><b className="text-[15px]">{fa(r.bp)}</b><div className="text-[11px] text-up" dir="ltr">{pct(r.bp)}</div></td>
+                <td className="leading-tight"><b className="text-[15px]">{fa(r.ap)}</b><div className="text-[11px] text-down" dir="ltr">{pct(r.ap)}</div></td>
+                <Vol v={r.aq} w={((cum ? r.ca : r.aq) / mx) * 100} />
+                <td>{fa(r.an)}</td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+        <div className="my-3 flex items-center gap-3 text-xs text-muted"><i className="flex-1 border-t border-dashed border-line" />جمع سفارش‌ها<i className="flex-1 border-t border-dashed border-line" /></div>
+        <div className="num grid grid-cols-2 overflow-hidden rounded-xl text-[15px] font-bold">
+          <div className="grid grid-cols-2 bg-up/10 py-3 text-center text-up"><span>{fa(data.reduce((a, r) => a + r.bn, 0))}</span><span>{fa(data.at(-1).cb)}</span></div>
+          <div className="grid grid-cols-2 bg-down/10 py-3 text-center text-down"><span>{fa(data.at(-1).ca)}</span><span>{fa(data.reduce((a, r) => a + r.an, 0))}</span></div>
+        </div>
       </div>
     </div>
   )
