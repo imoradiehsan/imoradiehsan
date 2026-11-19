@@ -15,7 +15,7 @@ const TABS = [
 
 export default function AppPanel({ sym, setSym, tab, setTab, orders, addOrder }) {
   return (
-    <aside className="flex w-full bg-surface lg:h-full lg:w-[400px] lg:shrink-0">
+    <aside className="flex w-full bg-surface lg:h-full lg:w-[var(--right-w)] lg:shrink-0">
       {/* Side rail — like an app's nav bar, pinned to the screen edge */}
       <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
         <img src="./logo.png" alt="تحلیلگر بورس" className="mb-3 h-9 w-9 rounded-xl" />

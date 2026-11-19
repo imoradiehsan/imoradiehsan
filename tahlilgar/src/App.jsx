@@ -1,17 +1,73 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import AppPanel from './components/AppPanel'
 import SitePanel from './components/SitePanel'
 import { SYMBOLS } from './data/market'
+
+const MIN_RIGHT = 320, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400
+const load = () => { try { return +localStorage.getItem('rightW') || DEFAULT } catch { return DEFAULT } }
 
 export default function App() {
   const [dark, setDark] = useState(true)
   const [sym, setSym] = useState(SYMBOLS[0])
   const [tab, setTab] = useState('watch')
   const [orders, setOrders] = useState([])
+  const [rightW, setRightW] = useState(load)
+  const [drag, setDrag] = useState(false)
+  const root = useRef(null)
   useEffect(() => { document.documentElement.classList.toggle('dark', dark) }, [dark])
+
+  // Right panel is pinned to the right edge, so its width = distance from pointer to that edge
+  const clamp = (w) => {
+    const total = root.current?.clientWidth || window.innerWidth
+    return Math.round(Math.min(MAX_RIGHT, total - MIN_LEFT, Math.max(MIN_RIGHT, w)))
+  }
+  useEffect(() => {
+    if (!drag) return
+    const move = (e) => {
+      const r = root.current.getBoundingClientRect()
+      setRightW(clamp(r.right - e.clientX))
+    }
+    const up = () => setDrag(false)
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
+    document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none'
+    return () => {
+      window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up)
+      document.body.style.cursor = ''; document.body.style.userSelect = ''
+    }
+  }, [drag])
+  useEffect(() => { try { localStorage.setItem('rightW', rightW) } catch {} }, [rightW])
+  useEffect(() => {
+    const fit = () => setRightW((w) => clamp(w))
+    window.addEventListener('resize', fit); return () => window.removeEventListener('resize', fit)
+  }, [])
+
+  const nudge = (d) => setRightW((w) => clamp(w + d))
+
   return (
-    <div className="flex flex-col gap-[3px] bg-bg lg:h-full lg:flex-row">
+    <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': rightW + 'px' }}>
       <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} />
+
+      {/* Splitter: hover → blue, drag → resize, double-click → reset, arrows for keyboard */}
+      <div
+        role="separator" aria-orientation="vertical" aria-label="تغییر اندازه پنل‌ها" tabIndex={0}
+        aria-valuenow={rightW} aria-valuemin={MIN_RIGHT} aria-valuemax={MAX_RIGHT}
+        onPointerDown={(e) => { e.preventDefault(); setDrag(true) }}
+        onDoubleClick={() => setRightW(clamp(DEFAULT))}
+        onKeyDown={(e) => { if (e.key === 'ArrowRight') nudge(-20); if (e.key === 'ArrowLeft') nudge(20) }}
+        className="group relative hidden w-[3px] shrink-0 cursor-col-resize bg-bg outline-none lg:block"
+      >
+        <span className="absolute inset-y-0 -left-1.5 -right-1.5 z-20" />
+        <span className={`absolute inset-y-0 left-0 right-0 z-10 transition-colors duration-150 ${drag ? 'bg-brand-light' : 'group-hover:bg-brand group-focus-visible:bg-brand'}`} />
+        <span className={`absolute left-1/2 top-1/2 z-20 flex h-10 w-1.5 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center gap-1 rounded-full transition-opacity ${drag ? 'bg-brand-light opacity-100' : 'bg-brand opacity-0 group-hover:opacity-100'}`}>
+          <i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" /><i className="h-0.5 w-0.5 rounded-full bg-white" />
+        </span>
+        {drag && (
+          <span className="num absolute right-3 top-1/2 z-30 -translate-y-1/2 whitespace-nowrap rounded-lg bg-brand px-2 py-1 text-xs text-white shadow-glow">
+            {rightW.toLocaleString('fa-IR')} پیکسل
+          </span>
+        )}
+      </div>
+
       <SitePanel sym={sym} dark={dark} setDark={setDark} openOrder={() => setTab('order')} />
     </div>
   )
