@@ -859,7 +859,7 @@ function HolderPage({ h, sym, hist, setHist, openSym }) {
                 <div>
                   {/* one flat list: hairline dividers instead of a box per row; ownership shown as a bar */}
                   <div className="overflow-hidden rounded-2xl border border-line">
-                    <div className="grid grid-cols-[1fr_78px_70px] gap-2 bg-surface2/50 px-4 py-2 text-[11px] text-muted"><span>نماد / مالکیت</span><span className="text-left">ارزش</span><span className="text-left">حجم</span></div>
+                    <div className="grid grid-cols-[1fr_78px_70px] gap-2 bg-surface2/50 px-4 py-2 text-[11px] text-muted"><span className="flex justify-between gap-2"><span>نماد</span><span>درصد مالکیت</span></span><span className="text-left">ارزش</span><span className="text-left">حجم</span></div>
                     {rows.map((r, i) => {
                       const maxP = Math.max(...rows.map((x) => x.p))
                       return (
@@ -868,10 +868,10 @@ function HolderPage({ h, sym, hist, setHist, openSym }) {
                           className="num group grid cursor-pointer grid-cols-[1fr_78px_70px] items-center gap-2 border-t border-line/60 px-4 py-3 text-xs transition-colors hover:bg-brand/5">
                           <div className="min-w-0">
                             <div className="flex items-center justify-between gap-2">
-                              <b className="text-sm text-brand-light group-hover:underline">{r.c}</b>
-                              <span className="font-bold" dir="ltr">{fa(r.p, 3)}٪</span>
+                              <b className="text-sm text-ink group-hover:text-brand-light">{r.c}</b>
+                              <span className="text-muted" dir="ltr">{fa(r.p, 3)}٪</span>
                             </div>
-                            <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${r.p / maxP * 100}%` }} transition={{ duration: .5, delay: i * .03 }} className="h-full rounded-full bg-brand" /></div>
+                            <div className="mt-1.5 h-[3px] overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${r.p / maxP * 100}%` }} transition={{ duration: .5, delay: i * .03 }} className="h-full rounded-full bg-muted/50 group-hover:bg-brand" /></div>
                           </div>
                           <span className="text-left font-semibold" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
                           <span className="text-left text-muted" dir="ltr">{bigN(r.q)}</span>
