@@ -18,6 +18,9 @@ const I = {
   trash: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" /></svg>,
   star: (on) => <svg width="16" height="16" viewBox="0 0 24 24" fill={on ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z" /></svg>,
   chev: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg>,
+  play: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M10 8.5v7l5.5-3.5Z" fill="currentColor" /></svg>,
+  list: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg>,
+  board: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="7" rx="2" /><rect x="3" y="13" width="18" height="7" rx="2" /></svg>,
   swap: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7" /></svg>,
 }
 
@@ -222,7 +225,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const showChart = opts.chart && !reorder
   // inline template: dynamic Tailwind class names would not be generated at build time
   const cols = ['minmax(0,1fr)', '78px', opts.vol ? '70px' : '0px', showChart ? '84px' : null].filter(Boolean).join(' ')
-  const startReorder = () => { const on = !reorder; setReorder(on); setBoard(false); if (on) say('با کشیدن ردیف‌ها می‌توانید آن‌ها را جابجا کنید') }
+  const startReorder = () => { const on = !reorder; setReorder(on); setBoard(false);  }
 
   return (
     <div className="flex h-full flex-col">
@@ -237,12 +240,27 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
       {sub === 'watch' ? (
         <>
-          <div className="flex shrink-0 items-center gap-1 border-b border-line px-3 py-1.5">
-            <Toggle on={board} set={(v) => { setBoard(v); setReorder(false) }} label="نمایش تابلو" />
-            <span className="flex-1" />
-            <button onClick={startReorder} title="جابجایی ردیف‌ها" className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${reorder ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.move}</button>
-            <button onClick={() => setSheet('settings')} title="تنظیمات ستون‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
-          </div>
+          {/* toolbar: view switch on one side, row tools on the other; reorder mode replaces it with a clear "done" bar */}
+          <AnimatePresence mode="wait" initial={false}>
+            {reorder ? (
+              <motion.div key="re" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="flex shrink-0 items-center gap-2 border-b border-brand/40 bg-brand/10 px-3 py-2 text-xs">
+                <span className="text-brand-light">{I.move}</span><span className="flex-1">ردیف‌ها را با دستگیره بکشید و جابجا کنید</span>
+                <button onClick={startReorder} className="btn btn-on !h-7">پایان</button>
+              </motion.div>
+            ) : (
+              <motion.div key="tb" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="flex shrink-0 items-center gap-1 border-b border-line px-3 py-2">
+                <div className="seg !h-8">{[[false, 'جدول', I.list], [true, 'تابلو', I.board]].map(([k, t, ic]) => (
+                  <button key={t} onClick={() => setBoard(k)} className="seg-item !px-2.5">
+                    {board === k && <motion.span layoutId="wl-view" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
+                    <span className={`relative flex items-center gap-1 ${board === k ? 'font-bold text-brand-light' : ''}`}>{ic}{t}</span>
+                  </button>
+                ))}</div>
+                <span className="flex-1" />
+                {!board && <button onClick={startReorder} title="جابجایی ردیف‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.move}</button>}
+                <button onClick={() => setSheet('settings')} title="تنظیمات ستون‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="scroll-y min-h-0 flex-1">
             {board ? (
@@ -278,10 +296,13 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
       )}
 
       {/* list switcher (watchlists or portfolios) */}
-      <div className="flex shrink-0 items-center gap-2 overflow-x-auto border-t border-line px-3 py-2">
+      <div className="flex shrink-0 items-center gap-2 border-t border-line px-3 py-2">
+        <StrategyFab onClick={() => setSheet('strategy')} />
+        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
         {(sub === 'watch' ? lists : plists).map((l) => (
           <button key={l.id} onClick={() => { (sub === 'watch' ? setCur : setPcur)(l.id); setReorder(false) }} className={`btn ${(sub === 'watch' ? cur : pcur) === l.id ? 'btn-on' : ''}`}>{l.name.replace(/^(دیده‌بان|پرتفوی) /, '')}</button>
         ))}
+        </div>
         <button onClick={() => setSheet(sub === 'watch' ? 'lists' : 'plists')} title="مدیریت فهرست‌ها" className="btn-icon shrink-0">{I.plus}</button>
       </div>
 
@@ -300,6 +321,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
         </div>} />
       <Dialog open={!!del} title="حذف نماد" text={`آیا از حذف نماد «${del ?? ''}» از «${list.name}» مطمئن هستید؟`} okText="حذف" danger
         onOk={() => { setItems(list.items.filter((x) => x !== del)); say(`نماد ${del} از ${list.name} حذف شد`); setDel(null) }} onCancel={() => setDel(null)} />
+      <StrategySheet open={sheet === 'strategy'} close={() => setSheet(null)} target={sub === 'watch' ? list : plist} onRun={(name, n) => say(`استراتژی «${name}» روی ${fa(n)} نماد اجرا شد`)} />
       <AddSheet open={sheet === 'add'} close={() => setSheet(null)} items={list.items} setItems={setItems} name={list.name} say={say} />
       <Modal open={sheet === 'settings'} title="تنظیمات دیده‌بان" onClose={() => setSheet(null)} closeText="تایید" primary>
         <div className="space-y-3">
@@ -360,6 +382,45 @@ function AddSheet({ open, close, items, setItems, name, say }) {
             <span className={`grid h-5 w-5 place-items-center rounded-md border text-[11px] ${on ? 'border-brand bg-brand text-white' : 'border-line'}`}>{on && '✓'}</span>
             <b>{x.s}</b><span className="truncate text-xs text-muted">{x.n}</span>
           </button>) })}
+      </div>
+    </Modal>
+  )
+}
+
+// extended button: shows its label for 3s, then shrinks to an icon; hover or focus shows the label again
+function StrategyFab({ onClick }) {
+  const [wide, setWide] = useState(true), [hover, setHover] = useState(false)
+  useEffect(() => { const t = setTimeout(() => setWide(false), 3000); return () => clearTimeout(t) }, [])
+  const open = wide || hover
+  return (
+    <motion.button layout onClick={onClick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} onFocus={() => setHover(true)} onBlur={() => setHover(false)}
+      aria-label="اجرای استراتژی" title="اجرای استراتژی"
+      className="flex h-9 shrink-0 items-center gap-1.5 overflow-hidden rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-2 text-sm font-bold text-white shadow-glow" transition={{ type: 'spring', stiffness: 400, damping: 30 }}>
+      {I.play}
+      <AnimatePresence initial={false}>{open && <motion.span initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 'auto' }} exit={{ opacity: 0, width: 0 }} className="whitespace-nowrap pl-1">اجرای استراتژی</motion.span>}</AnimatePresence>
+    </motion.button>
+  )
+}
+
+const STRATS = [
+  ['breakout', 'شکست مقاومت', 'نمادهایی که امروز از مقاومت ۲۰ روزه عبور کرده‌اند'],
+  ['money', 'ورود پول حقیقی', 'ورود پول حقیقی سنگین در سه روز اخیر'],
+  ['rsi', 'اشباع فروش (RSI زیر ۳۰)', 'نمادهای نزدیک کف با احتمال برگشت'],
+  ['volume', 'حجم مشکوک', 'حجم امروز بیش از دو برابر میانگین ماهانه'],
+]
+function StrategySheet({ open, close, target, onRun }) {
+  const [pick, setPick] = useState('breakout')
+  const cur = STRATS.find((x) => x[0] === pick)
+  return (
+    <Modal open={open} title="اجرای استراتژی" onClose={close}
+      actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { onRun(cur[1], target.items.length); close() }} className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">{I.play} اجرا روی «{target.name}» ({fa(target.items.length)} نماد)</motion.button>}>
+      <div className="space-y-2">
+        {STRATS.map(([k, t, d]) => (
+          <button key={k} onClick={() => setPick(k)} className={`flex w-full items-start gap-3 rounded-xl border p-3 text-right transition-colors ${pick === k ? 'border-brand/60 bg-brand/10' : 'border-line hover:border-brand/30'}`}>
+            <span className={`mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${pick === k ? 'border-brand' : 'border-line'}`}>{pick === k && <i className="h-1.5 w-1.5 rounded-full bg-brand" />}</span>
+            <span><b className="block text-sm">{t}</b><span className="text-xs text-muted">{d}</span></span>
+          </button>
+        ))}
       </div>
     </Modal>
   )
