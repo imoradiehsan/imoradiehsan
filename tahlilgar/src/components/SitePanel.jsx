@@ -743,43 +743,61 @@ function holderPortfolio(h, sym) {
   return [{ c: sym.s, ind: sym.ind, v: h.v * sym.p, q: h.v, p: h.p }, ...picks.map(([c, ind]) => { const q = (1 + r() * 200) * 1e6; return { c, ind, q, v: q * (800 + r() * 20000), p: +(1 + r() * 4).toFixed(3) } })].sort((a, b) => b.v - a.v)
 }
 
-// pie with outside labels; slices under 10% are grouped into "سایر" and listed underneath
+// donut + linked legend: hovering a row highlights its slice (and vice versa); "سایر" expands to its parts
 function IndustryPie({ rows }) {
   const total = rows.reduce((a, r) => a + r.v, 0)
-  const by = Object.entries(rows.reduce((m, r) => ((m[r.ind] = (m[r.ind] || 0) + r.v), m), {})).map(([k, v]) => ({ k, pct: v / total * 100 })).sort((a, b) => b.pct - a.pct)
+  const by = Object.entries(rows.reduce((m, r) => ((m[r.ind] = (m[r.ind] || 0) + r.v), m), {})).map(([k, v]) => ({ k, v, pct: v / total * 100 })).sort((a, b) => b.pct - a.pct)
   const main = by.filter((x) => x.pct >= 10), rest = by.filter((x) => x.pct < 10)
-  const slices = rest.length ? [...main, { k: 'سایر', pct: rest.reduce((a, x) => a + x.pct, 0) }] : main
-  const R = 66, cx = 180, cy = 90, cols = ['#2E62FF', '#14B8A6', '#F59E0B', '#A855F7', '#EC4899', '#22C55E', '#94A3B8']
+  const slices = rest.length ? [...main, { k: 'سایر', v: rest.reduce((a, x) => a + x.v, 0), pct: rest.reduce((a, x) => a + x.pct, 0) }] : main
+  const PAL = ['#2E62FF', '#14B8A6', '#F59E0B', '#A855F7', '#EC4899', '#22C55E']
+  const color = (sl, i) => (sl.k === 'سایر' ? '#94A3B8' : PAL[i % PAL.length])
+  const [hot, setHot] = useState(null), [openRest, setOpenRest] = useState(false)
+  const R = 60, r0 = 40, C = 70
   let ang = -Math.PI / 2
+  const arcs = slices.map((sl) => { const a0 = ang, a1 = (ang += sl.pct / 100 * Math.PI * 2); return [a0, a1] })
+  const pt = (a, rr) => `${C + rr * Math.cos(a)},${C + rr * Math.sin(a)}`
+  const arc = ([a0, a1], grow) => {
+    const R2 = R + grow, big = a1 - a0 > Math.PI ? 1 : 0
+    if (a1 - a0 >= Math.PI * 2 - 1e-6) return `M${C - R2},${C} a${R2},${R2} 0 1,0 ${R2 * 2},0 a${R2},${R2} 0 1,0 ${-R2 * 2},0 M${C - r0},${C} a${r0},${r0} 0 1,1 ${r0 * 2},0 a${r0},${r0} 0 1,1 ${-r0 * 2},0`
+    return `M${pt(a0, R2)} A${R2},${R2} 0 ${big} 1 ${pt(a1, R2)} L${pt(a1, r0)} A${r0},${r0} 0 ${big} 0 ${pt(a0, r0)} Z`
+  }
+  const cur = hot != null ? slices[hot] : null
   return (
-    <div className="mt-4 rounded-2xl border border-line bg-surface2/25 p-3">
-      <div className="mb-1 text-xs font-semibold text-muted">ترکیب صنایع پرتفوی</div>
-      <svg viewBox="0 0 360 180" className="mx-auto w-full max-w-[360px]" style={{ direction: 'ltr' }}>
-        {slices.map((sl, i) => {
-          const a0 = ang, a1 = (ang += sl.pct / 100 * Math.PI * 2), mid = (a0 + a1) / 2, large = a1 - a0 > Math.PI ? 1 : 0
-          const p = (a, rr = R) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]
-          const d = slices.length === 1 ? `M${cx - R},${cy} a${R},${R} 0 1,0 ${R * 2},0 a${R},${R} 0 1,0 ${-R * 2},0` : `M${cx},${cy} L${p(a0)} A${R},${R} 0 ${large} 1 ${p(a1)} Z`
-          const [lx, ly] = p(mid, R + 14), right = Math.cos(mid) >= 0
-          return (
-            <g key={sl.k}>
-              <motion.path d={d} fill={sl.k === 'سایر' ? '#94A3B8' : cols[i % (cols.length - 1)]} stroke="rgb(var(--surface))" strokeWidth="1.5" initial={{ opacity: 0, scale: .6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * .08, type: 'spring', stiffness: 200, damping: 18 }} style={{ originX: `${cx}px`, originY: `${cy}px` }} />
-              <line x1={p(mid, R)[0]} y1={p(mid, R)[1]} x2={lx} y2={ly} stroke="rgb(var(--muted))" />
-              <text x={lx + (right ? 4 : -4)} y={ly + 4} fontSize="11" fontWeight="700" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--ink))">{fa(sl.pct, 1)}٪</text>
-            </g>
-          )
-        })}
-      </svg>
-      <div className="mt-1 space-y-1.5 border-t border-line/60 pt-2 text-xs">
-        {slices.map((sl, i) => (
-          <div key={sl.k} className="num flex items-start gap-2"><i className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: sl.k === 'سایر' ? '#94A3B8' : cols[i % (cols.length - 1)] }} /><span className="w-10 shrink-0 text-muted">{fa(sl.pct, 1)}٪</span><span className="leading-5">{sl.k}</span></div>
-        ))}
-      </div>
-      {rest.length > 0 && (
-        <div className="mt-2 space-y-1 border-t border-line/60 pt-2 text-xs">
-          <div className="font-semibold text-muted">سایر:</div>
-          {rest.map((x) => <div key={x.k} className="num flex gap-3"><span className="w-10 text-muted">{fa(x.pct, 1)}٪</span><span>{x.k}</span></div>)}
+    <div className="mt-4 rounded-2xl border border-line bg-surface2/25 p-4">
+      <div className="mb-3 text-xs font-semibold text-muted">ترکیب صنایع پرتفوی</div>
+      <div className="flex items-center gap-4">
+        <svg viewBox="0 0 140 140" className="h-36 w-36 shrink-0">
+          {slices.map((sl, i) => (
+            <motion.path key={sl.k} d={arc(arcs[i], hot === i ? 5 : 0)} fill={color(sl, i)} fillRule="evenodd" stroke="rgb(var(--surface))" strokeWidth="1.5"
+              opacity={hot == null || hot === i ? 1 : .35} onMouseEnter={() => setHot(i)} onMouseLeave={() => setHot(null)}
+              initial={{ opacity: 0 }} animate={{ opacity: hot == null || hot === i ? 1 : .35 }} transition={{ duration: .25, delay: hot == null ? i * .06 : 0 }} className="cursor-pointer" />
+          ))}
+          <text x="70" y="66" textAnchor="middle" fontSize="15" fontWeight="800" fill="rgb(var(--ink))">{cur ? fa(cur.pct, 1) + '٪' : fa(slices.length)}</text>
+          <text x="70" y="84" textAnchor="middle" fontSize="9" fill="rgb(var(--muted))">{cur ? (cur.k.length > 14 ? cur.k.slice(0, 13) + '…' : cur.k) : 'صنعت'}</text>
+        </svg>
+        <div className="min-w-0 flex-1 space-y-1">
+          {slices.map((sl, i) => (
+            <div key={sl.k}>
+              <button onMouseEnter={() => setHot(i)} onMouseLeave={() => setHot(null)} onClick={() => sl.k === 'سایر' && setOpenRest(!openRest)}
+                className={`w-full rounded-lg px-2 py-1.5 text-right text-xs transition-colors ${hot === i ? 'bg-surface2' : ''} ${sl.k === 'سایر' ? 'cursor-pointer' : 'cursor-default'}`}>
+                <div className="flex items-center gap-2">
+                  <i className="h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: color(sl, i) }} />
+                  <span className="min-w-0 flex-1 leading-5">{sl.k}{sl.k === 'سایر' && <span className="text-muted"> ({fa(rest.length)} صنعت) {openRest ? '▴' : '▾'}</span>}</span>
+                  <b className="num shrink-0">{fa(sl.pct, 1)}٪</b>
+                </div>
+                <div className="mr-4.5 mt-1 h-1 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${sl.pct}%` }} transition={{ duration: .6, delay: i * .05 }} className="h-full rounded-full" style={{ background: color(sl, i) }} /></div>
+              </button>
+              <AnimatePresence initial={false}>{sl.k === 'سایر' && openRest && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                  <div className="mr-6 space-y-1 border-r border-line py-1 pr-3 text-[11px]">
+                    {rest.map((x) => <div key={x.k} className="num flex justify-between gap-2"><span className="text-muted">{x.k}</span><span>{fa(x.pct, 1)}٪</span></div>)}
+                  </div>
+                </motion.div>
+              )}</AnimatePresence>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   )
 }
