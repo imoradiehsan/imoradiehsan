@@ -1015,7 +1015,11 @@ function historyData(sym) {
 
 function HolderHistory({ sym, close, openSym }) {
   const all = useMemo(() => historyData(sym), [sym])
-  const [chart, setChart] = useState(false)
+  const holders = useMemo(() => holdersData(sym).list, [sym])
+  const [view, setView] = useState('list')          // 'list' | 'chart' | 'holder'
+  const [from, setFrom] = useState('list')          // where the holder page was opened from
+  const [holder, setHolder] = useState(null), [hist, setHist] = useState(false)
+  const [ctype, setCtype] = useState('line')
   const [sheet, setSheet] = useState(false)
   const [f, setF] = useState({ name: 'all', pct: 'all', type: 'all' })
   const [draft, setDraft] = useState(f)
@@ -1024,31 +1028,52 @@ function HolderHistory({ sym, close, openSym }) {
   const list = all.filter((t) => (f.name === 'all' || t.name === f.name) && (f.pct === 'all' || Math.abs(t.dP) >= +f.pct) &&
     (f.type === 'all' || (f.type === 'chg' ? !t.tag : t.tag === f.type)))
   const active = Object.values(f).filter((v) => v !== 'all').length
-  const title = chart ? `نمودار سابقه سهامداران ${sym.s}` : `سابقه سهامداران ${sym.s}`
+  const openHolder = (name) => {
+    const h = holders.find((x) => x.n === name) || { n: name, p: .5, v: 2e7, d: 0, others: [] }
+    setHolder(h); setHist(false); setFrom(view); setView('holder')
+  }
+  const back = () => (view === 'holder' ? (hist ? setHist(false) : setView(from)) : setView('list'))
+  const title = view === 'chart' ? `نمودار سابقه سهامداران ${sym.s}` : view === 'holder' ? (hist ? `سابقه معاملات ${holder.n}` : 'سهامدار عمده') : `سابقه سهامداران ${sym.s}`
+  const filterBtn = (compact) => (
+    <button onClick={() => { setDraft(f); setSheet(true) }} title="تنظیمات فیلتر" className={compact ? `btn-icon relative ${active ? '!border-brand/60 !text-brand-light' : ''}` : `btn ${active ? 'btn-on' : ''}`}>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
+      {!compact && (active ? `فیلتر شده (${fa(active)} مورد)` : 'تنظیمات فیلتر')}
+      {compact && active > 0 && <i className="num absolute -left-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-brand text-[9px] not-italic text-white">{fa(active)}</i>}
+    </button>
+  )
   return (
     <div className="flex h-full flex-col overflow-hidden">
       <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-3">
-        <AnimatePresence initial={false}>{chart && (
-          <motion.button key="back" onClick={() => setChart(false)} title="بازگشت" initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 36 }} exit={{ opacity: 0, width: 0 }} className="grid h-9 shrink-0 place-items-center overflow-hidden rounded-xl hover:bg-surface2">
+        <AnimatePresence initial={false}>{view !== 'list' && (
+          <motion.button key="back" onClick={back} title="بازگشت" initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 36 }} exit={{ opacity: 0, width: 0 }} className="grid h-9 shrink-0 place-items-center overflow-hidden rounded-xl hover:bg-surface2">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           </motion.button>
         )}</AnimatePresence>
         <b className="min-w-0 flex-1"><Marquee>{title}</Marquee></b>
-        <HoldersHelp items={HISTORY_HELP} />
+        {view === 'chart' && <>
+          {filterBtn(true)}
+          <button onClick={() => setCtype(ctype === 'line' ? 'candle' : 'line')} title={ctype === 'line' ? 'نمودار شمعی' : 'نمودار خطی'} className="btn-icon">
+            {ctype === 'line'
+              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>
+              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>}
+          </button>
+        </>}
+        <HoldersHelp items={view === 'holder' ? HOLDERS_HELP : HISTORY_HELP} />
         <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
       </div>
-      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
-        <button onClick={() => { setDraft(f); setSheet(true) }} className={`btn ${active ? 'btn-on' : ''}`}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
-          {active ? `فیلتر شده (${fa(active)} مورد)` : 'تنظیمات فیلتر'}
-        </button>
-        {!chart && <button onClick={() => setChart(true)} className="btn btn-on">نمایش سابقه روی نمودار <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>}
-      </div>
+      {view === 'list' && (
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">
+          {filterBtn(false)}
+          <button onClick={() => setView('chart')} className="btn btn-on">نمایش سابقه روی نمودار <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button>
+        </div>
+      )}
       <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={chart ? 'c' : 'l'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
-          {chart ? <HistoryChart sym={sym} trades={list} /> : list.length
-            ? <div className="space-y-2">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} />)}</div>
-            : <Empty text="با این فیلترها معامله‌ای پیدا نشد." />}
+        <motion.div key={view} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className={`min-h-0 flex-1 ${view === 'list' ? 'scroll-y p-4' : ''}`}>
+          {view === 'chart' && <HistoryChart sym={sym} trades={list} type={ctype} onPick={openHolder} />}
+          {view === 'holder' && <HolderPage h={holder} sym={sym} hist={hist} setHist={setHist} openSym={openSym} />}
+          {view === 'list' && (list.length
+            ? <div className="space-y-2">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} onClick={() => openHolder(t.name)} />)}</div>
+            : <Empty text="با این فیلترها معامله‌ای پیدا نشد." />)}
         </motion.div>
       </AnimatePresence>
       <Modal open={sheet} visible title="فیلتر سهامداران عمده" onClose={() => { setF(draft); setSheet(false) }} closeText="تایید">
@@ -1068,30 +1093,56 @@ function HolderHistory({ sym, close, openSym }) {
   )
 }
 
-// price line with buy (▲) / sell (▼) markers on the days each filtered holder traded
-function HistoryChart({ sym, trades }) {
-  const bars = useMemo(() => makeBars(sym, 86400).slice(-32), [sym])
+// full-height price chart (line/candle) with volume; trade dots: green = buy, red = sell. Click a dot to open that holder.
+const H_RANGES = [['۱ ماه', 22], ['۲ ماه', 44], ['۳ ماه', 66], ['۶ ماه', 130], ['۹ ماه', 195], ['۱ سال', 260], ['۲ سال', 320]]
+function HistoryChart({ sym, trades, type, onPick }) {
+  const [range, setRange] = useState('۱ ماه')
+  const n = H_RANGES.find((r) => r[0] === range)[1]
+  const bars = useMemo(() => makeBars(sym, 86400).slice(-n), [sym, n])
+  const box = useRef(null); const [W, setW] = useState(480), [H, setH] = useState(500)
+  useEffect(() => { const ro = new ResizeObserver(([e]) => { setW(e.contentRect.width); setH(e.contentRect.height) }); ro.observe(box.current); return () => ro.disconnect() }, [])
   const [hover, setHover] = useState(null)
-  const W = 460, H = 260, pl = 8, pr = 52, pt = 14, pb = 26
-  const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high))
-  const X = (i) => pl + (bars.length - 1 - i) / (bars.length - 1) * (W - pl - pr), Y = (v) => pt + (1 - (v - lo) / (hi - lo)) * (H - pt - pb)
+  const pl = 8, pr = 52, pt = 14, pb = 34, volH = (H - pt - pb) * .16
+  const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high)), pad = (hi - lo) * .06
+  const step = (W - pl - pr) / bars.length, X = (i) => pl + i * step + step / 2
+  const Y = (v) => pt + (1 - (v - lo + pad) / (hi - lo + 2 * pad)) * (H - pt - pb - volH - 6)
+  const vmax = Math.max(...bars.map((b) => b.volume))
   const idx = (t) => Math.min(bars.length - 1, Math.max(0, bars.length - 1 - t.day))
-  const line = bars.map((b, i) => `${i ? 'L' : 'M'}${X(bars.length - 1 - i)},${Y(b.close)}`).join('')
+  const line = bars.map((b, i) => `${i ? 'L' : 'M'}${X(i)},${Y(b.close)}`).join('')
+  const ticks = bars.map((_, i) => i).filter((i) => i % Math.ceil(bars.length / 6) === 0)
+  const hv = hover != null ? trades[hover] : null
   return (
-    <div>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" style={{ direction: 'ltr' }}>
-        {[0, .25, .5, .75, 1].map((k) => { const v = lo + (hi - lo) * k; return <g key={k}><line x1={pl} x2={W - pr} y1={Y(v)} y2={Y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={W - pr + 6} y={Y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{fa(Math.round(v))}</text></g> })}
-        <motion.path d={line} fill="none" stroke="#3C7CFF" strokeWidth="2" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
-        {trades.map((t, k) => { const i = idx(t), b = bars[i], up = t.dP >= 0, x = X(bars.length - 1 - i), y = up ? Y(b.low) + 12 : Y(b.high) - 12
-          return <g key={k} onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} className="cursor-pointer">
-            <motion.path initial={{ scale: 0 }} animate={{ scale: hover === k ? 1.4 : 1 }} style={{ originX: `${x}px`, originY: `${y}px` }} d={up ? `M${x},${y - 7} L${x + 6},${y + 4} L${x - 6},${y + 4} Z` : `M${x},${y + 7} L${x + 6},${y - 4} L${x - 6},${y - 4} Z`} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} />
-          </g> })}
-        {[0, 8, 16, 24, 31].map((i) => <text key={i} x={X(bars.length - 1 - i)} y={H - 8} fontSize="10" textAnchor="middle" fill="rgb(var(--muted))">{new Date(bars[i].time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { month: '2-digit', day: '2-digit' })}</text>)}
-      </svg>
-      <div className="mt-2 min-h-[64px] rounded-xl bg-surface2/50 p-3 text-xs">
-        {hover == null ? <span className="text-muted">برای دیدن جزئیات، ماوس را روی علامت‌های ▲ خرید و ▼ فروش ببرید. ({fa(trades.length)} معامله)</span> : (() => { const t = trades[hover], up = t.dP >= 0; return (
-          <div className="num space-y-1"><div className="flex justify-between"><b className="text-brand-light">{t.name}</b><span className="text-muted">{t.d}</span></div>
-            <div className="flex justify-between"><span>{up ? 'خرید' : 'فروش'} <b className={up ? 'text-up' : 'text-down'} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</b></span><span className="text-muted">{fa(t.oldP, 3)}٪ ← {fa(t.newP, 3)}٪</span></div></div>) })()}
+    <div className="flex h-full flex-col">
+      <div ref={box} className="relative min-h-0 flex-1" dir="ltr">
+        <svg width={W} height={H} className="absolute inset-0">
+          {[0, .25, .5, .75, 1].map((k) => { const v = lo + (hi - lo) * k; return <g key={k}><line x1={pl} x2={W - pr} y1={Y(v)} y2={Y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={W - pr + 6} y={Y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{fa(Math.round(v))}</text></g> })}
+          {ticks.map((i) => <g key={i}><line x1={X(i)} x2={X(i)} y1={pt} y2={H - pb} stroke="rgb(var(--line))" strokeDasharray="3 4" opacity=".6" />
+            <text x={X(i)} y={H - pb + 16} fontSize="10" textAnchor="end" fill="rgb(var(--muted))" transform={`rotate(-30 ${X(i)} ${H - pb + 16})`}>{new Date(bars[i].time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</text></g>)}
+          <line x1={W - pr} x2={W - pr} y1={pt} y2={H - pb} stroke="rgb(var(--muted))" opacity=".5" />
+          {bars.map((b, i) => { const h = b.volume / vmax * volH; return <rect key={'v' + i} x={X(i) - step * .32} width={step * .64} y={H - pb - h} height={h} fill={b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'} opacity=".55" /> })}
+          {type === 'line'
+            ? <motion.path key={range} d={line} fill="none" stroke="#3C7CFF" strokeWidth="2.5" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: .8 }} />
+            : bars.map((b, i) => { const c = b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'; return <g key={i}><line x1={X(i)} x2={X(i)} y1={Y(b.high)} y2={Y(b.low)} stroke={c} /><rect x={X(i) - step * .32} width={step * .64} y={Y(Math.max(b.open, b.close))} height={Math.max(1, Math.abs(Y(b.open) - Y(b.close)))} fill={c} /></g> })}
+          {trades.map((t, k) => { const i = idx(t); if (t.day >= bars.length) return null; const up = t.dP >= 0, x = X(i), y = Y(bars[i].close) + (up ? 14 : -14)
+            return <motion.circle key={k} cx={x} cy={y} initial={{ r: 0 }} animate={{ r: hover === k ? 9 : 6 }} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} stroke="rgb(var(--ink))" strokeWidth="2"
+              onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => onPick(t.name)} className="cursor-pointer" /> })}
+        </svg>
+        <AnimatePresence>{hv && (() => { const i = idx(hv), x = X(i); return (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ left: x > W / 2 ? x - 200 : x + 16, top: 12 }}
+            className="num pointer-events-none absolute z-10 w-48 rounded-xl border border-line bg-surface2/95 p-2.5 text-[11px] shadow-2xl backdrop-blur" dir="rtl">
+            <div className="mb-1 flex justify-between"><span className="text-muted">{hv.d}</span>{hv.tag && <span className={hv.tag === 'خروج کامل' ? 'text-down' : 'text-up'}>{hv.tag}</span>}</div>
+            <b className="block text-brand-light">{hv.name}</b>
+            <div className="mt-1 flex justify-between"><span>{hv.dP >= 0 ? 'خرید' : 'فروش'}</span><b className={hv.dP >= 0 ? 'text-up' : 'text-down'} dir="ltr">{hv.dP >= 0 ? '+' : '−'}{fa(Math.abs(hv.dP), 3)}٪</b></div>
+            <div className="mt-1 text-[10px] text-muted">برای دیدن سهامدار کلیک کنید</div>
+          </motion.div>) })()}</AnimatePresence>
+      </div>
+      <div className="shrink-0 overflow-x-auto border-t border-line px-3 py-2.5 [&_.seg-item]:px-2.5">
+        <div className="seg">{H_RANGES.map(([t]) => (
+          <button key={t} onClick={() => setRange(t)} className="seg-item">
+            {range === t && <motion.span layoutId="hrange" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
+            <span className={`relative ${range === t ? 'font-bold text-brand-light' : ''}`}>{t}</span>
+          </button>
+        ))}</div>
       </div>
     </div>
   )
