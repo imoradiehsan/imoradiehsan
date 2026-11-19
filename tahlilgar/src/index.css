@@ -39,3 +39,8 @@ body { @apply bg-bg text-ink transition-colors duration-500; }
 .num { font-feature-settings: "ss02", "tnum"; }
 ::-webkit-scrollbar { width: 6px; height: 6px }
 ::-webkit-scrollbar-thumb { background: rgb(var(--line)); border-radius: 9px }
+.panel {
+  @apply rounded-[24px] border border-line/70 bg-surface/80 backdrop-blur-xl;
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 20px 50px -30px rgba(0,0,0,.5);
+}
+@media (min-width: 1024px) { .panel { height: 100% } }
