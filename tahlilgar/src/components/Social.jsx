@@ -196,6 +196,10 @@ function StoryViewer({ stories, idx, setIdx, onClose, say }) {
 export default function Opinions({ sym }) {
   const ME = 'احسان_مرادی'
   const [tab, setTab] = useState('latest')
+  // keep the latest/featured/analysis tabs floating right under the symbol's sticky tab bar
+  const tabsRef = useRef(null), [barH, setBarH] = useState(0)
+  useEffect(() => { const bar = document.querySelector('[data-symtabs]'); if (!bar) return; const m = () => setBarH(bar.offsetHeight); m(); const ro = new ResizeObserver(m); ro.observe(bar); return () => ro.disconnect() }, [])
+  const pick = (k) => { setTab(k); const sc = tabsRef.current?.closest('.scroll-y'); if (sc && tabsRef.current.getBoundingClientRect().top <= sc.getBoundingClientRect().top + barH + 1) sc.scrollTo({ top: tabsRef.current.parentElement.offsetTop + tabsRef.current.offsetTop - barH, behavior: 'smooth' }) }
   const [posts, setPosts] = useState(() => seedPosts(sym))
   useEffect(() => setPosts(seedPosts(sym)), [sym])
   const [stories, setStories] = useState(STORIES)
@@ -235,9 +239,9 @@ export default function Opinions({ sym }) {
         ))}
       </div>
       {/* tabs */}
-      <div className="grid grid-cols-3 border-b border-line">
+      <div ref={tabsRef} style={{ top: barH }} className="sticky z-10 grid grid-cols-3 border-b border-line bg-surface/95 backdrop-blur">
         {[['latest', 'آخرین نظرات'], ['best', 'نظرات برگزیده'], ['analysis', 'تحلیل']].map(([k, t]) => (
-          <button key={k} onClick={() => setTab(k)} className={`relative py-3 text-sm ${tab === k ? 'font-bold text-brand-light' : 'text-muted hover:text-ink'}`}>
+          <button key={k} onClick={() => pick(k)} className={`relative py-3 text-sm ${tab === k ? 'font-bold text-brand-light' : 'text-muted hover:text-ink'}`}>
             {t}{tab === k && <motion.span layoutId="op-tab" className="absolute inset-x-6 -bottom-px h-0.5 rounded-full bg-brand-light" />}
           </button>
         ))}

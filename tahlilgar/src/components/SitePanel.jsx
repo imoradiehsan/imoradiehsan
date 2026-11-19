@@ -164,7 +164,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
         </AnimatePresence>
 
         {/* Symbol tabs */}
-        <div ref={tabsBar} className="sticky top-0 z-20 mt-4 flex gap-1 overflow-x-auto border-b border-line bg-surface/95 px-5 backdrop-blur">
+        <div ref={tabsBar} data-symtabs className="sticky top-0 z-20 mt-4 flex gap-1 overflow-x-auto border-b border-line bg-surface/95 px-5 backdrop-blur">
           {TABS.map((t) => (
             <button key={t} onClick={() => setTab(t)} className={`relative whitespace-nowrap px-3 py-3 text-sm transition-colors ${tab === t ? 'font-bold text-ink' : 'text-muted hover:text-ink'}`}>
               {t}{tab === t && <motion.span layoutId="sym-tab" className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-brand-light" />}
