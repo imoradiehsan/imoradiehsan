@@ -262,7 +262,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
             )}
           </AnimatePresence>
 
-          <div className="scroll-y min-h-0 flex-1">
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {board ? (
               <div className="space-y-2.5 p-3">{sorted.map((r) => <Board key={r.s} r={r} active={sym.s === r.s} onPick={setSym} fav toggleFav={() => setDel(r.s)} />)}</div>
             ) : (
@@ -288,7 +288,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
         </>
       ) : (
-        <div className="scroll-y min-h-0 flex-1"><Portfolio sym={sym} onPick={setSym} items={plist.items} setItems={setPItems} reorder={reorder}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"><Portfolio sym={sym} onPick={setSym} items={plist.items} setItems={setPItems} reorder={reorder}
           settings={{ ...pset, toolbar: <>
             <button onClick={startReorder} title="جابجایی ردیف‌ها" className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${reorder ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.move}</button>
             <button onClick={() => setSheet('plists')} title="تنظیمات پرتفوی" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
