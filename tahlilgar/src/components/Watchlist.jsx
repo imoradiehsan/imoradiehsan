@@ -313,7 +313,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
       <ListsSheet kind="پرتفوی" open={sheet === 'plists'} close={() => setSheet(null)} lists={plists} setLists={setPlists} cur={pcur} setCur={setPcur}
         extra={<div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4 text-sm">
           <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={pset.fee} onChange={(e) => setPset({ ...pset, fee: e.target.checked })} className="h-4 w-4 accent-[#2E62FF]" />محاسبه کارمزد فروش</label>
-          <span className="flex items-center gap-2 text-muted">ارزش بر حسب:<Dropdown value={pset.by} options={[['last', 'آخرین قیمت'], ['close', 'قیمت پایانی']]} onChange={(v) => setPset({ ...pset, by: v })} /></span>
+          <span className="flex items-center gap-2 text-muted">ارزش بر حسب:<Dropdown up value={pset.by} options={[['last', 'آخرین قیمت'], ['close', 'قیمت پایانی']]} onChange={(v) => setPset({ ...pset, by: v })} /></span>
         </div>} />
       <Dialog open={!!del} title="حذف نماد" text={`آیا از حذف نماد «${del ?? ''}» از «${list.name}» مطمئن هستید؟`} okText="حذف" danger
         onOk={() => { setItems(list.items.filter((x) => x !== del)); say(`نماد ${del} از ${list.name} حذف شد`); setDel(null) }} onCancel={() => setDel(null)} />
