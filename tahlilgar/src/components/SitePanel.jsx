@@ -155,10 +155,8 @@ function Overview({ sym, d, open, dark }) {
         </Card>
         <div className="space-y-4">
           <Card title="دامنه قیمت امروز"><Range sym={sym} d={d} /></Card>
-          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1 rounded-lg bg-brand/15 px-2.5 py-1 text-xs font-semibold text-brand-light hover:bg-brand/25">↗ {t}</a>)}>
-            <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl bg-line/60">
-              {d.fundamentals.map(([k, v]) => <div key={k} className="flex justify-between bg-surface px-3 py-2.5 text-sm"><dt className="text-muted">{k}</dt><dd className="num font-bold">{v}</dd></div>)}
-            </dl>
+          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
+            <Fundamentals d={d} />
           </Card>
         </div>
       </div>
@@ -225,22 +223,70 @@ function OrderBook({ d, prev, rows, cum }) {
 }
 
 function Range({ sym, d }) {
-  const span = d.limHi - d.limLo, pos = (v) => ((v - d.limLo) / span) * 100
+  const lo = d.low, hi = d.high, span = hi - lo || 1
+  const pos = (v) => ((v - lo) / span) * 100           // 0 = left (کمترین) … 100 = right (بیشترین)
+  const close = Math.round(sym.p * 0.998)
+  const pct = (v) => (v >= d.prev ? '+' : '−') + fa(Math.abs((v - d.prev) / d.prev * 100), 2) + '٪'
+  const upCandle = sym.p >= d.open
+  const basePct = 50
+  const Marker = ({ v, top }) => (
+    <motion.div initial={{ left: '50%', opacity: 0 }} animate={{ left: `${pos(v)}%`, opacity: 1 }} transition={{ type: 'spring', stiffness: 110, damping: 16 }}
+      className={`num absolute -translate-x-1/2 whitespace-nowrap text-sm ${top ? 'bottom-full mb-1.5' : 'top-full mt-1.5'}`} style={{ left: `${pos(v)}%` }}>
+      <span className="text-xs text-up">({pct(v)})</span> <b>{fa(v)}</b> <span className="text-[10px]">{top ? '▼' : '▲'}</span>
+    </motion.div>
+  )
   return (
-    <div className="flex items-stretch gap-3">
-      <div className="flex w-5 flex-col items-center"><span className="w-1.5 flex-1 rounded-full bg-up" /><span className="mt-1 [writing-mode:vertical-rl] text-[10px] text-muted">کندل صعودی</span></div>
-      <div className="flex-1 py-2">
-        <div className="num flex justify-between text-xs text-muted"><span>{fa(d.limHi)}</span><span>دیروز {fa(d.prev)}</span><span>{fa(d.limLo)}</span></div>
-        <div className="relative my-4 h-2 rounded-full bg-surface2" dir="ltr">
-          <motion.div initial={{ width: 0 }} animate={{ width: `${pos(d.high) - pos(d.low)}%` }} transition={{ duration: .8 }} style={{ left: `${pos(d.low)}%` }} className="absolute h-full rounded-full bg-gradient-to-r from-down via-amber-400 to-up" />
-          <span className="absolute -top-1 h-4 w-0.5 bg-muted" style={{ left: `${pos(d.prev)}%` }} />
-          <motion.span initial={{ left: '50%' }} animate={{ left: `${pos(sym.p)}%` }} transition={{ type: 'spring', stiffness: 120 }} className="absolute -top-1.5 h-5 w-5 -translate-x-1/2 rounded-full border-4 border-surface bg-brand shadow-glow" />
+    <div className="flex items-stretch gap-4">
+      <div className="flex items-center gap-1.5" title="جهت کندل امروز">
+        <span className={`h-full w-1.5 rounded-full ${upCandle ? 'bg-up' : 'bg-down'}`} />
+        <span className="text-[11px] text-muted [writing-mode:vertical-rl]">{upCandle ? 'کندل صعودی' : 'کندل نزولی'}</span>
+      </div>
+      <div className="flex-1 pb-8 pt-2" dir="ltr">
+        <div className="num relative h-5 text-xs text-muted">
+          <span className="absolute left-0">{fa(lo)}</span>
+          <span className="absolute -translate-x-1/2" style={{ left: `${pos(d.prev)}%` }}>{fa(d.prev)}</span>
+          <span className="absolute right-0">{fa(hi)}</span>
         </div>
-        <div className="num flex justify-between text-xs">
-          <span>بیشترین <b className="text-up">{fa(d.high)}</b></span><span>آخرین <b>{fa(sym.p)}</b></span><span>کمترین <b className="text-down">{fa(d.low)}</b></span>
+        <div className="relative mx-1.5 mt-7 h-1.5">
+          <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: .6 }} style={{ width: `${pos(d.prev)}%`, originX: 1 }} className="absolute inset-y-0 left-0 rounded-l-full bg-down" />
+          <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: .6 }} style={{ left: `${pos(d.prev)}%`, originX: 0 }} className="absolute inset-y-0 right-0 rounded-r-full bg-up" />
+          <span className="absolute -left-1.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-down" />
+          <span className="absolute -right-1.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-up" />
+          <Marker v={sym.p} top />
+          <Marker v={close} />
         </div>
       </div>
-      <div className="flex w-5 flex-col items-center"><span className="w-1.5 flex-1 rounded-full bg-surface2"><span className="block h-1/2 rounded-full bg-brand" /></span><span className="mt-1 [writing-mode:vertical-rl] text-[10px] text-muted">۵۰٪ حجم مبنا</span></div>
+      <div className="flex items-center gap-1.5" title="حجم معاملات نسبت به حجم مبنا">
+        <span className="num text-[11px] text-muted [writing-mode:vertical-rl]">{fa(basePct)}٪ حجم مبنا</span>
+        <span className="relative h-full w-1.5 overflow-hidden rounded-full bg-surface2 ring-1 ring-line">
+          <motion.span initial={{ height: 0 }} animate={{ height: `${basePct}%` }} transition={{ duration: .8 }} className="absolute inset-x-0 bottom-0 rounded-full bg-brand" />
+        </span>
+      </div>
+    </div>
+  )
+}
+
+function Fundamentals({ d }) {
+  const f = Object.fromEntries(d.fundamentals)
+  const Cell = ({ k, label = k, tip, big, className = '' }) => (
+    <div className={`flex flex-col items-center justify-center gap-1 bg-surface px-2 py-3.5 text-center ${className}`}>
+      <span title={tip} className="cursor-help border-b border-dotted border-muted/60 text-xs text-muted">{label}</span>
+      <b className={`num ${big ? 'text-xl' : 'text-[15px]'}`}>{f[k]}</b>
+    </div>
+  )
+  const [num, unit] = String(f['ارزش بازار']).split(' ')
+  return (
+    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4">
+      <div className="col-span-2 flex flex-col items-center justify-center gap-1 bg-brand/10 px-2 py-3.5 text-center">
+        <span title="قیمت × تعداد سهام" className="cursor-help border-b border-dotted border-muted/60 text-xs text-muted">ارزش بازار</span>
+        <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
+      </div>
+      <Cell k="P/E" tip="قیمت به سود هر سهم" />
+      <Cell k="EPS" tip="سود هر سهم (ریال)" />
+      <Cell k="P/E گروه" tip="میانگین P/E صنعت" />
+      <Cell k="P/S" tip="قیمت به فروش" />
+      <Cell k="سهام شناور" label="درصد شناور" tip="سهام قابل معامله" />
+      <Cell k="تعداد سهام" />
     </div>
   )
 }

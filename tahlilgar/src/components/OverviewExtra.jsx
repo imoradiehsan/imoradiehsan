@@ -5,7 +5,7 @@ import { fa } from '../data/market'
 
 function rnd(s) { let x = [...s].reduce((a, c) => a * 37 + c.charCodeAt(0), 11) % 2147483647; return () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646 }
 const css = (n) => `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--' + n).trim().replace(/ /g, ',')})`
-const big = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' میلیارد' : n >= 1e6 ? fa(n / 1e6, 1) + ' میلیون' : fa(n)
+const big = (n) => n >= 1e9 ? fa(n / 1e9, 1) + ' B' : n >= 1e6 ? fa(n / 1e6, 1) + ' M' : n >= 1e3 ? fa(n / 1e3, 1) + ' K' : fa(n)
 
 export function Card({ title, actions, children, className = '' }) {
   return (
@@ -15,13 +15,13 @@ export function Card({ title, actions, children, className = '' }) {
     </div>
   )
 }
-function Seg({ items, value, onChange, id }) {
+function Seg({ items, value, onChange, id, icons = {} }) {
   return (
     <div className="flex rounded-xl border border-line bg-surface2/40 p-0.5">
       {items.map((t) => (
         <button key={t} onClick={() => onChange(t)} className="relative rounded-lg px-3 py-1 text-xs">
           {value === t && <motion.span layoutId={id} className="absolute inset-0 rounded-lg bg-surface2 ring-1 ring-line" />}
-          <span className={`relative ${value === t ? 'font-bold text-ink' : 'text-muted'}`}>{t}</span>
+          <span className={`relative flex items-center gap-1 ${value === t ? 'font-bold text-ink' : 'text-muted'}`}>{icons[t]}{t}</span>
         </button>
       ))}
     </div>
@@ -61,7 +61,7 @@ export function Intraday({ sym, dark }) {
     })
     const up = '#26c281', down = '#f0506e', col = sym.c >= 0 ? up : down
     const s = mode === 'خطی'
-      ? ch.addAreaSeries({ lineColor: col, topColor: col + '55', bottomColor: col + '00', lineWidth: 2 })
+      ? ch.addAreaSeries({ lineColor: col, topColor: col + '40', bottomColor: col + '00', lineWidth: 2, lastPriceAnimation: 1, crosshairMarkerRadius: 5 })
       : ch.addCandlestickSeries({ upColor: up, downColor: down, wickUpColor: up, wickDownColor: down, borderVisible: false })
     s.setData(mode === 'خطی' ? data.map((d) => ({ time: d.time, value: d.close })) : data)
     const v = ch.addHistogramSeries({ priceScaleId: 'v', priceFormat: { type: 'volume' }, lastValueVisible: false, priceLineVisible: false })
@@ -71,8 +71,8 @@ export function Intraday({ sym, dark }) {
     return () => ch.remove()
   }, [data, mode, dark])
   return (
-    <Card title="روند معاملات امروز" actions={<Seg id="intra" items={['خطی', 'شمعی']} value={mode} onChange={setMode} />}>
-      <div ref={host} className="h-64" dir="ltr" />
+    <Card className="flex flex-col" title="روند معاملات امروز" actions={<Seg id="intra" items={['خطی', 'شمعی']} value={mode} onChange={setMode} icons={{ 'خطی': <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>, 'شمعی': <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg> }} />}>
+      <div ref={host} className="min-h-64 flex-1" dir="ltr" />
     </Card>
   )
 }
@@ -91,31 +91,31 @@ export function RealLegal({ sym }) {
   return (
     <Card title="معاملات حقیقی و حقوقی">
       <div className="space-y-4">
-        {rows.map((x) => (
-          <div key={x.t} className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs">
+        {rows.map((x, i) => (
+          <div key={x.t} className={`grid grid-cols-[1fr_auto_1fr] items-center gap-4 text-xs ${i ? 'border-t border-dashed border-line pt-4' : ''}`}>
             <div>
-              <div className="num mb-1 flex justify-between"><b className="text-sm">{fa(Math.round(x.b))}</b><span className="text-muted">({fa(x.b / total * 100, 1)}٪)</span></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-surface2" dir="ltr"><motion.div initial={{ width: 0 }} animate={{ width: `${x.b / total * 100}%` }} className="ml-auto h-full rounded-full bg-up" /></div>
-              <div className="num mt-1 text-muted">{fa(x.bn)} خریدار</div>
+              <div className="num mb-1.5 flex items-baseline gap-1.5"><b className="text-[15px]">{fa(Math.round(x.b))}</b><span className="text-muted">({fa(x.b / total * 100, 2)}٪)</span></div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${x.b / total * 100}%` }} transition={{ duration: .7 }} className="h-full rounded-full bg-up" /></div>
+              <div className="num mt-1.5 text-muted">{fa(x.bn)}</div>
             </div>
-            <div className="text-center"><div className="text-[10px] text-muted">حجم</div><b className="text-brand-light">{x.t}</b><div className="text-[10px] text-muted">تعداد</div></div>
+            <div className="flex flex-col items-center gap-1"><span className="text-[11px] text-muted">حجم</span><b className="text-sm text-brand-light">{x.t}</b><span className="text-[11px] text-muted">تعداد</span></div>
             <div>
-              <div className="num mb-1 flex justify-between"><span className="text-muted">({fa(x.s / total * 100, 1)}٪)</span><b className="text-sm">{fa(Math.round(x.s))}</b></div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${x.s / total * 100}%` }} className="h-full rounded-full bg-down" /></div>
-              <div className="num mt-1 text-left text-muted">{fa(x.sn)} فروشنده</div>
+              <div className="num mb-1.5 flex items-baseline justify-end gap-1.5"><span className="text-muted">({fa(x.s / total * 100, 2)}٪)</span><b className="text-[15px]">{fa(Math.round(x.s))}</b></div>
+              <div className="flex h-1.5 justify-end overflow-hidden rounded-full bg-surface2"><motion.div initial={{ width: 0 }} animate={{ width: `${x.s / total * 100}%` }} transition={{ duration: .7 }} className="h-full rounded-full bg-down" /></div>
+              <div className="num mt-1.5 text-left text-muted">{fa(x.sn)}</div>
             </div>
           </div>
         ))}
         <div className="grid grid-cols-3 gap-2 text-center">
           {[['سرانه خرید حقیقی', perB], ['سرانه فروش حقیقی', perS], ['ورود پول حقیقی', money]].map(([t, v]) => (
-            <div key={t} className="rounded-xl border border-line bg-surface/60 p-2.5"><div className="text-[11px] text-muted">{t}</div><div className={`num mt-1 font-extrabold ${t.startsWith('ورود') ? (v >= 0 ? 'text-up' : 'text-down') : ''}`} dir="ltr">{v < 0 ? '−' : ''}{big(Math.abs(v))}</div><div className="text-[10px] text-muted">ریال</div></div>
+            <div key={t} className="rounded-xl border border-line bg-surface/60 p-3"><div className="text-[11px] text-muted">{t}</div><div className={`num mt-1.5 flex items-baseline justify-center gap-1 font-extrabold ${t.startsWith('ورود') ? (v >= 0 ? 'text-up' : 'text-down') : ''}`}><span className="text-[10px] font-normal text-muted">ریال</span><span dir="ltr">{v < 0 ? '−' : ''}{big(Math.abs(v))}</span></div></div>
           ))}
         </div>
         <div className="rounded-xl border border-line bg-surface/60 p-3">
-          <div className="mb-2 flex justify-between text-sm"><span className="text-muted">قدرت خریدار به فروشنده حقیقی</span><b className={`num text-lg ${power >= 1 ? 'text-up' : 'text-down'}`}>{fa(power, 2)}</b></div>
-          <div className="flex h-2 overflow-hidden rounded-full">
-            <motion.div initial={{ width: '50%' }} animate={{ width: `${power / (1 + power) * 100}%` }} transition={{ duration: .8 }} className="h-full bg-up" />
-            <div className="h-full flex-1 bg-down" />
+          <div className="mb-2.5 flex items-center justify-between text-sm"><span className="text-muted">قدرت خریدار به فروشنده حقیقی</span><b className="num text-xl">{fa(power, 2)}</b></div>
+          <div className="flex h-2 gap-1 overflow-hidden">
+            <motion.div initial={{ width: '50%' }} animate={{ width: `${power / (1 + power) * 100}%` }} transition={{ duration: .8 }} className="h-full rounded-full bg-up" />
+            <div className="h-full flex-1 rounded-full bg-down" />
           </div>
         </div>
       </div>
@@ -128,9 +128,9 @@ function BarRow({ label, v, max }) {
   const pos = v >= 0
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-xs">
-      <div className="flex h-6 rounded-md bg-surface2/40">{pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, v / max * 100)}%` }} className="num flex items-center justify-end rounded-md bg-up/25 px-1.5 font-bold text-up" dir="ltr">+{fa(v, 2)}٪</motion.div>}</div>
-      <span className="w-24 truncate text-center text-muted">{label}</span>
-      <div className="flex h-6 justify-end rounded-md bg-surface2/40">{!pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, Math.abs(v) / max * 100)}%` }} className="num flex items-center rounded-md bg-down/25 px-1.5 font-bold text-down" dir="ltr">{fa(v, 2)}٪</motion.div>}</div>
+      <div className="flex h-7 justify-end rounded-md bg-surface2/40">{pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, v / max * 100)}%` }} className="num flex items-center rounded-md bg-up/25 px-2 font-bold text-ink" dir="ltr">+{fa(v, 2)}٪</motion.div>}</div>
+      <span className="w-24 truncate text-center text-sm text-muted">{label}</span>
+      <div className="flex h-7 justify-start rounded-md bg-surface2/40">{!pos && <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(14, Math.abs(v) / max * 100)}%` }} className="num flex items-center justify-end rounded-md bg-down/25 px-2 font-bold text-ink" dir="ltr">{fa(v, 2)}٪</motion.div>}</div>
     </div>
   )
 }
@@ -180,15 +180,14 @@ export function Poll({ sym }) {
       <motion.button whileTap={{ scale: .97 }} onClick={() => setVote(mine ? null : k)}
         className={`relative flex flex-1 items-center justify-between overflow-hidden rounded-xl border p-4 transition-colors ${mine ? (good ? 'border-up' : 'border-down') : 'border-line hover:border-muted'}`}>
         <motion.span initial={{ width: 0 }} animate={{ width: vote ? `${pct}%` : '0%' }} transition={{ duration: .6 }} className={`absolute inset-y-0 right-0 ${good ? 'bg-up/15' : 'bg-down/15'}`} />
-        <span className={`relative flex items-center gap-2 text-lg font-extrabold ${good ? 'text-up' : 'text-down'}`}>{good ? '↗' : '↘'} {label}{mine && <span className={`rounded-full px-2 py-0.5 text-[10px] text-white ${good ? 'bg-up' : 'bg-down'}`}>رأی شما</span>}</span>
-        <AnimatePresence>{vote && <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative text-left"><b className="num text-xl">{fa(pct)}٪</b><span className="num block text-[11px] text-muted">{fa(n)} نفر</span></motion.span>}</AnimatePresence>
+        <span className={`relative flex h-7 items-center gap-2 text-lg font-extrabold ${good ? 'text-up' : 'text-down'}`}>{good ? '↗' : '↘'} {label}<AnimatePresence>{mine && <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className={`rounded-full px-2 py-0.5 text-[10px] text-white ${good ? 'bg-up' : 'bg-down'}`}>رأی شما</motion.span>}</AnimatePresence></span>
+        <motion.span animate={{ opacity: vote ? 1 : 0 }} className="relative flex items-baseline gap-2" aria-hidden={!vote}><span className="num text-[11px] text-muted">{fa(n)} نفر</span><b className="num text-xl">{fa(pct)}٪</b></motion.span>
       </motion.button>
     )
   }
   return (
-    <Card title={`پیش‌بینی کاربران برای ${sym.s} در روز معاملاتی بعد`} actions={<span className="num text-xs text-muted">{fa(total)} رأی ثبت شده</span>}>
+    <Card title={`پیش‌بینی کاربران برای ${sym.s} در روز معاملاتی بعد`} actions={<span className="num text-xs text-muted">{vote ? `${fa(total)} رأی ثبت شده` : 'برای دیدن نتیجه رأی بدهید'}</span>}>
       <div className="flex flex-col gap-3 sm:flex-row">{opt('up', 'صعودی', up, true)}{opt('down', 'نزولی', down, false)}</div>
-      {!vote && <p className="mt-2 text-center text-xs text-muted">برای دیدن نتیجه رأی بدهید</p>}
     </Card>
   )
 }
