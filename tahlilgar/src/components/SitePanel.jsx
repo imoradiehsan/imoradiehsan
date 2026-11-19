@@ -1223,23 +1223,23 @@ function TradeHistory({ sym }) {
   }, [sym])
   const [list, st, toggle] = useSort(rows, { t: (r) => r.t, v: (r) => r.v, last: (r) => r.last, close: (r) => r.close })
   const pct = (v) => <span className={`text-[10px] ${v >= 0 ? 'text-up' : 'text-down'}`} dir="ltr">({v >= 0 ? '+' : '−'}{fa(Math.abs(v), 2)}٪)</span>
+  const cols = 'grid grid-cols-[1fr_1.2fr_1.3fr_1.3fr] items-center text-center'
+  // header lives outside the scroller: rows scroll under nothing, and the scrollbar never overlaps the titles
   return (
-    <div className="scroll-y h-full">
-      <table className="num w-full text-xs">
-        <thead className="sticky top-0 z-10 bg-surface2 text-muted">
-          <tr>{[['t', 'تاریخ'], ['v', 'حجم'], ['last', 'آخرین'], ['close', 'پایانی']].map(([k, l]) => <th key={k} className="px-3 py-2.5 font-normal"><SortHead label={l} k={k} s={st} toggle={toggle} /></th>)}</tr>
-        </thead>
-        <tbody>
-          {list.map((r) => (
-            <motion.tr layout key={r.t} transition={{ type: 'spring', stiffness: 500, damping: 40 }} className="border-b border-line/50 text-center even:bg-surface2/30">
-              <td className="px-3 py-2.5 text-muted">{new Date(r.t * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</td>
-              <td dir="ltr">{fa(r.v)}</td>
-              <td><span className="flex items-center justify-center gap-1.5">{fa(Math.round(r.last))}{pct(r.lastP)}</span></td>
-              <td><span className="flex items-center justify-center gap-1.5"><b>{fa(Math.round(r.close))}</b>{pct(r.closeP)}</span></td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="num flex h-full flex-col text-xs">
+      <div className={`${cols} shrink-0 border-b border-line bg-surface2 py-2.5 text-muted`}>
+        {[['t', 'تاریخ'], ['v', 'حجم'], ['last', 'آخرین'], ['close', 'پایانی']].map(([k, l]) => <SortHead key={k} label={l} k={k} s={st} toggle={toggle} />)}
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        {list.map((r) => (
+          <motion.div layout key={r.t} transition={{ type: 'spring', stiffness: 500, damping: 40 }} className={`${cols} border-b border-line/50 py-2.5 even:bg-surface2/30`}>
+            <span className="text-muted">{new Date(r.t * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</span>
+            <span dir="ltr">{fa(r.v)}</span>
+            <span className="flex items-center justify-center gap-1.5">{fa(Math.round(r.last))}{pct(r.lastP)}</span>
+            <span className="flex items-center justify-center gap-1.5"><b>{fa(Math.round(r.close))}</b>{pct(r.closeP)}</span>
+          </motion.div>
+        ))}
+      </div>
     </div>
   )
 }
