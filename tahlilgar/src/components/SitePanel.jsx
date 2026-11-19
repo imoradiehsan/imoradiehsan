@@ -451,10 +451,10 @@ function Drawer({ k, close, sym, d }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
-            <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>
+            {k !== 'holders' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
             <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} />}
-              {k === 'holders' && <Holders sym={sym} />}
+              {k === 'holders' && <Holders sym={sym} close={close} />}
               {k === 'big' && d.big.map((b, i) => <div key={i} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span className="text-muted">{b.t}</span><b className={b.side === 'خرید' ? 'text-up' : 'text-down'}>{b.side}</b><span>{fa(b.q)} سهم</span><span>{fa(b.p)}</span></div>)}
               {k === 'history' && d.history.map((h) => <div key={h.d} className="num flex items-center justify-between rounded-xl bg-surface2/40 p-3"><span>{h.d}</span><b>{fa(h.p)}</b><Change c={h.c} className="!text-xs" /><span className="text-muted">{h.v}</span></div>)}
               {k === 'real' && <RealPower sym={sym} />}
@@ -784,9 +784,8 @@ function IndustryPie({ rows }) {
   )
 }
 
-function HolderPage({ h, sym, back }) {
+function HolderPage({ h, sym, hist, setHist }) {
   const rows = useMemo(() => holderPortfolio(h, sym), [h, sym])
-  const [hist, setHist] = useState(false)
   const total = rows.reduce((a, r) => a + r.v, 0)
   // ownership changes: old/new holding, delta, and a badge for full exit / new entry
   const trades = useMemo(() => {
@@ -805,10 +804,6 @@ function HolderPage({ h, sym, back }) {
   }, [rows, h])
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center gap-2 border-b border-line px-3 py-2.5">
-        <button onClick={hist ? () => setHist(false) : back} title="بازگشت" className="btn-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
-        <b className="min-w-0 text-sm"><Marquee>{hist ? `سابقه معاملات ${h.n}` : 'سهامدار عمده'}</Marquee></b>
-      </div>
       <div className="border-b border-line bg-surface2/40 px-4 py-3">
         <div className="flex items-start justify-between gap-2">
           <b className="text-sm leading-6">{h.n}</b>
@@ -871,15 +866,31 @@ const Empty = ({ text }) => (
   </div>
 )
 
-function Holders({ sym }) {
+function Holders({ sym, close }) {
   const { list, sum, float } = useMemo(() => holdersData(sym), [sym])
   const [sel, setSel] = useState(null)
+  const [hist, setHist] = useState(false)
+  const back = () => (hist ? setHist(false) : setSel(null))
+  const title = sel == null ? `سهامداران عمده ${sym.s}` : hist ? `سابقه معاملات ${list[sel].n}` : 'سهامدار عمده'
   return (
     <div className="flex h-full flex-col overflow-hidden">
+      {/* app bar: back arrow appears on inner pages, title follows the current page */}
+      <div className="flex h-14 shrink-0 items-center gap-2 border-b border-line px-3">
+        <AnimatePresence initial={false}>{sel != null && (
+          <motion.button key="back" onClick={back} title="بازگشت" initial={{ opacity: 0, width: 0 }} animate={{ opacity: 1, width: 36 }} exit={{ opacity: 0, width: 0 }} className="grid h-9 shrink-0 place-items-center overflow-hidden rounded-xl text-ink hover:bg-surface2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </motion.button>
+        )}</AnimatePresence>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.b key={title} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: .15 }} className="min-w-0 flex-1"><Marquee>{title}</Marquee></motion.b>
+        </AnimatePresence>
+        <HoldersHelp />
+        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
+      </div>
       <AnimatePresence mode="wait" initial={false}>
         {sel != null ? (
           <motion.div key="page" className="h-full" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>
-            <HolderPage h={list[sel]} sym={sym} back={() => setSel(null)} />
+            <HolderPage h={list[sel]} sym={sym} hist={hist} setHist={setHist} />
           </motion.div>
         ) : (
           <motion.div key="list" className="flex h-full flex-col" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ duration: .22 }}>
@@ -891,7 +902,7 @@ function Holders({ sym }) {
               <div className="mb-2 grid grid-cols-[1fr_80px_64px] px-3 text-[11px] text-muted"><span>نام سهامدار</span><span className="text-center">حجم</span><span className="text-left">درصد</span></div>
               <div className="space-y-2">
                 {list.map((h, i) => (
-                  <motion.button key={h.n} onClick={() => setSel(i)} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} whileTap={{ scale: .98 }}
+                  <motion.button key={h.n} onClick={() => { setHist(false); setSel(i) }} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .05 }} whileTap={{ scale: .98 }}
                     className="grid w-full grid-cols-[1fr_80px_64px] items-center gap-2 rounded-2xl border border-line bg-surface2/25 px-3 py-3 text-right text-sm transition-colors hover:border-brand/40">
                     <span className="min-w-0 font-medium text-brand-light"><Marquee>{h.n}</Marquee></span>
                     <span className="num text-center text-xs" dir="ltr">{bigN(h.v)}</span>
