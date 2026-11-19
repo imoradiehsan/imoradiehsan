@@ -1050,14 +1050,6 @@ function HolderHistory({ sym, close, openSym }) {
           </motion.button>
         )}</AnimatePresence>
         <b className="min-w-0 flex-1"><Marquee>{title}</Marquee></b>
-        {view === 'chart' && <>
-          {filterBtn(true)}
-          <button onClick={() => setCtype(ctype === 'line' ? 'candle' : 'line')} title={ctype === 'line' ? 'نمودار شمعی' : 'نمودار خطی'} className="btn-icon">
-            {ctype === 'line'
-              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>
-              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>}
-          </button>
-        </>}
         <HoldersHelp items={view === 'holder' ? HOLDERS_HELP : HISTORY_HELP} />
         <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
       </div>
@@ -1069,7 +1061,7 @@ function HolderHistory({ sym, close, openSym }) {
       )}
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={view} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className={`min-h-0 flex-1 ${view === 'list' ? 'scroll-y p-4' : ''}`}>
-          {view === 'chart' && <HistoryChart sym={sym} trades={list} type={ctype} onPick={openHolder} />}
+          {view === 'chart' && <HistoryChart sym={sym} trades={list} type={ctype} setType={setCtype} filter={filterBtn(false)} onPick={openHolder} />}
           {view === 'holder' && <HolderPage h={holder} sym={sym} hist={hist} setHist={setHist} openSym={openSym} />}
           {view === 'list' && (list.length
             ? <div className="space-y-2">{list.map((t, i) => <TradeCard key={i} i={i} t={t} title={t.name} onClick={() => openHolder(t.name)} />)}</div>
@@ -1095,7 +1087,7 @@ function HolderHistory({ sym, close, openSym }) {
 
 // full-height price chart (line/candle) with volume; trade dots: green = buy, red = sell. Click a dot to open that holder.
 const H_RANGES = [['۱ ماه', 22], ['۲ ماه', 44], ['۳ ماه', 66], ['۶ ماه', 130], ['۹ ماه', 195], ['۱ سال', 260], ['۲ سال', 320]]
-function HistoryChart({ sym, trades, type, onPick }) {
+function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
   const [range, setRange] = useState('۱ ماه')
   const n = H_RANGES.find((r) => r[0] === range)[1]
   const bars = useMemo(() => makeBars(sym, 86400).slice(-n), [sym, n])
@@ -1113,8 +1105,23 @@ function HistoryChart({ sym, trades, type, onPick }) {
   const ticks = bars.map((_, i) => i).filter((i) => i % Math.ceil(bars.length / 6) === 0)
   const hv = hover != null ? trades[hover] : null
   const ci = hv ? idx(hv) : cross
+  const icon = (t) => t === 'line'
+    ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>
+    : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>
   return (
     <div className="flex h-full flex-col">
+      {/* toolbar under the app bar: filter · chart type · period */}
+      <div className="relative z-20 flex shrink-0 items-center gap-2 border-b border-line px-4 py-2.5">
+        {filter}
+        <div className="seg">{[['line', 'خطی'], ['candle', 'شمعی']].map(([k, t]) => (
+          <button key={k} onClick={() => setType(k)} className="seg-item">
+            {type === k && <motion.span layoutId="hc-type" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
+            <span className={`relative flex items-center gap-1 ${type === k ? 'font-bold text-brand-light' : ''}`}>{icon(k)}{t}</span>
+          </button>
+        ))}</div>
+        <div className="flex-1" />
+        <div className="[&>div>div]:left-0 [&>div>div]:right-auto"><Dropdown value={range} options={H_RANGES.map(([t]) => [t, t])} onChange={setRange} /></div>
+      </div>
       <div ref={box} className="relative min-h-0 flex-1" dir="ltr" onMouseLeave={() => setCross(null)}
         onMouseMove={(e) => { const r = box.current.getBoundingClientRect(); const i = Math.floor((e.clientX - r.left - pl) / step); setCross(i >= 0 && i < bars.length ? i : null) }}>
         <svg width={W} height={H} className="absolute inset-0">
@@ -1150,14 +1157,6 @@ function HistoryChart({ sym, trades, type, onPick }) {
               <div className="text-[10px] text-muted">برای دیدن سهامدار کلیک کنید</div>
             </div>}
           </motion.div>) })()}</AnimatePresence>
-      </div>
-      <div className="shrink-0 overflow-x-auto border-t border-line px-3 py-2.5 [&_.seg-item]:px-2.5">
-        <div className="seg">{H_RANGES.map(([t]) => (
-          <button key={t} onClick={() => setRange(t)} className="seg-item">
-            {range === t && <motion.span layoutId="hrange" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
-            <span className={`relative ${range === t ? 'font-bold text-brand-light' : ''}`}>{t}</span>
-          </button>
-        ))}</div>
       </div>
     </div>
   )
