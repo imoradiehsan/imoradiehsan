@@ -903,11 +903,11 @@ function Holders({ sym, close }) {
       </div>
       <AnimatePresence mode="wait" initial={false}>
         {sel != null ? (
-          <motion.div key="page" className="h-full" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>
+          <motion.div key="page" className="min-h-0 flex-1" initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -40, opacity: 0 }} transition={{ duration: .22 }}>
             <HolderPage h={list[sel]} sym={sym} hist={hist} setHist={setHist} />
           </motion.div>
         ) : (
-          <motion.div key="list" className="flex h-full flex-col" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ duration: .22 }}>
+          <motion.div key="list" className="flex min-h-0 flex-1 flex-col" initial={{ x: 40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 40, opacity: 0 }} transition={{ duration: .22 }}>
             <div className="num flex items-center justify-between border-b border-line bg-surface2/40 px-4 py-3 text-xs">
               <span className="text-muted">مجموع سهم سهامداران عمده: <b className="text-ink">{fa(sum, 2)}٪</b></span>
               <span className="text-muted">سهام شناور: <b className="text-ink">{fa(float, 2)}٪</b></span>
