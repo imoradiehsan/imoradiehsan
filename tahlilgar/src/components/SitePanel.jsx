@@ -43,7 +43,8 @@ export default function SitePanel({ sym, dark, setDark }) {
   // Chart tab: scrolling snaps the tab bar to the top, and the chart then fills everything below it
   const scroller = useRef(null), tabsBar = useRef(null)
   const [fill, setFill] = useState(600)
-  const isChart = tab === 'چارت'
+  const isChart = ['چارت', 'حمایت/مقاومت', 'تکنیکال'].includes(tab)
+  const cardH = Math.max(380, fill - 40)   // card fills the space under the stuck tab bar (p-5 = 20px top + bottom)
   useEffect(() => {
     const sc = scroller.current, bar = tabsBar.current
     const measure = () => setFill(sc.clientHeight - bar.offsetHeight)
@@ -147,13 +148,13 @@ export default function SitePanel({ sym, dark, setDark }) {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className={isChart ? '' : 'space-y-4 p-5'}>
+          <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className="space-y-4 p-5">
             {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
-            {tab === 'چارت' && <div data-chart style={{ height: Math.max(360, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} /></div>}
+            {tab === 'چارت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
-            {tab === 'حمایت/مقاومت' && <div data-chart className="h-[70vh] min-h-[460px] overflow-hidden rounded-2xl border border-line"><SRChart sym={sym} dark={dark} /></div>}
+            {tab === 'حمایت/مقاومت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><SRChart sym={sym} dark={dark} /></div>}
             {tab === 'نظرات و تحلیل‌ها' && <Opinions d={d} />}
-            {tab === 'تکنیکال' && <div data-chart className="h-[74vh] min-h-[520px] overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} technical /></div>}
+            {tab === 'تکنیکال' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} technical /></div>}
           </motion.div>
         </AnimatePresence>
       </div>
