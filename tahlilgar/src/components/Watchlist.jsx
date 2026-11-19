@@ -185,14 +185,16 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
         <button onClick={() => setUnit(unit === 'pct' ? 'amt' : 'pct')} title={unit === 'pct' ? 'نمایش مبلغ' : 'نمایش درصد'} className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${unit === 'amt' ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.swap}</button>
         {settings.toolbar}
       </div>
-      <div className={`sticky top-0 z-10 grid items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted ${cols}`}>
+      <div className={`grid shrink-0 items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted ${cols}`}>
         <SortHead label="نماد" k="s" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} align="start" /><SortHead label="آخرین قیمت" k="p" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />
         <SortHead label="سود / زیان" k="pl" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /><SortHead label="٪ از پرتفوی" k="w" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />{!reorder && <span />}
       </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin]">
       {reorder
         ? <Reorder.Group axis="y" values={items} onReorder={setItems}>{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
         : sorted.map((x) => <PRow key={x.s} x={x} />)}
       {!rows.length && <p className="px-4 py-10 text-center text-sm text-muted">این پرتفوی هنوز نمادی ندارد.</p>}
+      </div>
     </>
   )
 }
@@ -262,17 +264,19 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
             )}
           </AnimatePresence>
 
-          <div className="scroll-y min-h-0 flex-1">
+          {!board && (
+          <div style={{ gridTemplateColumns: cols }} className="grid shrink-0 items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted">
+            <SortHead label="نماد" k="s" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} align="start" />
+            <SortHead label="آخرین قیمت" k="p" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />
+            {opts.vol ? <SortHead label={<span className="leading-4">حجم معامله<br />م. حجم ۱ ماهه</span>} k="v" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /> : <span />}
+            {showChart && <SortHead label={<span className="leading-4">نمودار ۱ ماهه<br />(تقویمی)</span>} k="m" s={st} toggle={toggle} />}
+          </div>
+          )}
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin]">
             {board ? (
               <div className="space-y-2.5 p-3">{sorted.map((r) => <Board key={r.s} r={r} active={sym.s === r.s} onPick={setSym} fav toggleFav={() => setDel(r.s)} />)}</div>
             ) : (
               <>
-                <div style={{ gridTemplateColumns: cols }} className="sticky top-0 z-10 grid items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted">
-                  <SortHead label="نماد" k="s" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} align="start" />
-                  <SortHead label="آخرین قیمت" k="p" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />
-                  {opts.vol ? <SortHead label={<span className="leading-4">حجم معامله<br />م. حجم ۱ ماهه</span>} k="v" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /> : <span />}
-                  {showChart && <SortHead label={<span className="leading-4">نمودار ۱ ماهه<br />(تقویمی)</span>} k="m" s={st} toggle={toggle} />}
-                </div>
                 {reorder ? (
                   <Reorder.Group axis="y" values={list.items} onReorder={setItems}>
                     {list.items.map((s) => { const r = rows.find((x) => x.s === s); return r && <Row key={s} r={r} cols={cols} reorder active={false} onPick={setSym} /> })}
@@ -288,7 +292,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
         </>
       ) : (
-        <div className="scroll-y min-h-0 flex-1"><Portfolio sym={sym} onPick={setSym} items={plist.items} setItems={setPItems} reorder={reorder}
+        <div className="flex min-h-0 flex-1 flex-col"><Portfolio sym={sym} onPick={setSym} items={plist.items} setItems={setPItems} reorder={reorder}
           settings={{ ...pset, toolbar: <>
             <button onClick={startReorder} title="جابجایی ردیف‌ها" className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${reorder ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.move}</button>
             <button onClick={() => setSheet('plists')} title="تنظیمات پرتفوی" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
