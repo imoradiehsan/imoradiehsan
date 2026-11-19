@@ -39,8 +39,8 @@ function seedPosts(sym) {
   ]
 }
 const STORIES = [
-  { u: 'مسعود_جزایری', label: 'مسعود جزایری', slides: [['معامله درست، صبر، سود منطقی', '#1e3a8a'], ['حد ضرر رو هیچ‌وقت جابه‌جا نکنید', '#0f766e']], t: '۳ ساعت پیش' },
-  { u: 'امواج_الیوت', label: 'امواج الیوت', slides: [['موج ۳ در جریانه؛ هدف بعدی بالای سقف قبلی', '#7c2d12'], ['اصلاح ABC تمام شد؟ نظرتون رو بنویسید', '#581c87'], ['شاخص کل: حمایت ۲٬۸۵۰٬۰۰۰', '#1e40af']], t: '۲۰ ساعت پیش' },
+  { u: 'مسعود_جزایری', label: 'مسعود جزایری', slides: [['معامله درست، صبر، سود منطقی', '#1e3a8a'], ['کد به کد زاگرس خوب بود؛ اصلاحش هم انجام شده.', '#1f2f3f', { q: 'بسیار کم ریسکه', o: [['موافقم', 89], ['مخالفم', 11]] }], ['حد ضرر رو هیچ‌وقت جابه‌جا نکنید', '#0f766e']], t: '۳ ساعت پیش' },
+  { u: 'امواج_الیوت', label: 'امواج الیوت', slides: [['موج ۳ در جریانه؛ هدف بعدی بالای سقف قبلی', '#7c2d12'], ['اصلاح ABC تمام شد؟', '#581c87', { q: 'نظر شما؟', o: [['بله، تمام شد', 62], ['هنوز نه', 38]] }], ['شاخص کل: حمایت ۲٬۸۵۰٬۰۰۰', '#1e40af']], t: '۲۰ ساعت پیش' },
   { u: 'تحلیلگر_ارشد', label: 'تحلیلگر ارشد', slides: [['ورود پول حقیقی امروز: +۱٬۲۰۰ میلیارد', '#065f46']], t: 'دیروز' },
 ]
 
@@ -85,41 +85,106 @@ function Post({ p, me, onMenu, toggle }) {
   )
 }
 
-function StoryViewer({ story, onClose, onNext }) {
-  const [i, setI] = useState(0)
+// carousel story viewer: active story in the middle, neighbours as dimmed previews; RTL so the next story sits on the left
+const REASONS = ['استفاده از الفاظ و کلمات نامناسب', 'محتوای نامربوط به بازار', 'انتشار شماره، لینک یا آی‌دی', 'توهین به فرد، گروه، اقوام و …', 'دلایل دیگر']
+// poll sticker inside a story slide: tap to vote, then bars fill with the results and your choice is marked
+function StoryPoll({ poll, vote, setVote }) {
+  const voted = vote != null
+  const res = poll.o.map(([t, pct], k) => { const bump = voted ? (k === vote ? 1 : 0) : 0; return [t, pct + bump] })
+  const total = res.reduce((a, [, v]) => a + v, 0)
+  return (
+    <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()} className="absolute inset-x-4 bottom-4 z-[2] space-y-2 rounded-2xl bg-black/55 p-3 text-white backdrop-blur">
+      <p className="text-center text-sm font-bold">{poll.q}</p>
+      {res.map(([t, v], k) => { const pct = Math.round(v / total * 100), mine = vote === k; return (
+        <button key={t} disabled={voted} onClick={() => setVote(k)} className="relative flex h-10 w-full items-center justify-between overflow-hidden rounded-xl bg-white/15 px-3 text-sm transition-colors enabled:hover:bg-white/25">
+          {voted && <motion.span initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: .6, ease: 'easeOut' }} className={`absolute inset-y-0 right-0 rounded-xl ${mine ? 'bg-brand' : 'bg-white/25'}`} />}
+          <span className="relative font-semibold">{t}</span>
+          {voted && <span className="num relative flex items-center gap-1.5 text-xs">{mine && <span className="rounded bg-white/25 px-1.5">شما</span>}{fa(pct)}٪</span>}
+        </button>) })}
+    </div>
+  )
+}
+
+function StoryViewer({ stories, idx, setIdx, onClose, say }) {
+  const [votes, setVotes] = useState({})
+  const [report, setReport] = useState(false)
+  const [i, setI] = useState(0), [prog, setProg] = useState(0)
+  const [paused, setPaused] = useState(false), [muted, setMuted] = useState(true), [liked, setLiked] = useState(false)
   const [msg, setMsg] = useState('')
-  useEffect(() => { setI(0) }, [story])
+  const story = idx != null ? stories[idx] : null
+  useEffect(() => { setI(0); setProg(0); setLiked(false); setReport(false) }, [idx])
+  useEffect(() => { setProg(0) }, [i])
+  const next = () => (i < story.slides.length - 1 ? setI(i + 1) : idx < stories.length - 1 ? setIdx(idx + 1) : onClose())
+  const prev = () => (i > 0 ? setI(i - 1) : idx > 0 && setIdx(idx - 1))
+  useEffect(() => {
+    if (!story || paused) return
+    const t = setInterval(() => setProg((p) => (p >= 1 ? 1 : p + 0.02)), 100)   // 5s per slide
+    return () => clearInterval(t)
+  }, [story, paused, i])
+  useEffect(() => { if (prog >= 1) next() }, [prog])
   useEffect(() => {
     if (!story) return
-    const t = setTimeout(() => (i < story.slides.length - 1 ? setI(i + 1) : onNext()), 5000)
-    return () => clearTimeout(t)
-  }, [i, story])
+    const k = (e) => { if (e.key === 'ArrowLeft') next(); if (e.key === 'ArrowRight') prev(); if (e.key === ' ') { e.preventDefault(); setPaused((x) => !x) } }
+    window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
+  })
+  const Preview = ({ k }) => { const st = stories[k]; return (
+    <motion.button layout onClick={() => setIdx(k)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="relative hidden h-[min(56vh,440px)] w-48 shrink-0 overflow-hidden rounded-2xl opacity-60 transition-opacity hover:opacity-90 lg:block" style={{ background: `linear-gradient(160deg, ${st.slides[0][1]}, #0b1022)` }}>
+      <p className="absolute inset-x-3 top-6 line-clamp-3 text-center text-xs font-bold text-white/70">{st.slides[0][0]}</p>
+      <span className="absolute inset-0 grid place-content-center justify-items-center gap-1 bg-black/45 text-white">
+        <span className="rounded-full bg-gradient-to-tr from-brand-dark via-brand-light to-cyan-400 p-[3px]"><span className="block rounded-full border-2 border-black"><Avatar name={st.u} size={64} /></span></span>
+        <b className="text-sm">{st.label}</b><span className="text-xs opacity-80">{st.t}</span>
+      </span>
+    </motion.button>) }
+  const btn = 'grid h-9 w-9 place-items-center rounded-full text-white hover:bg-white/15'
   return (
     <AnimatePresence>{story && (
-      <motion.div data-overlay className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}>
-        <motion.div onClick={(e) => e.stopPropagation()} initial={{ scale: .9 }} animate={{ scale: 1 }} exit={{ scale: .9 }} className="relative flex h-[min(92vh,760px)] w-[min(94vw,420px)] flex-col overflow-hidden rounded-3xl bg-surface shadow-2xl">
-          <div className="absolute inset-x-3 top-3 z-10 flex gap-1">
-            {story.slides.map((_, k) => (
-              <span key={k} className="h-1 flex-1 overflow-hidden rounded-full bg-white/30">
-                <motion.span key={`${story.u}-${i}-${k}`} className="block h-full bg-white" initial={{ width: k < i ? '100%' : 0 }} animate={{ width: k <= i ? '100%' : 0 }} transition={{ duration: k === i ? 5 : 0, ease: 'linear' }} />
-              </span>
-            ))}
+      <motion.div data-overlay className="fixed inset-0 z-[70] flex items-center justify-center gap-6 bg-[#0b0d14]/95 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <button onClick={onClose} aria-label="بستن" className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full text-2xl text-white hover:bg-white/10">×</button>
+        <div className="flex w-[30rem] items-center justify-end gap-4">{[idx - 2, idx - 1].filter((k) => k >= 0).map((k) => <Preview key={stories[k].u} k={k} />)}</div>
+        {idx > 0 ? <button onClick={prev} aria-label="قبلی" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-white hover:bg-white/30"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m9 6 6 6-6 6" /></svg></button> : <span className="w-9" />}
+
+        <motion.div key={story.u} initial={{ scale: .94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative flex h-[min(94vh,820px)] w-[min(94vw,440px)] shrink-0 flex-col overflow-hidden rounded-2xl bg-black shadow-2xl">
+          <div className="absolute inset-x-3 top-3 z-10 flex gap-1" dir="ltr">
+            {story.slides.map((_, k) => <span key={k} className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/30"><span className="block h-full bg-white" style={{ width: `${k < i ? 100 : k === i ? prog * 100 : 0}%` }} /></span>)}
           </div>
           <div className="absolute inset-x-3 top-6 z-10 flex items-center gap-2 text-white">
-            <Avatar name={story.u} size={34} /><div className="flex-1 leading-tight"><b className="block text-sm">{story.label}</b><span className="text-[11px] opacity-80">{story.t}</span></div>
-            <button title="گزارش" className="grid h-8 w-8 place-items-center rounded-full hover:bg-white/15">{Ico.flag}</button>
-            <button onClick={onClose} aria-label="بستن" className="grid h-8 w-8 place-items-center rounded-full text-xl hover:bg-white/15">×</button>
+            <Avatar name={story.u} size={34} /><b className="text-sm">{story.label}</b><span className="text-xs opacity-70">{story.t}</span>
+            <span className="flex-1" />
+            <button onClick={() => setMuted(!muted)} title={muted ? 'صدا' : 'بی‌صدا'} className={btn}>{muted
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 5 6 9H3v6h3l5 4V5ZM22 9l-6 6M16 9l6 6" /></svg>
+              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 5 6 9H3v6h3l5 4V5ZM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" /></svg>}</button>
+            <button onClick={() => setPaused(!paused)} title={paused ? 'پخش' : 'توقف'} className={btn}>{paused
+              ? <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8Z" /></svg>
+              : <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>}</button>
+            <button onClick={() => { setPaused(true); setReport(true) }} title="گزارش استوری" aria-label="گزارش استوری" className={btn}>{Ico.flag}</button>
           </div>
-          <div className="relative flex-1" style={{ background: `linear-gradient(160deg, ${story.slides[i][1]}, #0b1022)` }}>
-            <button aria-label="قبلی" className="absolute inset-y-0 right-0 w-1/3" onClick={() => setI(Math.max(0, i - 1))} />
-            <button aria-label="بعدی" className="absolute inset-y-0 left-0 w-2/3" onClick={() => (i < story.slides.length - 1 ? setI(i + 1) : onNext())} />
-            <AnimatePresence mode="wait"><motion.p key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="pointer-events-none absolute inset-x-6 top-1/2 -translate-y-1/2 text-center text-2xl font-extrabold leading-relaxed text-white">{story.slides[i][0]}</motion.p></AnimatePresence>
+          <div className="relative flex-1" style={{ background: `linear-gradient(160deg, ${story.slides[i][1]}, #05070f)` }} onPointerDown={() => setPaused(true)} onPointerUp={() => setPaused(false)}>
+            <button aria-label="قبلی" className="absolute inset-y-0 right-0 z-[1] w-1/3" onClick={prev} />
+            <button aria-label="بعدی" className="absolute inset-y-0 left-0 z-[1] w-2/3" onClick={next} />
+            <AnimatePresence mode="wait"><motion.p key={i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="pointer-events-none absolute inset-x-6 top-1/2 -translate-y-1/2 text-center text-3xl font-extrabold leading-relaxed text-white">{story.slides[i][0]}</motion.p></AnimatePresence>
+            {story.slides[i][2] && <StoryPoll poll={story.slides[i][2]} vote={votes[`${story.u}-${i}`]} setVote={(k) => { setVotes({ ...votes, [`${story.u}-${i}`]: k }); say('رأی شما ثبت شد') }} />}
           </div>
-          <form onSubmit={(e) => { e.preventDefault(); setMsg('') }} className="flex items-center gap-2 border-t border-line p-3">
-            <input value={msg} onChange={(e) => setMsg(e.target.value)} placeholder="ارسال پیام" className="h-10 flex-1 rounded-full bg-surface2 px-4 text-sm outline-none" />
-            <button disabled={!msg.trim()} className="grid h-10 w-10 place-items-center rounded-full bg-brand text-white disabled:opacity-40">{Ico.send}</button>
+          <AnimatePresence>{report && (
+            <motion.div className="absolute inset-0 z-20 flex flex-col justify-end bg-black/60" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { setReport(false); setPaused(false) }}>
+              <motion.div onClick={(e) => e.stopPropagation()} initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }} className="m-3 space-y-2">
+                <div className="overflow-hidden rounded-2xl bg-surface">
+                  <h4 className="border-b border-line py-3 text-center text-sm font-bold">گزارش استوری {story.label}</h4>
+                  {REASONS.map((r) => <button key={r} onClick={() => { setReport(false); setPaused(false); say('گزارش شما ثبت شد؛ متشکریم') }} className="block w-full border-b border-line/60 py-3.5 text-center text-sm last:border-0 hover:bg-surface2">{r}</button>)}
+                </div>
+                <button onClick={() => { setReport(false); setPaused(false) }} className="w-full rounded-2xl bg-surface py-3.5 font-semibold hover:bg-surface2">بستن</button>
+              </motion.div>
+            </motion.div>
+          )}</AnimatePresence>
+          <form onSubmit={(e) => { e.preventDefault(); if (msg.trim()) { say(`پیام برای ${story.label} ارسال شد`); setMsg('') } }} className="flex items-center gap-2 bg-black p-3">
+            <input value={msg} onChange={(e) => setMsg(e.target.value)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)} placeholder={`پاسخ به ${story.label}…`} className="h-11 flex-1 rounded-full border border-white/40 bg-transparent px-4 text-sm text-white outline-none placeholder:text-white/60 focus:border-white" />
+            <motion.button type="button" whileTap={{ scale: 1.3 }} onClick={() => setLiked(!liked)} aria-label="پسندیدن" className={`grid h-10 w-10 place-items-center ${liked ? 'text-down' : 'text-white'}`}><svg width="24" height="24" viewBox="0 0 24 24" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z" /></svg></motion.button>
+            <button aria-label="ارسال" className="grid h-10 w-10 place-items-center text-white"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"><path d="M3 11 21 3l-8 18-2-8-8-2Z" /></svg></button>
           </form>
         </motion.div>
+
+        {idx < stories.length - 1 ? <button onClick={() => setIdx(idx + 1)} aria-label="بعدی" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-white hover:bg-white/30"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button> : <span className="w-9" />}
+        <div className="flex w-[30rem] items-center justify-start gap-4">{[idx + 1, idx + 2].filter((k) => k < stories.length).map((k) => <Preview key={stories[k].u} k={k} />)}</div>
       </motion.div>
     )}</AnimatePresence>
   )
@@ -145,7 +210,7 @@ export default function Opinions({ sym }) {
   const addStory = (type) => {
     setSheet(null)
     if (type === 'live') return say('پخش زنده به‌زودی فعال می‌شود')
-    const s = { u: ME, label: 'استوری شما', t: 'همین حالا', slides: [[{ photo: 'استوری عکس شما', poll: `${sym.s} فردا مثبت یا منفی؟`, q: `سؤالتون درباره ${sym.s} رو بپرسید` }[type], '#1d4ed8']] }
+    const s = { u: ME, label: 'استوری شما', t: 'همین حالا', slides: [[{ photo: 'استوری عکس شما', poll: `${sym.s} فردا مثبت یا منفی؟`, q: `سؤالتون درباره ${sym.s} رو بپرسید` }[type], '#1d4ed8', type === 'poll' ? { q: `${sym.s} فردا…`, o: [['مثبت', 50], ['منفی', 50]] } : undefined]] }
     setStories((st) => [s, ...st.filter((x) => x.u !== ME)]); say('استوری شما منتشر شد')
   }
   const mine = stories.find((s) => s.u === ME)
@@ -223,7 +288,7 @@ export default function Opinions({ sym }) {
           className="w-full resize-none rounded-xl border border-line bg-surface2/50 p-3 text-sm leading-7 outline-none focus:border-brand/60" />
       </Modal>
 
-      <StoryViewer story={view != null ? stories[view] : null} onClose={() => setView(null)} onNext={nextStory} />
+      <StoryViewer stories={stories} idx={view} setIdx={openStory} onClose={() => setView(null)} say={say} />
       <AnimatePresence>{toast && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pointer-events-none fixed bottom-8 left-1/2 z-[90] -translate-x-1/2 rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">{toast}</motion.div>
       )}</AnimatePresence>
