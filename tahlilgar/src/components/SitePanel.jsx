@@ -450,7 +450,7 @@ function Drawer({ k, close, sym, d }) {
         <>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
-            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl ${k === 'peers' || k === 'real' ? 'max-w-3xl' : 'max-w-md'}`}>
+            className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
             <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></div>
             <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' ? 'flex min-h-0 flex-col overflow-hidden' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} />}
@@ -568,7 +568,7 @@ function Peers({ sym }) {
         <Dropdown value={dir} options={[['desc', 'نزولی'], ['asc', 'صعودی']]} onChange={setDir} />
       </div>
       <div className="overflow-x-auto">
-        <table className="num w-full min-w-[640px] text-xs">
+        <table className="num w-full min-w-[500px] text-[11px]">
           <thead className="sticky top-0 z-10 bg-surface2/90 text-muted backdrop-blur">
             <tr className="text-center">
               <th className="px-3 py-2.5 text-right font-normal">نماد</th><th className="font-normal">قیمت</th><th className="font-normal">{two('حجم', 'م. حجم')}</th>

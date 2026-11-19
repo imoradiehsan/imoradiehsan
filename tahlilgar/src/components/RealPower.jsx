@@ -24,7 +24,7 @@ function RangeDrop({ value, set }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="relative">
-      <button onClick={() => setOpen(!open)} className={`btn min-w-[96px] justify-between ${open ? 'btn-on' : ''}`}>
+      <button onClick={() => setOpen(!open)} className={`btn min-w-[78px] justify-between !px-2.5 ${open ? 'btn-on' : ''}`}>
         {value}
         <motion.svg animate={{ rotate: open ? 180 : 0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
       </button>
@@ -122,7 +122,7 @@ export default function RealPower({ sym }) {
 
   return (
     <div className="-m-4 flex h-full flex-col">
-      <div className="relative z-20 flex shrink-0 flex-wrap items-center gap-2 border-b border-line px-4 py-2.5">
+      <div className="relative z-20 flex shrink-0 items-center gap-1.5 border-b border-line px-3 py-2.5 [&_.seg-item]:px-2">
         <Seg id="rp-type" value={type} set={setType} items={[['line', 'خطی'], ['candle', 'شمعی']]} />
         <Seg id="rp-unit" value={unit} set={setUnit} items={[['vol', 'حجم'], ['pct', 'درصد']]} />
         <Seg id="rp-adj" value={adj} set={setAdj} items={[[true, 'تعدیل شده'], [false, 'تعدیل نشده']]} />
