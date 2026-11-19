@@ -177,7 +177,7 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
   }
   return (
     <>
-      <div className="num flex items-center gap-1 border-b border-line px-3 py-1.5 text-xs text-muted">
+      <div className="num flex h-12 items-center gap-1 border-b border-line px-3 text-xs text-muted">
         <button onClick={() => setPeriod(period === 'day' ? 'total' : 'day')} title="تغییر بازه بازده" className="flex items-center gap-1 rounded-lg px-1.5 py-1 hover:bg-surface2">
           {period === 'day' ? 'بازده روز' : 'بازده کلی'}: <b className={amt >= 0 ? 'text-up' : 'text-down'} dir="ltr">{amt >= 0 ? '+' : '−'}{big(Math.abs(amt))} ({sgn(pct)})</b><span className="text-muted">{I.chev}</span>
         </button>
@@ -245,12 +245,12 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
           {/* toolbar: view switch on one side, row tools on the other; reorder mode replaces it with a clear "done" bar */}
           <AnimatePresence mode="wait" initial={false}>
             {reorder ? (
-              <motion.div key="re" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="flex shrink-0 items-center gap-2 border-b border-brand/40 bg-brand/10 px-3 py-2 text-xs">
+              <motion.div key="re" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className="flex h-12 shrink-0 items-center gap-2 border-b border-brand/40 bg-brand/10 px-3 text-xs">
                 <span className="text-brand-light">{I.move}</span><span className="flex-1">ردیف‌ها را با دستگیره بکشید و جابجا کنید</span>
                 <button onClick={startReorder} className="btn btn-on !h-7">پایان</button>
               </motion.div>
             ) : (
-              <motion.div key="tb" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="flex shrink-0 items-center gap-1 border-b border-line px-3 py-2">
+              <motion.div key="tb" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="flex h-12 shrink-0 items-center gap-1 border-b border-line px-3">
                 <div className="seg !h-8">{[[false, 'جدول', I.list], [true, 'تابلو', I.board]].map(([k, t, ic]) => (
                   <button key={t} onClick={() => setBoard(k)} className="seg-item !px-2.5">
                     {board === k && <motion.span layoutId="wl-view" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
