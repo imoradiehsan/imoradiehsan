@@ -608,24 +608,28 @@ function Peers({ sym, openSym }) {
 }
 
 /* ---------- Modal (bottom sheet on phones, centered dialog on desktop) ---------- */
-function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false }) {
+function Modal({ open, title, onClose, children, closeText = 'بستن', visible = false, actions, primary = false }) {
   useEffect(() => {
     if (!open) return
     const k = (e) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
   }, [open])
+  // one card: header (title + close) · body · footer actions — bottom sheet on phones, centered dialog on desktop
   return (
     <AnimatePresence>
       {open && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
           <motion.div role="dialog" aria-modal="true" aria-label={title} initial={{ y: 60, opacity: 0, scale: .97 }} animate={{ y: 0, opacity: 1, scale: 1 }} exit={{ y: 60, opacity: 0, scale: .97 }} transition={{ type: 'spring', stiffness: 360, damping: 32 }}
-            className="relative m-3 flex max-h-[90vh] w-full max-w-xl flex-col gap-3">
-            <div className={`flex min-h-0 flex-col rounded-3xl border border-line bg-surface shadow-2xl ${visible ? '' : 'overflow-hidden'}`}>
-              <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
-              <h3 className="px-5 pb-3 pt-4 text-center font-bold">{title}</h3>
-              <div className={`min-h-0 px-4 pb-4 ${visible ? '' : 'scroll-y'}`}>{children}</div>
+            className={`relative flex max-h-[90vh] w-full max-w-xl flex-col rounded-t-3xl border border-line bg-surface shadow-2xl sm:m-3 sm:rounded-3xl ${visible ? '' : 'overflow-hidden'}`}>
+            <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
+            <div className="flex items-center gap-3 border-b border-line px-5 py-3.5">
+              <h3 className="flex-1 font-bold">{title}</h3>
+              <button onClick={onClose} aria-label="بستن" className="grid h-8 w-8 place-items-center rounded-lg text-lg text-muted hover:bg-surface2 hover:text-ink">×</button>
             </div>
-            <motion.button whileTap={{ scale: .97 }} onClick={onClose} className="rounded-3xl border border-line bg-surface py-3.5 font-semibold shadow-2xl hover:border-brand/40">{closeText}</motion.button>
+            <div className={`min-h-0 px-5 py-4 ${visible ? '' : 'scroll-y'}`}>{children}</div>
+            <div className="flex items-center gap-2 border-t border-line px-5 py-3.5">
+              {actions || <motion.button whileTap={{ scale: .97 }} onClick={onClose} className={`h-11 flex-1 rounded-xl font-bold transition-colors ${primary ? 'bg-gradient-to-l from-brand-light to-brand-dark text-white shadow-glow' : 'border border-line bg-surface2/50 hover:border-brand/40'}`}>{closeText}</motion.button>}
+            </div>
           </motion.div>
         </div>
       )}
@@ -945,7 +949,7 @@ function HoldersHelp({ items = HOLDERS_HELP }) {
   return (
     <>
       <button onClick={() => setOpen(true)} title="راهنما" className="btn-icon !rounded-full"><span className="text-sm font-bold">?</span></button>
-      <Modal open={open} title="راهنما" onClose={() => setOpen(false)} closeText="متوجه شدم">
+      <Modal open={open} title="راهنما" onClose={() => setOpen(false)} closeText="متوجه شدم" primary>
         <div className="space-y-2">
           {items.map(([q, a], i) => (
             <div key={q} className={`overflow-hidden rounded-2xl border ${acc === i ? 'border-brand/40' : 'border-line'}`}>
@@ -1068,17 +1072,20 @@ function HolderHistory({ sym, close, openSym }) {
             : <Empty text="با این فیلترها معامله‌ای پیدا نشد." />)}
         </motion.div>
       </AnimatePresence>
-      <Modal open={sheet} visible title="فیلتر سهامداران عمده" onClose={() => { setF(draft); setSheet(false) }} closeText="تایید">
-        <div className="space-y-3 pb-2 text-sm">
-          {[['name', 'نام', [['all', 'همه'], ...[...new Set(all.map((t) => t.name))].map((n) => [n, n])]],
+      <Modal open={sheet} visible title="فیلتر سهامداران عمده" onClose={() => setSheet(false)}
+        actions={<>
+          <button onClick={() => setDraft({ name: 'all', pct: 'all', type: 'all' })} disabled={!Object.values(draft).some((v) => v !== 'all')} className="h-11 rounded-xl border border-line px-5 text-sm font-semibold text-muted transition-colors hover:text-ink disabled:opacity-40">پاک کردن</button>
+          <motion.button whileTap={{ scale: .97 }} onClick={() => { setF(draft); setSheet(false) }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">اعمال فیلتر</motion.button>
+        </>}>
+        <div className="space-y-4 text-sm">
+          {[['name', 'نام سهامدار', [['all', 'همه سهامداران'], ...[...new Set(all.map((t) => t.name))].map((n) => [n, n])]],
             ['pct', 'درصد معامله', [['all', 'همه'], ...steps.map((v) => [String(v), `بزرگتر از ${fa(v, 2)}٪`])]],
-            ['type', 'نوع تغییر', [['all', 'همه'], ['ورود جدید', 'ورود جدید'], ['خروج کامل', 'خروج کامل'], ['chg', 'افزایش یا کاهش درصد']]]].map(([k, label, opts]) => (
-            <div key={k} className="flex items-center gap-3">
-              <span className="w-24 shrink-0 text-muted">{label}:</span>
-              <div className="min-w-0 flex-1 [&_.btn]:w-full [&>div>div]:w-full"><Dropdown value={draft[k]} options={opts} onChange={(v) => setDraft({ ...draft, [k]: v })} /></div>
-            </div>
+            ['type', 'نوع تغییر', [['all', 'همه'], ['ورود جدید', 'ورود جدید'], ['خروج کامل', 'خروج کامل'], ['chg', 'افزایش یا کاهش درصد']]]].map(([k, label, opts], i) => (
+            <label key={k} className="block" style={{ position: 'relative', zIndex: 3 - i }}>
+              <span className="mb-1.5 block text-xs font-semibold text-muted">{label}</span>
+              <div className="[&_.btn]:h-11 [&_.btn]:w-full [&_.btn]:text-sm [&>div>div]:w-full"><Dropdown value={draft[k]} options={opts} onChange={(v) => setDraft({ ...draft, [k]: v })} /></div>
+            </label>
           ))}
-          {Object.values(draft).some((v) => v !== 'all') && <button onClick={() => setDraft({ name: 'all', pct: 'all', type: 'all' })} className="text-xs text-brand-light hover:underline">پاک کردن فیلترها</button>}
         </div>
       </Modal>
     </div>
