@@ -150,12 +150,12 @@ function Overview({ sym, d, open, dark }) {
       </Card>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Card title="دفتر سفارش" actions={<><Pill on={rows} onClick={() => setRows(!rows)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg> ردیف‌های عرضه و تقاضا</Pill><Pill on={cum} onClick={() => setCum(!cum)}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
+        <Card className="flex flex-col" title="دفتر سفارش" actions={<><Pill on={rows} onClick={() => setRows(!rows)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg> ردیف‌های عرضه و تقاضا</Pill><Pill on={cum} onClick={() => setCum(!cum)}>{ico(Show, 14)} نمودار تجمعی</Pill></>}>
           <OrderBook d={d} prev={d.prev} rows={rows} cum={cum} />
         </Card>
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <Card title="دامنه قیمت امروز"><Range sym={sym} d={d} /></Card>
-          <Card title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
+          <Card className="flex flex-1 flex-col" title="اطلاعات بنیادی" actions={['TSETMC', 'پیام ناظر', 'کدال'].map((t) => <a key={t} href="#" onClick={(e) => e.preventDefault()} className="flex items-center gap-1.5 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-bold text-brand-light transition-colors hover:bg-brand/25">{t}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg></a>)}>
             <Fundamentals d={d} />
           </Card>
         </div>
@@ -314,7 +314,7 @@ function Fundamentals({ d }) {
   )
   const [num, unit] = String(f['ارزش بازار']).split(' ')
   return (
-    <div className="grid grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
+    <div className="grid flex-1 auto-rows-fr grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
       <div className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-tr-xl bg-brand/10 px-2 py-3.5 text-center">
         <Tip label="ارزش بازار" tip={TIPS['ارزش بازار']} />
         <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
