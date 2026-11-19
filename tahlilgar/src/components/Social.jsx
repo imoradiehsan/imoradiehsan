@@ -65,7 +65,7 @@ function Post({ p, me, onMenu, toggle }) {
       <div className="flex items-start gap-3">
         <Avatar name={p.u} />
         <div className="min-w-0 flex-1">
-          <b className="block truncate" dir="auto">{p.u}</b>
+          <b className="block truncate text-right"><bdi>{p.u}</bdi></b>
           <span className="num text-xs text-muted">{p.edited ? 'ویرایش شده: ' : ''}{p.d}</span>
         </div>
         {p.u !== me && <motion.button whileTap={{ scale: .94 }} onClick={() => toggle(p.id, 'follow')} className={`btn !h-8 !px-4 ${p.follow ? 'btn-on' : ''}`}>{p.follow ? 'دنبال‌شده' : 'دنبال'}</motion.button>}
