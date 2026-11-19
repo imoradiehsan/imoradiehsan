@@ -788,12 +788,26 @@ function HolderPage({ h, sym, back }) {
   const rows = useMemo(() => holderPortfolio(h, sym), [h, sym])
   const [hist, setHist] = useState(false)
   const total = rows.reduce((a, r) => a + r.v, 0)
-  const trades = useMemo(() => rows.slice(0, 6).map((r, i) => ({ c: r.c, side: i % 3 === 1 ? 'فروش' : 'خرید', q: Math.round(r.q * (.02 + i * .01)), d: `۰۵/۰۸/${fa(26 - i * 3)}` })), [rows])
+  // ownership changes: old/new holding, delta, and a badge for full exit / new entry
+  const trades = useMemo(() => {
+    if (!rows.length) return []
+    let x = [...h.n].reduce((a, c) => a * 7 + c.charCodeAt(0), 3) % 2147483647
+    const r = () => ((x = (x * 16807) % 2147483647) - 1) / 2147483646
+    const pool = [...rows.map((q) => q.c), 'فیرا', 'ذرت', 'نورا', 'رز', 'وهنر']
+    return Array.from({ length: 8 }, (_, i) => {
+      const c = pool[Math.floor(r() * pool.length)], kind = r()
+      const oldP = kind < .3 ? 0 : +(r() * 6 + .5).toFixed(3)
+      const newP = kind > .7 ? 0 : kind < .3 ? +(r() * 3 + .5).toFixed(3) : +Math.max(0, oldP + (r() - .5) * 1.5).toFixed(3)
+      const per = (40 + r() * 60) * 1e6
+      return { c, oldP, newP, dP: newP - oldP, oldV: oldP * per, newV: newP * per, d: `۱۴۰۵/۰۸/${fa(27 - i * 2).padStart(2, '۰')}`,
+        tag: newP === 0 ? 'خروج کامل' : oldP === 0 ? 'ورود جدید' : null }
+    })
+  }, [rows, h])
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b border-line px-3 py-2.5">
         <button onClick={hist ? () => setHist(false) : back} title="بازگشت" className="btn-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
-        <b className="text-sm">{hist ? 'سابقه معاملات' : 'سهامدار عمده'}</b>
+        <b className="min-w-0 text-sm"><Marquee>{hist ? `سابقه معاملات ${h.n}` : 'سهامدار عمده'}</Marquee></b>
       </div>
       <div className="border-b border-line bg-surface2/40 px-4 py-3">
         <div className="flex items-start justify-between gap-2">
@@ -806,11 +820,26 @@ function HolderPage({ h, sym, back }) {
         <motion.div key={hist ? 'h' : 'p'} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: .18 }} className="scroll-y min-h-0 flex-1 p-4">
           {hist ? (
             <div className="space-y-2">
-              {trades.length ? trades.map((t, i) => (
-                <div key={i} className="num grid grid-cols-4 items-center rounded-2xl border border-line bg-surface2/25 px-3 py-3 text-xs">
-                  <b className="text-sm text-brand-light">{t.c}</b><span className={t.side === 'خرید' ? 'text-up' : 'text-down'}>{t.side}</span><span dir="ltr" className="text-center">{bigN(t.q)}</span><span className="text-left text-muted">{t.d}</span>
-                </div>
-              )) : <Empty text="معامله‌ای برای این سهامدار ثبت نشده است." />}
+              {trades.length ? trades.map((t, i) => {
+                const up = t.dP >= 0, col = up ? 'text-up' : 'text-down'
+                return (
+                  <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="num space-y-2 rounded-2xl border border-line bg-surface2/25 p-3 text-xs">
+                    <div className="flex items-center justify-between">
+                      <b className="text-sm text-brand-light">{t.c}</b>
+                      <span className="flex items-center gap-2">
+                        {t.tag && <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${t.tag === 'خروج کامل' ? 'bg-down/15 text-down' : 'bg-up/15 text-up'}`}>{t.tag}</span>}
+                        <span className="text-muted">{t.d}</span>
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+                      <div className="flex justify-between"><span className="text-muted">درصد معامله:</span><b className={col} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</b></div>
+                      <div className="flex justify-between"><span className="text-muted">حجم قدیم: <span className="text-[10px]">({fa(t.oldP, 3)}٪)</span></span><b dir="ltr">{bigN(t.oldV)}</b></div>
+                      <div className="flex justify-between"><span className="text-muted">حجم معامله:</span><b className={col} dir="ltr">{bigN(Math.abs(t.newV - t.oldV))}</b></div>
+                      <div className="flex justify-between"><span className="text-muted">حجم جدید: <span className="text-[10px]">({fa(t.newP, 3)}٪)</span></span><b dir="ltr">{bigN(t.newV)}</b></div>
+                    </div>
+                  </motion.div>
+                )
+              }) : <Empty text="معامله‌ای برای این سهامدار ثبت نشده است." />}
             </div>
           ) : (
             <>
