@@ -116,7 +116,7 @@ function Board({ r, fav, toggleFav, onPick, active }) {
           </div>
           <div className="num flex items-center justify-center gap-1.5 text-muted"><span className="text-[10px]">▲</span><span className="text-ink">{fa(r.close)}</span><Pct v={r.closeP} className="text-[10px]" /></div>
         </div>
-        <button onClick={(e) => { e.stopPropagation(); toggleFav() }} className={fav ? 'text-amber-400' : 'text-muted hover:text-ink'} title="نشان‌گذاری">{I.star(fav)}</button>
+        <button onClick={(e) => { e.stopPropagation(); toggleFav() }} className={fav ? 'text-amber-400' : 'text-muted hover:text-ink'} title="حذف از دیده‌بان">{I.star(fav)}</button>
       </div>
       <div className="num mx-3 mt-2 grid grid-cols-6 items-center gap-1 border-t border-line/60 py-2 text-center text-[11px]">
         <span className="text-muted">{fa(b.bn)}</span>
@@ -210,8 +210,9 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const setPItems = (items) => setPlists((ls) => ls.map((l) => (l.id === plist.id ? { ...l, items } : l)))
   const [board, setBoard] = useState(false)
   const [reorder, setReorder] = useState(false)
-  const [toast, setToast] = useState(false)
-  const [fav, setFav] = useState(['فولاد'])
+  const [toast, setToast] = useState(null)
+  const say = (m) => { setToast(m); clearTimeout(say.t); say.t = setTimeout(() => setToast(null), 2600) }
+  const [del, setDel] = useState(null)   // symbol waiting for remove confirmation
   const [opts, setOpts] = useState({ chart: true, vol: true })
   const [sheet, setSheet] = useState(null) // 'lists' | 'add' | 'settings'
   const list = lists.find((l) => l.id === cur) || lists[0]
@@ -221,7 +222,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const showChart = opts.chart && !reorder
   // inline template: dynamic Tailwind class names would not be generated at build time
   const cols = ['minmax(0,1fr)', '78px', opts.vol ? '70px' : '0px', showChart ? '84px' : null].filter(Boolean).join(' ')
-  const startReorder = () => { const on = !reorder; setReorder(on); setBoard(false); if (on) { setToast(true); setTimeout(() => setToast(false), 2600) } }
+  const startReorder = () => { const on = !reorder; setReorder(on); setBoard(false); if (on) say('با کشیدن ردیف‌ها می‌توانید آن‌ها را جابجا کنید') }
 
   return (
     <div className="flex h-full flex-col">
@@ -245,7 +246,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
           <div className="scroll-y min-h-0 flex-1">
             {board ? (
-              <div className="space-y-2.5 p-3">{sorted.map((r) => <Board key={r.s} r={r} active={sym.s === r.s} onPick={setSym} fav={fav.includes(r.s)} toggleFav={() => setFav(fav.includes(r.s) ? fav.filter((x) => x !== r.s) : [...fav, r.s])} />)}</div>
+              <div className="space-y-2.5 p-3">{sorted.map((r) => <Board key={r.s} r={r} active={sym.s === r.s} onPick={setSym} fav toggleFav={() => setDel(r.s)} />)}</div>
             ) : (
               <>
                 <div style={{ gridTemplateColumns: cols }} className="sticky top-0 z-10 grid items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted">
@@ -286,8 +287,8 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
       <AnimatePresence>{toast && (
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
-          className="pointer-events-none absolute inset-x-6 bottom-16 z-30 mx-auto w-fit max-w-full text-center rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">
-          با کشیدن ردیف‌ها می‌توانید آن‌ها را جابجا کنید
+          className="pointer-events-none absolute inset-x-6 bottom-16 z-[90] mx-auto w-fit max-w-full text-center rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">
+          {toast}
         </motion.div>
       )}</AnimatePresence>
 
@@ -297,7 +298,9 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
           <label className="flex cursor-pointer items-center gap-2"><input type="checkbox" checked={pset.fee} onChange={(e) => setPset({ ...pset, fee: e.target.checked })} className="h-4 w-4 accent-[#2E62FF]" />محاسبه کارمزد فروش</label>
           <span className="flex items-center gap-2 text-muted">ارزش بر حسب:<Dropdown value={pset.by} options={[['last', 'آخرین قیمت'], ['close', 'قیمت پایانی']]} onChange={(v) => setPset({ ...pset, by: v })} /></span>
         </div>} />
-      <AddSheet open={sheet === 'add'} close={() => setSheet(null)} items={list.items} setItems={setItems} name={list.name} />
+      <Dialog open={!!del} title="حذف نماد" text={`آیا از حذف نماد «${del ?? ''}» از «${list.name}» مطمئن هستید؟`} okText="حذف" danger
+        onOk={() => { setItems(list.items.filter((x) => x !== del)); say(`نماد ${del} از ${list.name} حذف شد`); setDel(null) }} onCancel={() => setDel(null)} />
+      <AddSheet open={sheet === 'add'} close={() => setSheet(null)} items={list.items} setItems={setItems} name={list.name} say={say} />
       <Modal open={sheet === 'settings'} title="تنظیمات دیده‌بان" onClose={() => setSheet(null)} closeText="تایید" primary>
         <div className="space-y-3">
           {[['vol', 'نمایش ستون حجم معامله'], ['chart', 'نمایش نمودار ۱ ماهه']].map(([k, t]) => (
@@ -345,7 +348,7 @@ function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دید�
   )
 }
 
-function AddSheet({ open, close, items, setItems, name }) {
+function AddSheet({ open, close, items, setItems, name, say }) {
   const [q, setQ] = useState('')
   const found = SYMBOLS.filter((x) => x.s.includes(q) || x.n.includes(q))
   return (
@@ -353,7 +356,7 @@ function AddSheet({ open, close, items, setItems, name }) {
       <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="جستجوی نماد..." className="mb-3 h-11 w-full rounded-xl border border-line bg-surface2/50 px-4 text-sm outline-none focus:border-brand/60" />
       <div className="space-y-1">
         {found.map((x) => { const on = items.includes(x.s); return (
-          <button key={x.s} onClick={() => setItems(on ? items.filter((s) => s !== x.s) : [...items, x.s])} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-right text-sm hover:bg-surface2">
+          <button key={x.s} onClick={() => { setItems(on ? items.filter((s) => s !== x.s) : [...items, x.s]); say(on ? `نماد ${x.s} از ${name} حذف شد` : `نماد ${x.s} به ${name} اضافه شد`) }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-right text-sm hover:bg-surface2">
             <span className={`grid h-5 w-5 place-items-center rounded-md border text-[11px] ${on ? 'border-brand bg-brand text-white' : 'border-line'}`}>{on && '✓'}</span>
             <b>{x.s}</b><span className="truncate text-xs text-muted">{x.n}</span>
           </button>) })}
