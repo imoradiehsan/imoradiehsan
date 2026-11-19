@@ -1,5 +1,5 @@
 // دیده‌بان و پرتفوی: جدول، حالت تابلو، جابجایی ردیف‌ها، چند دیده‌بان، افزودن نماد، تنظیمات
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence, Reorder, useDragControls } from 'framer-motion'
 import { SYMBOLS, fa } from '../data/market'
 import { symbolData } from '../data/symbol'
@@ -298,12 +298,8 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
       {/* list switcher (watchlists or portfolios) */}
       <div className="flex shrink-0 items-center gap-2 border-t border-line px-3 py-2">
         <StrategyFab onClick={() => setSheet('strategy')} />
-        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto">
-        {(sub === 'watch' ? lists : plists).map((l) => (
-          <button key={l.id} onClick={() => { (sub === 'watch' ? setCur : setPcur)(l.id); setReorder(false) }} className={`btn ${(sub === 'watch' ? cur : pcur) === l.id ? 'btn-on' : ''}`}>{l.name.replace(/^(دیده‌بان|پرتفوی) /, '')}</button>
-        ))}
-        </div>
-        <button onClick={() => setSheet(sub === 'watch' ? 'lists' : 'plists')} title="مدیریت فهرست‌ها" className="btn-icon shrink-0">{I.plus}</button>
+        <ChipRail items={sub === 'watch' ? lists : plists} active={sub === 'watch' ? cur : pcur}
+          pick={(id) => { (sub === 'watch' ? setCur : setPcur)(id); setReorder(false) }} manage={() => setSheet(sub === 'watch' ? 'lists' : 'plists')} />
       </div>
 
       <AnimatePresence>{toast && (
@@ -423,5 +419,59 @@ function StrategySheet({ open, close, target, onRun }) {
         ))}
       </div>
     </Modal>
+  )
+}
+
+// list switcher: no visible scrollbar, faded edges only where more chips are hidden, arrows to page,
+// wheel scrolls sideways, active chip always scrolled into view; a fixed "all lists" button opens the manager
+function ChipRail({ items, active, pick, manage }) {
+  const ref = useRef(null)
+  const [edge, setEdge] = useState({ start: false, end: false })
+  const measure = () => {
+    const el = ref.current; if (!el) return
+    const max = el.scrollWidth - el.clientWidth, x = Math.abs(el.scrollLeft)  // RTL scrollLeft is ≤ 0
+    setEdge({ start: x > 2, end: x < max - 2 })
+  }
+  useEffect(() => { measure(); const ro = new ResizeObserver(measure); ro.observe(ref.current); return () => ro.disconnect() }, [items])
+  useEffect(() => { ref.current?.querySelector('[data-on]')?.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' }) }, [active, items])
+  // drag with the mouse to scroll; a real drag swallows the click that follows it
+  const drag = useRef(null)
+  const onDown = (e) => { if (e.pointerType !== 'mouse') return; drag.current = { x: e.clientX, left: ref.current.scrollLeft, moved: false } }
+  const onMove = (e) => { const d = drag.current; if (!d) return; const dx = e.clientX - d.x; if (Math.abs(dx) > 4) d.moved = true; if (d.moved) ref.current.scrollLeft = d.left - dx }
+  const onUp = () => { setTimeout(() => (drag.current = null), 0) }
+  const page = (dir) => ref.current.scrollBy({ left: dir * ref.current.clientWidth * .7, behavior: 'smooth' })
+  const mask = `linear-gradient(to left, ${edge.start ? 'transparent, #000 28px' : '#000, #000'}, ${edge.end ? '#000 calc(100% - 28px), transparent' : '#000'})`
+  const arrow = (show, dir, d) => (
+    <AnimatePresence>{show && (
+      <motion.button initial={{ opacity: 0, scale: .8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .8 }} onClick={() => page(dir)} aria-label="فهرست‌های بیشتر"
+        className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-line bg-surface text-muted hover:text-ink">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d={d} /></svg>
+      </motion.button>
+    )}</AnimatePresence>
+  )
+  const current = items.find((l) => l.id === active)
+  return (
+    <>
+      {arrow(edge.start, 1, 'm9 6 6 6-6 6')}
+      <div ref={ref} onScroll={measure} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerLeave={onUp}
+        onClickCapture={(e) => { if (drag.current?.moved) { e.stopPropagation(); e.preventDefault() } }} onDragStart={(e) => e.preventDefault()} onWheel={(e) => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ref.current.scrollBy({ left: -e.deltaY }) }}
+        className="flex min-w-0 flex-1 cursor-grab select-none items-center gap-1.5 overflow-x-auto [scrollbar-width:none] active:cursor-grabbing [&::-webkit-scrollbar]:hidden" style={{ maskImage: mask, WebkitMaskImage: mask }}>
+        {items.map((l) => {
+          const on = l.id === active
+          return (
+            <button key={l.id} data-on={on || undefined} onClick={() => pick(l.id)} title={l.name}
+              className={`btn shrink-0 !gap-1 ${on ? 'btn-on' : ''}`}>
+              <span className="max-w-[7rem] truncate">{l.name.replace(/^(دیده‌بان|پرتفوی) /, '')}</span>
+              <span className={`num rounded-md px-1 text-[10px] ${on ? 'bg-brand/20' : 'bg-surface2'}`}>{fa(l.items.length)}</span>
+            </button>
+          )
+        })}
+      </div>
+      {arrow(edge.end, -1, 'm15 6-6 6 6 6')}
+      <button onClick={manage} title={`همه فهرست‌ها (${fa(items.length)}) · مدیریت`} aria-label="مدیریت فهرست‌ها" className="btn-icon relative shrink-0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h11M4 12h11M4 18h7M18 15v6M15 18h6" /></svg>
+        {items.length > 1 && <i className="num absolute -left-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-brand px-1 text-[9px] not-italic text-white">{fa(items.length)}</i>}
+      </button>
+    </>
   )
 }
