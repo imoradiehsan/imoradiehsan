@@ -306,8 +306,9 @@ const TIPS = {
 
 function Fundamentals({ d }) {
   const f = Object.fromEntries(d.fundamentals)
-  const Cell = ({ k, label = k }) => (
-    <div className="flex flex-col items-center justify-center gap-1 bg-surface px-2 py-3.5 text-center">
+  // grid keeps overflow visible for tooltips, so corner cells carry their own radius
+  const Cell = ({ k, label = k, r = '' }) => (
+    <div className={`flex flex-col items-center justify-center gap-1 bg-surface px-2 py-3.5 text-center ${r}`}>
       <Tip label={label} tip={TIPS[k]} />
       <b className="num text-[15px]">{f[k]}</b>
     </div>
@@ -315,16 +316,16 @@ function Fundamentals({ d }) {
   const [num, unit] = String(f['ارزش بازار']).split(' ')
   return (
     <div className="grid grid-cols-2 gap-px rounded-xl border border-line bg-line sm:grid-cols-4">
-      <div className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-tr-xl bg-brand/10 px-2 py-3.5 text-center">
+      <div className="col-span-2 flex flex-col items-center justify-center gap-1 rounded-t-[11px] bg-[rgb(var(--surface))] bg-gradient-to-b from-brand/10 to-brand/10 px-2 py-3.5 text-center sm:rounded-tl-none">
         <Tip label="ارزش بازار" tip={TIPS['ارزش بازار']} />
         <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
       </div>
       <Cell k="P/E" />
-      <Cell k="EPS" />
-      <Cell k="P/E گروه" />
+      <Cell k="EPS" r="sm:rounded-tl-[11px]" />
+      <Cell k="P/E گروه" r="sm:rounded-br-[11px]" />
       <Cell k="P/S" />
-      <Cell k="سهام شناور" label="درصد شناور" />
-      <Cell k="تعداد سهام" />
+      <Cell k="سهام شناور" label="درصد شناور" r="rounded-br-[11px] sm:rounded-br-none" />
+      <Cell k="تعداد سهام" r="rounded-bl-[11px]" />
     </div>
   )
 }
