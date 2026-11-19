@@ -1146,9 +1146,16 @@ function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
             <rect x={W - pr + 2} y={Y(bars[ci].close) - 9} width={pr - 4} height="18" rx="5" fill="rgb(var(--down))" />
             <text x={W - pr + pr / 2} y={Y(bars[ci].close) + 4} fontSize="10" fontWeight="700" textAnchor="middle" fill="#fff">{fa(Math.round(bars[ci].close))}</text>
           </g>}
-          {trades.map((t, k) => { const i = idx(t); if (t.day >= bars.length) return null; const up = t.dP >= 0, x = X(i), y = Y(bars[i].close) + (up ? 14 : -14)
-            return <motion.circle key={k} cx={x} cy={y} initial={{ r: 0 }} animate={{ r: hover === k ? 9 : 6 }} fill={up ? 'rgb(var(--up))' : 'rgb(var(--down))'} stroke="rgb(var(--ink))" strokeWidth="2"
-              onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => onPick(t.name)} className="cursor-pointer" /> })}
+          {trades.map((t, k) => { const i = idx(t); if (t.day >= bars.length) return null; const up = t.dP >= 0, x = X(i), y = Y(bars[i].close) + (up ? 22 : -22)
+            const py = Y(bars[i].close), col = up ? 'rgb(var(--up))' : 'rgb(var(--down))', on = hover === k
+            // pin marker: thin stem to the price point, soft halo, arrow showing buy (up) or sell (down)
+            return <g key={k} onMouseEnter={() => setHover(k)} onMouseLeave={() => setHover(null)} onClick={() => onPick(t.name)} style={{ cursor: 'pointer' }}>
+              <line x1={x} x2={x} y1={py} y2={y} stroke={col} strokeWidth="1.5" strokeDasharray="2 2" opacity={on ? 1 : .6} />
+              <circle cx={x} cy={py} r="2.5" fill={col} />
+              <motion.circle cx={x} cy={y} fill={col} initial={{ r: 0, opacity: 0 }} animate={{ r: on ? 15 : 11, opacity: .18 }} />
+              <motion.circle className="cursor-pointer" cx={x} cy={y} fill={col} stroke="rgb(var(--surface))" strokeWidth="2" initial={{ r: 0 }} animate={{ r: on ? 10 : 8 }} transition={{ type: 'spring', stiffness: 400, damping: 18 }} />
+              <path d={up ? `M${x - 3.5},${y + 1.5} L${x},${y - 2.5} L${x + 3.5},${y + 1.5}` : `M${x - 3.5},${y - 1.5} L${x},${y + 2.5} L${x + 3.5},${y - 1.5}`} fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
+            </g> })}
         </svg>
         <AnimatePresence>{ci != null && (() => { const b = bars[ci], x = X(ci); return (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .1 }} style={{ left: x > W / 2 ? x - (hv ? 228 : 150) : x + 14, top: Math.min(H - (hv ? 190 : 150), Math.max(8, Y(b.close) + 14)) }}
