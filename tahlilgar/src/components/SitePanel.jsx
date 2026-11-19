@@ -829,19 +829,19 @@ function HolderPage({ h, sym, hist, setHist }) {
                     {/* before → change → after: each value sits under its own label */}
                     <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-1.5 text-center">
                       <div className="rounded-xl bg-surface2/50 px-2 py-2">
-                        <div className="text-[10px] text-muted">قبل</div>
+                        <div className="text-[10px] text-muted">حجم قدیم</div>
                         <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.oldV)}</b>
                         <div className="text-[10px] text-muted" dir="ltr">{fa(t.oldP, 3)}٪</div>
                       </div>
                       <span className="self-center text-muted">←</span>
                       <div className={`rounded-xl px-2 py-2 ${up ? 'bg-up/10' : 'bg-down/10'}`}>
-                        <div className="text-[10px] text-muted">{up ? 'خرید' : 'فروش'}</div>
+                        <div className="text-[10px] text-muted">{up ? 'حجم خرید' : 'حجم فروش'}</div>
                         <b className={`mt-0.5 block text-[13px] ${col}`} dir="ltr">{up ? '+' : '−'}{bigN(Math.abs(t.newV - t.oldV))}</b>
                         <div className={`text-[10px] ${col}`} dir="ltr">{up ? '+' : '−'}{fa(Math.abs(t.dP), 3)}٪</div>
                       </div>
                       <span className="self-center text-muted">←</span>
                       <div className="rounded-xl bg-surface2/50 px-2 py-2">
-                        <div className="text-[10px] text-muted">بعد</div>
+                        <div className="text-[10px] text-muted">حجم جدید</div>
                         <b className="mt-0.5 block text-[13px]" dir="ltr">{bigN(t.newV)}</b>
                         <div className="text-[10px] text-muted" dir="ltr">{fa(t.newP, 3)}٪</div>
                       </div>
