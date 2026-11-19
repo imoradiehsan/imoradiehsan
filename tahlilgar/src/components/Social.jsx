@@ -86,6 +86,18 @@ function Post({ p, me, onMenu, toggle }) {
 }
 
 // carousel story viewer: active story in the middle, neighbours as dimmed previews; RTL so the next story sits on the left
+function Preview({ st, onClick }) {
+  return (
+    <button onClick={onClick}
+      className="relative hidden h-[min(56vh,440px)] w-48 shrink-0 overflow-hidden rounded-2xl opacity-60 transition-opacity hover:opacity-90 lg:block" style={{ background: `linear-gradient(160deg, ${st.slides[0][1]}, #0b1022)` }}>
+      <p className="absolute inset-x-3 top-6 line-clamp-3 text-center text-xs font-bold text-white/70">{st.slides[0][0]}</p>
+      <span className="absolute inset-0 grid place-content-center justify-items-center gap-1 bg-black/45 text-white">
+        <span className="rounded-full bg-gradient-to-tr from-brand-dark via-brand-light to-cyan-400 p-[3px]"><span className="block rounded-full border-2 border-black"><Avatar name={st.u} size={64} /></span></span>
+        <b className="text-sm">{st.label}</b><span className="text-xs opacity-80">{st.t}</span>
+      </span>
+    </button>)
+}
+
 const REASONS = ['استفاده از الفاظ و کلمات نامناسب', 'محتوای نامربوط به بازار', 'انتشار شماره، لینک یا آی‌دی', 'توهین به فرد، گروه، اقوام و …', 'دلایل دیگر']
 // poll sticker inside a story slide: tap to vote, then bars fill with the results and your choice is marked
 function StoryPoll({ poll, vote, setVote }) {
@@ -127,21 +139,12 @@ function StoryViewer({ stories, idx, setIdx, onClose, say }) {
     const k = (e) => { if (e.key === 'ArrowLeft') next(); if (e.key === 'ArrowRight') prev(); if (e.key === ' ') { e.preventDefault(); setPaused((x) => !x) } }
     window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k)
   })
-  const Preview = ({ k }) => { const st = stories[k]; return (
-    <motion.button layout onClick={() => setIdx(k)} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="relative hidden h-[min(56vh,440px)] w-48 shrink-0 overflow-hidden rounded-2xl opacity-60 transition-opacity hover:opacity-90 lg:block" style={{ background: `linear-gradient(160deg, ${st.slides[0][1]}, #0b1022)` }}>
-      <p className="absolute inset-x-3 top-6 line-clamp-3 text-center text-xs font-bold text-white/70">{st.slides[0][0]}</p>
-      <span className="absolute inset-0 grid place-content-center justify-items-center gap-1 bg-black/45 text-white">
-        <span className="rounded-full bg-gradient-to-tr from-brand-dark via-brand-light to-cyan-400 p-[3px]"><span className="block rounded-full border-2 border-black"><Avatar name={st.u} size={64} /></span></span>
-        <b className="text-sm">{st.label}</b><span className="text-xs opacity-80">{st.t}</span>
-      </span>
-    </motion.button>) }
   const btn = 'grid h-9 w-9 place-items-center rounded-full text-white hover:bg-white/15'
   return (
     <AnimatePresence>{story && (
-      <motion.div data-overlay className="fixed inset-0 z-[70] flex items-center justify-center gap-6 bg-[#0b0d14]/95 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <motion.div data-overlay className="fixed inset-0 z-[70] flex items-center justify-center gap-6 bg-[#0b0d14]/95 px-6 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
         <button onClick={onClose} aria-label="بستن" className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full text-2xl text-white hover:bg-white/10">×</button>
-        <div className="flex w-[30rem] items-center justify-end gap-4">{[idx - 2, idx - 1].filter((k) => k >= 0).map((k) => <Preview key={stories[k].u} k={k} />)}</div>
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-4 overflow-hidden">{[idx - 2, idx - 1].filter((k) => k >= 0).map((k) => <Preview key={stories[k].u} st={stories[k]} onClick={() => setIdx(k)} />)}</div>
         {idx > 0 ? <button onClick={prev} aria-label="قبلی" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-white hover:bg-white/30"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m9 6 6 6-6 6" /></svg></button> : <span className="w-9" />}
 
         <motion.div key={story.u} initial={{ scale: .94, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative flex h-[min(94vh,820px)] w-[min(94vw,440px)] shrink-0 flex-col overflow-hidden rounded-2xl bg-black shadow-2xl">
@@ -184,7 +187,7 @@ function StoryViewer({ stories, idx, setIdx, onClose, say }) {
         </motion.div>
 
         {idx < stories.length - 1 ? <button onClick={() => setIdx(idx + 1)} aria-label="بعدی" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-white hover:bg-white/30"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m15 6-6 6 6 6" /></svg></button> : <span className="w-9" />}
-        <div className="flex w-[30rem] items-center justify-start gap-4">{[idx + 1, idx + 2].filter((k) => k < stories.length).map((k) => <Preview key={stories[k].u} k={k} />)}</div>
+        <div className="flex min-w-0 flex-1 items-center justify-start gap-4 overflow-hidden">{[idx + 1, idx + 2].filter((k) => k < stories.length).map((k) => <Preview key={stories[k].u} st={stories[k]} onClick={() => setIdx(k)} />)}</div>
       </motion.div>
     )}</AnimatePresence>
   )
