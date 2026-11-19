@@ -749,12 +749,12 @@ function IndustryPie({ rows }) {
   const by = Object.entries(rows.reduce((m, r) => ((m[r.ind] = (m[r.ind] || 0) + r.v), m), {})).map(([k, v]) => ({ k, pct: v / total * 100 })).sort((a, b) => b.pct - a.pct)
   const main = by.filter((x) => x.pct >= 10), rest = by.filter((x) => x.pct < 10)
   const slices = rest.length ? [...main, { k: 'سایر', pct: rest.reduce((a, x) => a + x.pct, 0) }] : main
-  const R = 62, cx = 180, cy = 95, cols = ['#2E62FF', '#3C7CFF', '#6b8cff', '#93acff', '#1f44c9']
+  const R = 66, cx = 180, cy = 90, cols = ['#2E62FF', '#3C7CFF', '#6b8cff', '#93acff', '#1f44c9']
   let ang = -Math.PI / 2
   return (
     <div className="mt-4 rounded-2xl border border-line bg-surface2/25 p-3">
       <div className="mb-1 text-xs font-semibold text-muted">ترکیب صنایع پرتفوی</div>
-      <svg viewBox="0 0 360 190" className="w-full" style={{ direction: 'ltr' }}>
+      <svg viewBox="0 0 360 180" className="mx-auto w-full max-w-[360px]" style={{ direction: 'ltr' }}>
         {slices.map((sl, i) => {
           const a0 = ang, a1 = (ang += sl.pct / 100 * Math.PI * 2), mid = (a0 + a1) / 2, large = a1 - a0 > Math.PI ? 1 : 0
           const p = (a, rr = R) => [cx + rr * Math.cos(a), cy + rr * Math.sin(a)]
@@ -764,14 +764,18 @@ function IndustryPie({ rows }) {
             <g key={sl.k}>
               <motion.path d={d} fill={cols[i % cols.length]} stroke="rgb(var(--surface))" strokeWidth="1.5" initial={{ opacity: 0, scale: .6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * .08, type: 'spring', stiffness: 200, damping: 18 }} style={{ originX: `${cx}px`, originY: `${cy}px` }} />
               <line x1={p(mid, R)[0]} y1={p(mid, R)[1]} x2={lx} y2={ly} stroke="rgb(var(--muted))" />
-              <text x={lx + (right ? 4 : -4)} y={ly - 2} fontSize="10" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--ink))">{fa(sl.pct, 1)}٪</text>
-              <text x={lx + (right ? 4 : -4)} y={ly + 11} fontSize="9" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--muted))">{sl.k.length > 20 ? sl.k.slice(0, 19) + '…' : sl.k}</text>
+              <text x={lx + (right ? 4 : -4)} y={ly + 4} fontSize="11" fontWeight="700" textAnchor={right ? 'start' : 'end'} fill="rgb(var(--ink))">{fa(sl.pct, 1)}٪</text>
             </g>
           )
         })}
       </svg>
+      <div className="mt-1 space-y-1.5 border-t border-line/60 pt-2 text-xs">
+        {slices.map((sl, i) => (
+          <div key={sl.k} className="num flex items-start gap-2"><i className="mt-1 h-2.5 w-2.5 shrink-0 rounded-sm" style={{ background: cols[i % cols.length] }} /><span className="w-10 shrink-0 text-muted">{fa(sl.pct, 1)}٪</span><span className="leading-5">{sl.k}</span></div>
+        ))}
+      </div>
       {rest.length > 0 && (
-        <div className="mt-1 space-y-1 border-t border-line/60 pt-2 text-xs">
+        <div className="mt-2 space-y-1 border-t border-line/60 pt-2 text-xs">
           <div className="font-semibold text-muted">سایر:</div>
           {rest.map((x) => <div key={x.k} className="num flex gap-3"><span className="w-10 text-muted">{fa(x.pct, 1)}٪</span><span>{x.k}</span></div>)}
         </div>
