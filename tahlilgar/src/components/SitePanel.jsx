@@ -5,6 +5,7 @@ import TVChart, { makeBars } from './TVChart'
 import { useSort, SortHead } from './sort'
 import SRChart from './SRChart'
 import RealPower from './RealPower'
+import Opinions from './Social'
 import { Intraday, RealLegal, Returns, Compare, Poll, Marquee } from './OverviewExtra'
 import { Change } from './Count'
 import { fa, SYMBOLS } from '../data/market'
@@ -177,7 +178,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
             {tab === 'چارت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
             {tab === 'حمایت/مقاومت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><SRChart sym={sym} dark={dark} /></div>}
-            {tab === 'نظرات و تحلیل‌ها' && <Opinions d={d} />}
+            {tab === 'نظرات و تحلیل‌ها' && <Opinions sym={sym} />}
             {tab === 'تکنیکال' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} technical /></div>}
           </motion.div>
         </AnimatePresence>
@@ -430,38 +431,6 @@ function News({ d }) {
   )
 }
 
-function Opinions({ d }) {
-  const [likes, setLikes] = useState({})
-  const [text, setText] = useState('')
-  const [mine, setMine] = useState([])
-  const all = [...mine, ...d.opinions]
-  return (
-    <>
-      <Card>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={3} placeholder="تحلیل یا نظرت رو درباره این نماد بنویس..." className="w-full resize-none rounded-xl bg-surface2/50 p-3 text-sm outline-none focus:ring-1 focus:ring-brand" />
-        <div className="mt-2 flex justify-end"><motion.button whileTap={{ scale: .95 }} disabled={!text.trim()} onClick={() => { setMine([['احسان مرادی', 'تکنیکال', 'خنثی', text, 0], ...mine]); setText('') }} className="rounded-xl bg-brand px-5 py-2 text-sm font-bold text-white disabled:opacity-40">انتشار</motion.button></div>
-      </Card>
-      <AnimatePresence initial={false}>
-        {all.map(([who, kind, view, body, lk], i) => (
-          <motion.div key={who + body} layout initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-            <Card>
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-surface2 font-bold">{who[0]}</span>
-                <div className="flex-1"><div className="font-semibold">{who}</div><div className="text-xs text-muted">تحلیل {kind}</div></div>
-                <span className={`rounded-full px-3 py-1 text-xs font-bold ${view === 'صعودی' ? 'bg-up/15 text-up' : view === 'نزولی' ? 'bg-down/15 text-down' : 'bg-surface2 text-muted'}`}>{view}</span>
-              </div>
-              <p className="mt-3 text-sm leading-7">{body}</p>
-              <div className="mt-2 flex gap-4 text-xs text-muted">
-                <motion.button whileTap={{ scale: 1.3 }} onClick={() => setLikes({ ...likes, [i]: !likes[i] })} className={likes[i] ? 'text-down' : 'hover:text-ink'}>♥ <span className="num">{fa(lk + (likes[i] ? 1 : 0))}</span></motion.button>
-                <button className="flex items-center gap-1 hover:text-ink">{ico(Chat, 14)} پاسخ</button>
-              </div>
-            </Card>
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </>
-  )
-}
 
 const DRAWER_TITLES = Object.fromEntries(LINKS.map(([k, t]) => [k, t]))
 function Drawer({ k, close, sym, d, openSym }) {
