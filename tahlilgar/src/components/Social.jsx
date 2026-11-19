@@ -197,7 +197,13 @@ export default function Opinions({ sym }) {
   const ME = 'احسان_مرادی'
   const [tab, setTab] = useState('latest')
   // keep the latest/featured/analysis tabs floating right under the symbol's sticky tab bar
-  const tabsRef = useRef(null), [barH, setBarH] = useState(0)
+  const tabsRef = useRef(null), [barH, setBarH] = useState(0), [stuck, setStuck] = useState(false)
+  useEffect(() => {
+    const sc = tabsRef.current?.closest('.scroll-y'); if (!sc) return
+    const anchor = tabsRef.current.previousElementSibling   // stories row: once it has scrolled away, the tabs are pinned
+    const on = () => setStuck(anchor.getBoundingClientRect().bottom <= sc.getBoundingClientRect().top + barH + 1)
+    on(); sc.addEventListener('scroll', on, { passive: true }); return () => sc.removeEventListener('scroll', on)
+  }, [barH])
   useEffect(() => { const bar = document.querySelector('[data-symtabs]'); if (!bar) return; const m = () => setBarH(bar.offsetHeight); m(); const ro = new ResizeObserver(m); ro.observe(bar); return () => ro.disconnect() }, [])
   const pick = (k) => { setTab(k); const sc = tabsRef.current?.closest('.scroll-y'); if (sc && tabsRef.current.getBoundingClientRect().top <= sc.getBoundingClientRect().top + barH + 1) sc.scrollTo({ top: tabsRef.current.parentElement.offsetTop + tabsRef.current.offsetTop - barH, behavior: 'smooth' }) }
   const [posts, setPosts] = useState(() => seedPosts(sym))
@@ -239,12 +245,19 @@ export default function Opinions({ sym }) {
         ))}
       </div>
       {/* tabs */}
-      <div ref={tabsRef} style={{ top: barH }} className="sticky z-10 grid grid-cols-3 border-b border-line bg-surface/95 backdrop-blur">
-        {[['latest', 'آخرین نظرات'], ['best', 'نظرات برگزیده'], ['analysis', 'تحلیل']].map(([k, t]) => (
-          <button key={k} onClick={() => pick(k)} className={`relative py-3 text-sm ${tab === k ? 'font-bold text-brand-light' : 'text-muted hover:text-ink'}`}>
-            {t}{tab === k && <motion.span layoutId="op-tab" className="absolute inset-x-6 -bottom-px h-0.5 rounded-full bg-brand-light" />}
-          </button>
-        ))}
+      {/* in place: full-width underline tabs. Once scrolled under the symbol tabs: a floating pill control over the content */}
+      <div ref={tabsRef} style={{ top: barH }} className={`sticky z-10 ${stuck ? 'pointer-events-none flex justify-center py-2' : 'border-b border-line bg-surface'}`}>
+        <motion.div layout transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+          className={stuck ? 'pointer-events-auto grid grid-cols-3 gap-1 rounded-full bg-surface2/90 p-1 shadow-[0_10px_30px_-8px_rgba(0,0,0,.6)] ring-1 ring-line backdrop-blur' : 'grid grid-cols-3'}>
+          {[['latest', 'آخرین نظرات'], ['best', 'نظرات برگزیده'], ['analysis', 'تحلیل']].map(([k, t]) => (
+            <button key={k} onClick={() => pick(k)} className={`relative whitespace-nowrap text-sm transition-colors ${stuck ? 'rounded-full px-5 py-1.5' : 'py-3'} ${tab === k ? (stuck ? 'font-bold text-white' : 'font-bold text-brand-light') : 'text-muted hover:text-ink'}`}>
+              {tab === k && (stuck
+                ? <motion.span layoutId="op-pill" className="absolute inset-0 rounded-full bg-gradient-to-l from-brand-light to-brand-dark shadow-glow" />
+                : <motion.span layoutId="op-tab" className="absolute inset-x-6 -bottom-px h-0.5 rounded-full bg-brand-light" />)}
+              <span className="relative">{t}</span>
+            </button>
+          ))}
+        </motion.div>
       </div>
       <div className="space-y-3 p-5">
         <AnimatePresence initial={false}>{list.map((p) => <Post key={p.id} p={p} me={ME} toggle={toggle} onMenu={(p, rect) => setMenu({ p, rect })} />)}</AnimatePresence>
