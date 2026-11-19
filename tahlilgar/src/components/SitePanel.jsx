@@ -819,7 +819,7 @@ function HolderPage({ h, sym, back }) {
                 <div className="space-y-2">
                   {rows.map((r, i) => (
                     <motion.div key={r.c} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }}
-                      className={`num grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs ${r.c === sym.s ? 'border-brand/50 bg-brand/10' : 'border-line bg-surface2/25'}`}>
+                      className={`num grid grid-cols-[1fr_76px_70px_64px] items-center rounded-2xl border px-3 py-3 text-xs border-line bg-surface2/25`}>
                       <b className="text-sm text-brand-light">{r.c}</b>
                       <span className="text-center" dir="ltr">{r.v >= 1e12 ? fa(r.v / 1e12, 1) + ' T' : bigN(r.v)}</span>
                       <span className="text-center" dir="ltr">{bigN(r.q)}</span>
