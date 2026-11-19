@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart from './TVChart'
-import SymbolDetails from './SymbolDetails'
 import { Intraday, RealLegal, Returns, Compare, Poll } from './OverviewExtra'
 import { Change } from './Count'
 import { fa } from '../data/market'
@@ -171,7 +170,6 @@ function Overview({ sym, d, open, dark }) {
         <Compare sym={sym} />
       </div>
       <Poll sym={sym} />
-      <div><h3 className="mb-3 font-bold">عملکرد مالی</h3><SymbolDetails sym={sym} /></div>
     </>
   )
 }
