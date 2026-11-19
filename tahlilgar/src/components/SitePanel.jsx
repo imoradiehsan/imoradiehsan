@@ -9,7 +9,7 @@ import { candles, orderBook, fa, SYMBOLS } from '../data/market'
 const NAV = ['بازار', 'چارت', 'تحلیل‌ها', 'اخبار', 'دیده‌بان', 'آموزش']
 const TF = ['۱ روز', '۱ هفته', '۱ ماه', '۳ ماه', '۱ سال']
 
-export default function SitePanel({ sym, dark, setDark, openOrder }) {
+export default function SitePanel({ sym, dark, setDark }) {
   const [nav, setNav] = useState('چارت')
   const [info, setInfo] = useState('depth')
   const [fav, setFav] = useState(false)
@@ -67,9 +67,6 @@ export default function SitePanel({ sym, dark, setDark, openOrder }) {
             {[['حجم', sym.vol], ['ارزش بازار', sym.mc], ['P/E', sym.pe ? fa(sym.pe, 1) : '—']].map(([k, v]) => (
               <div key={k}><div className="text-xs text-muted">{k}</div><div className="num font-semibold">{v}</div></div>
             ))}
-          </div>
-          <div className="mr-auto flex gap-2">
-            <motion.button whileTap={{ scale: .94 }} onClick={() => openOrder()} className="rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-5 py-2.5 text-sm font-bold text-white shadow-glow">معامله</motion.button>
           </div>
         </motion.div>
       </AnimatePresence>

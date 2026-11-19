@@ -10,7 +10,6 @@ export default function App() {
   const [dark, setDark] = useState(true)
   const [sym, setSym] = useState(SYMBOLS[0])
   const [tab, setTab] = useState('watch')
-  const [orders, setOrders] = useState([])
   const [rightW, setRightW] = useState(load)
   const [drag, setDrag] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -50,7 +49,7 @@ export default function App() {
 
   return (
     <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': (collapsed ? 0 : rightW) + 'px' }} data-drag={drag || undefined}>
-      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} orders={orders} addOrder={(o) => setOrders([o, ...orders])} collapsed={collapsed} setCollapsed={(c) => { if (!c && collapsed) setRightW((w) => clamp(w)); setCollapsed(c) }} />
+      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} collapsed={collapsed} setCollapsed={(c) => { if (!c && collapsed) setRightW((w) => clamp(w)); setCollapsed(c) }} />
 
       {/* Splitter: hover → blue, drag → resize, double-click → reset, arrows for keyboard */}
       <div
@@ -73,7 +72,7 @@ export default function App() {
         )}
       </div>
 
-      <SitePanel sym={sym} dark={dark} setDark={setDark} openOrder={() => setTab('order')} />
+      <SitePanel sym={sym} dark={dark} setDark={setDark} />
     </div>
   )
 }
