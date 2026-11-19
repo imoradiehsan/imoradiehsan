@@ -1102,14 +1102,14 @@ function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
   useEffect(() => { const ro = new ResizeObserver(([e]) => { setW(e.contentRect.width); setH(e.contentRect.height) }); ro.observe(box.current); return () => ro.disconnect() }, [])
   const [hover, setHover] = useState(null)
   const [cross, setCross] = useState(null)   // index of the bar under the mouse
-  const pl = 8, pr = 52, pt = 14, pb = 34, volH = (H - pt - pb) * .16
+  const pl = 8, pr = 52, pt = 14, pb = 30, volH = (H - pt - pb) * .16
   const lo = Math.min(...bars.map((b) => b.low)), hi = Math.max(...bars.map((b) => b.high)), pad = (hi - lo) * .06
   const step = (W - pl - pr) / bars.length, X = (i) => pl + i * step + step / 2
   const Y = (v) => pt + (1 - (v - lo + pad) / (hi - lo + 2 * pad)) * (H - pt - pb - volH - 6)
   const vmax = Math.max(...bars.map((b) => b.volume))
   const idx = (t) => Math.min(bars.length - 1, Math.max(0, bars.length - 1 - t.day))
   const line = bars.map((b, i) => `${i ? 'L' : 'M'}${X(i)},${Y(b.close)}`).join('')
-  const ticks = bars.map((_, i) => i).filter((i) => i % Math.ceil(bars.length / 6) === 0)
+  const ticks = bars.map((_, i) => i).filter((i) => i % Math.ceil(bars.length / Math.max(3, Math.floor((W - pl - pr) / 70))) === 0)
   const hv = hover != null ? trades[hover] : null
   const ci = hv ? idx(hv) : cross
   const icon = (t) => t === 'line'
@@ -1134,7 +1134,7 @@ function HistoryChart({ sym, trades, type, setType, filter, onPick }) {
         <svg width={W} height={H} className="absolute inset-0">
           {[0, .25, .5, .75, 1].map((k) => { const v = lo + (hi - lo) * k; return <g key={k}><line x1={pl} x2={W - pr} y1={Y(v)} y2={Y(v)} stroke="rgb(var(--line))" strokeDasharray="3 4" /><text x={W - pr + 6} y={Y(v) + 4} fontSize="10" fill="rgb(var(--muted))">{fa(Math.round(v))}</text></g> })}
           {ticks.map((i) => <g key={i}><line x1={X(i)} x2={X(i)} y1={pt} y2={H - pb} stroke="rgb(var(--line))" strokeDasharray="3 4" opacity=".6" />
-            <text x={X(i)} y={H - pb + 16} fontSize="10" textAnchor="end" fill="rgb(var(--muted))" transform={`rotate(-30 ${X(i)} ${H - pb + 16})`}>{new Date(bars[i].time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { year: '2-digit', month: '2-digit', day: '2-digit' })}</text></g>)}
+            <text x={Math.min(W - pr - 22, Math.max(pl + 22, X(i)))} y={H - pb + 18} fontSize="11" textAnchor="middle" fill="rgb(var(--ink))" opacity=".75">{new Date(bars[i].time * 1000).toLocaleDateString('fa-IR-u-ca-persian', { month: 'short', day: 'numeric' })}</text></g>)}
           <line x1={W - pr} x2={W - pr} y1={pt} y2={H - pb} stroke="rgb(var(--muted))" opacity=".5" />
           {bars.map((b, i) => { const h = b.volume / vmax * volH; return <rect key={'v' + i} x={X(i) - step * .32} width={step * .64} y={H - pb - h} height={h} fill={b.close >= b.open ? 'rgb(var(--up))' : 'rgb(var(--down))'} opacity=".55" /> })}
           {type === 'line'
