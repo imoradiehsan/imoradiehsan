@@ -43,7 +43,7 @@ export default function SitePanel({ sym, dark, setDark }) {
   // Chart tab: scrolling snaps the tab bar to the top, and the chart then fills everything below it
   const scroller = useRef(null), tabsBar = useRef(null)
   const [fill, setFill] = useState(600)
-  const isChart = ['چارت', 'حمایت/مقاومت', 'تکنیکال'].includes(tab)
+  const isChart = tab === 'چارت'
   useEffect(() => {
     const sc = scroller.current, bar = tabsBar.current
     const measure = () => setFill(sc.clientHeight - bar.offsetHeight)
@@ -151,9 +151,9 @@ export default function SitePanel({ sym, dark, setDark }) {
             {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
             {tab === 'چارت' && <div data-chart style={{ height: Math.max(360, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
-            {tab === 'حمایت/مقاومت' && <div data-chart style={{ height: Math.max(360, fill) }}><SRChart sym={sym} dark={dark} /></div>}
+            {tab === 'حمایت/مقاومت' && <div data-chart className="h-[70vh] min-h-[460px] overflow-hidden rounded-2xl border border-line"><SRChart sym={sym} dark={dark} /></div>}
             {tab === 'نظرات و تحلیل‌ها' && <Opinions d={d} />}
-            {tab === 'تکنیکال' && <div data-chart style={{ height: Math.max(420, fill) }} className="overflow-hidden"><TVChart sym={sym} dark={dark} technical /></div>}
+            {tab === 'تکنیکال' && <div data-chart className="h-[74vh] min-h-[520px] overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} technical /></div>}
           </motion.div>
         </AnimatePresence>
       </div>
