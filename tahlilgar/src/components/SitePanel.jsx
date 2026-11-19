@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart from './TVChart'
 import SymbolDetails from './SymbolDetails'
+import { Intraday, RealLegal, Returns, Compare, Poll } from './OverviewExtra'
 import { Change } from './Count'
 import { fa } from '../data/market'
 import { symbolData } from '../data/symbol'
@@ -116,7 +117,7 @@ export default function SitePanel({ sym, dark, setDark }) {
 
         <AnimatePresence mode="wait">
           <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className="space-y-4 p-5">
-            {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} />}
+            {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
             {tab === 'چارت' && <div className="h-[72vh] min-h-[420px] overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
             {tab === 'حمایت/مقاومت' && <Levels sym={sym} d={d} />}
@@ -131,7 +132,7 @@ export default function SitePanel({ sym, dark, setDark }) {
   )
 }
 
-function Overview({ sym, d, open }) {
+function Overview({ sym, d, open, dark }) {
   const [rows, setRows] = useState(true)
   const [cum, setCum] = useState(false)
   return (
@@ -163,7 +164,13 @@ function Overview({ sym, d, open }) {
         </div>
       </div>
 
-      <Card title="حقیقی و حقوقی"><Real d={d} /></Card>
+      <div className="grid gap-4 xl:grid-cols-2">
+        <Intraday sym={sym} dark={dark} />
+        <RealLegal sym={sym} />
+        <Returns sym={sym} />
+        <Compare sym={sym} />
+      </div>
+      <Poll sym={sym} />
       <div><h3 className="mb-3 font-bold">عملکرد مالی</h3><SymbolDetails sym={sym} /></div>
     </>
   )
@@ -193,6 +200,11 @@ function OrderBook({ d, prev, rows, cum }) {
           ))}
         </tbody>
       </table>
+      <div className="mt-3 border-t border-dashed border-line pt-2 text-center text-[11px] text-muted">جمع سفارش‌ها</div>
+      <div className="num mt-2 grid min-w-[480px] grid-cols-2 overflow-hidden rounded-xl text-sm font-bold">
+        <div className="flex justify-between bg-up/10 px-4 py-2.5 text-up"><span>{fa(data.reduce((a, r) => a + r.bn, 0))}</span><span>{fa(data.at(-1).cb)}</span></div>
+        <div className="flex justify-between bg-down/10 px-4 py-2.5 text-down"><span>{fa(data.at(-1).ca)}</span><span>{fa(data.reduce((a, r) => a + r.an, 0))}</span></div>
+      </div>
     </div>
   )
 }

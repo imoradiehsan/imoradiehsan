@@ -17,20 +17,7 @@ export default function SymbolDetails({ sym }) {
   const box = 'rounded-2xl border border-line/60 bg-surface2/30 p-4'
 
   return (
-    <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
-      <section className={box}>
-        <h4 className="mb-3 text-sm font-semibold">بازدهی</h4>
-        <div className="grid grid-cols-3 gap-1.5">
-          {perf.map(([t, v], k) => (
-            <motion.div key={t + sym.s} initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: k * .04 }}
-              className={`rounded-lg py-2 text-center ${v >= 0 ? 'bg-up/15 text-up' : 'bg-down/15 text-down'}`} style={{ opacity: .6 + Math.min(Math.abs(v), 30) / 75 }}>
-              <div className="num text-sm font-bold" dir="ltr">{v >= 0 ? '+' : '−'}{fa(Math.abs(v), 2)}٪</div>
-              <div className="text-[11px] text-muted">{t}</div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
+    <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
       <section className={box}>
         <div className="mb-3 flex items-center justify-between">
           <h4 className="text-sm font-semibold">صورت سود و زیان</h4>
