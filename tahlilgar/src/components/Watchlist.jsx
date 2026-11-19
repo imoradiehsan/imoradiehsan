@@ -240,6 +240,8 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
 
       {sub === 'watch' ? (
         <>
+
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {/* toolbar: view switch on one side, row tools on the other; reorder mode replaces it with a clear "done" bar */}
           <AnimatePresence mode="wait" initial={false}>
             {reorder ? (
@@ -261,8 +263,6 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
               </motion.div>
             )}
           </AnimatePresence>
-
-          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {board ? (
               <div className="space-y-2.5 p-3">{sorted.map((r) => <Board key={r.s} r={r} active={sym.s === r.s} onPick={setSym} fav toggleFav={() => setDel(r.s)} />)}</div>
             ) : (
