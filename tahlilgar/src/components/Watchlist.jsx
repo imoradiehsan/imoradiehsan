@@ -252,10 +252,10 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
               </motion.div>
             ) : (
               <motion.div key="tb" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="flex h-12 shrink-0 items-center gap-1 border-b border-line px-3">
-                <div className="seg !h-8">{[[false, 'جدول', I.list], [true, 'تابلو', I.board]].map(([k, t, ic]) => (
+                <div className="seg !h-8">{[[false, 'جدول'], [true, 'تابلو']].map(([k, t]) => (
                   <button key={t} onClick={() => setBoard(k)} className="seg-item !px-2.5">
                     {board === k && <motion.span layoutId="wl-view" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
-                    <span className={`relative flex items-center gap-1 ${board === k ? 'font-bold text-brand-light' : ''}`}>{ic}{t}</span>
+                    <span className={`relative ${board === k ? 'font-bold text-brand-light' : ''}`}>{t}</span>
                   </button>
                 ))}</div>
                 <span className="flex-1" />
