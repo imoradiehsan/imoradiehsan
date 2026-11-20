@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>آرکا فایننس | معامله در بازارهای جهانی</title>
+  <meta name="description" content="بروکر و خدمات مالی آرکا فایننس — معامله فارکس، طلا، شاخص‌ها و ارز دیجیتال با اسپرد پایین و اجرای سریع." />
+  <meta name="theme-color" content="#060d24" />
+  <link rel="preload" href="assets/fonts/Vazirmatn-Variable.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="header" id="top">
+    <div class="container header__inner">
+      <a href="#top" class="logo" aria-label="آرکا فایننس">
+        <span class="logo__mark">A</span>
+        <span class="logo__text">آرکا<b>فایننس</b></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="#services">خدمات</a>
+        <a href="#accounts">حساب‌ها</a>
+        <a href="#platforms">پلتفرم‌ها</a>
+        <a href="#promo">پروموشن‌ها</a>
+        <a href="#why">چرا ما</a>
+        <a href="#faq">سوالات متداول</a>
+        <div class="nav__mobile-cta">
+          <a href="#start" class="btn btn--ghost">ورود</a>
+          <a href="#accounts" class="btn btn--primary">افتتاح حساب</a>
+        </div>
+      </nav>
+      <div class="header__cta">
+        <a href="#start" class="btn btn--ghost">ورود</a>
+        <a href="#accounts" class="btn btn--primary">افتتاح حساب</a>
+      </div>
+      <button class="burger" id="burger" aria-label="منو" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <!-- ===== Hero slider (banners come from banners.js) ===== -->
+  <section class="hero" aria-roledescription="carousel" aria-label="بنرهای تبلیغاتی">
+    <div class="hero__track" id="heroTrack"></div>
+    <button class="hero__arrow hero__arrow--prev" id="heroPrev" aria-label="بنر قبلی">
+      <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+    <button class="hero__arrow hero__arrow--next" id="heroNext" aria-label="بنر بعدی">
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <div class="hero__dots" id="heroDots" role="tablist"></div>
+  </section>
+
+  <!-- ===== Live ticker ===== -->
+  <div class="ticker" aria-label="قیمت‌های لحظه‌ای (نمایشی)">
+    <div class="ticker__track" id="ticker"></div>
+  </div>
+
+  <!-- ===== Stats ===== -->
+  <section class="stats container">
+    <div class="stat"><b data-count="250000" data-suffix="+">0</b><span>کاربر فعال</span></div>
+    <div class="stat"><b data-count="1000" data-suffix="+">0</b><span>نماد معاملاتی</span></div>
+    <div class="stat"><b data-count="30" data-suffix=" ms">0</b><span>میانگین سرعت اجرا</span></div>
+    <div class="stat"><b data-count="24" data-suffix="/7">0</b><span>پشتیبانی فارسی</span></div>
+  </section>
+
+  <!-- ===== Services ===== -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">خدمات ما</span>
+        <h2>هر آنچه برای معامله نیاز دارید</h2>
+        <p>از بازار فارکس تا ارزهای دیجیتال؛ ابزارها و خدماتی برای هر سطح از تجربه.</p>
+      </div>
+      <div class="grid grid--4">
+        <article class="card service reveal">
+          <div class="icon icon--blue"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 4 8-8M14 8h6v6"/></svg></div>
+          <h3>فارکس</h3>
+          <p>بیش از ۶۰ جفت‌ارز اصلی، فرعی و اگزوتیک با لوریج انعطاف‌پذیر.</p>
+          <a href="#accounts" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--gold"><svg viewBox="0 0 24 24"><path d="M4 18h16l-3-7H7zM9 11l1.5-4h3L15 11"/></svg></div>
+          <h3>فلزات گرانبها</h3>
+          <p>معامله طلا، نقره و پلاتین با اسپردهای رقابتی و نقدشوندگی بالا.</p>
+          <a href="#accounts" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--purple"><svg viewBox="0 0 24 24"><path d="M9 8h5a2 2 0 010 4H9h6a2 2 0 010 4H9V8zM11 6v2M11 16v2M13 6v2M13 16v2"/></svg></div>
+          <h3>ارزهای دیجیتال</h3>
+          <p>بیت‌کوین، اتریوم و ده‌ها رمزارز دیگر؛ معامله ۲۴ ساعته در ۷ روز هفته.</p>
+          <a href="#accounts" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--green"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3>شاخص‌ها و سهام</h3>
+          <p>شاخص‌های جهانی و سهام شرکت‌های بزرگ با کمترین هزینه معاملاتی.</p>
+          <a href="#accounts" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--teal"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="15" r="3"/><path d="M3 20c0-3 2.5-5 5-5M11 8h5a3 3 0 013 3"/></svg></div>
+          <h3>کپی ترید</h3>
+          <p>معاملات تریدرهای موفق را به‌صورت خودکار در حساب خود کپی کنید.</p>
+          <a href="#platforms" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--blue"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+          <h3>حساب PAMM</h3>
+          <p>سرمایه خود را به مدیران حرفه‌ای بسپارید و از سود مشترک بهره‌مند شوید.</p>
+          <a href="#accounts" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--gold"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+          <h3>همکاری (IB)</h3>
+          <p>با معرفی کاربران جدید، از کمیسیون‌های پلکانی و پاداش‌های ویژه بهره ببرید.</p>
+          <a href="#start" class="link">بیشتر بدانید</a>
+        </article>
+        <article class="card service reveal">
+          <div class="icon icon--purple"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg></div>
+          <h3>آکادمی و تحلیل</h3>
+          <p>آموزش رایگان، تحلیل روزانه بازار و تقویم اقتصادی به زبان فارسی.</p>
+          <a href="#faq" class="link">بیشتر بدانید</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Account types ===== -->
+  <section class="section section--alt" id="accounts">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">انواع حساب</span>
+        <h2>حساب مناسب خودتان را انتخاب کنید</h2>
+        <p>شرایط شفاف، بدون کارمزد پنهان. از تازه‌کار تا حرفه‌ای.</p>
+      </div>
+      <div class="grid grid--4 accounts">
+        <article class="card account reveal">
+          <h3>استاندارد</h3>
+          <p class="account__desc">مناسب شروع معامله</p>
+          <div class="account__price"><small>حداقل واریز</small><b>$10</b></div>
+          <ul>
+            <li><span>اسپرد از</span><b>1.2 پیپ</b></li>
+            <li><span>کمیسیون</span><b>ندارد</b></li>
+            <li><span>حداکثر لوریج</span><b>1:1000</b></li>
+            <li><span>حساب اسلامی</span><b>دارد</b></li>
+          </ul>
+          <a href="#start" class="btn btn--ghost btn--block">افتتاح حساب</a>
+        </article>
+        <article class="card account account--featured reveal">
+          <span class="ribbon">محبوب‌ترین</span>
+          <h3>ECN</h3>
+          <p class="account__desc">اسپرد خام برای اسکالپرها</p>
+          <div class="account__price"><small>حداقل واریز</small><b>$100</b></div>
+          <ul>
+            <li><span>اسپرد از</span><b>0.0 پیپ</b></li>
+            <li><span>کمیسیون</span><b>$6 / لات</b></li>
+            <li><span>حداکثر لوریج</span><b>1:500</b></li>
+            <li><span>حساب اسلامی</span><b>دارد</b></li>
+          </ul>
+          <a href="#start" class="btn btn--primary btn--block">افتتاح حساب</a>
+        </article>
+        <article class="card account reveal">
+          <h3>ECN پلاس</h3>
+          <p class="account__desc">برای معامله‌گران حرفه‌ای</p>
+          <div class="account__price"><small>حداقل واریز</small><b>$1000</b></div>
+          <ul>
+            <li><span>اسپرد از</span><b>0.0 پیپ</b></li>
+            <li><span>کمیسیون</span><b>$4 / لات</b></li>
+            <li><span>حداکثر لوریج</span><b>1:500</b></li>
+            <li><span>مدیر حساب اختصاصی</span><b>دارد</b></li>
+          </ul>
+          <a href="#start" class="btn btn--ghost btn--block">افتتاح حساب</a>
+        </article>
+        <article class="card account reveal">
+          <h3>سوشال</h3>
+          <p class="account__desc">ویژه کپی ترید</p>
+          <div class="account__price"><small>حداقل واریز</small><b>$50</b></div>
+          <ul>
+            <li><span>اسپرد از</span><b>1.0 پیپ</b></li>
+            <li><span>کمیسیون</span><b>ندارد</b></li>
+            <li><span>حداکثر لوریج</span><b>1:500</b></li>
+            <li><span>دسترسی به استراتژی‌ها</span><b>نامحدود</b></li>
+          </ul>
+          <a href="#start" class="btn btn--ghost btn--block">افتتاح حساب</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Platforms ===== -->
+  <section class="section" id="platforms">
+    <div class="container split">
+      <div class="split__text reveal">
+        <span class="eyebrow">پلتفرم‌های معاملاتی</span>
+        <h2>هر جا هستید، معامله کنید</h2>
+        <p>با پلتفرم‌های استاندارد جهانی روی دسکتاپ، وب و موبایل به بازارها دسترسی داشته باشید.</p>
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" data-tab="mt5" role="tab">MetaTrader 5</button>
+          <button class="tab" data-tab="mt4" role="tab">MetaTrader 4</button>
+          <button class="tab" data-tab="web" role="tab">وب‌تریدر</button>
+        </div>
+        <div class="tab-panel is-active" data-panel="mt5">
+          <ul class="checks">
+            <li>بیش از ۲۱ تایم‌فریم و ۸۰ اندیکاتور داخلی</li>
+            <li>عمق بازار و تقویم اقتصادی داخلی</li>
+            <li>پشتیبانی کامل از اکسپرت و ربات‌های معاملاتی</li>
+          </ul>
+        </div>
+        <div class="tab-panel" data-panel="mt4">
+          <ul class="checks">
+            <li>محبوب‌ترین پلتفرم فارکس در جهان</li>
+            <li>هزاران اندیکاتور و اکسپرت آماده</li>
+            <li>سبک و سریع، حتی روی سیستم‌های قدیمی</li>
+          </ul>
+        </div>
+        <div class="tab-panel" data-panel="web">
+          <ul class="checks">
+            <li>بدون نیاز به نصب، مستقیم در مرورگر</li>
+            <li>همگام با حساب موبایل و دسکتاپ</li>
+            <li>رابط کاربری فارسی و ساده</li>
+          </ul>
+        </div>
+        <div class="stores">
+          <a href="#" class="store">ویندوز</a>
+          <a href="#" class="store">macOS</a>
+          <a href="#" class="store">اندروید</a>
+          <a href="#" class="store">iOS</a>
+        </div>
+      </div>
+      <div class="split__media reveal">
+        <div class="device">
+          <div class="device__bar"><i></i><i></i><i></i><span>XAUUSD · H1</span></div>
+          <svg class="device__chart" viewBox="0 0 400 220" preserveAspectRatio="none" id="chartSvg"></svg>
+          <div class="device__foot">
+            <div><small>خرید</small><b class="up" id="buyPrice">2,384.20</b></div>
+            <div><small>فروش</small><b class="down" id="sellPrice">2,384.05</b></div>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="phone__row"><span>EURUSD</span><b class="up">1.0862</b></div>
+          <div class="phone__row"><span>GBPUSD</span><b class="down">1.2714</b></div>
+          <div class="phone__row"><span>BTCUSD</span><b class="up">67,410</b></div>
+          <div class="phone__row"><span>US30</span><b class="up">39,120</b></div>
+          <div class="phone__btn">معامله</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Promotions ===== -->
+  <section class="section section--alt" id="promo">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">پروموشن‌ها</span>
+        <h2>جوایز و کمپین‌های ویژه</h2>
+      </div>
+      <div class="grid grid--3">
+        <article class="promo promo--a reveal">
+          <span class="promo__tag">بونوس</span>
+          <h3>۵۰٪ بونوس خوش‌آمدگویی</h3>
+          <p>روی اولین واریز خود اعتبار معاملاتی اضافه دریافت کنید.</p>
+          <a href="#start" class="btn btn--light">دریافت</a>
+        </article>
+        <article class="promo promo--b reveal">
+          <span class="promo__tag">مسابقه</span>
+          <h3>مسابقه ماهانه تریدرها</h3>
+          <p>در حساب دمو رقابت کنید و جوایز نقدی واقعی ببرید.</p>
+          <a href="#start" class="btn btn--light">ثبت‌نام</a>
+        </article>
+        <article class="promo promo--c reveal">
+          <span class="promo__tag">کش‌بک</span>
+          <h3>بازگشت کمیسیون</h3>
+          <p>به ازای هر لات معامله، بخشی از هزینه را پس بگیرید.</p>
+          <a href="#start" class="btn btn--light">جزئیات</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why us ===== -->
+  <section class="section" id="why">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">چرا آرکا؟</span>
+        <h2>امنیت، سرعت و شفافیت</h2>
+      </div>
+      <div class="grid grid--3 features">
+        <div class="feature reveal"><div class="icon icon--green"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div><h3>نگهداری جداگانه وجوه</h3><p>سرمایه مشتریان در حساب‌های تفکیک‌شده بانکی نگهداری می‌شود.</p></div></div>
+        <div class="feature reveal"><div class="icon icon--blue"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div><h3>واریز و برداشت آنی</h3><p>پردازش خودکار تراکنش‌ها در کمتر از چند دقیقه.</p></div></div>
+        <div class="feature reveal"><div class="icon icon--gold"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><h3>اجرای فوق‌سریع</h3><p>سرورهای اختصاصی با میانگین اجرای کمتر از ۳۰ میلی‌ثانیه.</p></div></div>
+        <div class="feature reveal"><div class="icon icon--purple"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0116 0v4a2 2 0 01-2 2h-2v-6h4M4 12v4a2 2 0 002 2h2v-6H4"/></svg></div><div><h3>پشتیبانی فارسی ۲۴/۷</h3><p>تیم پشتیبانی همیشه از طریق چت، تلفن و تلگرام در کنار شماست.</p></div></div>
+        <div class="feature reveal"><div class="icon icon--teal"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><div><h3>بدون ریکوت</h3><p>نقدشوندگی از تأمین‌کنندگان معتبر و اجرای مستقیم سفارش‌ها.</p></div></div>
+        <div class="feature reveal"><div class="icon icon--blue"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg></div><div><h3>امنیت پیشرفته</h3><p>احراز هویت دومرحله‌ای و رمزنگاری کامل اطلاعات کاربران.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Steps ===== -->
+  <section class="section section--alt" id="start">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">شروع کنید</span>
+        <h2>در ۴ قدم ساده معامله را آغاز کنید</h2>
+      </div>
+      <ol class="steps">
+        <li class="step reveal"><span class="step__num">۱</span><h3>ثبت‌نام</h3><p>فرم ثبت‌نام را در کمتر از ۲ دقیقه تکمیل کنید.</p></li>
+        <li class="step reveal"><span class="step__num">۲</span><h3>احراز هویت</h3><p>مدارک شناسایی خود را بارگذاری کنید.</p></li>
+        <li class="step reveal"><span class="step__num">۳</span><h3>واریز</h3><p>با روش دلخواه، حساب خود را شارژ کنید.</p></li>
+        <li class="step reveal"><span class="step__num">۴</span><h3>معامله</h3><p>پلتفرم را نصب کنید و اولین معامله را باز کنید.</p></li>
+      </ol>
+      <div class="payments reveal">
+        <span>روش‌های پرداخت:</span>
+        <i>USDT (TRC20)</i><i>USDT (ERC20)</i><i>Bitcoin</i><i>Perfect Money</i><i>کارت بانکی</i><i>Visa / Master</i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Testimonials ===== -->
+  <section class="section">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="eyebrow">نظرات کاربران</span>
+        <h2>اعتماد هزاران معامله‌گر</h2>
+      </div>
+      <div class="grid grid--3">
+        <blockquote class="card quote reveal"><div class="stars">★★★★★</div><p>برداشت‌ها واقعاً سریع انجام می‌شود و پشتیبانی همیشه جواب می‌دهد.</p><footer><span class="avatar">م</span><div><b>مهدی ر.</b><small>معامله‌گر فارکس</small></div></footer></blockquote>
+        <blockquote class="card quote reveal"><div class="stars">★★★★★</div><p>اسپرد حساب ECN برای اسکالپ عالی است. سرعت اجرا هم بی‌نقص.</p><footer><span class="avatar">س</span><div><b>سارا ک.</b><small>اسکالپر طلا</small></div></footer></blockquote>
+        <blockquote class="card quote reveal"><div class="stars">★★★★☆</div><p>با کپی ترید شروع کردم و کم‌کم خودم یاد گرفتم معامله کنم.</p><footer><span class="avatar">ع</span><div><b>علی ج.</b><small>کاربر کپی ترید</small></div></footer></blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section section--alt" id="faq">
+    <div class="container container--narrow">
+      <div class="section__head reveal">
+        <span class="eyebrow">سوالات متداول</span>
+        <h2>پاسخ سوالات شما</h2>
+      </div>
+      <div class="faq">
+        <details class="reveal" open><summary>حداقل مبلغ برای شروع چقدر است؟</summary><p>با حساب استاندارد می‌توانید تنها با ۱۰ دلار معامله را آغاز کنید.</p></details>
+        <details class="reveal"><summary>برداشت سود چقدر زمان می‌برد؟</summary><p>اکثر درخواست‌های برداشت به‌صورت خودکار و در کمتر از ۳۰ دقیقه پردازش می‌شوند.</p></details>
+        <details class="reveal"><summary>آیا حساب دمو رایگان است؟</summary><p>بله، حساب دمو با موجودی مجازی کاملاً رایگان و بدون محدودیت زمانی است.</p></details>
+        <details class="reveal"><summary>چه مدارکی برای احراز هویت لازم است؟</summary><p>یک مدرک شناسایی معتبر (کارت ملی یا پاسپورت) و یک مدرک تأیید آدرس.</p></details>
+        <details class="reveal"><summary>آیا حساب اسلامی (بدون سواپ) دارید؟</summary><p>بله، تمامی حساب‌ها قابلیت تبدیل به حساب اسلامی را دارند.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-band">
+    <div class="container cta-band__inner reveal">
+      <div>
+        <h2>همین امروز به جمع معامله‌گران بپیوندید</h2>
+        <p>افتتاح حساب رایگان است و کمتر از ۲ دقیقه زمان می‌برد.</p>
+      </div>
+      <div class="cta-band__btns">
+        <a href="#start" class="btn btn--light btn--lg">افتتاح حساب واقعی</a>
+        <a href="#start" class="btn btn--outline-light btn--lg">حساب دمو</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <a href="#top" class="logo"><span class="logo__mark">A</span><span class="logo__text">آرکا<b>فایننس</b></span></a>
+        <p class="footer__about">ارائه‌دهنده خدمات معاملاتی در بازارهای مالی جهانی با تمرکز بر شفافیت و رضایت مشتری.</p>
+        <div class="socials">
+          <a href="#" aria-label="تلگرام"><svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/></svg></a>
+          <a href="#" aria-label="اینستاگرام"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/></svg></a>
+          <a href="#" aria-label="یوتیوب"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="4"/><path d="M10 9.5v5l4-2.5z"/></svg></a>
+        </div>
+      </div>
+      <div><h4>معامله</h4><a href="#services">فارکس</a><a href="#services">فلزات</a><a href="#services">ارز دیجیتال</a><a href="#services">شاخص‌ها</a></div>
+      <div><h4>حساب‌ها</h4><a href="#accounts">استاندارد</a><a href="#accounts">ECN</a><a href="#accounts">ECN پلاس</a><a href="#accounts">سوشال</a></div>
+      <div><h4>شرکت</h4><a href="#why">درباره ما</a><a href="#promo">پروموشن‌ها</a><a href="#faq">سوالات متداول</a><a href="#">تماس با ما</a></div>
+    </div>
+    <div class="container footer__risk">
+      <p><b>هشدار ریسک:</b> معامله ابزارهای مالی اهرمی مانند فارکس و CFD دارای ریسک بالایی است و ممکن است برای همه سرمایه‌گذاران مناسب نباشد. پیش از معامله از درک کامل ریسک‌ها اطمینان حاصل کنید و تنها با سرمایه‌ای معامله کنید که توان از دست دادن آن را دارید.</p>
+      <p class="footer__copy">© <span id="year"></span> آرکا فایننس. تمامی حقوق محفوظ است.</p>
+    </div>
+  </footer>
+
+  <a href="#top" class="to-top" id="toTop" aria-label="بازگشت به بالا"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></a>
+
+  <script src="banners.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
