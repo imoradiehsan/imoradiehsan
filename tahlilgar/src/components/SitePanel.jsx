@@ -130,8 +130,8 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
       {/* Site header */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4" onClick={(e) => e.stopPropagation()}>
         <img src="./logo.png" alt="" className="h-8 w-8 rounded-lg" />
-        <span className="hidden whitespace-nowrap font-bold xl:block">تحلیل‌گر بورس</span>
-        <label className="hidden h-9 w-56 items-center gap-2 rounded-xl border border-line bg-surface2/40 px-3 text-sm focus-within:border-brand/60 md:flex">
+        <button title="جست‌وجوی نماد" className="icon-btn !h-9 !w-9 shrink-0 2xl:hidden">{ico(Search, 17)}</button>
+        <label className="hidden h-9 w-56 shrink-0 items-center gap-2 rounded-xl border border-line bg-surface2/40 px-3 text-sm focus-within:border-brand/60 2xl:flex">
           {ico(Search, 16)}<input placeholder="جست‌وجوی نماد" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted" />
           <kbd className="text-[10px] text-muted" dir="ltr">Ctrl K</kbd>
         </label>
@@ -156,11 +156,24 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
           ))}
         </nav>
         <div className="flex-1" />
-        <button onClick={() => setDark(!dark)} className="icon-btn !h-9 !w-9" title="تغییر تم">
-          {dark ? <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>
-            : <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>}
-        </button>
-        <span className="relative grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-brand-light to-brand-dark text-xs font-bold text-white" title="احسان مرادی">ا‌م<i className="absolute -top-0.5 right-0 h-2.5 w-2.5 rounded-full bg-down ring-2 ring-surface" /></span>
+        <div className="relative">
+          <button onClick={() => setMenu(menu === 'profile' ? null : 'profile')} title="حساب کاربری" className="relative grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-brand-light to-brand-dark text-xs font-bold text-white">ا‌م<i className="absolute -top-0.5 right-0 h-2.5 w-2.5 rounded-full bg-down ring-2 ring-surface" /></button>
+          <AnimatePresence>{menu === 'profile' && (
+            <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }} className="absolute left-0 top-11 z-50 w-64 rounded-2xl border border-line bg-surface p-2 shadow-2xl">
+              <div className="flex items-center gap-3 border-b border-line px-2 pb-3 pt-1">
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-brand-light to-brand-dark text-xs font-bold text-white">ا‌م</span>
+                <span className="min-w-0"><b className="block text-sm">احسان مرادی</b><span className="text-[11px] text-muted">اشتراک پایه</span></span>
+              </div>
+              <div className="px-2 pb-1 pt-3 text-[11px] text-muted">ظاهر</div>
+              <div className="seg !h-9 w-full">
+                {[[false, 'روشن', <svg key="s" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>],
+                  [true, 'تیره', <svg key="m" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" /></svg>]].map(([v, t, svg]) => (
+                  <button key={t} onClick={() => setDark(v)} className={`seg-item flex flex-1 items-center justify-center gap-1.5 ${dark === v ? 'bg-brand font-bold !text-white' : ''}`}>{svg}{t}</button>
+                ))}
+              </div>
+            </motion.div>
+          )}</AnimatePresence>
+        </div>
         <motion.button whileHover={{ y: -1 }} whileTap={{ scale: .95 }} className="whitespace-nowrap rounded-xl bg-gradient-to-l from-brand-light to-brand-dark px-4 py-2 text-sm font-bold text-white shadow-glow">ارتقای اشتراک</motion.button>
       </header>
 
