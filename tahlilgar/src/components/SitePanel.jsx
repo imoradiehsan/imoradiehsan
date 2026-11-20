@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import CloseIcon from './CloseIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
 import TVChart, { makeBars } from './TVChart'
@@ -481,7 +482,7 @@ function Drawer({ k, close, sym, d, openSym }) {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
           <motion.aside initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', stiffness: 320, damping: 34 }}
             data-overlay className={`fixed inset-y-0 left-0 z-50 flex w-full flex-col border-r border-line bg-surface shadow-2xl max-w-lg`}>
-            {k !== 'holders' && k !== 'big' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button></span></div>}
+            {k !== 'holders' && k !== 'big' && <div className="flex h-14 items-center justify-between border-b border-line px-4"><b>{k === 'holders' ? `سهامداران عمده ${sym.s}` : k === 'real' ? `سابقه قدرت حقیقی ${sym.s}` : k === 'peers' ? `هم‌گروه‌های ${sym.s}` : `${DRAWER_TITLES[k]} · ${sym.s}`}</b><span className="flex items-center gap-1">{k === 'holders' && <HoldersHelp />}<button onClick={close} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2"><CloseIcon /></button></span></div>}
             <div className={`flex-1 space-y-2 p-4 text-sm ${k === 'real' || k === 'peers' || k === 'holders' || k === 'big' || k === 'history' ? 'flex min-h-0 flex-col overflow-hidden !space-y-0 !p-0' : 'scroll-y'}`}>
               {k === 'peers' && <Peers sym={sym} openSym={openSym} />}
               {k === 'holders' && <Holders sym={sym} close={close} openSym={openSym} />}
@@ -651,7 +652,7 @@ export function Modal({ open, title, onClose, children, closeText = 'بستن', 
             <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-line sm:hidden" />
             <div className="flex items-center gap-3 border-b border-line px-5 py-3.5">
               <h3 className="flex-1 font-bold">{title}</h3>
-              <button onClick={onClose} aria-label="بستن" className="grid h-8 w-8 place-items-center rounded-lg text-lg text-muted hover:bg-surface2 hover:text-ink">×</button>
+              <button onClick={onClose} aria-label="بستن" className="grid h-8 w-8 place-items-center rounded-lg text-lg text-muted hover:bg-surface2 hover:text-ink"><CloseIcon /></button>
             </div>
             <div className={`min-h-0 px-5 py-4 ${visible ? '' : 'scroll-y'}`}>{children}</div>
             <div className="flex items-center gap-2 border-t border-line px-5 py-3.5">
@@ -946,7 +947,7 @@ function Holders({ sym, close, openSym }) {
           <motion.b key={title} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: .15 }} className="min-w-0 flex-1"><Marquee>{title}</Marquee></motion.b>
         </AnimatePresence>
         <HoldersHelp />
-        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
+        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2"><CloseIcon /></button>
       </div>
       <AnimatePresence mode="wait" initial={false}>
         {sel != null ? (
@@ -1099,7 +1100,7 @@ function HolderHistory({ sym, close, openSym }) {
         )}</AnimatePresence>
         <b className="min-w-0 flex-1"><Marquee>{title}</Marquee></b>
         <HoldersHelp items={view === 'holder' ? HOLDERS_HELP : HISTORY_HELP} />
-        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-xl text-muted hover:bg-surface2">×</button>
+        <button onClick={close} title="بستن" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2"><CloseIcon /></button>
       </div>
       {view === 'list' && (
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-line px-4 py-2.5">

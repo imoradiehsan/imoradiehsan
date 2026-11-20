@@ -1,4 +1,5 @@
 // دیده‌بان و پرتفوی: جدول، حالت تابلو، جابجایی ردیف‌ها، چند دیده‌بان، افزودن نماد، تنظیمات
+import CloseIcon from './CloseIcon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence, Reorder, useDragControls } from 'framer-motion'
 import { SYMBOLS, fa } from '../data/market'
@@ -354,7 +355,7 @@ function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دید�
           <motion.div key="new" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-2 flex items-center gap-2 rounded-xl border border-brand/50 bg-brand/5 px-3 py-2">
             <input autoFocus value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveNew(); if (e.key === 'Escape') { e.stopPropagation(); setAdding(false); setNewName('') } }} placeholder={`نام ${kind} جدید`} className={field} />
             <button onClick={saveNew} disabled={!newName.trim()} className="btn btn-on !h-9 disabled:opacity-40">افزودن</button>
-            <button onClick={() => { setAdding(false); setNewName('') }} aria-label="انصراف" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2">×</button>
+            <button onClick={() => { setAdding(false); setNewName('') }} aria-label="انصراف" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2"><CloseIcon /></button>
           </motion.div>
         ) : (
           <motion.button key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setAdding(true)}
