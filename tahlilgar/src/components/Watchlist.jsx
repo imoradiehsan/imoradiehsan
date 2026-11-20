@@ -88,7 +88,7 @@ function Row({ r, cols, active, reorder, onPick }) {
   const body = (
     <div onClick={() => !reorder && onPick(r)} style={{ gridTemplateColumns: cols }} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${active ? 'bg-brand/10' : ''}`}>
       <span className="flex min-w-0 items-center gap-1.5">
-        {reorder && <span onPointerDown={(e) => controls.start(e)} className="cursor-grab touch-none text-muted active:cursor-grabbing" title="جابجایی">{I.grip}</span>}
+        {reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted active:cursor-grabbing" title="جابجایی">{I.grip}</span>}
         <i className={`h-2 w-2 shrink-0 rounded-sm ${r.c >= 0 ? 'bg-up' : 'bg-down'}`} />
         <b className="truncate text-sm">{r.s}</b>
       </span>
@@ -98,7 +98,7 @@ function Row({ r, cols, active, reorder, onPick }) {
     </div>
   )
   return reorder
-    ? <Reorder.Item value={r.s} dragListener={false} dragControls={controls} className="relative" whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}>{body}</Reorder.Item>
+    ? <Reorder.Item value={r.s} dragListener={false} dragControls={controls} className="relative select-none bg-surface" whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}>{body}</Reorder.Item>
     : body
 }
 
@@ -167,14 +167,14 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
     const controls = useDragControls()
     const body = (
       <div onClick={() => !reorder && onPick(x)} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${cols} ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${!reorder && sym.s === x.s ? 'bg-brand/10' : ''}`}>
-        <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => controls.start(e)} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
+        <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
         <span className="num text-center leading-5"><span className="block font-semibold">{fa(x.price)}</span><Pct v={x.c} className="text-[10px]" /></span>
         {amtCell(x.plAmt, x.pl, x.pl >= 0)}
         {amtCell(x.val, x.w, null)}
         {!reorder && <span className="text-muted">{I.chev}</span>}
       </div>
     )
-    return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
+    return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} className="bg-surface" whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
   }
   return (
     <>
@@ -191,7 +191,7 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
         <SortHead label="سود / زیان" k="pl" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /><SortHead label="٪ از پرتفوی" k="w" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />{!reorder && <span />}
       </div>
       {reorder
-        ? <Reorder.Group axis="y" values={items} onReorder={setItems}>{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
+        ? <Reorder.Group axis="y" values={items} onReorder={setItems} className="select-none">{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
         : sorted.map((x) => <PRow key={x.s} x={x} />)}
       {!rows.length && <p className="px-4 py-10 text-center text-sm text-muted">این پرتفوی هنوز نمادی ندارد.</p>}
     </>
@@ -275,7 +275,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
                   {showChart && <SortHead label={<span className="leading-4">نمودار ۱ ماهه<br />(تقویمی)</span>} k="m" s={st} toggle={toggle} />}
                 </div>
                 {reorder ? (
-                  <Reorder.Group axis="y" values={list.items} onReorder={setItems}>
+                  <Reorder.Group axis="y" values={list.items} onReorder={setItems} className="select-none">
                     {list.items.map((s) => { const r = rows.find((x) => x.s === s); return r && <Row key={s} r={r} cols={cols} reorder active={false} onPick={setSym} /> })}
                   </Reorder.Group>
                 ) : sorted.map((r) => <Row key={r.s} r={r} cols={cols} active={sym.s === r.s} onPick={setSym} />)}
@@ -345,7 +345,7 @@ function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دید�
   return (
     <Modal open={open} title={kind === 'پرتفوی' ? 'پرتفوی‌ها' : 'دیده‌بان‌ها'} onClose={close}
       actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { setCur(pick); close() }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">تایید</motion.button>}>
-      <Reorder.Group axis="y" values={lists} onReorder={setLists} className="space-y-2">
+      <Reorder.Group axis="y" values={lists} onReorder={setLists} className="select-none space-y-2">
         {lists.map((l) => <ListRow key={l.id} l={l} on={pick === l.id} pick={() => setPick(l.id)} editing={edit === l.id}
           editField={<input autoFocus value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') { e.stopPropagation(); setEdit(null) } }} onBlur={saveEdit} className={field} />}
           onEdit={() => { setEdit(l.id); setName(l.name) }} onDelete={() => setDelId(l.id)} />)}
@@ -375,7 +375,7 @@ function ListRow({ l, on, pick, editing, editField, onEdit, onDelete }) {
   return (
     <Reorder.Item value={l} dragListener={false} dragControls={controls} whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}
       className={`flex items-center gap-2 rounded-xl border px-2 py-2 text-sm transition-colors ${on ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30'}`}>
-      <span onPointerDown={(e) => controls.start(e)} title="برای جابجایی بکشید" className="grid h-8 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted hover:text-ink active:cursor-grabbing">{I.grip}</span>
+      <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} title="برای جابجایی بکشید" className="grid h-8 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted hover:text-ink active:cursor-grabbing">{I.grip}</span>
       {editing ? editField : (
         <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 py-1">
           <input type="radio" checked={on} onChange={pick} className="sr-only" />
