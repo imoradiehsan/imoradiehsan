@@ -100,7 +100,7 @@ button:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px}
 /* amount / sell */
 .price{height:34px;background:rgba(242,188,69,.24);display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:500;color:var(--t2)}
 .price b{color:var(--ink);font-weight:500}
-.dot{width:14px;height:14px;border-radius:50%;background:rgba(27,146,71,.2);display:grid;place-items:center}.dot i{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.6s infinite}
+.dot{width:14px;height:14px;border-radius:50%;position:relative;display:grid;place-items:center}.dot::before{content:'';position:absolute;inset:0;border-radius:50%;background:#1B9247;animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite}@keyframes ping{0%{transform:scale(.55);opacity:.55}80%,100%{transform:scale(1.6);opacity:0}}.dot i{width:8px;height:8px;border-radius:50%;background:#1B9247;position:relative}
 @keyframes pulse{50%{opacity:.35}}
 .band{height:162px;background:linear-gradient(135deg,#1740B8,#1E6BFF 55%,#6A5CFF)}
 .acardw{margin:-82px 17px 0;position:relative;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:64px 16px 18px;text-align:center}
