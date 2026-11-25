@@ -32,11 +32,11 @@ jobs:
       - run: npm run build
       - run: |
           mkdir -p ../site
-          cp -r dist ../site/TGB
+          cp -r dist ../site/tgb
           cp -r ../gold ../site/gold
           cp -r ../bookstore ../site/bookstore
           cp -r ../reader ../site/reader
-          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=TGB/"><link rel="canonical" href="TGB/"><a href="TGB/">TGB</a>' > ../site/index.html
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=tgb/"><link rel="canonical" href="tgb/"><a href="tgb/">tgb</a>' > ../site/index.html
           cp ../site/index.html ../site/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
