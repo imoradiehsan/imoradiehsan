@@ -89,7 +89,7 @@ button:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px}
 .field input::placeholder{color:var(--ph);-webkit-text-fill-color:var(--ph)}
 .help{font-size:12px;margin-top:6px;display:flex;gap:4px;align-items:center}.help.err{color:var(--r)}.help.ok{color:var(--g)}
 /* login */
-.auth{position:absolute;inset:0;background:#FAFAFA url(a/loginbg.png) top/390px 868px no-repeat}
+.auth{position:absolute;inset:0;background:#FAFAFA url(a/loginbg.webp) top/390px 868px no-repeat}
 .acard{position:absolute;left:16px;right:16px;top:203px;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:24px 16px;text-align:center}
 .otp{display:flex;gap:8px;direction:ltr;justify-content:center;margin:24px 0 16px}
 .otp .field{width:59px;padding:0;justify-content:center}.otp input{text-align:center;font-size:20px;font-weight:700}
@@ -594,7 +594,7 @@ function st(paid,day){S=fresh();S.phase=paid>=3?'settled':'active';S.paid=Math.m
 (()=>{const P=document.getElementById('panel'),B=document.getElementById('pback');const set=o=>{P.classList.toggle('open',o);B.classList.toggle('on',o)};document.getElementById('menu').onclick=()=>set(!P.classList.contains('open'));document.getElementById('pclose').onclick=()=>set(false);B.onclick=()=>set(false);document.getElementById('plist').addEventListener('click',e=>{if(innerWidth<=760&&e.target.closest('button,[data-s],.pi'))setTimeout(()=>set(false),150)})})();
 function scale(){const small=innerWidth<=760;const st=document.querySelector('.stage');const avW=small?innerWidth:st.clientWidth-20,avH=small?innerHeight-50:innerHeight-70;document.documentElement.style.setProperty('--s',Math.min(1,avW/390,avH/868))}
 addEventListener('resize',scale);scale();
-if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
+(()=>{const L=[...new Set((document.documentElement.innerHTML.match(/a\/[\w-]+\.webp/g)||[]).concat(Object.keys(window).length?[]:[]))];const pre=()=>{const all=new Set(L);document.querySelectorAll('script').forEach(x=>(x.textContent.match(/IMG\('(\w+)'\)|'(svc\d|ban\d|qa\d|intro\d|ill_\w+)'/g)||[]).forEach(m=>{const n=m.replace(/IMG\('|'\)|'/g,'');all.add('a/'+n+'.webp')}));all.add('a/loginbg.webp');all.forEach(u=>{const i=new Image();i.decoding='async';i.src=u})};(window.requestIdleCallback||setTimeout)(pre)})();if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
 const style=document.createElement('style');style.textContent='@keyframes draw{to{stroke-dashoffset:0}}';document.head.appendChild(style);
 reset('intro',{k:0,anim:'none'});
 </script>
