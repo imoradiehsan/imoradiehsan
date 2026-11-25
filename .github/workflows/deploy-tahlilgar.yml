@@ -30,12 +30,17 @@ jobs:
           cache-dependency-path: tahlilgar/package-lock.json
       - run: npm ci
       - run: npm run build
-      - run: cp dist/index.html dist/404.html
-      - run: cp -r ../gold dist/gold
-      - run: cp -r ../bookstore dist/bookstore && cp -r ../reader dist/reader
+      - run: |
+          mkdir -p ../site
+          cp -r dist ../site/TGB
+          cp -r ../gold ../site/gold
+          cp -r ../bookstore ../site/bookstore
+          cp -r ../reader ../site/reader
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=TGB/"><link rel="canonical" href="TGB/"><a href="TGB/">TGB</a>' > ../site/index.html
+          cp ../site/index.html ../site/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: tahlilgar/dist
+          path: site
 
   deploy:
     needs: build
