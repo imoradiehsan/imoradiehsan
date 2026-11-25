@@ -271,6 +271,7 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .exit-back>.sb,.exit-back>.ab{animation:kXB .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kXB{to{transform:translateX(100%)}}
 .enter-push>.ab>*,.enter-back>.ab>*{animation:abin .3s ease both}@keyframes abin{from{opacity:0}}
 .exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
+.hchev{display:block;margin:0 auto}
 </style>
 </head>
 <body>
@@ -583,7 +584,7 @@ ACT.toastOld=()=>toast('این قرارداد قبلاً تسویه شده اس�
 // home
 SCR.home=()=>`<div class="body" style="background:#fff"><div class="hhead">${sbar('dark')}<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px"><img src="${IMG('logo_w')}" alt="قسطا" style="height:32px"><button class="ib" style="background:rgba(255,255,255,.15);position:relative" data-a="toast" data-m="اعلانی ندارید">${I.bell}<i style="position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#F22323"></i></button></div>
  <div class="wal">${[['کیف پول نقدی','گردش کیف','برداشت وجه'],['کیف پول اعتبار ماهانه','گردش کیف','مدیریت اعتبار'],['کیف پول نقدی','گردش کیف','برداشت وجه اعتبار']].map(w=>`<div class="wc"><div class="wt"><span>${w[0]}</span><span>۴ قسط</span></div><div class="wa num">۱۸٬۰۰۰٬۰۰۰<small>تومان</small></div><div class="wb"><span>${w[1]}</span><span>${w[2]}</span></div></div>`).join('')}</div></div>
- <div class="hsheet"><div class="handle"></div>
+ <div class="hsheet"><svg class="hchev" width="68" height="10" viewBox="0 0 68 10" fill="none"><path d="M2 7.86035L33.7717 2.12712C34.7487 1.95081 35.75 1.95791 36.7244 2.14804L66 7.86035" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke="#E4E4E7"/></svg>
  <button style="display:block;width:100%;margin-top:12px" data-a="goldEntry"><img class="bnr" src="${IMG('ban1')}" alt="خرید اقساطی طلا"></button>
  <div class="svc">${[['svc4','وام‌یاب','جدید'],['svc3','طلا قسطی','بدون چک','goldEntry'],['svc2','استعلام ضامن'],['svc1','وام خودرو','هوشمند'],['svc8','فروشگاه'],['svc7','رشد اعتبار','مشاوره'],['svc6','کیف پول'],['svc5','اعتبار ماهانه']].map(s=>`<button data-a="${s[3]||'toast'}" data-m="این سرویس در پروتوتایپ فعال نیست">${s[2]?`<span class="bdg">${s[2]}</span>`:''}<img src="${IMG(s[0])}" alt="">${s[1]}</button>`).join('')}</div>
  <img class="bnr" src="${IMG('ban4')}" alt=""><div class="qa"><div>خرید شارژ و بسته<br><span>شروع خرید</span><img src="${IMG('qa2')}" alt=""></div><div>پرداخت انواع قبض<br><span>شروع پرداخت</span><img src="${IMG('qa1')}" alt=""></div></div></div></div>
