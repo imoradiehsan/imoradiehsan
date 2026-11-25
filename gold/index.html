@@ -271,7 +271,7 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .exit-back>.sb,.exit-back>.ab{animation:kXB .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kXB{to{transform:translateX(100%)}}
 .enter-push>.ab>*,.enter-back>.ab>*{animation:abin .3s ease both}@keyframes abin{from{opacity:0}}
 .exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
-.hchev{display:block;margin:0 auto}
+.hchev{display:block;margin:-6px auto 0;padding:6px 14px;box-sizing:content-box;cursor:pointer;transition:transform .35s cubic-bezier(.3,1.4,.5,1)}.hchev.down{transform:scaleY(-1)}
 #dev button:focus-visible,#dev [data-a]:focus-visible,#dev input:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px;border-radius:12px}
 </style>
 </head>
@@ -648,7 +648,9 @@ document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return
 });
 new MutationObserver(()=>dev.querySelectorAll('[data-a]:not(button):not(input):not([tabindex])').forEach(x=>x.tabIndex=0)).observe(dev,{childList:true,subtree:true});
 document.addEventListener('focusin',e=>{const f=e.target.closest&&e.target.closest('#dev button,#dev [data-a]');if(f&&!f.hasAttribute('tabindex')&&f.tagName!=='BUTTON')f.tabIndex=0});
-})();if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
+})();(()=>{const sheetTop=b=>{const sh=b.querySelector('.hsheet');return sh?sh.offsetTop-8:0};
+document.addEventListener('click',e=>{const c=e.target.closest('.hchev');if(!c)return;const b=c.closest('.body');if(!b)return;b.scrollTo({top:b.scrollTop>20?0:sheetTop(b),behavior:'smooth'})});
+document.addEventListener('scroll',e=>{const b=e.target;if(!b.querySelector)return;const c=b.querySelector(':scope .hchev');if(c)c.classList.toggle('down',b.scrollTop>20)},true)})();if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
 const style=document.createElement('style');style.textContent='@keyframes draw{to{stroke-dashoffset:0}}';document.head.appendChild(style);
 reset('intro',{k:0,anim:'none'});
 </script>
