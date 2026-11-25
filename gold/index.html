@@ -272,7 +272,7 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .enter-push>.ab>*,.enter-back>.ab>*{animation:abin .3s ease both}@keyframes abin{from{opacity:0}}
 .exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
 .hchev{display:block;margin:-6px auto 0;padding:6px 14px;box-sizing:content-box;cursor:pointer;transition:transform .35s cubic-bezier(.3,1.4,.5,1)}.hchev.down{transform:scaleY(-1)}
-#dev button:focus-visible,#dev [data-a]:focus-visible,#dev input:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px;border-radius:12px}
+#dev input,#dev input:focus,#dev input:focus-visible{outline:none!important}#dev button:focus,#dev [data-a]:focus{outline:none}#dev button:focus-visible,#dev [data-a]:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(30,108,255,.28)}
 </style>
 </head>
 <body>
