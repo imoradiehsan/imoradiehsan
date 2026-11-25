@@ -273,6 +273,12 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
 .hchev{display:block;margin:-6px auto 0;padding:6px 14px;box-sizing:content-box;cursor:pointer;transition:transform .35s cubic-bezier(.3,1.4,.5,1)}.hchev.down{transform:scaleY(-1)}
 #dev input,#dev input:focus,#dev input:focus-visible{outline:none!important}#dev button:focus,#dev [data-a]:focus{outline:none}#dev button:focus-visible,#dev [data-a]:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(30,108,255,.28)}
+.sbtn{position:relative;overflow:visible;transition:transform .15s,background-color .2s,opacity .2s}.sbtn::after{content:'';position:absolute;inset:0;border-radius:50%;background:#1E6CFF;opacity:0;transform:scale(.6)}
+.sbtn.tap{animation:sbpop .32s cubic-bezier(.3,1.6,.5,1)}.sbtn.tap::after{animation:sbring .45s ease-out}
+@keyframes sbpop{40%{transform:scale(.86)}100%{transform:scale(1)}}@keyframes sbring{0%{opacity:.25;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
+.sbtn.lim{opacity:.45}
+#av{display:inline-block}#av.bumpU{animation:bumpU .38s cubic-bezier(.2,.9,.3,1.2)}#av.bumpD{animation:bumpD .38s cubic-bezier(.2,.9,.3,1.2)}#av.nudge{animation:shake .35s}
+@keyframes bumpU{0%{transform:translateY(8px);opacity:.4}100%{transform:none;opacity:1}}@keyframes bumpD{0%{transform:translateY(-8px);opacity:.4}100%{transform:none;opacity:1}}
 </style>
 </head>
 <body>
@@ -392,9 +398,14 @@ SCR.amount=()=>`${sbar()}${abar('خرید طلا')}${priceBar()}<div class="body
   <input class="rng" type="range" id="ar" min="10" max="100" step="10" value="${S.m}" aria-label="مبلغ خرید"><div class="rlab"><span>۱۰ میلیون تومان</span><span>۱۰۰ میلیون تومان</span></div></div>
  <div class="card rows rise" style="animation-delay:.08s"><div class="row"><span class="k">تعداد اقساط</span><span class="v">۳ <span class="u">قسط</span></span></div><div class="row"><span class="k">هزینه خدمات</span><span class="v" id="r1"></span></div><div class="row"><span class="k">قسط اول (امروز)</span><span class="v" id="r2"></span></div><div class="row"><span class="k">مجموع بازپرداخت</span><span class="v" id="r3"></span></div></div><div style="height:16px"></div></div>
  <div class="cta"><button class="btn" data-a="toFee">ادامه</button></div>`;
-BIND.amount=el=>{const r=el.querySelector('#ar');const u=()=>{S.m=+r.value;const p=P();r.style.setProperty('--v',((r.value-10)/90*100)+'%');el.querySelector('#av').innerHTML=money(p.A)+'<small>تومان</small>';el.querySelector('#ag').textContent='وزن تخمینی طلا: '+gr(p.grams)+' گرم';
- el.querySelector('#r1').innerHTML=money(p.op)+' <span class="u">تومان</span>';el.querySelector('#r2').innerHTML=money(p.inst)+' <span class="u">تومان</span>';el.querySelector('#r3').innerHTML=money(p.inst*3)+' <span class="u">تومان</span>'};
- r.oninput=u;u();el.querySelector('#mn').onclick=()=>{r.value=Math.max(10,+r.value-10);u()};el.querySelector('#pl').onclick=()=>{r.value=Math.min(100,+r.value+10);u()}};
+BIND.amount=el=>{const r=el.querySelector('#ar'),av=el.querySelector('#av'),mn=el.querySelector('#mn'),pl=el.querySelector('#pl');let prev=null,raf=0;
+ const paint=(A,op,inst,g)=>{av.innerHTML=money(Math.round(A))+'<small>تومان</small>';el.querySelector('#ag').textContent='وزن تخمینی طلا: '+gr(g)+' گرم';el.querySelector('#r1').innerHTML=money(Math.round(op))+' <span class="u">تومان</span>';el.querySelector('#r2').innerHTML=money(Math.round(inst))+' <span class="u">تومان</span>';el.querySelector('#r3').innerHTML=money(Math.round(inst)*3)+' <span class="u">تومان</span>'};
+ const u=(dir)=>{S.m=+r.value;const p=P();r.style.setProperty('--v',((r.value-10)/90*100)+'%');mn.classList.toggle('lim',S.m<=10);pl.classList.toggle('lim',S.m>=100);
+  const to=[p.A,p.op,p.inst,p.grams];if(!prev){prev=to;paint(...to);return}const from=prev.slice();prev=to;cancelAnimationFrame(raf);
+  if(dir){av.classList.remove('bumpU','bumpD');void av.offsetWidth;av.classList.add(dir>0?'bumpU':'bumpD')}
+  const t0=performance.now(),D=380;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);paint(...from.map((v,x)=>v+(to[x]-v)*e));if(k<1)raf=requestAnimationFrame(f);else paint(...to)};raf=requestAnimationFrame(f)};
+ const tap=b=>{b.classList.remove('tap');void b.offsetWidth;b.classList.add('tap')};
+ r.oninput=()=>u(0);u();mn.onclick=()=>{tap(mn);if(+r.value<=10){av.classList.remove('nudge');void av.offsetWidth;av.classList.add('nudge');return}r.value=+r.value-10;u(-1)};pl.onclick=()=>{tap(pl);if(+r.value>=100){av.classList.remove('nudge');void av.offsetWidth;av.classList.add('nudge');return}r.value=+r.value+10;u(1)}};
 ACT.toFee=()=>go('fee');
 // operation fee
 SCR.fee=()=>`${sbar()}${abar('بررسی و پرداخت')}<div class="body pad"><div class="paycard rise"><div class="in"><img class="ill" src="${IMG('ill_opfee')}" alt=""><div class="h16" style="margin-top:16px">هزینه عملیات خرید طلا</div><div class="d14" style="margin-top:8px">این مبلغ بابت خدمات اجرایی و پردازش درخواست خرید اقساطی طلا دریافت می‌شود.</div></div></div>
