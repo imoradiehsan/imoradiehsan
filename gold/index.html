@@ -334,7 +334,7 @@ const IMG=n=>`a/${n}.webp`;
 const dev=document.getElementById('dev');let stack=[],cur=null,timers=[];
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200)}
 function go(name,o={}){if(cur&&!o.replace)stack.push(cur);show({name,o},o.anim||'push')}
-function back(){closeSheet(true);if(!stack.length)return;show(stack.pop(),'back')}
+const PARENT={intro:null,login:'intro',otp:'login',home:null};function back(){closeSheet(true);if(stack.length)return show(stack.pop(),'back');const n=cur&&cur.name;const par=n in PARENT?PARENT[n]:'home';if(par&&par!==n)show({name:par,o:{}},'back')}
 function reset(name,o={}){stack=[];show({name,o},o.anim||'fade')}
 function show(st,anim){timers.forEach(clearTimeout);timers=[];closeSheet(true);
  const old=[...dev.querySelectorAll('.scr')].find(x=>!x.classList.contains('leaving'));const el=document.createElement('section');el.className='scr';el.innerHTML=SCR[st.name](st.o||{});dev.appendChild(el);
