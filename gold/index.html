@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>قسطا · خرید اقساطی طلا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: desktop = scenario panel + phone stage; phone = full-screen app */
+:root{--bg:#E9EEF7;--fg:#18181B;--muted:#6B7280;--line:#E4E7EC;--panel:#fff;--chip:#EEF4FF;--accent:#1E6CFF;direction:rtl}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1320;--fg:#EDEFF5;--muted:#9AA3B5;--line:#262C3C;--panel:#161B2A;--chip:#1C2740;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1320;--fg:#EDEFF5;--muted:#9AA3B5;--line:#262C3C;--panel:#161B2A;--chip:#1C2740;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:Vazirmatn,Tahoma,sans-serif}
+button,input{font:inherit;color:inherit;border:0;background:none;padding:0;margin:0}
+button{cursor:pointer}
+.shell{display:flex;height:100%;overflow:hidden}
+.panel{width:320px;flex:none;background:var(--panel);border-inline-start:1px solid var(--line);display:flex;flex-direction:column}
+.panel header{padding:16px;border-bottom:1px solid var(--line)}
+.panel h1{margin:0;font-size:16px;font-weight:800}.panel p{margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.8}
+.plist{overflow:auto;flex:1;padding:8px}
+.pg{margin:6px 0 10px}.pg h2{font-size:11px;color:var(--muted);margin:6px 8px;font-weight:700;letter-spacing:.2px}
+.pb{display:block;width:100%;text-align:right;font-size:13px;padding:8px 10px;border-radius:10px}
+.pb:hover{background:var(--chip)}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-width:0;padding:10px}
+.timebar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;min-height:32px}
+.chip{font-size:12px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-weight:700}
+.chip.time{color:#8A5A00;background:#FFF5E0;border-color:#F3DCA5}.chip.hint{color:var(--muted);font-weight:500}
+.phone{width:calc(390px*var(--s));height:calc(868px*var(--s));position:relative;flex:none}
+.device{position:absolute;top:0;right:0;width:390px;height:868px;transform:scale(var(--s));transform-origin:top right;border-radius:44px;overflow:hidden;background:#FAFAFA;box-shadow:0 30px 80px #1b2b5a33,0 0 0 10px #111,0 0 0 11px #333}
+.menu{display:none}
+@media (max-width:760px){.panel{position:fixed;inset:0 auto 0 0;width:min(86vw,330px);z-index:80;transform:translateX(-105%);transition:.3s;box-shadow:0 0 40px #0004}.panel.open{transform:none}
+ .menu{display:inline-flex;position:fixed;top:10px;left:10px;z-index:70;font-size:12px;padding:6px 10px;border-radius:10px;background:var(--chip);color:var(--accent);font-weight:700}.stage{padding:50px 0 0}.device{border-radius:0;box-shadow:none}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+button:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px}
+
+/* ===== app (fixed light, matches Figma) ===== */
+.app{--ink:#18181B;--t2:#535353;--t3:#6E6E6E;--ph:#A1A1A1;--ln:#E8E8E8;--p:#1E6CFF;--pd:#1449AD;--navy:#0F3680;--deep:#0A2557;--g:#1B9247;--o:#FF832B;--r:#F22323;--soft:#F2F6FF;--seg:#E4E4E7;color:var(--ink);font-family:Vazirmatn,Tahoma,sans-serif}
+.scr{position:absolute;inset:0;background:#FAFAFA;display:flex;flex-direction:column;overflow:hidden}
+.sb{height:47px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 34px;font-size:16px;font-weight:500;direction:ltr;background:#fff;z-index:3}
+.sb.dark{background:transparent;color:#fff}.sb.clear{background:transparent}
+.sb .ic{display:flex;gap:6px;align-items:center}
+.ab{height:57px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;background:#fff;border-bottom:1px solid var(--ln);z-index:3}
+.ab .t{font-size:14px;font-weight:500;flex:1}
+.ib{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:#fff}
+.txbtn{height:32px;padding:0 10px;border:1px solid var(--ln);border-radius:8px;display:flex;align-items:center;gap:6px;font-size:14px;background:#fff}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;position:relative}.body::-webkit-scrollbar{display:none}
+.pad{padding:16px}
+.cta{flex:none;height:80px;background:#fff;box-shadow:0 -4px 16px rgba(16,24,40,.06);padding:16px;display:flex;gap:8px;z-index:3}
+.btn{flex:1;height:48px;border-radius:16px;background:var(--p);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s,transform .1s}
+.btn:active{transform:scale(.98)}.btn[disabled]{opacity:.35;pointer-events:none}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.btn.sm{flex:none;height:40px;border-radius:12px;font-size:14px;padding:0 20px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:16px}
+.h16{font-size:16px;font-weight:700;color:var(--ink)}.d14{font-size:14px;color:var(--t2);line-height:24px}
+.c{text-align:center}
+.ill{width:120px;height:120px;display:block;margin:0 auto}
+.strip{background:var(--soft);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--p);display:flex;gap:8px;align-items:center;line-height:22px}
+.strip svg{flex:none}
+.u{font-size:12px;font-weight:500;color:var(--ph)}
+.num{}
+.spin{width:20px;height:20px;border-radius:50%;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;animation:sp 1s linear infinite}
+.spin.b{border-color:#D6E3FF;border-top-color:var(--p)}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* transitions */
+.enter-push{animation:inL .34s cubic-bezier(.2,.8,.2,1) both}.exit-push{animation:outR .34s cubic-bezier(.2,.8,.2,1) both}
+.enter-back{animation:inR .34s cubic-bezier(.2,.8,.2,1) both}.exit-back{animation:outL .34s cubic-bezier(.2,.8,.2,1) both}
+@keyframes inL{from{transform:translateX(-100%)}}@keyframes outR{to{transform:translateX(30%);filter:brightness(.85)}}
+@keyframes inR{from{transform:translateX(30%);filter:brightness(.85)}}@keyframes outL{to{transform:translateX(-100%)}}
+.enter-fade{animation:fin .3s ease both}.exit-fade{animation:fout .3s ease both}
+@keyframes fin{from{opacity:0;transform:scale(.985)}}@keyframes fout{to{opacity:0}}
+.enter-dis{animation:dis .18s linear both}.exit-dis{animation:fout .18s linear both}@keyframes dis{from{opacity:0}}
+.rise{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+/* sheet */
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:40;opacity:0;transition:opacity .25s}.scrim.on{opacity:1}
+.sheet{position:absolute;inset:auto 0 0;background:#fff;border:1px solid var(--ln);border-radius:24px 24px 0 0;padding:16px 16px 16px;z-index:41;transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.8,.2,1)}
+.sheet.on{transform:none}.handle{width:64px;height:4px;border-radius:100px;background:rgba(0,0,0,.2);margin:0 auto 12px}
+.sic{width:56px;height:56px;border-radius:28px;display:grid;place-items:center;margin:4px auto 16px}
+.toast{position:absolute;left:50%;top:64px;transform:translate(-50%,-16px);background:#18181B;color:#fff;font-size:13px;padding:9px 14px;border-radius:12px;opacity:0;transition:.25s;z-index:60;white-space:nowrap;pointer-events:none}.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* inputs */
+.lbl{font-size:16px;font-weight:500;margin:24px 0 8px}.strip+.lbl{margin-top:16px}
+.field{height:48px;border:1px solid var(--ln);border-radius:16px;background:#fff;display:flex;align-items:center;padding:0 16px;gap:8px;transition:border-color .15s}
+.field.focus{border-color:var(--p)}.field.err{border-color:var(--r)}.field.ok{border-color:var(--g);background:#F4FBF6;cursor:not-allowed}.field.ok input{pointer-events:none}.fic{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none;animation:pop .35s both}
+.field input{flex:1;height:100%;outline:0;font-size:16px;color:var(--ink);-webkit-text-fill-color:var(--ink);min-width:0}
+#i_card,#i_nid,#ibi{unicode-bidi:plaintext;text-align:right}
+.field input::placeholder{color:var(--ph);-webkit-text-fill-color:var(--ph)}
+.help{font-size:12px;margin-top:6px;display:flex;gap:4px;align-items:center}.help.err{color:var(--r)}.help.ok{color:var(--g)}
+/* login */
+.auth{position:absolute;inset:0;background:#FAFAFA url(a/loginbg.png) top/390px 868px no-repeat}
+.acard{position:absolute;left:16px;right:16px;top:203px;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:24px 16px;text-align:center}
+.otp{display:flex;gap:8px;direction:ltr;justify-content:center;margin:24px 0 16px}
+.otp .field{width:59px;padding:0;justify-content:center}.otp input{text-align:center;font-size:20px;font-weight:700}
+.otp.err .field{border-color:var(--r);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.divt{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--t2);margin:24px -16px 16px}.divt i{flex:1;height:1px;background:var(--ln)}
+.rbtn{flex:1;height:40px;border-radius:12px;background:#F3F3F3;font-size:14px;display:flex;align-items:center;justify-content:center;gap:8px}.rbtn[disabled]{opacity:.45}
+/* amount / sell */
+.price{height:34px;background:rgba(242,188,69,.24);display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:500;color:var(--t2)}
+.price b{color:var(--ink);font-weight:500}
+.dot{width:14px;height:14px;border-radius:50%;background:rgba(27,146,71,.2);display:grid;place-items:center}.dot i{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.band{height:162px;background:linear-gradient(135deg,#1740B8,#1E6BFF 55%,#6A5CFF)}
+.acardw{margin:-82px 17px 0;position:relative;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:64px 16px 18px;text-align:center}
+.acardw .ill{position:absolute;top:-64px;left:50%;transform:translateX(-50%);animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translate(-50%,-5px)}}
+.stepper{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.sbtn{width:40px;height:40px;border-radius:50%;background:var(--soft);display:grid;place-items:center}
+.big{font-size:24px;font-weight:700;color:var(--p)}.big small{font-size:14px;font-weight:700;margin-inline-start:4px}
+.rng{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;direction:ltr;margin:26px 0 8px;cursor:pointer}
+.rng::-webkit-slider-runnable-track{height:20px;border-radius:16px;background:linear-gradient(to right,var(--p) var(--v,50%),#F4F4F5 var(--v,50%))}
+.rng::-moz-range-track{height:20px;border-radius:16px;background:linear-gradient(to right,var(--p) var(--v,50%),#F4F4F5 var(--v,50%))}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:40px;height:24px;border-radius:56px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10'%3E%3Crect x='2' width='2' height='10' rx='1' fill='%231E6CFF'/%3E%3Crect x='8' width='2' height='10' rx='1' fill='%231E6CFF'/%3E%3Crect x='14' width='2' height='10' rx='1' fill='%231E6CFF'/%3E%3C/svg%3E") center no-repeat;border:2px solid var(--p);margin-top:-2px;box-shadow:0 2px 6px rgba(30,108,255,.25)}
+.rng::-moz-range-thumb{width:36px;height:20px;border-radius:56px;background:#fff;border:2px solid var(--p)}
+.rlab{display:flex;justify-content:space-between;font-size:12px;font-weight:500;color:#8A8A8A;direction:ltr}
+.rows{margin:12px 17px 0;padding:6px 16px}
+.row{display:flex;justify-content:space-between;align-items:center;min-height:36px;font-size:14px}
+.row .k{color:var(--t3)}.row .v{font-weight:500;display:flex;gap:4px;align-items:baseline}
+/* ticket */
+.ticket{position:relative;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:16px;margin-top:12px}
+.ticket .tr{display:flex;justify-content:space-between;align-items:center;min-height:32px;font-size:14px}
+.ticket .tr .k{color:var(--t2)}.ticket .tr .v{font-weight:500;display:flex;gap:4px}
+.ticket .cut{position:relative;border-top:1px dashed var(--ln);margin:10px -8px}
+.ticket .cut:before,.ticket .cut:after{content:"";position:absolute;top:-8px;width:14px;height:14px;border-radius:50%;background:#FAFAFA;border:1px solid var(--ln)}
+.ticket .cut:before{right:-16px;clip-path:inset(0 50% 0 0)}.ticket .cut:after{left:-16px;clip-path:inset(0 0 0 50%)}
+.ticket .tot{color:var(--pd);font-weight:700}
+.ticket .tr.pen .k,.ticket .tr.pen .v{color:var(--r)}
+.paycard{background:var(--soft);border:1px solid var(--ln);border-radius:16px;overflow:hidden}
+.paycard .in{background:#fff;padding:16px 16px 18px;text-align:center}
+.paycard .ft{padding:12px;font-size:12px;color:var(--t2);text-align:center}.paycard .ft a{color:var(--p)}
+.note{font-size:11px;color:#8C99AD;line-height:20px;margin:14px 12px 0;text-align:right}
+/* receipt */
+.rcpt{margin:16px 16px 0;padding:16px 16px 12px;border-radius:12px}
+.ring{width:108px;height:108px;border-radius:50%;margin:0 auto;display:grid;place-items:center;border:1px solid}
+.ring>div{width:90px;height:90px;border-radius:50%;display:grid;place-items:center;border:1px solid}
+.ring>div>div{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;color:#fff}
+.pop{animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}@keyframes pop{from{transform:scale(.4);opacity:0}}
+.rcpt .tr{display:flex;justify-content:space-between;align-items:center;height:44px;font-size:14px}
+.rcpt .tr .k{color:var(--t2)}.rcpt .tr .v{font-weight:500;display:flex;gap:4px}
+.after{font-size:14px;color:var(--t2);text-align:center;margin:16px}
+/* summary header */
+.hwrap{position:relative}.hbg{position:absolute;top:0;left:0;right:0;border-radius:0 0 24px 24px;background:linear-gradient(135deg,#1740B8,#1E6BFF 55%,#6A5CFF);overflow:hidden}.hbg.green{background:linear-gradient(135deg,#064A31,#0C784F 55%,#2FAE77)}.hbg:before{content:"";position:absolute;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,rgba(0,0,0,.18),transparent 60%);left:-394px;top:-476px}
+.sum{position:relative;padding:16px 16px 0;color:#fff}
+.sum>*{position:relative}
+.cchip{position:absolute;left:16px;top:16px;height:26px;padding:0 8px;border-radius:24px;background:rgba(255,255,255,.1);font-size:12px;font-weight:500;display:flex;gap:4px;align-items:center;color:#fff;z-index:2}
+.sum .ill{animation:float2 4s ease-in-out infinite}@keyframes float2{50%{transform:translateY(-5px)}}
+.st1{font-size:14px;font-weight:500;text-align:center;margin-top:4px}
+.st2{font-size:24px;font-weight:700;text-align:center;display:flex;justify-content:center;gap:4px;align-items:baseline}.st2 small{font-size:14px;font-weight:500;color:#E0EAFF}
+.gch{margin:4px auto 0;width:fit-content;height:30px;padding:0 12px;border-radius:24px;background:rgba(255,255,255,.1);display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500}
+.prog{margin:12px 0 0;background:rgba(0,0,0,.1);border-radius:16px;padding:16px}
+.prog .pt{font-size:12px;text-align:center}
+.segs{display:flex;gap:7px;margin:8px 0 16px;direction:rtl}.segs i{flex:1;height:4px;border-radius:24px;background:rgba(255,255,255,.4)}.segs i.on{background:#7CFF16;animation:grow .6s ease-out both}
+@keyframes grow{from{transform:scaleX(0);transform-origin:right}}
+.pcols{display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:12px}.pcols>div+div{border-right:1px solid rgba(255,255,255,.2)}
+.pcols b{display:flex;justify-content:center;gap:4px;font-weight:500;margin-top:6px;align-items:baseline}.pcols b small{font-size:11px;color:#93B8FF;font-weight:400}
+.lift{position:relative;margin-top:-1px;padding:12px 16px 24px;background:linear-gradient(#0000 0,#0000 0) }
+.bn{border-radius:16px;overflow:hidden;background:linear-gradient(180deg,#F9FBFE,#D5EAFE);margin-top:12px}
+.bn .bh{padding:12px 16px;color:#fff;font-size:14px;font-weight:500;text-align:center;line-height:20px}
+.bn .bb{display:flex;align-items:center;justify-content:space-between;padding:16px}
+.bn .bb .k{font-size:13px;color:var(--t2)}.bn .bb .v{font-size:16px;font-weight:700;color:var(--navy);display:flex;gap:4px;align-items:baseline;margin-top:4px}.bn .bb .v small{font-size:12px;font-weight:400;color:var(--t2)}
+.sched{padding:16px 17px;margin-top:16px}
+.seg{display:flex;background:var(--seg);border-radius:12px;padding:4px;gap:0;margin:16px 0 8px}
+.seg button{flex:1;height:24px;border-radius:8px;font-size:12px;color:var(--t2);transition:background .2s,color .2s}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.it{display:flex;align-items:flex-start;gap:10px;padding:10px 0 6px;position:relative;cursor:default}
+.it .si{width:20px;height:20px;flex:none;margin-top:2px;display:grid;place-items:center;z-index:1}
+.it .line{position:absolute;right:9.5px;top:34px;bottom:-12px;width:1px;background:var(--seg)}
+.it .dt{font-size:14px;font-weight:700;color:var(--pd)}.it .am{font-size:14px;font-weight:500;color:var(--deep);display:flex;gap:4px;align-items:baseline;margin-top:6px}.it .am small{font-size:12px;font-weight:400}
+.it .bd{margin-inline-start:auto;height:30px;padding:0 10px;border-radius:100px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.bd.blue{background:rgba(30,108,255,.2);color:var(--p)}.bd.gray{background:var(--seg);color:var(--t2)}.bd.green{background:rgba(27,146,71,.2);color:var(--g)}
+.bd.red{background:rgba(242,35,35,.12);color:var(--r)}.bd.orange{background:rgba(255,131,43,.15);color:#D9651A}.bd.gold{background:rgba(183,122,8,.1);color:#B77A08}
+.it.exp{cursor:pointer}.it .chev{transition:transform .2s}.it.open .chev{transform:rotate(180deg)}
+.xd{margin:2px 30px 8px 0;background:#F4F4F5;border-radius:12px 0 0 12px;padding:8px 14px;font-size:14px;display:none}
+.it.open+.xd{display:block;animation:rise .25s both}
+.xd div{display:flex;gap:6px;align-items:center;min-height:30px;color:var(--t2)}.xd i{font-style:normal;width:10px;text-align:center}.xd b{font-weight:400}.xd .rd{color:#F22323}.xd .gd{color:#B77A08}
+.empty{text-align:center;padding:8px 0 4px}.empty img{width:100px;height:100px}
+.chart{padding:16px 17px;margin-top:16px}
+.chb{width:32px;height:32px;border-radius:10px;background:var(--soft);display:grid;place-items:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:#F4F4F5;border-radius:12px;padding:12px 6px;margin-top:12px;text-align:center}
+.stats span{font-size:12px;color:var(--t2)}.stats b{display:block;font-size:14px;color:var(--pd);margin-top:4px}
+/* my gold */
+.optc{padding:16px 17px;margin-top:16px;text-align:center}
+.halo{width:300px;height:220px;border-radius:50%;background:radial-gradient(closest-side,rgba(250,211,103,.75),rgba(250,211,103,0));margin:-40px auto -180px;pointer-events:none}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 0;text-align:right;width:100%}
+.opt+.opt{border-top:1px solid #F1F1F3}
+.oic{width:40px;height:40px;border-radius:8px;background:var(--soft);display:grid;place-items:center;flex:none;color:var(--p)}
+.opt .ot{font-size:14px;font-weight:500;color:var(--navy)}.opt .os{font-size:12px;color:var(--t2);margin-top:4px}
+.dis{margin-inline-start:auto;height:26px;padding:0 8px;border-radius:100px;background:rgba(83,83,83,.1);color:var(--ph);font-size:12px;font-weight:500;display:flex;align-items:center}
+.opt.off .ot,.opt.off .os,.opt.off .oic{opacity:.55}
+/* account */
+.acc{padding:16px;margin-top:12px}
+.iban{font-size:14px;font-weight:500;color:var(--navy);direction:ltr;text-align:right}
+.blogo{width:40px;height:40px;border:1px solid var(--ln);border-radius:8px;display:grid;place-items:center;background:#fff;flex:none}.blogo img{width:28px;height:28px}
+.acrow{display:flex;gap:12px;align-items:center;justify-content:flex-end;width:100%;text-align:right}
+.accsel{border:1px solid var(--ln);border-radius:14px;padding:14px;margin-top:8px;display:flex;align-items:center;gap:12px;width:100%;transition:.15s}
+.accsel.on{background:var(--soft);border-color:var(--p)}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid #C9CDD4;flex:none;display:grid;place-items:center}.accsel.on .radio{border-color:var(--p)}.accsel.on .radio:after{content:"";width:10px;height:10px;border-radius:50%;background:var(--p)}
+/* tx */
+.mh{font-size:14px;font-weight:700;color:var(--t2);margin:16px 4px 8px}
+.txm{background:#fff;border-radius:16px;padding:0 20px;margin-bottom:4px}.tx{padding:16px 0}.tx+.tx{border-top:1px solid #F3F3F3}
+.tx .top{display:flex;align-items:center;gap:12px;cursor:pointer}
+.txi{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none;background:rgba(30,108,255,.2)}
+.tx .tt{font-size:12px;font-weight:500}.tx .td{font-size:12px;color:#535353;margin-top:6px}
+.tx .ta{text-align:left;display:flex;flex-direction:column;align-items:flex-end;gap:4px}.tx .ta b{font-size:14px;font-weight:600;display:flex;gap:4px;align-items:baseline;direction:ltr}.tx .ta b small{font-size:11px;color:#A1A1A1;font-weight:400}.tch{display:grid;transition:transform .2s}.tx.open .tch{transform:rotate(180deg)}.tst{height:20px;border-radius:6px;padding:0 8px;font-size:11px;font-weight:500;display:flex;align-items:center}
+.tx .det{display:none;background:#FAFAFA;border-radius:12px;margin-top:16px;padding:6px 12px}.tx.open .det{display:block;animation:rise .25s both}
+.tx .det div{display:flex;justify-content:space-between;font-size:12px;min-height:26px;align-items:center}.tx .det span{color:#535353}.tx .det b{font-weight:500}
+/* purchases */
+.ctc{padding:16px;margin-bottom:12px}
+.gauge{width:84px;height:62px;position:relative;flex:none}
+.gauge b{position:absolute;bottom:-2px;left:0;right:0;text-align:center;font-size:12px;font-weight:700;line-height:14px}.gauge b small{display:block;font-size:10px;color:#A1A1A1;font-weight:400}
+.cft{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-top:12px;padding-top:12px;border-top:1px solid #F1F1F3;color:var(--t2)}.cft b{color:var(--ink);font-weight:500}
+/* home */
+.hhead{background:linear-gradient(160deg,#1740B8,#1E6BFF 60%,#6A5CFF);color:#fff;padding:0 0 60px;position:relative}
+.wal{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 41px 0;scrollbar-width:none}.wal::-webkit-scrollbar{display:none}
+.wc{flex:none;width:308px;height:160px;border-radius:24px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);scroll-snap-align:center;padding:16px;display:flex;flex-direction:column}
+.wc .wt{display:flex;justify-content:space-between;font-size:14px;font-weight:500}.wc .wa{font-size:28px;font-weight:800;text-align:center;margin:auto 0;display:flex;justify-content:center;gap:6px;align-items:baseline}.wc .wa small{font-size:13px;font-weight:400}
+.wc .wb{display:flex;justify-content:space-between}.wc .wb span{background:rgba(255,255,255,.15);border-radius:10px;padding:6px 12px;font-size:13px}
+.hsheet{background:#fff;border-radius:24px 24px 0 0;margin-top:-40px;position:relative;padding:12px 16px 16px}
+.svc{display:grid;grid-template-columns:repeat(4,1fr);gap:16px 8px;margin:20px 0}
+.svc button{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:12px;position:relative}
+.svc img{width:62px;height:62px;border-radius:16px;background:var(--soft)}
+.svc .bdg{position:absolute;top:-8px;background:var(--p);color:#fff;font-size:10px;border-radius:8px;padding:1px 7px}
+.bnr{width:100%;border-radius:16px;display:block}
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.qa div{background:#F2F6FF;border-radius:16px;padding:12px;font-size:14px;font-weight:700;min-height:80px;position:relative;overflow:hidden}.qa img{position:absolute;bottom:0;left:0;width:71px}
+.qa span{display:inline-block;margin-top:8px;font-size:12px;font-weight:500;background:var(--p);color:#fff;border-radius:8px;padding:2px 8px}
+.nav{flex:none;height:94px;background:#fff;border-top:1px solid var(--ln);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 16px 24px}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:#8A8A8A}.nav .on{color:var(--p);font-weight:700}
+.nav .on .nb{background:var(--p);color:#fff;border-radius:12px;width:36px;height:32px;display:grid;place-items:center}
+.notice{border-radius:16px;padding:14px;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#FFF6E0,#FBDD96);border:1px solid #E8C066;margin-top:12px}
+.notice.done{background:linear-gradient(90deg,#EBF9F0,#CDEFD9);border-color:#9AD9B0}
+/* contract */
+.crow{padding:12px 0}.crow+.crow{border-top:1px solid var(--ln)}.crow b{font-size:14px;font-weight:500;display:block}.crow p{margin:6px 0 0;font-size:13px;color:var(--t2);line-height:22px}
+/* processing */
+.pring{width:164px;height:164px;margin:0 auto;position:relative}.pring svg{transform:rotate(-90deg)}
+.pring .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.steps{margin-top:16px;padding:4px 16px}
+.step{display:flex;align-items:center;gap:12px;padding:12px 0}.step+.step{border-top:1px solid #F1F1F3}
+.step .s{width:24px;height:24px;flex:none;display:grid;place-items:center}
+.step .tt{font-size:14px;font-weight:500;color:var(--navy)}.step .sd{font-size:12px;color:var(--t2);margin-top:4px}
+.confetti i{position:absolute;animation:cf 1.2s cubic-bezier(.2,.7,.3,1) both}@keyframes cf{from{transform:translateY(-40px) rotate(0);opacity:0}}
+/* wheel */
+.wheels{position:relative;display:grid;grid-template-columns:1fr 1.4fr 1fr;height:200px;margin:8px 0 16px;direction:rtl}
+.wheels:before{content:"";position:absolute;left:0;right:0;top:84px;height:32px;background:#E8E8E8;border-radius:8px}
+.wheels:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#fff,#fff0 30%,#fff0 70%,#fff);z-index:2}
+.wheel{position:relative;z-index:1;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;padding:80px 0}.wheel::-webkit-scrollbar{display:none}
+.wheel div{height:40px;display:grid;place-items:center;scroll-snap-align:center;font-size:16px;color:var(--ph)}.wheel div.sel{color:var(--ink);font-weight:500}
+.gw{position:absolute;inset:0;background:#FAFAFA}.gw img{position:absolute;top:47px;left:0;width:390px;height:795px}
+.gwbtn{position:absolute;left:32px;top:646px;width:325px;height:48px;border-radius:13px;background:#00C290;color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:4px}
+.gwx{position:absolute;left:120px;top:700px;width:150px;height:40px}
+</style>
+</head>
+<body>
+
+<div class="shell">
+ <aside class="panel" id="panel">
+  <header><h1>قسطا · خرید اقساطی طلا</h1><p>پروتوتایپ کامل و کلیک‌خور. از هر سناریو شروع کنید؛ دکمه‌های زرد بالای گوشی زمان را جلو می‌برند.</p></header>
+  <div class="plist" id="plist"></div>
+ </aside>
+ <main class="stage">
+  <button class="menu" id="menu">☰ سناریوها</button>
+  <div class="timebar" id="timebar"></div>
+  <div class="phone"><div class="device app" id="dev"><div class="toast" id="toast"></div></div></div>
+ </main>
+</div>
+
+<script>
+document.documentElement.lang='fa';document.documentElement.dir='rtl';
+/* ---------- numbers ---------- */
+const FA='۰۱۲۳۴۵۶۷۸۹',fa=s=>String(s).replace(/\d/g,d=>FA[d]),en=s=>String(s).replace(/[۰-۹]/g,d=>FA.indexOf(d)).replace(/\D/g,'');
+const money=n=>fa(Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'٬'));
+const gr=g=>fa((Math.round(g*1000)/1000).toFixed(3)).replace('.','٫');
+const PRICE=24956462,TIER={10:2.95,20:2.85,30:2.75,40:2.65,50:2.45,60:2.35,70:2.25,80:2.15,90:2.05,100:1.95};
+const DATES=['۲۶ آذر ۱۴۰۵','۱ دی ۱۴۰۵','۱ بهمن ۱۴۰۵'],ORD=['اول','دوم','سوم'],MON=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+function plan(m){const A=m*1e6,o=TIER[m],g=100*.005/1.005,r=Math.max(0,5-g-o),op=Math.round(A*o/100),extra=A*r/100;const inst=Math.floor((Math.round(A*1.06+op+extra)-op)/3);return {A,op,inst,grams:A/PRICE,pday:inst*.003}}
+const pen=d=>Math.round(P().pday*d);
+let S;const P=()=>plan(S.m);
+function fresh(){return {m:60,phase:'none',paid:0,day:'normal',review:'ok',fix:null,form:{nid:'',bd:null,card:''},inst:[{s:'unpaid'},{s:'unpaid'},{s:'unpaid'}],sold:0,collat:0,accounts:[{id:1,bank:'بانک شهر',logo:'bank_shahr',iban:'IR۶۱  ۰۶۱۰  ****  ****  ****  ۷۱۴۵'},{id:2,bank:'بانک ملت',logo:'bank_mellat',iban:'IR۴۵  ۰۱۲۰  ****  ****  ****  ۲۲۹۱'}],acc:1,sellG:0,notice:null,hist:[],phone:'09123456789'}}
+S=fresh();
+const gold=()=>P().grams-S.sold-S.collat;
+const paidSum=()=>S.inst.reduce((a,x,i)=>a+(x.s==='unpaid'?0:P().inst+(x.pen||0)),0)+0;
+const remaining=()=>S.inst.reduce((a,x)=>a+(x.s==='unpaid'?P().inst:0),0)+(S.day==='penalty'?pen(8):0);
+/* ---------- icons ---------- */
+const sv=(p,w=20,sw=1.6,c='currentColor',f='none')=>`<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="${f}" stroke="${c}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const I={back:sv('<path d="M9 5l7 7-7 7"/>',22,2,'#18181B'),head:sv('<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M20 20c0 1-1.5 2-4 2h-2"/>',20,1.5,'#323232'),
+ rcpt:sv('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',18,1.5),doc:sv('<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',14,1.6,'#fff'),
+ info:sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',18,1.7),check:sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',30,2.6,'#fff'),x:sv('<path d="M7 7l10 10M17 7L7 17"/>',30,2.6,'#fff'),bang:sv('<path d="M12 6v8M12 18h.01"/>',30,2.8,'#fff'),
+ edit:sv('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',16,1.8,'#1E6CFF'),cal:sv('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16M9 14l2 2 4-4"/>',40,1.4,'#1E6CFF'),
+ chart:sv('<path d="M4 20l3-8 4 4 4-9 5 13z"/>',18,0,'#1E6CFF','#1E6CFF'),left:sv('<path d="M15 6l-6 6 6 6"/>',18,1.8,'#18181B'),down:sv('<path d="M6 9l6 6 6-6"/>',16,1.8,'#535353'),
+ phone:sv('<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 13l1.5 1.5L14 12"/>',20,1.6,'#1E6CFF'),idc:sv('<circle cx="12" cy="9" r="3"/><path d="M6 19c1-3 4-4 6-4s5 1 6 4"/><circle cx="12" cy="12" r="9"/>',20,1.5,'#1E6CFF'),
+ card:sv('<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/>',20,1.6,'#1E6CFF'),sell:sv('<path d="M4 18h16"/><path d="M6 14l3-6 3 3 3-5 3 8"/>',22,1.7),truck:sv('<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>',22,1.6),
+ loan:sv('<rect x="3" y="7" width="18" height="12" rx="2"/><path d="M3 11h18M7 15h3M8 7V5h8v2"/>',22,1.6),bale:'<span style="width:20px;height:20px;border-radius:6px;background:#0ACA9B;display:grid;place-items:center">'+sv('<path d="M5 12l4 4 10-9"/>',12,3,'#fff')+'</span>',
+ msg:sv('<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10.5h.01M12 10.5h.01M16 10.5h.01"/>',18,1.6,'#18181B'),bell:sv('<path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"/>',20,1.6,'#fff'),
+ plus:sv('<path d="M12 5v14M5 12h14"/>',18,1.6,'#18181B'),minus:sv('<path d="M5 12h14"/>',18,1.6,'#18181B'),shield:sv('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',20,1.6,'#fff'),
+ gold:sv('<path d="M3 18l3-7h6l3 7zM10 11l2-5h6l3 5"/>',14,0,'#F2BC45','#F2BC45')};
+const sbar=(cls='')=>`<div class="sb ${cls}"><span>9:41</span><span class="ic">${sv('<path d="M2 9a15 15 0 0120 0M5.5 12.5a10 10 0 0113 0M9 16a5 5 0 016 0"/><circle cx="12" cy="19" r="1"/>',18,2,'currentColor')}<span style="width:26px;height:13px;border:1.5px solid currentColor;border-radius:4px;position:relative;display:inline-block"><i style="position:absolute;inset:2px;width:70%;background:currentColor;border-radius:1px"></i></span></span></div>`;
+const abar=(t,left='head',back=true)=>`<div class="ab">${back?`<button class="ib" data-a="back" aria-label="بازگشت">${I.back}</button>`:''}<div class="t">${t}</div>${left==='head'?`<button class="ib" data-a="toast" data-m="پشتیبانی در نسخهٔ نهایی فعال می‌شود" aria-label="پشتیبانی">${I.head}</button>`:left==='tx'?`<button class="txbtn" data-go="tx">${I.rcpt}تراکنش‌ها</button>`:''}</div>`;
+const IMG=n=>`a/${n}.webp`;
+/* ---------- router ---------- */
+const dev=document.getElementById('dev');let stack=[],cur=null,timers=[];
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2200)}
+function go(name,o={}){if(cur&&!o.replace)stack.push(cur);show({name,o},o.anim||'push')}
+function back(){closeSheet(true);if(!stack.length)return;show(stack.pop(),'back')}
+function reset(name,o={}){stack=[];show({name,o},o.anim||'fade')}
+function show(st,anim){timers.forEach(clearTimeout);timers=[];closeSheet(true);
+ const old=[...dev.querySelectorAll('.scr')].find(x=>!x.classList.contains('leaving'));const el=document.createElement('section');el.className='scr';el.innerHTML=SCR[st.name](st.o||{});dev.appendChild(el);
+ if(old){old.classList.add('leaving');const m={push:['enter-push','exit-push'],back:['enter-back','exit-back'],fade:['enter-fade','exit-fade'],dis:['enter-dis','exit-dis'],none:['','']}[anim]||['enter-fade','exit-fade'];if(m[0])el.classList.add(m[0]);if(m[1])old.classList.add(m[1]);setTimeout(()=>old.remove(),anim==='none'?0:360)}
+ cur=st;bind(el,st);renderTime()}
+const later=(fn,ms)=>timers.push(setTimeout(fn,ms));
+function bind(el,st){el.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const a=b.dataset.a;if(a==='back')back();else if(a==='toast')toast(b.dataset.m);else ACT[a]&&ACT[a](b,el)}));
+ el.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();go(b.dataset.go,b.dataset.n?{n:+b.dataset.n}:{})}));
+ BIND[st.name]&&BIND[st.name](el,st.o||{})}
+/* ---------- sheet ---------- */
+function openSheet(html,onBind){closeSheet(true);const c=document.createElement('div');c.className='scrim';const s=document.createElement('div');s.className='sheet';s.innerHTML='<div class="handle"></div>'+html;dev.appendChild(c);dev.appendChild(s);requestAnimationFrame(()=>{c.classList.add('on');s.classList.add('on')});c.onclick=()=>closeSheet();onBind&&onBind(s);return s}
+function closeSheet(now){const s=dev.querySelector('.sheet'),c=dev.querySelector('.scrim');if(!s)return;if(now){s.remove();c.remove();return}s.classList.remove('on');c.classList.remove('on');setTimeout(()=>{s.remove();c.remove()},380)}
+/* ---------- shared blocks ---------- */
+const ticket=rows=>`<div class="ticket"><div class="h16" style="margin-bottom:8px">جزئیات پرداخت</div>${rows.filter(r=>r[0]!=='TOTAL').map(r=>`<div class="tr ${r[2]||''}"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('')}<div class="cut"></div>${rows.filter(r=>r[0]==='TOTAL').map(r=>`<div class="tr tot"><span>مبلغ قابل پرداخت</span><span style="display:flex;gap:4px">${money(r[1])} <span>تومان</span></span></div>`).join('')}</div>`;
+const tm=v=>`${money(v)} <span class="u" style="color:#18181B;font-weight:500;font-size:14px">تومان</span>`;
+function receipt(o){const col={ok:'#1B9247',fail:'#F22323'}[o.kind];return `${sbar()}<div class="body"><div class="card rcpt rise">
+ <div class="ring pop" style="border-color:${col}33"><div style="border-color:${col}66"><div style="background:${col}">${o.kind==='ok'?I.check:I.x}</div></div></div>
+ <div class="h16 c" style="margin-top:16px">${o.title}</div><div class="d14 c" style="margin-top:8px">${o.sub}</div>
+ <div style="margin-top:12px">${o.rows.map(r=>`<div class="tr"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('')}</div></div>
+ ${o.foot?`<div class="after" ${o.kind==='fail'?'style="color:#FF832B;font-weight:500"':''} id="foot">${o.foot}</div>`:''}</div>
+ <div class="cta">${o.kind==='ok'?`<button class="btn" data-a="${o.next}">${o.cta||'بازگشت به برنامه'}</button>`:`<button class="btn" data-a="${o.retry}">تلاش دوباره</button><button class="btn ghost" data-a="${o.backTo||'back'}">بازگشت</button>`}</div>`}
+const R_DATE=['۱۴۰۵/۰۹/۲۶','۱۴۰۵/۱۰/۰۱','۱۴۰۵/۱۱/۰۱'];
+/* ---------- screens ---------- */
+const SCR={},BIND={},ACT={};
+// intro
+const INTRO=[['intro1','امروز طلا بخر، از فردا سود ببر!','تا ۱۰۰ میلیون تومان طلا با قیمت روز بخر و از رشد احتمالی قیمتش بهره‌مند شو.'],['intro2','بدون چک و ضامن، سه‌قسطه بخر!','قسط اول رو موقع خرید پرداخت کن و دو قسط بعدی رو در ماه‌های آینده بده.'],['intro3','طلا به نام تو، با خیال راحت!','طلا به نامت ثبت می‌شه و تا تسویه نگهداری می‌شه؛ بعدش تحویل یا بفروش.']];
+SCR.intro=o=>{const k=o.k||0,s=INTRO[k];return `${sbar()}${abar('خرید قسطی طلا','head')}<div class="body" style="background:#0A2B8F">
+ <img src="${IMG(s[0])}" alt="" style="position:absolute;inset:0;width:390px;height:764px;object-fit:cover" class="enter-dis">
+ <div style="position:absolute;top:24px;left:16px;right:16px;display:flex;gap:8px;direction:rtl">${[0,1,2].map(i=>`<i style="flex:1;height:4px;border-radius:40px;background:${i<=k?'#F2F6FF':'rgba(255,255,255,.3)'}"></i>`).join('')}</div>
+ <div style="position:absolute;top:457px;left:25px;right:24px;text-align:center;color:#fff" class="rise"><div style="font-size:24px;font-weight:700;line-height:34px">${s[1]}</div><div style="font-size:16px;color:#E0EAFF;line-height:28px;margin-top:8px">${s[2]}</div></div>
+ <button class="btn" style="position:absolute;left:16px;right:16px;top:692px;height:48px" data-a="introNext">${k<2?'بعدی':'ادامه'}</button></div>`};
+ACT.introNext=()=>{const k=(cur.o.k||0);if(k<2)go('intro',{k:k+1,anim:'dis',replace:true});else go('login')};
+// login
+SCR.login=()=>`<div class="auth"></div>${sbar('clear')}<div class="body"><div class="acard rise"><div class="h16">خوش آمدید</div><div class="d14" style="margin-top:8px">شماره موبایلی را که به نام خودتان است وارد کنید.</div>
+ <div class="field" id="pf" style="margin-top:16px"><input id="ph" inputmode="numeric" maxlength="11" placeholder="شماره موبایل" autocomplete="off"></div>
+ <button class="btn" id="pgo" style="width:100%;margin-top:16px" disabled>ادامه</button>
+ <div style="font-size:14px;margin-top:16px;line-height:24px">با ورود، <a style="color:#1E6CFF">شرایط</a> و <a style="color:#1E6CFF">حریم خصوصی</a> را می‌پذیرید.</div></div></div>`;
+BIND.login=el=>{const i=el.querySelector('#ph'),f=el.querySelector('#pf'),g=el.querySelector('#pgo');i.onfocus=()=>f.classList.add('focus');i.onblur=()=>f.classList.remove('focus');
+ i.oninput=()=>{i.value=fa(en(i.value).slice(0,11));g.disabled=!/^09\d{9}$/.test(en(i.value))};
+ g.onclick=()=>{S.phone=en(i.value);g.innerHTML='<span class="spin"></span>';later(()=>go('otp',{anim:'dis'}),900)};later(()=>i.focus({preventScroll:true}),400)};
+// otp
+SCR.otp=o=>`<div class="auth"></div>${sbar('clear')}<div class="body"><div class="acard rise" style="padding-bottom:16px">
+ <button data-a="back" style="display:flex;gap:6px;align-items:center;margin:0 auto;color:#1E6CFF;font-size:16px;font-weight:700;direction:ltr">${fa(S.phone)} ${I.edit}</button>
+ <div class="d14" style="margin-top:8px" id="osub">کد ۵ رقمی پیامک‌شده به این شماره را وارد کنید.</div>
+ <div class="otp" id="ob">${[0,1,2,3,4].map(i=>`<div class="field"><input inputmode="numeric" maxlength="1" placeholder="-" aria-label="رقم ${i+1}"></div>`).join('')}</div>
+ <button class="btn" id="ogo" style="width:100%" disabled>تأیید</button>
+ <div class="divt"><i></i><span id="otm">دریافت مجدد کد تا ۰۱:۵۹</span><i></i></div>
+ <div style="display:flex;gap:8px"><button class="rbtn" id="rb" disabled>${I.bale} ارسال به بله</button><button class="rbtn" id="rs" disabled>${I.msg} ارسال پیامک</button></div></div></div>`;
+BIND.otp=el=>{const ins=[...el.querySelectorAll('#ob input')],g=el.querySelector('#ogo'),box=el.querySelector('#ob');
+ const code=()=>ins.map(x=>en(x.value)).join('');
+ ins.forEach((inp,k)=>{const f=inp.parentNode;inp.onfocus=()=>f.classList.add('focus');inp.onblur=()=>f.classList.remove('focus');
+  inp.oninput=()=>{inp.value=fa(en(inp.value).slice(-1));box.classList.remove('err');el.querySelector('#osub').style.color='';if(inp.value&&k<4)ins[k+1].focus();g.disabled=code().length<5;if(code().length===5)g.click()};
+  inp.onkeydown=e=>{if(e.key==='Backspace'&&!inp.value&&k>0)ins[k-1].focus()}});
+ g.onclick=()=>{if(g.dataset.busy)return;g.dataset.busy=1;g.innerHTML='<span class="spin"></span>';later(()=>{delete g.dataset.busy;g.textContent='تأیید';if(code()==='12345'){go('amount')}else{box.classList.add('err');const s=el.querySelector('#osub');s.textContent='کد واردشده اشتباه است. دوباره تلاش کنید.';s.style.color='#F22323';ins.forEach(x=>x.value='');ins[0].focus();g.disabled=true}},1100)};
+ let t=119;const tmEl=el.querySelector('#otm');const iv=setInterval(()=>{if(!tmEl.isConnected)return clearInterval(iv);t--;tmEl.textContent=t>0?'دریافت مجدد کد تا '+fa(String(Math.floor(t/60)).padStart(2,'0'))+':'+fa(String(t%60).padStart(2,'0')):'کد را دریافت نکردید؟';if(t<=0){clearInterval(iv);el.querySelector('#rb').disabled=false;el.querySelector('#rs').disabled=false}},1000);
+ el.querySelector('#rb').onclick=()=>toast('کد به بله ارسال شد');el.querySelector('#rs').onclick=()=>toast('کد دوباره پیامک شد');later(()=>ins[0].focus({preventScroll:true}),400)};
+// amount
+const priceBar=()=>`<div class="price"><span class="dot"><i></i></span>قیمت هر گرم طلای ۱۸ عیار: <b>${money(PRICE)} تومان</b></div>`;
+SCR.amount=()=>`${sbar()}${abar('خرید طلا')}${priceBar()}<div class="body"><div class="band"></div>
+ <div class="acardw rise" style="margin-top:-82px"><img class="ill" src="${IMG('ill_gold')}" alt=""><div class="h16" style="color:#1449AD">خرید طلا</div>
+  <div class="stepper"><button class="sbtn" id="pl" aria-label="بیشتر">${I.plus}</button><div><div class="big" id="av"></div><div class="d14" id="ag" style="margin-top:4px"></div></div><button class="sbtn" id="mn" aria-label="کمتر">${I.minus}</button></div>
+  <input class="rng" type="range" id="ar" min="10" max="100" step="10" value="${S.m}" aria-label="مبلغ خرید"><div class="rlab"><span>۱۰ میلیون تومان</span><span>۱۰۰ میلیون تومان</span></div></div>
+ <div class="card rows rise" style="animation-delay:.08s"><div class="row"><span class="k">تعداد اقساط</span><span class="v">۳ <span class="u">قسط</span></span></div><div class="row"><span class="k">هزینه خدمات</span><span class="v" id="r1"></span></div><div class="row"><span class="k">قسط اول (امروز)</span><span class="v" id="r2"></span></div><div class="row"><span class="k">مجموع بازپرداخت</span><span class="v" id="r3"></span></div></div><div style="height:16px"></div></div>
+ <div class="cta"><button class="btn" data-a="toFee">ادامه</button></div>`;
+BIND.amount=el=>{const r=el.querySelector('#ar');const u=()=>{S.m=+r.value;const p=P();r.style.setProperty('--v',((r.value-10)/90*100)+'%');el.querySelector('#av').innerHTML=money(p.A)+'<small>تومان</small>';el.querySelector('#ag').textContent='وزن تخمینی طلا: '+gr(p.grams)+' گرم';
+ el.querySelector('#r1').innerHTML=money(p.op)+' <span class="u">تومان</span>';el.querySelector('#r2').innerHTML=money(p.inst)+' <span class="u">تومان</span>';el.querySelector('#r3').innerHTML=money(p.inst*3)+' <span class="u">تومان</span>'};
+ r.oninput=u;u();el.querySelector('#mn').onclick=()=>{r.value=Math.max(10,+r.value-10);u()};el.querySelector('#pl').onclick=()=>{r.value=Math.min(100,+r.value+10);u()}};
+ACT.toFee=()=>go('fee');
+// operation fee
+SCR.fee=()=>`${sbar()}${abar('بررسی و پرداخت')}<div class="body pad"><div class="paycard rise"><div class="in"><img class="ill" src="${IMG('ill_opfee')}" alt=""><div class="h16" style="margin-top:16px">هزینه عملیات خرید طلا</div><div class="d14" style="margin-top:8px">این مبلغ بابت خدمات اجرایی و پردازش درخواست خرید اقساطی طلا دریافت می‌شود.</div></div></div>
+ ${ticket([['نوع پرداخت','هزینه عملیات'],['مبلغ هزینه عملیات',tm(P().op)],['TOTAL',P().op]])}
+ <div class="note">چنانچه خرید طلا به هر دلیلی انجام نشود، مبلغ پرداختی پس از کسر هزینهٔ خدمات به کیف پول شما برگردانده می‌شود.</div></div>
+ <div class="cta"><button class="btn" data-a="payFee">پرداخت هزینه عملیات</button></div>`;
+ACT.payFee=()=>go('gateway',{amount:P().op,ctx:'fee',anim:'fade'});
+// gateway
+SCR.gateway=o=>`${sbar()}<div class="gw"><img src="${IMG('gateway')}" alt="درگاه پرداخت"><button class="gwbtn" data-a="gwPay">پرداخت ${money(o.amount)} تومان</button><button class="gwx" data-a="gwCancel" aria-label="انصراف"></button></div>`;
+ACT.gwPay=b=>{b.innerHTML='<span class="spin"></span>';later(()=>payDone(true),1000)};ACT.gwCancel=()=>payDone(false);
+function payDone(ok){const o=cur.o;const now=['۱۶:۳۰:۱۲','۱۶:۴۷:۵۷','۱۸:۰۲:۱۴','۰۹:۱۲:۳۸'];
+ if(o.ctx==='fee'){reset('rcpt',{kind:ok?'ok':'fail',title:ok?'پرداخت موفق':'پرداخت ناموفق',sub:ok?'ممنونیم که مارو انتخاب کردین!':'لطفاً دوباره تلاش کنید.',rows:[['نوع پرداخت','هزینه عملیات'],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت','۱۴۰۵/۰۹/۲۶'],['زمان ثبت',ok?'۱۶:۳۰:۱۲':'۱۶:۲۸:۴۰'],['کد پیگیری',ok?'۴۰۴۶۴۹۱۶۴۷۱۰۹۸۷':'۴۰۴۶۴۹۱۶۴۷۱۰۹۵۱'],['مبلغ پرداختی',tm(P().op)]],foot:ok?'تا ۵ ثانیه دیگر به برنامه برمی‌گردید':'اگر مبلغی از حساب شما کسر شده، حداکثر تا ۷۲ ساعت آینده به حسابتان برمی‌گردد.',next:'toIdentity',retry:'payFee',auto:ok});
+  if(ok)S.hist.push({t:'هزینهٔ عملیات',d:'۲۶ آذر ۱۴۰۵ · ۱۶:۴۰',a:-P().op,m:'آذر ۱۴۰۵',st:'پرداخت شد'});return}
+ const n=o.n,p=P(),penAmt=(S.day==='penalty'&&n===S.paid)?pen(8):0,amt=p.inst+penAmt;
+ if(!ok){reset('rcpt',{kind:'fail',title:'پرداخت ناموفق',sub:'لطفاً دوباره تلاش کنید.',rows:[['نوع پرداخت','قسط '+ORD[n]+' خرید طلا'],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت',R_DATE[n]],['زمان ثبت','۱۶:۲۸:۴۰'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۰۹۵۱'],['مبلغ',tm(amt)]],foot:'اگر مبلغی از حساب شما کسر شده، حداکثر تا ۷۲ ساعت آینده به حسابتان برمی‌گردد.',retry:'retryInst',backTo:'toDetails'});return}
+ S.inst[n]={s:penAmt?'late':'paid',pen:penAmt};S.paid=n+1;S.hist.push({t:n===0?'خرید طلا و قسط اول':'پرداخت قسط '+ORD[n]+(penAmt?' با تأخیر':''),d:[DATES[0],'۴ دی ۱۴۰۵','۱ بهمن ۱۴۰۵'][n]+' · '+now[n+1],a:-amt,m:['آذر ۱۴۰۵','دی ۱۴۰۵','بهمن ۱۴۰۵'][n],st:penAmt?'پرداخت با جریمه':'پرداخت شد',pen:penAmt,n});
+ if(n===0)S.phase='active';S.day='normal';const all=S.paid>=3;if(all)S.phase='settled';
+ reset('rcpt',{kind:'ok',title:all?'همهٔ اقساط تسویه شد':n===0?'خرید طلای شما قطعی شد':'قسط '+ORD[n]+' پرداخت شد',sub:all?gr(gold())+' گرم طلا از وثیقه آزاد شد.':n===0?'ممنونیم که قسطا را انتخاب کردید!':'قسط بعدی: '+DATES[n+1],rows:[['نوع پرداخت',n===0?'قسط اول خرید طلا':'پرداخت قسط '+ORD[n]],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت',R_DATE[n]],['زمان ثبت',now[n+1]],['کد پیگیری',['۴۰۴۶۴۹۱۶۴۷۱۱۴۱۹','۴۰۴۶۴۹۱۶۴۷۱۱۶۰۳','۴۰۴۶۴۹۱۶۴۷۱۱۸۲۷'][n]],['مبلغ پرداختی',tm(amt)]],foot:'تا ۵ ثانیه دیگر به برنامه برمی‌گردید',next:all?'toGold':'toDetails',auto:true})}
+ACT.retryInst=()=>reset('pay',{n:S.paid});
+SCR.rcpt=o=>receipt(o);
+BIND.rcpt=(el,o)=>{if(o.auto){let t=5;const f=el.querySelector('#foot');const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);t--;if(f)f.textContent='تا '+fa(t)+' ثانیه دیگر به برنامه برمی‌گردید';if(t<=0){clearInterval(iv);if(cur.name==='rcpt')ACT[o.next]&&ACT[o.next]()}},1000)}};
+ACT.toIdentity=()=>reset('identity');ACT.toDetails=()=>reset('details');ACT.toGold=()=>reset('mygold');ACT.toHome=()=>reset('home');
+// identity
+const FIELDS=[['nid','کد ملی','کد ملی ۱۰ رقمی خود را وارد کنید'],['bd','تاریخ تولد','تاریخ تولد خود را انتخاب کنید'],['card','شماره کارت بانکی','شماره کارت ۱۶ رقمی خود را وارد کنید']];
+const ERRMSG={nid:'کد ملی با مالک شماره موبایل مطابقت ندارد.',bd:'تاریخ تولد با کد ملی مطابقت ندارد.',card:'شماره کارت به نام صاحب این کد ملی نیست.'};
+const bdText=v=>v?fa(v.y)+'/'+fa(String(v.m).padStart(2,'0'))+'/'+fa(String(v.d).padStart(2,'0')):'';
+SCR.identity=()=>`${sbar()}${abar('اطلاعات هویتی و بانکی')}<div class="body pad" style="padding-bottom:24px"><img class="ill rise" src="${IMG('ill_avatar')}" alt=""><div class="h16 c" style="margin-top:16px">تکمیل اطلاعات هویتی و بانکی</div><div class="d14 c" style="margin-top:8px">برای ادامه فرایند خرید اقساطی طلا، لطفاً اطلاعات هویتی و بانکی خود را با دقت وارد کنید.</div>
+ <div class="strip" style="margin-top:8px">${I.info}اطلاعات باید متعلق به مالک شماره همراه فعلی باشد.</div>
+ ${FIELDS.map(f=>{const err=S.fix===f[0],ok=S.fix&&!err;return `<div class="lbl">${f[1]}</div><div class="field ${err?'err':ok?'ok':''}" id="f_${f[0]}" ${f[0]==='bd'&&!ok?'data-a="pickBd" style="cursor:pointer"':''}>${f[0]==='bd'?`<span id="bdv" style="flex:1;font-size:16px;color:${S.form.bd?'#18181B':'#A1A1A1'}">${S.form.bd?bdText(S.form.bd):f[2]}</span>`:`<input id="i_${f[0]}" inputmode="numeric" ${ok?'readonly tabindex="-1"':''} placeholder="${f[2]}" value="${f[0]==='nid'?fa(S.form.nid):fa((S.form.card.match(/.{1,4}/g)||[]).join('  '))}">`}${ok?`<span class="fic" style="background:#1B9247">${sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',12,3,'#fff')}</span>`:err?`<span class="fic" style="background:#F22323">${sv('<path d="M12 7v6M12 17h.01"/>',12,3,'#fff')}</span>`:''}</div>${err?`<div class="help err">${ERRMSG[f[0]]}</div>`:ok?`<div class="help ok">تأیید شده است.</div>`:''}`}).join('')}</div>
+ <div class="cta"><button class="btn" id="idgo" data-a="idSubmit">تأیید و ادامه</button></div>`;
+BIND.identity=el=>{const nid=el.querySelector('#i_nid'),card=el.querySelector('#i_card'),g=el.querySelector('#idgo');
+ const chk=()=>{g.disabled=!(en(S.form.nid).length===10&&S.form.bd&&en(S.form.card).length===16)};
+ [nid,card].forEach(i=>{const f=i.parentNode;i.onfocus=()=>f.classList.add('focus');i.onblur=()=>f.classList.remove('focus')});
+ nid.oninput=()=>{S.form.nid=en(nid.value).slice(0,10);nid.value=fa(S.form.nid);if(S.fix==='nid'){el.querySelector('#f_nid').classList.remove('err')}chk()};
+ card.oninput=()=>{S.form.card=en(card.value).slice(0,16);card.value=fa((S.form.card.match(/.{1,4}/g)||[]).join('  '));if(S.fix==='card')el.querySelector('#f_card').classList.remove('err');chk()};chk()};
+ACT.pickBd=(b,el)=>{const v=S.form.bd||{y:1376,m:6,d:28};const yrs=[];for(let y=1387;y>=1310;y--)yrs.push(y);
+ const col=(id,arr,lab)=>`<div class="wheel" data-id="${id}">${arr.map(x=>`<div data-v="${x}">${lab(x)}</div>`).join('')}</div>`;
+ openSheet(`<div style="display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:4px"><button data-x style="position:absolute;left:0;width:24px;height:24px;border-radius:50%;border:1px solid #E8E8E8;display:grid;place-items:center">${sv('<path d="M7 7l10 10M17 7L7 17"/>',12,2,'#535353')}</button><b style="font-size:16px;font-weight:500">تاریخ تولد</b></div>
+  <div class="wheels">${col('d',Array.from({length:31},(_,i)=>i+1),fa)}${col('m',Array.from({length:12},(_,i)=>i+1),x=>MON[x-1])}${col('y',yrs,fa)}</div><button class="btn" style="width:100%" id="bdok">تأیید و ادامه</button>`,s=>{
+  const got={};s.querySelectorAll('.wheel').forEach(w=>{const items=[...w.children];const mark=()=>{const i=Math.max(0,Math.min(items.length-1,Math.round(w.scrollTop/40)));items.forEach((x,j)=>x.classList.toggle('sel',j===i));got[w.dataset.id]=+items[i].dataset.v};
+   w.onscroll=mark;items.forEach((x,j)=>x.onclick=()=>w.scrollTo({top:j*40,behavior:'smooth'}));const idx=items.findIndex(x=>+x.dataset.v===v[w.dataset.id]);requestAnimationFrame(()=>{w.scrollTop=idx*40;mark()})});
+  s.querySelector('[data-x]').onclick=()=>closeSheet();
+  s.querySelector('#bdok').onclick=()=>{let d=got.d;if(got.m>6&&d>30)d=30;if(got.m===12&&d>29)d=29;S.form.bd={y:got.y,m:got.m,d};const t=el.querySelector('#bdv');t.textContent=bdText(S.form.bd);t.style.color='#18181B';if(S.fix==='bd')el.querySelector('#f_bd').classList.remove('err');closeSheet();el.querySelector('#idgo').disabled=!(en(S.form.nid).length===10&&S.form.bd&&en(S.form.card).length===16)}})};
+ACT.idSubmit=b=>{b.innerHTML='<span class="spin"></span>';later(()=>{go('processing',{anim:'fade'})},800)};
+// processing
+const STEPS=[['تأیید مالکیت شماره همراه','بررسی مالکیت شماره موبایل',I.phone],['بررسی اطلاعات هویتی','بررسی کد ملی و تاریخ تولد',I.idc],['تأیید مالکیت کارت بانکی','تطبیق کارت بانکی با کد ملی',I.card]];
+SCR.processing=()=>`${sbar()}${abar('بررسی درخواست')}<div class="body pad"><div class="pring"><svg width="164" height="164" viewBox="0 0 164 164"><circle cx="82" cy="82" r="74" fill="none" stroke="rgba(30,108,255,.2)" stroke-width="14"/><circle id="arc" cx="82" cy="82" r="74" fill="none" stroke="#1E6CFF" stroke-width="14" stroke-linecap="round" stroke-dasharray="464.96" stroke-dashoffset="0" style="transition:stroke-dashoffset .3s linear"/></svg><div class="c"><b id="ptm" style="font-size:28px;color:#1E6CFF">۲:۰۳</b><span style="font-size:13px;color:#535353">تا نتیجه بررسی</span></div></div>
+ <div class="h16 c" style="margin-top:16px">در حال بررسی اطلاعات</div><div class="d14 c" style="margin-top:8px">در حال بررسی و تطبیق اطلاعات شما هستیم. این فرایند معمولاً کمتر از ۵ دقیقه زمان می‌برد.</div>
+ <div class="card steps">${STEPS.map(s=>`<div class="step"><span class="oic">${s[2]}</span><div style="flex:1;text-align:right"><div class="tt">${s[0]}</div><div class="sd">${s[1]}</div></div><span class="s"><span class="spin b"></span></span></div>`).join('')}</div></div>`;
+BIND.processing=el=>{const fail={ok:-1,shahkar:0,birth:1,card:2}[S.fix?'ok':S.review];const st=[...el.querySelectorAll('.step .s')];const arc=el.querySelector('#arc'),tmEl=el.querySelector('#ptm');let t=123,k=0;
+ const iv=setInterval(()=>{if(!el.isConnected)return clearInterval(iv);t=Math.max(0,t-5);tmEl.textContent=fa(Math.floor(t/60)+':'+String(t%60).padStart(2,'0'));arc.style.strokeDashoffset=464.96*(1-t/123);
+  if(k<3&&123-t>=30*(k+1)){if(k===fail){st[k].innerHTML=`<span style="width:22px;height:22px;border-radius:50%;background:#F22323;display:grid;place-items:center" class="pop">${sv('<path d="M7 7l10 10M17 7L7 17"/>',12,3,'#fff')}</span>`;clearInterval(iv);later(()=>reset('reviewErr',{k:S.review}),900);return}
+   st[k].innerHTML=`<span style="width:22px;height:22px;border-radius:50%;background:#1B9247;display:grid;place-items:center" class="pop">${sv('<path d="M5 12.5l4.5 4.5L19 7.5"/>',12,3,'#fff')}</span>`;k++}
+  if(k>=3){clearInterval(iv);later(()=>{S.fix=null;S.review='ok';S.phase='await';reset('approved')},800)}},250)};
+const RERR={shahkar:['عدم تطابق اطلاعات هویتی','کد ملی واردشده با مالک شماره همراه شما مطابقت ندارد. لطفاً کد ملی خود را بررسی و اصلاح کنید.',['شماره همراه',()=>fa(S.phone)],['کد ملی',()=>fa(S.form.nid||'0020775408')],'اصلاح کد ملی','nid'],
+ birth:['عدم تطابق تاریخ تولد','تاریخ تولد واردشده با اطلاعات کد ملی شما مطابقت ندارد. لطفاً تاریخ تولد را بررسی و اصلاح کنید.',['کد ملی',()=>fa(S.form.nid||'0020775409')],['تاریخ تولد',()=>bdText(S.form.bd)||'۱۳۷۶/۰۶/۲۸'],'اصلاح تاریخ تولد','bd'],
+ card:['عدم تطابق اطلاعات بانکی','شماره کارت واردشده متعلق به صاحب این کد ملی نیست. لطفاً شماره کارت خود را بررسی و اصلاح کنید.',['کد ملی',()=>fa(S.form.nid||'0020775409')],['شماره کارت بانکی',()=>fa((S.form.card.match(/.{1,4}/g)||[]).join(' '))||'۵۰۴۷ ۰۶۱۰ ۴۱۰۲ ۷۱۴۵'],'اصلاح شماره کارت','card']};
+SCR.reviewErr=o=>{const e=RERR[o.k];return `${sbar()}${abar('نتیجه بررسی')}<div class="body pad"><div class="ring pop" style="border-color:#FF832B33"><div style="border-color:#FF832B66"><div style="background:#FF832B">${o.k==='shahkar'?sv('<path d="M4 8V6a2 2 0 012-2h2M16 4h2a2 2 0 012 2v2M20 16v2a2 2 0 01-2 2h-2M8 20H6a2 2 0 01-2-2v-2M9 10v1M15 10v1M12 10v4h-1M9 16.5c1.8 1.2 4.2 1.2 6 0"/>',34,1.8,'#fff'):I.bang}</div></div></div>
+ <div class="h16 c" style="margin-top:24px">${e[0]}</div><div class="d14 c" style="margin-top:8px">${e[1]}</div>
+ <div class="card rise" style="margin-top:16px;padding:16px;display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;text-align:center"><div><div style="color:#1E6CFF">${e[5]==='card'?I.card:I.idc}</div><div class="d14">${e[3][0]}</div><div style="font-size:14px;font-weight:500;color:#FF832B;margin-top:6px;direction:ltr">${e[3][1]()}</div></div><i style="border-top:1px dashed #D4D4D8"></i><div><div style="color:#1E6CFF">${e[2][0]==='کد ملی'?I.idc:I.phone}</div><div class="d14">${e[2][0]}</div><div style="font-size:14px;font-weight:500;margin-top:6px;direction:ltr">${e[2][1]()}</div></div></div></div>
+ <div class="cta"><button class="btn" data-a="fixField">${e[4]}</button></div>`};
+ACT.fixField=()=>{S.fix=RERR[cur.o.k][5];S.review='ok';reset('identity')};
+SCR.approved=()=>`${sbar()}${abar('نتیجه درخواست')}<div class="body pad" style="position:relative"><div class="confetti">${[['#FF3366',300,95,'50%'],['#FFCC00',334,83,'50%'],['#33CC66',288,2,0],['#4D80FF',360,23,0],['#E54DE5',78,93,'50%'],['#00E5E5',36,77,0],['#E54DE5',338,7,0],['#E54DE5',90,14,0],['#33CC66',10,102,0]].map((c,i)=>`<i style="left:${c[1]}px;top:${c[2]}px;width:${8+i%3*3}px;height:${8+i%2*5}px;background:${c[0]};border-radius:${c[3]};animation-delay:${i*50}ms"></i>`).join('')}</div>
+ <img class="ill pop" src="${IMG('ill_shield')}" alt="" style="position:relative"><div class="h16 c" style="margin-top:16px;color:#0A2557">اطلاعات شما با موفقیت تأیید شد</div><div class="d14 c" style="margin-top:8px">اطلاعات هویتی و بانکی شما تأیید شد. اکنون می‌توانید با پرداخت قسط اول، خرید اقساطی طلای خود را آغاز کنید.</div>
+ <div class="card rise" style="margin-top:16px;padding:0 16px 16px"><div style="display:flex;align-items:center;justify-content:space-between"><div style="text-align:right;padding-inline-start:4px"><div style="font-size:14px;font-weight:500;color:#535353">اعتبار خرید اقساطی طلا</div><div style="display:flex;gap:4px;align-items:baseline;margin-top:8px"><b style="font-size:24px;color:#1E6CFF" id="cnt">۰</b><span style="font-size:12px;color:#1E6CFF">تومان</span></div></div><img src="${IMG('ill_wallet')}" alt="" style="width:120px;height:120px"></div>
+  <div style="display:grid;grid-template-columns:1fr 1px 1fr;border-top:1px solid #E8E8E8;padding-top:14px;text-align:center"><div><div style="font-size:12px;color:#535353">مدت بازپرداخت</div><div style="font-size:12px;font-weight:500;color:#0F3680;margin-top:6px">۳ ماهه</div></div><i style="background:#E8E8E8"></i><div><div style="font-size:12px;color:#535353">قسط اول</div><div style="font-size:12px;font-weight:500;color:#0F3680;margin-top:6px">${money(P().inst)} تومان</div></div></div></div>
+ <div class="strip" style="margin-top:16px">${I.info}پس از پرداخت قسط اول، فرایند خرید طلا به نام شما آغاز می‌شود.</div></div>
+ <div class="cta"><button class="btn" data-go="pay" data-n="0">ادامه و پرداخت قسط اول</button></div>`;
+BIND.approved=el=>{const c=el.querySelector('#cnt'),end=P().A,t0=performance.now();const f=t=>{const k=Math.min(1,(t-t0)/900);c.textContent=money(end*(1-Math.pow(1-k,3)));if(k<1&&c.isConnected)requestAnimationFrame(f)};requestAnimationFrame(f)};
+// pay installment
+SCR.pay=o=>{const n=o.n??S.paid,p=P(),pn=(S.day==='penalty'&&n===S.paid)?pen(8):0;const ill=['ill_pay1b','ill_pay1','ill_pay3'][n];
+ const desc=n===0?'با پرداخت قسط اول، خرید طلا به نام شما انجام می‌شود و تا تسویه کامل اقساط، به‌عنوان وثیقه باقی می‌ماند.':n===1?'با پرداخت قسط دوم، فقط یک قسط تا آزاد شدن طلای شما باقی می‌ماند.':'با پرداخت قسط سوم، همهٔ اقساط تسویه و طلای شما از وثیقه آزاد می‌شود.';
+ return `${sbar()}${abar('پرداخت قسط '+ORD[n])}<div class="body pad"><div class="paycard rise"><div class="in"><img class="ill" src="${IMG(ill)}" alt=""><div class="h16" style="margin-top:8px">پرداخت قسط ${ORD[n]}</div><div class="d14" style="margin-top:8px">${desc}</div></div><div class="ft">با پرداخت، <a data-go="contract" style="cursor:pointer">قرارداد</a> و <a data-go="contract" style="cursor:pointer">شرایط خرید اقساطی طلا</a> را می‌پذیرید.</div></div>
+ ${ticket([['نوع پرداخت','قسط '+ORD[n]+' خرید طلا'],['مبلغ پایه',tm(p.inst)],...(pn?[['جریمهٔ دیرکرد (۸ روز)',tm(pn),'pen']]:[]),['TOTAL',p.inst+pn]])}</div>
+ <div class="cta"><button class="btn" data-a="payInst">پرداخت قسط ${ORD[n]}</button></div>`};
+ACT.payInst=()=>{const n=cur.o.n??S.paid;go('gateway',{amount:P().inst+((S.day==='penalty'&&n===S.paid)?pen(8):0),ctx:'inst',n,anim:'fade'})};
+// purchase details
+function sumHead(green,extra){const p=P(),settled=S.phase==='settled';const lab=green?'موجودی شما:':(S.phase==='await'||S.phase==='none'?'وزن تخمینی طلا:':'مقدار طلای شما:');
+ return `<div class="sum"><button class="cchip" data-go="contract">${I.doc}مشاهده قرارداد</button><img class="ill" src="${IMG('ill_gold')}" alt=""><div class="st1" style="margin-top:4px">مبلغ خرید طلا</div><div class="st2 num">${money(p.A)}<small>تومان</small></div>
+ <div class="gch">${I.gold}${lab} <b style="font-weight:500">${gr(gold())} گرم${green?' طلا':''}</b></div>${extra||''}</div>`}
+function progCard(){const p=P(),done=S.inst.filter(x=>x.s!=='unpaid').length,col=S.inst.some(x=>x.s==='collateral');
+ return `<div class="prog"><div class="pt">${fa(done)} از ۳ قسط ${col?'تسویه':'پرداخت'} شده</div><div class="segs">${[0,1,2].map(i=>`<i class="${i<done?'on':''}" style="animation-delay:${i*120}ms"></i>`).join('')}</div>
+ <div class="pcols"><div>پرداخت‌شده<b class="num">${money(paidSum())}<small>تومان</small></b></div><div>مانده بدهی<b class="num">${money(remaining())}<small>تومان</small></b></div></div></div>`}
+function banner(){const p=P(),n=S.paid;if(S.phase==='settled')return '';
+ if(S.phase==='await')return bn('#1B9247','برای نهایی‌شدن خرید طلا، قسط اول را پرداخت کنید','پرداخت قسط اول',0,p.inst);
+ const m={due:['#1B9247','موعد پرداخت قسط شما فرا رسیده است.'],grace:['#FF832B','موعد پرداخت قسط شما گذشته است. تا روز ۵ پرداخت کنید تا جریمه‌ای اعمال نشود.'],penalty:['#F22323','قسط شما معوق شده است! همین حالا پرداخت کنید تا از فروش طلای شما برای تسویهٔ بدهی جلوگیری شود.']}[S.day];
+ if(!m)return '';return bn(m[0],m[1],'پرداخت قسط '+ORD[n],n,p.inst+(S.day==='penalty'?pen(8):0))}
+const bn=(c,t,b,n,v)=>`<div class="bn rise"><div class="bh" style="background:${c}">${t}</div><div class="bb"><div style="text-align:right"><div class="k">مبلغ قابل پرداخت</div><div class="v num">${money(v)} <small>تومان</small></div></div><button class="btn sm" data-go="pay" data-n="${n}">${b}</button></div></div>`;
+let TAB='current',CH='24';
+function instItem(i,last){const p=P(),x=S.inst[i],isCur=i===S.paid&&S.phase!=='settled'&&S.phase!=='none';
+ let b,ic,col;const pn=x.pen||0;
+ if(x.s==='paid'){b=['green','پرداخت شد'];col='#1B9247'}else if(x.s==='late'){b=['green','پرداخت با جریمه'];col='#1B9247'}else if(x.s==='collateral'){b=['gold','تسویه از محل طلا'];col='#B77A08'}
+ else if(isCur&&S.day==='penalty'){b=['red','با جریمه دیرکرد'];col='#F22323'}else if(isCur&&S.day==='grace'){b=['blue','در انتظار پرداخت'];col='#1E6CFF'}else if(isCur&&(S.day==='due'||S.phase==='await')){b=['blue','در انتظار پرداخت'];col='#1E6CFF'}else{b=['gray','سررسید نشده'];col='#D0D0D0'}
+ const amt=p.inst+(x.s==='late'||x.s==='collateral'?pn:(isCur&&S.day==='penalty'?pen(8):0));const exp=x.s==='late'||x.s==='collateral'||(isCur&&S.day==='penalty');
+ ic=stIcon(x.s!=='unpaid'?'chk':(isCur&&S.day==='penalty')?'alr':'clk',x.s==='unpaid'?col:'#1B9247');
+ return `<div class="it ${exp?'exp':''}" ${exp?'data-a="toggleIt"':''}><span class="si">${ic}</span>${last?'':'<span class="line"></span>'}<div><div class="dt">${DATES[i]}</div><div class="am num">${money(amt)} <small>تومان</small></div></div><span class="bd ${b[0]}">${b[1]}${exp?' '+I.down.replace('<svg','<svg class="chev"'):''}</span></div>
+ ${exp?`<div class="xd"><div><i>•</i><span>قسط:</span><b>${money(p.inst)} تومان</b></div><div class="rd"><i>+</i><span>جریمهٔ دیرکرد:</span><b>${money(x.s==='unpaid'?pen(8):pn)} تومان</b><button aria-label="توضیح جریمه" onclick="event.stopPropagation();penInfo(${x.s==='unpaid'?pen(8):pn})" style="display:grid">${sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',18,1.8,'#F22323')}</button></div>${x.s==='collateral'?`<div class="gd"><i>•</i><span>فروش بابت تسویهٔ دیرکرد:</span><b>${gr(x.g)} گرم طلا</b><button aria-label="توضیح فروش از وثیقه" onclick="event.stopPropagation();colInfo(${x.g},${p.inst+pn})" style="display:grid">${sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',18,1.8,'#B77A08')}</button></div>`:''}</div>`:''}`}
+ACT.toggleIt=b=>b.classList.toggle('open');
+const ST_P={chk:'M10 1.667C5.408 1.667 1.667 5.408 1.667 10S5.408 18.333 10 18.333 18.333 14.592 18.333 10 14.592 1.667 10 1.667ZM13.983 8.083 9.258 12.808a.62.62 0 0 1-.441.184.62.62 0 0 1-.442-.184L6.017 10.45a.63.63 0 0 1 0-.883.63.63 0 0 1 .883 0l1.917 1.916L13.1 7.2a.63.63 0 0 1 .883 0 .63.63 0 0 1 0 .883Z',
+ clk:'M10 1.667C5.408 1.667 1.667 5.408 1.667 10S5.408 18.333 10 18.333 18.333 14.592 18.333 10 14.592 1.667 10 1.667ZM13.625 12.975a.62.62 0 0 1-.542.308.6.6 0 0 1-.316-.091L10.183 11.65c-.641-.383-1.116-1.225-1.116-1.967V6.267c0-.342.283-.625.625-.625s.625.283.625.625v3.416c0 .3.25.742.508.892l2.583 1.542c.3.175.4.558.217.858Z',
+ alr:'M10 1.667C5.408 1.667 1.667 5.408 1.667 10S5.408 18.333 10 18.333 18.333 14.592 18.333 10 14.592 1.667 10 1.667ZM9.375 6.667c0-.342.283-.625.625-.625s.625.283.625.625v4.166c0 .342-.283.625-.625.625s-.625-.283-.625-.625V6.667Zm1.392 6.983a.9.9 0 0 1-.175.275.9.9 0 0 1-.275.175.83.83 0 0 1-.634 0 .9.9 0 0 1-.275-.175.9.9 0 0 1-.175-.275.83.83 0 0 1 0-.634.9.9 0 0 1 .175-.274.9.9 0 0 1 .909-.175c.1.041.191.1.275.175a.9.9 0 0 1 .175.274.83.83 0 0 1 0 .634Z'};
+const stIcon=(k,c)=>`<svg width="20" height="20" viewBox="0 0 20 20"><path d="${ST_P[k]}" fill="${c}"/></svg>`;
+const infoIc=c=>`<div class="sic" style="background:${c}33">${sv('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',26,2,c)}</div>`;
+function penInfo(v){openSheet(`${infoIc('#F22323')}<div class="h16 c">جریمهٔ دیرکرد</div><div class="d14 c" style="margin-top:8px">اگر قسط تا روز ۵ پرداخت نشود، از روز ۶ تا ۱۰ جریمهٔ دیرکرد به آن اضافه می‌شود و جریمه از روز اول تأخیر حساب می‌شود. اگر تا روز ۱۰ پرداخت نکنید، بدهی از طلای وثیقه تسویه می‌شود.</div><div style="background:#FAFAFA;border-radius:14px;padding:12px 14px;margin-top:16px;display:flex;justify-content:space-between;font-size:14px"><span style="color:#535353">جریمهٔ این قسط</span><b style="color:#F22323;font-weight:500">${money(v)} تومان</b></div><button class="btn" style="width:100%;margin-top:16px" onclick="closeSheet()">متوجه شدم</button>`)}
+function colInfo(g,debt){openSheet(`${infoIc('#B77A08')}<div class="h16 c">فروش از طلای وثیقه</div><div class="d14 c" style="margin-top:8px">چون قسط تا روز ۱۰ پرداخت نشد، مبلغ قسط به‌همراه جریمهٔ دیرکرد با فروش بخشی از طلای وثیقه به قیمت روز تسویه شد. باقی طلا همچنان متعلق به شماست.</div><div style="background:#FAFAFA;border-radius:14px;padding:6px 14px;margin-top:16px;font-size:14px"><div class="row"><span style="color:#535353">بدهی تسویه‌شده</span><b style="font-weight:500">${money(debt)} تومان</b></div><div class="row"><span style="color:#535353">طلای فروخته‌شده</span><b style="font-weight:500;color:#B77A08">${gr(g)} گرم</b></div></div><button class="btn" style="width:100%;margin-top:16px" onclick="closeSheet()">متوجه شدم</button>`)}
+function schedule(){const cur=S.paid<3&&S.phase!=='settled'&&S.phase!=='none'&&(S.phase==='await'||S.day!=='normal');
+ let list;if(TAB==='all')list=[0,1,2].map(i=>instItem(i,i===2)).join('');
+ else if(cur)list=instItem(S.paid,true);
+ else list=`<div class="empty"><img src="${IMG('ill_calendar')}" alt=""><div style="font-size:14px;font-weight:500;color:#535353;margin-top:12px">${S.phase==='settled'?'همهٔ اقساط تسویه شده است.':'قسط سررسیدشده‌ای ندارید.'}</div>${S.phase==='settled'?'':`<div style="font-size:14px;color:#535353;margin-top:4px">قسط بعدی: ${DATES[S.paid]}</div>`}</div>`;
+ return `<div class="card sched rise" style="animation-delay:.08s"><div class="c">${I.cal}<div class="h16" style="color:#1B1D21;margin-top:8px">برنامه اقساط شما</div><div style="font-size:13px;color:#535353;margin-top:8px">مبلغ و سررسید هر قسط را اینجا ببینید.</div></div>
+ <div class="seg"><button class="${TAB==='current'?'on':''}" data-a="tab" data-t="current">قسط فعلی</button><button class="${TAB==='all'?'on':''}" data-a="tab" data-t="all">کل اقساط</button></div><div id="ilist">${list}</div></div>`}
+ACT.tab=(b,el)=>{if(TAB===b.dataset.t)return;TAB=b.dataset.t;b.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));const L=el.querySelector('#ilist');const t=document.createElement('div');t.innerHTML=schedule();L.style.cssText='transition:opacity .15s;opacity:0';setTimeout(()=>{L.innerHTML=t.querySelector('#ilist').innerHTML;L.querySelectorAll('[data-a="toggleIt"]').forEach(x=>x.onclick=()=>x.classList.toggle('open'));L.style.opacity=1},150)};
+function chartCard(){const pts=[];let seed={'24':7,'7':13,'30':29}[CH],v=0;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280};for(let i=0;i<40;i++){v+=(rnd()-.45)*9;pts.push(v)}
+ const mn=Math.min(...pts),mx=Math.max(...pts),W=326,H=130;const xy=pts.map((y,i)=>[i/39*W,6+(1-(y-mn)/(mx-mn))*(H-12)]);const d=xy.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' ');const last=xy[xy.length-1];
+ const ticks=['۲۵٬۰۶۵٬۰۰۰','۲۵٬۰۰۰٬۰۰۰','۲۴٬۹۳۵٬۰۰۰','۲۴٬۸۷۰٬۰۰۰','۲۴٬۸۰۵٬۰۰۰'],xl={'24':['۲۳:۰۰','۱۷:۰۰','۱۱:۰۰','۰۵:۰۰','۲۳:۰۰'],'7':['جمعه','چهارشنبه','دوشنبه','شنبه'],'30':['۳۰ آذر','۲۰ آذر','۱۰ آذر','۱ آذر']}[CH];
+ return `<div class="card chart rise" style="animation-delay:.12s"><div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;gap:10px;align-items:center"><span class="chb">${I.chart}</span><b style="font-size:14px;color:#1B1D21">نمودار قیمت طلا</b></div><span style="font-size:13px;color:#535353">طلای ۱۸ عیار</span></div>
+ <div class="seg" style="margin:16px 0 12px">${[['24','۲۴ ساعت'],['7','۷ روز'],['30','۳۰ روز']].map(x=>`<button class="${CH===x[0]?'on':''}" data-a="chRange" data-c="${x[0]}">${x[1]}</button>`).join('')}</div>
+ <div style="position:relative;height:${H}px;direction:ltr"><div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between">${ticks.map(t=>`<div style="display:flex;align-items:center;gap:6px;font-size:10px;color:#71717A"><span>${t}</span><i style="flex:1;border-top:1px dashed #EEF0F3"></i></div>`).join('')}</div>
+ <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" preserveAspectRatio="none" style="position:absolute;inset:0"><defs><linearGradient id="cg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#1B9247" stop-opacity=".22"/><stop offset="1" stop-color="#1B9247" stop-opacity="0"/></linearGradient></defs><path d="${d} L${W} ${H} L0 ${H}Z" fill="url(#cg)"/><path d="${d}" fill="none" stroke="#1B9247" stroke-width="2" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1s ease-out forwards"/><circle cx="${last[0]-4}" cy="${last[1]}" r="4" fill="#1B9247" stroke="#fff" stroke-width="2"/></svg></div>
+ <div style="display:flex;justify-content:space-between;font-size:10px;color:#71717A;margin-top:8px;direction:rtl">${xl.map(x=>`<span>${x}</span>`).join('')}</div>
+ <div class="stats"><div><span>تغییرات ${CH==='24'?'۲۴ ساعت':CH==='7'?'۷ روز':'۳۰ روز'}</span><b style="color:#1B9247">↑ ۰٫۳۷٪</b></div><div><span>پایین‌ترین (تومان)</span><b>۲۴٬۸۲۶٬۹۰۰</b></div><div><span>بالاترین (تومان)</span><b>۲۵٬۰۴۶٬۴۰۰</b></div></div></div>`}
+ACT.chRange=(b,el)=>{CH=b.dataset.c;const c=el.querySelector('.chart');const t=document.createElement('div');t.innerHTML=chartCard();c.replaceWith(t.firstElementChild);el.querySelectorAll('[data-a="chRange"]').forEach(x=>x.onclick=()=>ACT.chRange(x,el))};
+SCR.details=()=>`${sbar()}${abar('جزئیات خرید اقساطی طلا','tx')}<div class="body"><div class="hwrap"><div class="hbg ${S.phase==='settled'?'green':''}" style="height:600px"></div>${sumHead(false,progCard())}<div style="padding:0 16px 24px;position:relative">${banner()}${schedule()}${chartCard()}${S.phase==='settled'?`<button class="btn" style="width:100%;margin-top:16px" data-a="toGold">مشاهدهٔ طلای من</button>`:''}</div></div></div>`;
+// my gold
+SCR.mygold=()=>{const msg=S.sold?gr(S.sold)+' گرم از طلای شما فروخته شد':S.collat?gr(S.collat)+' گرم بابت تسویهٔ قسط از طلای شما برداشته شد':'همهٔ اقساط شما پرداخت شد و طلایتان آزاد است';
+ return `${sbar()}${abar('طلای من','tx')}<div class="body"><div class="hwrap"><div class="hbg green" style="height:390px"></div>${sumHead(true,`<div class="prog" style="padding:16px;font-size:12px;text-align:center">${msg}</div>`)}<div style="padding:0 16px 24px;position:relative">
+ <div class="card optc rise"><div class="halo"></div><img class="ill" src="${IMG('ill_lock')}" alt="" style="position:relative"><div class="h16" style="color:#1B1D21;margin-top:8px">🎉 تبریک! طلات آزاد شد</div><div style="font-size:13px;color:#535353;margin:8px 0 8px">حالا انتخاب کن چطور از طلای خودت استفاده کنی.</div>
+ <button class="opt" data-go="sell"><span class="oic">${I.sell}</span><div style="flex:1;text-align:right"><div class="ot">فروش طلا</div><div class="os">واریز بهای طلا به حساب بانکی شما</div></div>${I.left}</button>
+ <div class="opt off"><span class="oic">${I.truck}</span><div style="flex:1;text-align:right"><div class="ot">تحویل فیزیکی</div><div class="os">ارسال طلا به نشانی شما</div></div><span class="dis">موقتا غیرفعال</span></div>
+ <div class="opt off"><span class="oic">${I.loan}</span><div style="flex:1;text-align:right"><div class="ot">دریافت وام</div><div class="os">دریافت وام با پشتوانه طلا</div></div><span class="dis">موقتا غیرفعال</span></div></div></div></div></div>`};
+function noticeHTML(){const n={pending:['مبلغ فروش در راه حساب شماست','مبلغ تا ۲ روز کاری به حسابتان واریز می‌شود',''],done:['مبلغ فروش واریز شد','مبلغ فروش طلا به حساب بانکی شما نشست','done']}[S.notice];return `<div class="notice ${n[2]} rise"><div style="flex:1;text-align:right"><div style="font-size:14px;font-weight:700;color:#5A3A08">${n[0]}</div><div style="font-size:12px;color:#7A5414;margin-top:2px">${n[1]}</div></div></div>`}
+// sell
+SCR.sell=()=>{const max=gold();return `${sbar()}${abar('فروش طلا')}${priceBar()}<div class="body"><div class="band"></div>
+ <div class="acardw rise"><img class="ill" src="${IMG('ill_gold')}" alt=""><div class="h16" style="color:#1449AD">فروش طلا</div>
+ <div class="stepper"><button class="sbtn" id="pl">${I.plus}</button><div><div class="big" id="sv"></div><div class="d14" id="sg" style="margin-top:4px"></div></div><button class="sbtn" id="mn">${I.minus}</button></div>
+ <input class="rng" type="range" id="sr" min="1" max="${Math.round(max*1000)}" step="1" value="1" aria-label="مقدار فروش"><div class="rlab"><span>۰٫۰۰۱ گرم</span><span>${gr(max)} گرم</span></div></div>
+ <div class="card rows rise" style="animation-delay:.08s"><div class="row"><span class="k">موجودی طلای شما</span><span class="v">${gr(max)} <span class="u">گرم</span></span></div><div class="row"><span class="k">طلای باقی‌مانده (پس از فروش)</span><span class="v" id="s1"></span></div><div class="row"><span class="k">مبلغ دریافتی (تخمینی)</span><span class="v" id="s2"></span></div></div></div>
+ <div class="cta"><button class="btn" id="sgo" data-go="sellReview" disabled>ادامه و بررسی فروش</button></div>`};
+BIND.sell=el=>{const r=el.querySelector('#sr'),max=gold(),b=el.querySelector('#sgo');const u=moved=>{const g=r.value/1000;S.sellG=g;r.style.setProperty('--v',(r.value-1)/(r.max-1)*100+'%');const val=sellVal(g);
+ el.querySelector('#sv').innerHTML=gr(g)+'<small>گرم</small>';el.querySelector('#sg').textContent='ارزش تخمینی: '+money(val)+' تومان';el.querySelector('#s1').innerHTML=gr(max-g)+' <span class="u">گرم</span>';el.querySelector('#s2').innerHTML=money(val)+' <span class="u">تومان</span>';if(moved)b.disabled=false};
+ r.oninput=()=>u(1);u(0);el.querySelector('#mn').onclick=()=>{r.value=Math.max(1,+r.value-10);u(1)};el.querySelector('#pl').onclick=()=>{r.value=Math.min(+r.max,+r.value+10);u(1)}};
+const sellVal=g=>g<.01?Math.round(g*PRICE):Math.round(g*PRICE/1000)*1000;
+SCR.sellReview=()=>{const a=S.accounts.find(x=>x.id===S.acc),v=sellVal(S.sellG);return `${sbar()}${abar('بررسی و تأیید فروش')}<div class="body pad">
+ <div class="paycard rise"><div class="in"><img class="ill" src="${IMG('ill_sell')}" alt=""><div class="h16" style="margin-top:8px">تأیید فروش طلا</div><div class="d14" style="margin-top:8px">مبلغ نهایی بر اساس قیمت طلا در لحظهٔ ثبت فروش محاسبه می‌شود و طبق چرخهٔ پایا حداکثر تا ۲ روز کاری به حساب شما واریز می‌شود.</div></div><div class="ft">ثبت فروش به معنای پذیرش <a data-go="contract" style="cursor:pointer">شرایط و قرارداد فروش طلا</a>ست.</div></div>
+ <div class="card acc rise" style="animation-delay:.06s"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:16px">واریز به حساب بانکی</b>${S.accounts.length>1?`<button style="color:#1E6CFF;font-size:14px;display:flex;gap:4px;align-items:center" data-a="pickAcc">${sv('<path d="M4 8h14l-3-3M20 16H6l3 3"/>',18,1.6,'#1E6CFF')}تغییر حساب</button>`:`<button style="color:#1E6CFF;font-size:14px;display:flex;gap:4px;align-items:center" data-a="addAcc">${sv('<path d="M12 5v14M5 12h14"/>',18,1.8,'#1E6CFF')}حساب جدید</button>`}</div>
+ <div style="display:flex;align-items:center;gap:12px;margin-top:14px"><span class="blogo"><img src="${IMG(a.logo)}" alt=""></span><div style="flex:1;text-align:right"><div class="iban">${a.iban}</div><div style="font-size:12px;color:#535353;margin-top:4px">${a.bank}</div></div><span class="radio" style="border-color:#1E6CFF"><i style="width:10px;height:10px;border-radius:50%;background:#1E6CFF;display:block;margin:3px"></i></span></div></div>
+ <div class="card acc rise" style="animation-delay:.1s"><div class="h16" style="margin-bottom:8px">جزئیات فروش</div><div class="row"><span class="k" style="color:#535353">نوع عملیات</span><span class="v">فروش طلا</span></div><div class="row"><span class="k" style="color:#535353">مبلغ تخمینی فروش</span><span class="v">${tm(v)}</span></div><div class="row"><span class="k" style="color:#535353">مقدار طلای فروشی</span><span class="v">${gr(S.sellG)} <span>گرم</span></span></div><div style="border-top:1px dashed #E8E8E8;margin:8px 0 4px"></div><div class="row" style="font-weight:700"><span>مبلغ دریافتی (تخمینی)</span><span class="v" style="font-weight:700">${money(v)} تومان</span></div></div></div>
+ <div class="cta"><button class="btn" data-a="sellSubmit">ثبت فروش طلا</button></div>`};
+ACT.pickAcc=(b,el)=>{openSheet(`<div class="sic" style="background:rgba(30,108,255,.2)">${I.card}</div><div class="h16 c">انتخاب حساب واریز</div><div style="font-size:13px;color:#535353;text-align:center;margin:8px 0 8px">لطفا یکی از موارد زیر را انتخاب کنید</div>
+ ${S.accounts.map(a=>`<button class="accsel ${a.id===S.acc?'on':''}" data-id="${a.id}"><span class="blogo"><img src="${IMG(a.logo)}" alt=""></span><div style="flex:1;text-align:right"><div class="iban">${a.iban}</div><div style="font-size:12px;color:#535353;margin-top:4px">${a.bank}</div></div><span class="radio"></span></button>`).join('')}
+ <button class="btn" style="width:100%;margin-top:16px" id="addacc">افزودن شماره شبای جدید</button>`,s=>{s.querySelectorAll('.accsel').forEach(x=>x.onclick=()=>{S.acc=+x.dataset.id;s.querySelectorAll('.accsel').forEach(y=>y.classList.toggle('on',y===x));setTimeout(()=>{closeSheet();show({name:'sellReview',o:{}},'dis')},250)});s.querySelector('#addacc').onclick=()=>ACT.addAcc()})};
+ACT.addAcc=()=>{openSheet(`<div class="sic" style="background:rgba(30,108,255,.2)">${I.card}</div><div class="h16 c">افزودن حساب جدید</div><div style="font-size:13px;color:#535353;text-align:center;margin-top:8px">لطفاً شماره شبایی را که به نام خودتان است وارد کنید.</div>
+ <div class="lbl">شماره شبا</div><div class="field" id="ibf"><input id="ibi" inputmode="numeric" placeholder="بدون فاصله وارد شود"><span style="font-size:14px;color:#535353;border-right:1px solid #E8E8E8;padding-right:10px">IR</span></div><div class="help" id="ibh" style="min-height:18px;color:#535353"></div>
+ <button class="btn" style="width:100%;margin-top:8px" id="ibok" disabled>ثبت حساب</button>`,s=>{const i=s.querySelector('#ibi'),f=s.querySelector('#ibf'),h=s.querySelector('#ibh'),b=s.querySelector('#ibok');
+ i.oninput=()=>{const d=en(i.value).slice(0,24);i.value=fa(d);f.className='field';h.className='help';h.textContent='';b.disabled=d.length<24;if(d.length===24){if(d.endsWith('0000')){f.classList.add('err');h.className='help err';h.textContent='این شماره شبا به نام شما نیست. شبای متعلق به خودتان را وارد کنید.';b.disabled=true}else{f.classList.add('ok');h.className='help ok';h.textContent='بانک پاسارگاد · به نام شما'}}};
+ b.onclick=()=>{const d=en(i.value);S.accounts.push({id:3,bank:'بانک پاسارگاد',logo:'bank_pasargad',iban:'IR'+fa(d.slice(0,2))+'  '+fa(d.slice(2,6))+'  ****  ****  ****  '+fa(d.slice(-4))});S.acc=3;closeSheet();toast('حساب جدید ثبت شد');later(()=>show({name:'sellReview',o:{}},'dis'),300)};setTimeout(()=>i.focus(),400)})};
+ACT.sellSubmit=b=>{b.innerHTML='<span class="spin"></span>';later(()=>{const g=S.sellG,v=sellVal(g),a=S.accounts.find(x=>x.id===S.acc);S.sold+=g;S.notice='pending';S.hist.push({t:'فروش طلا',d:'۲ بهمن ۱۴۰۵ · ۱۱:۳۰',a:v,m:'بهمن ۱۴۰۵',st:'در انتظار واریز',g,bank:a.bank});S.lastSale={g,v,bank:a.bank};
+ reset('rcpt',{kind:'ok',title:'فروش طلا ثبت شد',sub:gr(g)+' گرم طلا فروخته شد.',rows:[['نوع پرداخت','فروش طلا'],['روش تسویه','واریز به حساب بانکی'],['تاریخ ثبت','۱۴۰۵/۱۱/۰۱'],['زمان ثبت','۱۷:۱۰:۰۴'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۲۰۳۸'],['مبلغ دریافتی (تخمینی)',tm(v)]],foot:'واریز وجه طبق چرخهٔ پایا ممکن است تا ۲ روز کاری طول بکشد.',next:'toGold',cta:'بازگشت به طلای من'})},900)};
+// transactions
+const TXI=c=>`<svg width="24" height="24" viewBox="0 0 24 24"><path d="M21.14 9.9H12.75v5.48c0 .41-.34.75-.75.75s-.75-.34-.75-.75V9.9H2.86c-.48 0-.86.38-.86.86C2 16.65 6.11 20.76 12 20.76s10-4.11 10-10c0-.48-.38-.86-.86-.86Z" fill="${c}"/><path d="M12.75 5.8l1.56 1.56c.29.29.77.29 1.06 0 .29-.29.29-.77 0-1.06l-2.85-2.84a.75.75 0 0 0-1.06 0L8.62 6.31a.75.75 0 0 0 0 1.06c.29.29.77.29 1.06 0l1.56-1.56v4.09h1.5V5.8Z" fill="${c}"/></svg>`;
+const TXIN=c=>`<svg width="24" height="24" viewBox="0 0 24 24"><path d="M21.14 9.9h-8.46v3.67l1.57-1.57c.29-.29.77-.29 1.06 0 .29.29.29.77 0 1.06l-2.85 2.84c-.29.29-.77.29-1.06 0l-2.85-2.84a.75.75 0 0 1 0-1.06c.29-.29.77-.29 1.06 0l1.56 1.56V9.9H2.86c-.48 0-.86.38-.86.86C2 16.65 6.11 20.76 12 20.76s10-4.11 10-10c0-.48-.38-.86-.86-.86Z" fill="${c}"/><path d="M12.68 3.99a.75.75 0 0 0-1.5 0v5.9h1.5V3.99Z" fill="${c}"/></svg>`;
+SCR.tx=()=>{const h=[...S.hist].reverse();const months=[];h.forEach(x=>{let m=months.find(y=>y[0]===x.m);if(!m){m=[x.m,[]];months.push(m)}m[1].push(x)});
+ const det=x=>{const rows=x.g?[['مقدار طلا',gr(x.g)+' گرم'],['واریز به',x.bank+' · ۷۱۴۵ ****'],x.st==='واریز شد'?['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۲۰۳۸']:['زمان تقریبی واریز','حداکثر ۲ روز کاری (پایا)']]:x.n!==undefined?[['اصل قسط',money(P().A/3)+' تومان'],...(x.pen?[['جریمهٔ دیرکرد ('+(/وثیقه/.test(x.st)?'۱۰':'۸')+' روز)',money(x.pen)+' تومان']]:[]),['روش پرداخت',/وثیقه/.test(x.st)?'فروش از طلای وثیقه':'درگاه پرداخت آنلاین'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۰۸۸۲']]:[['شرح','خدمات اجرایی و پردازش درخواست خرید'],['روش پرداخت','درگاه پرداخت آنلاین'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۰۹۱۸۸']];
+  return `<div class="det">${rows.map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div>`};
+ return `${sbar()}${abar('تراکنش‌ها','none')}<div class="body pad">${h.length?'':'<div class="card" style="padding:24px;text-align:center;color:#535353;font-size:14px">هنوز تراکنشی ثبت نشده است.</div>'}
+ ${months.map(m=>`<div class="mh">${m[0]}</div><div class="txm rise">${m[1].map(x=>{const plus=x.a>0;const c=plus?'#1B9247':/وثیقه/.test(x.st)?'#FF832B':'#1E6CFF';
+  return `<div class="tx"><div class="top" data-a="toggleTx"><span class="txi" style="background:${c}33">${plus?TXIN(c):TXI(c)}</span><div style="flex:1;text-align:right"><div class="tt">${x.t}</div><div class="td">${x.d}</div></div><div class="ta"><b><small>تومانء</small>${plus?'+':'−'}${money(Math.abs(x.a))}</b><span class="tst" style="background:${c}33;color:${c}">${x.st}</span></div><span class="tch">${I.down}</span></div>${det(x)}</div>`}).join('')}</div>`).join('')}</div>`};
+ACT.toggleTx=b=>b.parentNode.classList.toggle('open');
+// contract
+SCR.contract=()=>{const p=P();const rows=[['موضوع قرارداد','خرید '+gr(p.grams)+' گرم طلای ۱۸ عیار به‌صورت اقساطی از قسطا.'],['مبلغ خرید',money(p.A)+' تومان، بر اساس قیمت هر گرم '+money(PRICE)+' تومان در زمان خرید.'],['بازپرداخت','۳ قسط ماهانه، هر قسط '+money(p.inst)+' تومان؛ قسط اول در زمان خرید پرداخت می‌شود.'],['وثیقه','طلای خریداری‌شده تا تسویهٔ کامل اقساط نزد قسطا به‌عنوان وثیقه نگهداری می‌شود.'],['تأخیر در پرداخت','قسط اول در روز خرید و اقساط بعدی روز ۱ هر ماه سررسید می‌شوند. پرداخت تا روز ۵ بدون جریمه است؛ از روز ۶ تا ۱۰ جریمهٔ دیرکرد اعمال می‌شود و در روز ۱۰ بدهی از طلای وثیقه تسویه می‌شود.'],['فروش طلا','پس از آزادسازی، فروش انجام و مبلغ طبق چرخهٔ پایا حداکثر تا ۲ روز کاری به حساب بانکی شما واریز می‌شود.'],['حفاظت از اطلاعات','اطلاعات هویتی و بانکی شما رمزنگاری‌شده نگهداری و شماره کارت در همهٔ صفحه‌ها پوشیده نمایش داده می‌شود.'],['حل اختلاف','پیگیری هر اختلاف با کد پیگیری تراکنش و شماره موبایل شما از طریق پشتیبانی قسطا انجام می‌شود.']];
+ return `${sbar()}${abar('قرارداد خرید اقساطی طلا','none')}<div class="body pad"><img class="ill" src="${IMG('ill_contract')}" alt=""><div class="h16 c" style="margin:16px 0">قوانین و مقررات سرویس خرید اقساطی طلا</div><div class="card" style="padding:4px 16px">${rows.map(r=>`<div class="crow"><b>${r[0]}:</b><p>${r[1]}</p></div>`).join('')}</div><div style="height:12px"></div></div><div class="cta"><button class="btn" data-a="back">متوجه شدم</button></div>`};
+// purchases list
+function gauge(done,col){const seg=[0,1,2].map(i=>{const a0=Math.PI*(1-i/3)-0.06,a1=Math.PI*(1-(i+1)/3)+0.06;const p=(a)=>[42+34*Math.cos(a),44-34*Math.sin(a)];const [x0,y0]=p(a0),[x1,y1]=p(a1);return `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A34 34 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" stroke="${i<done?col:'#E4E4E7'}" stroke-width="8" fill="none" stroke-linecap="round"/>`}).join('');
+ return `<div class="gauge"><svg width="84" height="50">${seg}</svg><b>${fa(done)} از ۳<small>قسط</small></b></div>`}
+function contractCard(o){return `<div class="card ctc rise"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:14px">${o.t}</b><button style="color:#1E6CFF;font-size:12px;display:flex;align-items:center;gap:2px" data-a="${o.go}">مشاهده جزئیات ${sv('<path d="M15 6l-6 6 6 6"/>',14,2,'#1E6CFF')}</button></div>
+ <div style="display:flex;align-items:center;gap:12px;margin-top:10px">${gauge(o.d,o.col)}<div style="flex:1;text-align:right"><div style="font-size:12px;color:#535353">${o.g} گرم طلا <span style="color:#D4D4D8">|</span> ${o.a} تومان</div><span class="bd ${o.c}" style="display:inline-flex;margin-top:8px;height:26px">${o.s}</span></div></div>
+ <div class="cft"><span style="display:flex;gap:6px;align-items:center">${sv('<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/>',16,1.6,'#A1A1A1')}${o.f[0]}</span><b>${o.f[1]}</b></div></div>`}
+SCR.purchases=()=>{const p=P(),active=S.phase==='await'||S.phase==='active';let cards='';
+ if(S.phase!=='none'){const st=S.phase==='await'?['orange','در انتظار پرداخت قسط اول','#FF832B',['پرداخت قسط اول تا','۳۰ آذر | '+money(p.inst)+' تومان']]:S.phase==='settled'?['green','تسویه شد','#1B9247',['تاریخ تسویه','۱ بهمن ۱۴۰۵ | طلا آزاد']]:S.day==='penalty'?['red','با جریمه دیرکرد','#F22323',['قسط معوق',DATES[S.paid]+' | '+money(p.inst+pen(8))+' تومان']]:S.day==='grace'?['orange','در انتظار پرداخت','#FF832B',['بدون جریمه تا','۵ '+DATES[S.paid].split(' ').slice(1).join(' ')+' | '+money(p.inst)+' تومان']]:['blue','در حال پرداخت','#1E6CFF',['قسط بعدی',DATES[S.paid]+' | '+money(p.inst)+' تومان']];
+  cards+=contractCard({t:'قرارداد ۱۴۰۵/۰۹/۲۶',go:S.phase==='settled'?'toGold':'toDetails',a:money(p.A),g:gr(p.grams),c:st[0],s:st[1],col:st[2],d:S.paid,f:st[3]})}
+ cards+=contractCard({t:'قرارداد ۱۴۰۵/۰۵/۱۰',go:'toastOld',a:money(30e6),g:gr(30e6/PRICE),c:'green',s:'تسویه شد',col:'#1B9247',d:3,f:['تاریخ تسویه','۱ مهر ۱۴۰۵ | طلا آزاد']});
+ return `${sbar()}${abar('قراردادهای من','none')}<div class="body pad">${active?'<div style="background:#FFF0E3;margin:-16px -16px 16px;padding:8px 16px;font-size:12px;color:#18181B;line-height:20px">خرید جدید پس از تسویهٔ کامل اقساط خرید فعلی فعال می‌شود.</div>':''}${cards}</div><div class="cta"><button class="btn" ${active?'disabled':''} data-a="newBuy">＋ خرید طلای اقساطی جدید</button></div>`};
+ACT.toastOld=()=>toast('این قرارداد قبلاً تسویه شده است');ACT.newBuy=()=>{const ph=S.phone;S=fresh();S.phone=ph;reset('amount')};
+// home
+SCR.home=()=>`<div class="body" style="background:#fff"><div class="hhead">${sbar('dark')}<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px"><img src="${IMG('logo_w')}" alt="قسطا" style="height:32px"><button class="ib" style="background:rgba(255,255,255,.15);position:relative" data-a="toast" data-m="اعلانی ندارید">${I.bell}<i style="position:absolute;top:6px;right:7px;width:6px;height:6px;border-radius:50%;background:#F22323"></i></button></div>
+ <div class="wal">${[['کیف پول نقدی','گردش کیف','برداشت وجه'],['کیف پول اعتبار ماهانه','گردش کیف','مدیریت اعتبار'],['کیف پول نقدی','گردش کیف','برداشت وجه اعتبار']].map(w=>`<div class="wc"><div class="wt"><span>${w[0]}</span><span>۴ قسط</span></div><div class="wa num">۱۸٬۰۰۰٬۰۰۰<small>تومان</small></div><div class="wb"><span>${w[1]}</span><span>${w[2]}</span></div></div>`).join('')}</div></div>
+ <div class="hsheet"><div class="handle"></div>
+ <button style="display:block;width:100%;margin-top:12px" data-a="goldEntry"><img class="bnr" src="${IMG('ban1')}" alt="خرید اقساطی طلا"></button>
+ <div class="svc">${[['svc4','وام‌یاب','جدید'],['svc3','طلا قسطی','بدون چک','goldEntry'],['svc2','استعلام ضامن'],['svc1','وام خودرو','هوشمند'],['svc8','فروشگاه'],['svc7','رشد اعتبار','مشاوره'],['svc6','کیف پول'],['svc5','اعتبار ماهانه']].map(s=>`<button data-a="${s[3]||'toast'}" data-m="این سرویس در پروتوتایپ فعال نیست">${s[2]?`<span class="bdg">${s[2]}</span>`:''}<img src="${IMG(s[0])}" alt="">${s[1]}</button>`).join('')}</div>
+ <img class="bnr" src="${IMG('ban4')}" alt=""><div class="qa"><div>خرید شارژ و بسته<br><span>شروع خرید</span><img src="${IMG('qa2')}" alt=""></div><div>پرداخت انواع قبض<br><span>شروع پرداخت</span><img src="${IMG('qa1')}" alt=""></div></div></div></div>
+ <div class="nav">${[['فروشگاه','<path d="M4 9l1-4h14l1 4M5 9v10h14V9M9 19v-5h6v5"/>'],['وام‌یاب','<path d="M3 10l9-6 9 6M5 10v9h14v-9M9 19v-5h6v5"/>'],['خدمات','<rect x="4" y="4" width="6" height="6" rx="2"/><rect x="14" y="4" width="6" height="6" rx="2"/><rect x="4" y="14" width="6" height="6" rx="2"/><rect x="14" y="14" width="6" height="6" rx="2"/>',1],['تراکنش‌ها','<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/>'],['حساب من','<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>']].map(n=>`<button class="${n[2]?'on':''}" data-a="toast" data-m="فقط خانه در این پروتوتایپ فعال است"><span class="nb">${sv(n[1],22,1.6,n[2]?'#fff':'#8A8A8A')}</span>${n[0]}</button>`).join('')}</div>`;
+ACT.goldEntry=()=>{if(S.phase==='none')go('intro',{k:0});else go('purchases')};
+/* ---------- time travel & scenarios ---------- */
+function timeOpts(){const o=[];const n=S.paid;
+ if(cur&&cur.name==='otp')o.push(['hint','کد تست: ۱۲۳۴۵']);
+ if(cur&&(cur.name==='sellReview'))o.push(['hint','شبای تست خطا: ۲۴ رقم با ۰۰۰۰ در انتها']);
+ if(S.phase==='active'&&n<3&&cur&&['details','purchases','mygold'].includes(cur.name)){
+  if(S.day==='normal')o.push(['سررسید قسط '+ORD[n]+' ('+DATES[n]+')',()=>{S.day='due'}]);
+  if(S.day==='due')o.push(['روز ۲ تا ۵ (بدون پرداخت)',()=>{S.day='grace'}]);
+  if(S.day==='grace')o.push(['رفتن به روز ۶ (جریمه)',()=>{S.day='penalty'}]);
+  if(S.day==='penalty')o.push(['رفتن به روز ۱۰ (تسویه از وثیقه)',()=>{collateral();return false}])}
+ if(S.notice==='pending'&&cur&&['mygold','home'].includes(cur.name))o.push(['۲ روز کاری بعد (واریز)',()=>{S.notice='done';const h=S.hist.find(x=>x.st==='در انتظار واریز');if(h)h.st='واریز شد';later(()=>reset('rcpt',{kind:'ok',title:'مبلغ فروش واریز شد',sub:'مبلغ به حساب '+S.lastSale.bank+' شما واریز شد.',rows:[['نوع پرداخت','فروش طلا'],['روش تسویه','واریز به حساب بانکی'],['تاریخ ثبت','۱۴۰۵/۱۱/۰۳'],['زمان ثبت','۱۱:۳۰:۰۰'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۲۰۳۸'],['مبلغ واریزشده',tm(S.lastSale.v)]],next:'toGold'}),50)}]);
+ return o}
+function collateral(){const n=S.paid,p=P(),pn=pen(10),debt=p.inst+pn,g=debt/PRICE;S.inst[n]={s:'collateral',pen:pn,g};S.collat+=g;S.paid=n+1;S.day='normal';if(S.paid>=3)S.phase='settled';
+ S.hist.push({t:'تسویهٔ قسط '+ORD[n]+' از وثیقه',d:(n===1?'۱۰ دی':'۱۰ بهمن')+' ۱۴۰۵ · ۰۰:۰۵',a:-debt,m:n===1?'دی ۱۴۰۵':'بهمن ۱۴۰۵',st:'تسویه از وثیقه',pen:pn,n});
+ reset('details',{anim:'fade'});later(()=>openSheet(`<div class="sic" style="background:rgba(255,131,43,.2)">${sv('<path d="M12 7v6M12 17h.01"/>',26,2.6,'#FF832B')}</div><div class="h16 c">بخشی از طلای شما برای تسویهٔ قسط فروخته شد</div><div style="font-size:13px;color:#535353;text-align:center;margin-top:8px;line-height:22px">مهلت پرداخت قسط شما تمام شد و مبلغ بدهی به‌همراه جریمهٔ دیرکرد از طلای وثیقه برداشته شد.</div>
+ <div style="background:#FAFAFA;border-radius:14px;padding:14px;margin-top:16px;font-size:12px"><div style="color:#A1A1A1;font-weight:500">بدهی تسویه‌شده (قسط ${ORD[n]})</div><div class="row" style="min-height:28px"><span style="color:#535353">قسط</span><b style="font-weight:500">${money(p.inst)} تومان</b></div><div class="row" style="min-height:28px"><span style="color:#535353">جریمهٔ دیرکرد (۱۰ روز)</span><b style="font-weight:500">${money(pn)} تومان</b></div><div class="row" style="min-height:30px;font-size:14px"><b style="font-weight:500">مجموع</b><b style="color:#FF832B">${money(debt)} تومان</b></div>
+ <div style="height:1px;background:#E8E8E8;margin:6px 0"></div><div style="color:#A1A1A1;font-weight:500;margin-top:6px">طلای وثیقه</div><div class="row" style="min-height:28px"><span style="color:#535353">طلای فروخته‌شده</span><b style="font-weight:500">${gr(g)} گرم</b></div><div class="row" style="min-height:30px;font-size:14px"><b style="font-weight:500">طلای باقی‌مانده</b><b>${gr(gold())} گرم${S.phase==='settled'?' (آزاد شد)':''}</b></div></div>
+ <button class="btn" style="width:100%;margin-top:16px" id="gotit">متوجه شدم</button>`,s=>s.querySelector('#gotit').onclick=()=>{closeSheet();if(S.phase==='settled')later(()=>reset('mygold'),350)}),500)}
+const _col=collateral;
+function renderTime(){const tb=document.getElementById('timebar');tb.innerHTML='';timeOpts().forEach(t=>{if(t[0]==='hint'){const c=document.createElement('span');c.className='chip hint';c.textContent=t[1];tb.appendChild(c);return}const b=document.createElement('button');b.className='chip time';b.textContent='⏭ '+t[0];b.onclick=()=>{if(t[1]()===false)return;if(cur.name==='details'||cur.name==='purchases'||cur.name==='mygold')show({name:cur.name,o:{}},'dis');else renderTime()};tb.appendChild(b)})}
+const SCN=[
+ ['شروع',[['معرفی سرویس',()=>{S=fresh();reset('intro',{k:0})}],['خانه',()=>{S=fresh();reset('home')}],['ورود با شماره موبایل',()=>{S=fresh();reset('login')}]]],
+ ['خرید و اعتبارسنجی',[['انتخاب مبلغ خرید',()=>{S=fresh();reset('amount')}],['پرداخت هزینهٔ عملیات',()=>{S=fresh();reset('fee')}],['اطلاعات هویتی (نتیجه موفق)',()=>{S=fresh();S.review='ok';reset('identity')}],['خطای شاهکار (کد ملی)',()=>{S=fresh();S.review='shahkar';S.form={nid:'0020775408',bd:{y:1376,m:6,d:28},card:'5047061041027145'};reset('identity')}],['خطای ثبت احوال (تاریخ تولد)',()=>{S=fresh();S.review='birth';S.form={nid:'0020775409',bd:{y:1376,m:6,d:28},card:'5047061041027145'};reset('identity')}],['خطای کارت بانکی',()=>{S=fresh();S.review='card';S.form={nid:'0020775409',bd:{y:1376,m:6,d:28},card:'5047061041027145'};reset('identity')}],['اعتبار فعال شد',()=>{S=fresh();S.phase='await';reset('approved')}]]],
+ ['اقساط',[['قبل از پرداخت قسط اول',()=>{S=fresh();S.phase='await';TAB='current';reset('details')}],['پرداخت قسط اول',()=>{S=fresh();S.phase='await';reset('pay',{n:0})}],['قسط اول پرداخت شد',()=>{st(1,'normal');reset('details')}],['سررسید قسط دوم',()=>{st(1,'due');reset('details')}],['قسط دوم: روز ۲ تا ۵',()=>{st(1,'grace');reset('details')}],['قسط دوم: روز ۶ تا ۱۰ (جریمه)',()=>{st(1,'penalty');reset('details')}],['قسط دوم: تسویه از وثیقه',()=>{st(1,'penalty');collateral()}],['سررسید قسط سوم',()=>{st(2,'due');reset('details')}],['قسط سوم معوق (جریمه)',()=>{st(2,'penalty');reset('details')}],['قسط سوم: تسویه از وثیقه',()=>{st(2,'penalty');collateral()}]]],
+ ['بعد از تسویه',[['طلای من (تسویهٔ کامل)',()=>{st(3,'normal');reset('mygold')}],['فروش طلا',()=>{st(3,'normal');reset('sell')}],['بررسی فروش و تغییر حساب',()=>{st(3,'normal');S.sellG=.962;reset('sellReview')}],['طلای من بعد از فروش ۴۰٪',()=>{st(3,'normal');S.sold=.962;S.notice='pending';S.lastSale={g:.962,v:24008000,bank:'بانک شهر'};S.hist.push({t:'فروش طلا',d:'۲ بهمن ۱۴۰۵ · ۱۱:۳۰',a:24008000,m:'بهمن ۱۴۰۵',st:'در انتظار واریز',g:.962,bank:'بانک شهر'});reset('mygold')}]]],
+ ['گزارش‌ها',[['تراکنش‌ها',()=>{st(3,'normal');reset('tx')}],['قراردادهای من',()=>{st(1,'normal');reset('purchases')}],['قرارداد',()=>{reset('contract')}]]]];
+function st(paid,day){S=fresh();S.phase=paid>=3?'settled':'active';S.paid=Math.min(paid,3);S.day=day;S.hist.push({t:'هزینهٔ عملیات',d:'۲۶ آذر ۱۴۰۵ · ۱۶:۴۰',a:-P().op,m:'آذر ۱۴۰۵',st:'پرداخت شد'});
+ for(let i=0;i<S.paid;i++){S.inst[i]={s:'paid'};S.hist.push({t:i===0?'خرید طلا و قسط اول':'پرداخت قسط '+ORD[i],d:[DATES[0],DATES[1],DATES[2]][i]+' · '+['۱۶:۴۷','۱۸:۰۲','۰۹:۱۵'][i],a:-P().inst,m:['آذر ۱۴۰۵','دی ۱۴۰۵','بهمن ۱۴۰۵'][i],st:'پرداخت شد',n:i})}}
+(function(){const pl=document.getElementById('plist');SCN.forEach(g=>{const d=document.createElement('div');d.className='pg';d.innerHTML='<h2>'+g[0]+'</h2>';g[1].forEach(x=>{const b=document.createElement('button');b.className='pb';b.textContent=x[0];b.onclick=()=>{x[1]();document.getElementById('panel').classList.remove('open')};d.appendChild(b)});pl.appendChild(d)})})();
+document.getElementById('menu').onclick=()=>document.getElementById('panel').classList.toggle('open');
+function scale(){const small=innerWidth<=760;const st=document.querySelector('.stage');const avW=small?innerWidth:st.clientWidth-20,avH=small?innerHeight-50:innerHeight-70;document.documentElement.style.setProperty('--s',Math.min(1,avW/390,avH/868))}
+addEventListener('resize',scale);scale();
+const style=document.createElement('style');style.textContent='@keyframes draw{to{stroke-dashoffset:0}}';document.head.appendChild(style);
+reset('intro',{k:0,anim:'none'});
+</script>
+
+</body>
+</html>
