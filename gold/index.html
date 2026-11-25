@@ -151,7 +151,7 @@ button:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px}
 .gch{margin:4px auto 0;width:fit-content;height:30px;padding:0 12px;border-radius:24px;background:rgba(255,255,255,.1);display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500}
 .prog{margin:12px 0 0;background:rgba(0,0,0,.1);border-radius:16px;padding:16px}
 .prog .pt{font-size:12px;text-align:center}
-.segs{display:flex;gap:7px;margin:8px 0 16px;direction:rtl}.segs i{flex:1;height:4px;border-radius:24px;background:rgba(255,255,255,.4)}.segs i.on{background:#7CFF16;animation:grow .6s ease-out both}
+.segs{display:flex;gap:7px;margin:8px 0 16px;direction:rtl}.segs i{flex:1;height:4px;border-radius:24px;background:rgba(255,255,255,.4)}.segs i{position:relative;overflow:hidden}.segs i.on::after{content:'';position:absolute;inset:0;border-radius:inherit;background:#7CFF16;transform-origin:right;animation:segfill .5s cubic-bezier(.4,0,.2,1) both;animation-delay:inherit}@keyframes segfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes grow{from{transform:scaleX(0);transform-origin:right}}
 .pcols{display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:12px}.pcols>div+div{border-right:1px solid rgba(255,255,255,.2)}
 .pcols b{display:flex;justify-content:center;gap:4px;font-weight:500;margin-top:6px;align-items:baseline}.pcols b small{font-size:11px;color:#93B8FF;font-weight:400}
@@ -451,7 +451,7 @@ function sumHead(green,extra){const p=P(),settled=S.phase==='settled';const lab=
  return `<div class="sum"><button class="cchip" data-go="contract">${I.doc}مشاهده قرارداد</button><img class="ill" src="${IMG('ill_gold')}" alt=""><div class="st1" style="margin-top:4px">مبلغ خرید طلا</div><div class="st2 num">${money(p.A)}<small>تومان</small></div>
  <div class="gch">${I.gold}${lab} <b style="font-weight:500">${gr(gold())} گرم${green?' طلا':''}</b></div>${extra||''}</div>`}
 function progCard(){const p=P(),done=S.inst.filter(x=>x.s!=='unpaid').length,col=S.inst.some(x=>x.s==='collateral');
- return `<div class="prog"><div class="pt">${fa(done)} از ۳ قسط ${col?'تسویه':'پرداخت'} شده</div><div class="segs">${[0,1,2].map(i=>`<i class="${i<done?'on':''}" style="animation-delay:${i*120}ms"></i>`).join('')}</div>
+ return `<div class="prog"><div class="pt">${fa(done)} از ۳ قسط ${col?'تسویه':'پرداخت'} شده</div><div class="segs">${[0,1,2].map(i=>`<i class="${i<done?'on':''}" style="animation-delay:${300+i*500}ms"></i>`).join('')}</div>
  <div class="pcols"><div>پرداخت‌شده<b class="num">${money(paidSum())}<small>تومان</small></b></div><div>مانده بدهی<b class="num">${money(remaining())}<small>تومان</small></b></div></div></div>`}
 function banner(){const p=P(),n=S.paid;if(S.phase==='settled')return '';
  if(S.phase==='await')return bn('#1B9247','برای نهایی‌شدن خرید طلا، قسط اول را پرداخت کنید','پرداخت قسط اول',0,p.inst);
