@@ -272,6 +272,7 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .enter-push>.ab>*,.enter-back>.ab>*{animation:abin .3s ease both}@keyframes abin{from{opacity:0}}
 .exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
 .hchev{display:block;margin:0 auto}
+#dev button:focus-visible,#dev [data-a]:focus-visible,#dev input:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px;border-radius:12px}
 </style>
 </head>
 <body>
@@ -630,7 +631,24 @@ document.addEventListener('dragstart',e=>{if(e.target.closest&&e.target.closest(
 const count=el=>{const tn=[...el.childNodes].find(n=>n.nodeType===3&&/[۰-۹]{1,3}(٬[۰-۹]{3})+/.test(n.textContent));if(!tn)return;const m=tn.textContent.match(/[۰-۹]{1,3}(٬[۰-۹]{3})+/)[0],v=toN(m);if(!v||v<1000)return;const pre=tn.textContent.split(m);const t0=performance.now(),D=700;const f=t=>{const k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);tn.textContent=pre[0]+toF(v*e)+pre.slice(1).join(m);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)};
 const enter=sc=>{const b=sc.querySelector('.body');if(b){let i=0;[...b.children].forEach(c=>{if(c.classList.contains('rise')||c.classList.contains('hhead')||c.classList.contains('an-st'))return;if(i>9)return;c.classList.add('an-st');c.style.animationDelay=(60+i*45)+'ms';i++})}
 sc.querySelectorAll('.num,.wa,.hero b,.amt b,b.big').forEach(count)};
-const dev=document.getElementById('dev');new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1&&n.classList.contains('scr'))requestAnimationFrame(()=>enter(n))}))).observe(dev,{childList:true})})();if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
+const dev=document.getElementById('dev');new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType===1&&n.classList.contains('scr'))requestAnimationFrame(()=>enter(n))}))).observe(dev,{childList:true})})();(()=>{const vis=b=>b&&!b.disabled&&b.offsetParent!==null;
+const ctx=()=>{const sh=dev.querySelector('.sheet.on');return sh||dev.querySelector('.scr:not(.leaving)')};
+const primary=c=>{const list=[...c.querySelectorAll('.cta .btn, .btn')].filter(vis);return list[0]};
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target,tag=(t.tagName||'').toLowerCase();const c=ctx();if(!c)return;
+ if(document.getElementById('panel').classList.contains('open')&&e.key==='Escape'){document.getElementById('pclose')&&document.getElementById('pclose').click();return}
+ if((e.key==='Enter'||e.key===' ')&&t.dataset&&t.dataset.a&&tag!=='button'&&tag!=='input'){e.preventDefault();t.click();return}
+ if(e.key==='Enter'){if(tag==='button'||tag==='textarea'||tag==='a')return;if(tag==='input'&&t.type==='checkbox'){t.click();e.preventDefault();return}const b=primary(c);if(b){e.preventDefault();b.click()}return}
+ if(e.key==='Escape'){e.preventDefault();if(dev.querySelector('.sheet.on'))closeSheet();else{const bk=c.querySelector('[data-a=back]');if(vis(bk))bk.click()}return}
+ if(tag==='input'||tag==='textarea'||tag==='select')return;
+ if(cur&&cur.name==='intro'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const k=cur.o.k||0;const sc=dev.querySelector('.scr:not(.leaving)');if(e.key==='ArrowLeft'){if(k<2)introGo(sc,k+1);else go('login')}else if(k>0)introGo(sc,k-1);return}
+ const pl=c.querySelector('#pl'),mn=c.querySelector('#mn');
+ if((e.key==='+'||e.key==='='||e.key==='ArrowUp')&&vis(pl)){e.preventDefault();pl.click();return}
+ if((e.key==='-'||e.key==='ArrowDown')&&vis(mn)){e.preventDefault();mn.click();return}
+ const r=c.querySelector('input[type=range]');if(r&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){e.preventDefault();const st=+r.step||1;r.value=+r.value+(e.key==='ArrowLeft'?st:-st);r.dispatchEvent(new Event('input',{bubbles:true}));r.dispatchEvent(new Event('change',{bubbles:true}));return}
+});
+new MutationObserver(()=>dev.querySelectorAll('[data-a]:not(button):not(input):not([tabindex])').forEach(x=>x.tabIndex=0)).observe(dev,{childList:true,subtree:true});
+document.addEventListener('focusin',e=>{const f=e.target.closest&&e.target.closest('#dev button,#dev [data-a]');if(f&&!f.hasAttribute('tabindex')&&f.tagName!=='BUTTON')f.tabIndex=0});
+})();if(innerWidth<=760){document.querySelector('.panel header').appendChild(document.getElementById('timebar'))}
 const style=document.createElement('style');style.textContent='@keyframes draw{to{stroke-dashoffset:0}}';document.head.appendChild(style);
 reset('intro',{k:0,anim:'none'});
 </script>
