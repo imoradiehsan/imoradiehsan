@@ -3,7 +3,7 @@ name: Deploy تحلیل‌گر بورس to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['tahlilgar/**', 'gold/**', '.github/workflows/deploy-tahlilgar.yml']
+    paths: ['tahlilgar/**', 'gold/**', 'bookstore/**', 'reader/**', '.github/workflows/deploy-tahlilgar.yml']
   workflow_dispatch:
 
 permissions:
@@ -32,6 +32,7 @@ jobs:
       - run: npm run build
       - run: cp dist/index.html dist/404.html
       - run: cp -r ../gold dist/gold
+      - run: cp -r ../bookstore dist/bookstore && cp -r ../reader dist/reader
       - uses: actions/upload-pages-artifact@v3
         with:
           path: tahlilgar/dist
