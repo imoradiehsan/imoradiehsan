@@ -279,6 +279,7 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 .sbtn.lim{opacity:.45}
 #av{display:inline-block}#av.bumpU{animation:bumpU .38s cubic-bezier(.2,.9,.3,1.2)}#av.bumpD{animation:bumpD .38s cubic-bezier(.2,.9,.3,1.2)}#av.nudge{animation:shake .35s}
 @keyframes bumpU{0%{transform:translateY(8px);opacity:.4}100%{transform:none;opacity:1}}@keyframes bumpD{0%{transform:translateY(-8px);opacity:.4}100%{transform:none;opacity:1}}
+#plist .pb{position:relative;transition:background-color .2s,color .2s,box-shadow .2s}#plist .pb.on{background:#E8F0FF;color:#1E6CFF;font-weight:700;box-shadow:inset -3px 0 0 #1E6CFF}
 </style>
 </head>
 <body>
@@ -629,7 +630,9 @@ const SCN=[
  ['گزارش‌ها',[['تراکنش‌ها',()=>{st(3,'normal');reset('tx')}],['قراردادهای من',()=>{st(1,'normal');reset('purchases')}],['قرارداد',()=>{reset('contract')}]]]];
 function st(paid,day){S=fresh();S.phase=paid>=3?'settled':'active';S.paid=Math.min(paid,3);S.day=day;S.hist.push({t:'هزینهٔ عملیات',d:'۲۶ آذر ۱۴۰۵ · ۱۶:۴۰',a:-P().op,m:'آذر ۱۴۰۵',st:'پرداخت شد'});
  for(let i=0;i<S.paid;i++){S.inst[i]={s:'paid'};S.hist.push({t:i===0?'خرید طلا و قسط اول':'پرداخت قسط '+ORD[i],d:[DATES[0],DATES[1],DATES[2]][i]+' · '+['۱۶:۴۷','۱۸:۰۲','۰۹:۱۵'][i],a:-P().inst,m:['آذر ۱۴۰۵','دی ۱۴۰۵','بهمن ۱۴۰۵'][i],st:'پرداخت شد',n:i})}}
-(function(){const pl=document.getElementById('plist');SCN.forEach(g=>{const d=document.createElement('div');d.className='pg';d.innerHTML='<h2>'+g[0]+'</h2>';g[1].forEach(x=>{const b=document.createElement('button');b.className='pb';b.textContent=x[0];b.onclick=()=>{x[1]();document.getElementById('panel').classList.remove('open')};d.appendChild(b)});pl.appendChild(d)})})();
+(function(){const pl=document.getElementById('plist');SCN.forEach(g=>{const d=document.createElement('div');d.className='pg';d.innerHTML='<h2>'+g[0]+'</h2>';g[1].forEach(x=>{const b=document.createElement('button');b.className='pb';b.textContent=x[0];const m=[...x[1].toString().matchAll(/(?:reset|go)\('(\w+)'/g)];b.dataset.scr=m.length?m[m.length-1][1]:'';b.onclick=()=>{window.__pick=b;x[1]();document.getElementById('panel').classList.remove('open');markPb()};d.appendChild(b)});pl.appendChild(d)})})();
+function markPb(){const n=cur&&cur.name;const all=[...document.querySelectorAll('#plist .pb')];let on=window.__pick&&window.__pick.dataset.scr===n?window.__pick:all.find(b=>b.dataset.scr===n);if(!on&&window.__pick&&document.body.contains(window.__pick))on=null;all.forEach(b=>b.classList.toggle('on',b===on));if(on)on.scrollIntoView({block:'nearest',behavior:'smooth'})}
+new MutationObserver(()=>requestAnimationFrame(markPb)).observe(document.getElementById('dev'),{childList:true});requestAnimationFrame(markPb);
 (()=>{const P=document.getElementById('panel'),B=document.getElementById('pback');const set=o=>{P.classList.toggle('open',o);B.classList.toggle('on',o)};document.getElementById('menu').onclick=()=>set(!P.classList.contains('open'));document.getElementById('pclose').onclick=()=>set(false);B.onclick=()=>set(false);document.getElementById('plist').addEventListener('click',e=>{if(innerWidth<=760&&e.target.closest('button,[data-s],.pi'))setTimeout(()=>set(false),150)})})();
 function scale(){const small=innerWidth<=760;const st=document.querySelector('.stage');const avW=small?innerWidth:st.clientWidth-20,avH=small?innerHeight-50:innerHeight-70;document.documentElement.style.setProperty('--s',Math.min(1,avW/390,avH/868))}
 addEventListener('resize',scale);scale();
