@@ -67,8 +67,8 @@ button:focus-visible{outline:2px solid #1E6CFF;outline-offset:2px}
 /* transitions */
 .enter-push{animation:inL .34s cubic-bezier(.2,.8,.2,1) both}.exit-push{animation:outR .34s cubic-bezier(.2,.8,.2,1) both}
 .enter-back{animation:inR .34s cubic-bezier(.2,.8,.2,1) both}.exit-back{animation:outL .34s cubic-bezier(.2,.8,.2,1) both}
-@keyframes inL{from{transform:translateX(-100%)}}@keyframes outR{to{transform:translateX(30%);filter:brightness(.85)}}
-@keyframes inR{from{transform:translateX(30%);filter:brightness(.85)}}@keyframes outL{to{transform:translateX(-100%)}}
+@keyframes inL{from{transform:translateX(-100%)}}@keyframes outR{to{transform:translateX(30%)}}
+@keyframes inR{from{transform:translateX(30%)}}@keyframes outL{to{transform:translateX(-100%)}}
 .enter-fade{animation:fin .3s ease both}.exit-fade{animation:fout .3s ease both}
 @keyframes fin{from{opacity:0;transform:scale(.985)}}@keyframes fout{to{opacity:0}}
 .enter-dis{animation:dis .18s linear both}.exit-dis{animation:fout .18s linear both}@keyframes dis{from{opacity:0}}
@@ -265,6 +265,12 @@ button:active:not(:disabled),.tx .top:active,.accsel:active,.opt:active{transfor
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 .itrack{position:absolute;inset:0}.islide{position:absolute;inset:0;transition:transform .5s cubic-bezier(.65,0,.25,1)}.islide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.islide .itx{position:absolute;bottom:150px;left:25px;right:24px;text-align:center;color:#fff}
 .iprog{position:absolute;top:24px;left:16px;right:16px;display:flex;gap:8px;direction:rtl;z-index:3}.iprog i{flex:1;height:4px;border-radius:40px;background:rgba(255,255,255,.3);overflow:hidden}.iprog b{display:block;height:100%;width:100%;background:#F2F6FF;border-radius:inherit;transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.4,0,.2,1) .1s}.iprog b.on{transform:scaleX(1)}
+.enter-push>.sb,.enter-push>.ab{animation:kP .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kP{from{transform:translateX(100%)}}
+.exit-push>.sb,.exit-push>.ab{animation:kXP .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kXP{to{transform:translateX(-30%)}}
+.enter-back>.sb,.enter-back>.ab{animation:kB .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kB{from{transform:translateX(-30%)}}
+.exit-back>.sb,.exit-back>.ab{animation:kXB .34s cubic-bezier(.2,.8,.2,1) both}@keyframes kXB{to{transform:translateX(100%)}}
+.enter-push>.ab>*,.enter-back>.ab>*{animation:abin .3s ease both}@keyframes abin{from{opacity:0}}
+.exit-back>.ab>*,.exit-push>.ab>*{animation:fout .2s ease both}
 </style>
 </head>
 <body>
