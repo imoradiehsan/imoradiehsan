@@ -22,7 +22,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
   const [alerts, setAlerts] = useState([{ id: 1, s: 'خودرو', type: 'general', cond: 'از بین رفتن صف خرید' }, { id: 2, s: 'فولاد', type: 'value', metric: 'قیمت آخرین معامله', op: 'بزرگتر از', val: '۶۵۰۰' }])
   const [help, setHelp] = useState(false)
   useEffect(() => { setAlertIntro?.(tab === 'alert' && alerts.length === 0) }, [tab, alerts.length])
-  useEffect(() => { if (alertReq) { setDir(1); setStack([{ k: 'newAlert', title: 'هشدار جدید', a: alertReq.preset }]) } }, [alertReq])
+  useEffect(() => { if (alertReq) { setDir(1); setTimeout(() => setStack([{ k: 'newAlert', title: 'هشدار جدید', a: alertReq.preset }]), 0) } }, [alertReq])
   const saveAlert = (a) => { setAlerts((al) => (al.some((b) => b.id === a.id) ? al.map((b) => (b.id === a.id ? a : b)) : [...al, a])); back() }
   const push = (page) => { setDir(1); setStack((st) => [...st, page]) }
   const back = () => { setDir(-1); setStack((st) => st.slice(0, -1)) }
