@@ -35,7 +35,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
       {/* Side rail — like an app's nav bar, pinned to the screen edge */}
       <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
         {TABS.map(({ k, t, I }) => (
-          <button key={k} title={t} onClick={() => { if (tab === k) setCollapsed(!collapsed); else { goTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
+          <button key={k} title={t} onClick={() => { const now = Date.now(); if (tab === k) { if (now - (AppPanel.sw || 0) > 450) setCollapsed(!collapsed) } else { AppPanel.sw = now; goTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
             {tab === k && !collapsed && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
             <span className={`relative ${tab === k && !collapsed ? 'text-brand-light' : 'text-muted group-hover:text-ink'}`}><I set={tab === k && !collapsed ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
             <span className="pointer-events-none absolute left-full z-20 ml-2 whitespace-nowrap rounded-lg bg-surface2 px-2 py-1 text-xs opacity-0 transition group-hover:opacity-100">{t}</span>
@@ -82,8 +82,8 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
           <AlertHelp open={help} close={() => setHelp(false)} />
         </div>
 
-        <AnimatePresence mode="popLayout" initial={false} custom={dir}>
-          <motion.div key={pageKey} custom={dir} className={`min-h-0 flex-1 bg-surface ${!page && (tab === 'watch' || tab === 'port') ? 'relative overflow-hidden' : 'scroll-y'}`} initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * 40 }} transition={{ duration: .22, ease: [.2, .8, .2, 1] }}>
+        <AnimatePresence mode="wait" initial={false} custom={dir}>
+          <motion.div key={pageKey} custom={dir} className={`min-h-0 flex-1 bg-surface ${!page && (tab === 'watch' || tab === 'port') ? 'relative overflow-hidden' : 'scroll-y'}`} initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, transition: { duration: .06 } }} transition={{ duration: .18, ease: [.2, .8, .2, 1] }}>
             {page?.k === 'newAlert' ? <AlertForm init={page.a || (page.x && { s: page.x.s })} onSave={saveAlert} onCancel={back} />
             : page?.k === 'alertHistory' ? <AlertHistory />
             : page ? (
