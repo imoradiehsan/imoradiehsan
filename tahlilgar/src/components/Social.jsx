@@ -1,4 +1,5 @@
 // نظرات نماد: استوری‌ها، تب‌های آخرین/برگزیده/تحلیل، کارت نظر با لایک/دیس‌لایک، منو، گزارش، نوشتن نظر
+import { toast } from './Toast'
 import CloseIcon from './CloseIcon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -219,9 +220,8 @@ export default function Opinions({ sym }) {
   const [view, setView] = useState(null)
   const [menu, setMenu] = useState(null)       // { p, rect }
   const [sheet, setSheet] = useState(null)     // 'report' | 'story' | 'write'
-  const [toast, setToast] = useState(null)
   const [draft, setDraft] = useState({ t: '', kind: 'نظر' })
-  const say = (m) => { setToast(m); clearTimeout(say.t); say.t = setTimeout(() => setToast(null), 2400) }
+  const say = (m) => toast(m)
   const toggle = (id, k) => setPosts((ps) => ps.map((p) => (p.id !== id ? p : k === 'liked' ? { ...p, liked: !p.liked, disliked: false } : k === 'disliked' ? { ...p, disliked: !p.disliked, liked: false } : { ...p, [k]: !p[k] })))
   const list = posts.filter((p) => (tab === 'latest' ? p.kind === 'نظر' : tab === 'best' ? p.best : p.kind === 'تحلیل'))
   const openStory = (k) => { setView(k); setSeen((s) => [...new Set([...s, stories[k].u])]) }
@@ -327,9 +327,6 @@ export default function Opinions({ sym }) {
       </Modal>
 
       <StoryViewer stories={stories} idx={view} setIdx={openStory} onClose={() => setView(null)} say={say} />
-      <AnimatePresence>{toast && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pointer-events-none fixed bottom-8 left-1/2 z-[90] -translate-x-1/2 rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">{toast}</motion.div>
-      )}</AnimatePresence>
     </div>
   )
 }

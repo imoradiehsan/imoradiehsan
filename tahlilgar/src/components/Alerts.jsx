@@ -4,6 +4,7 @@ import { Notification, TimeCircle, InfoSquare, EditSquare, Delete, Search } from
 import { SYMBOLS } from '../data/market'
 import { Dropdown, Modal } from './SitePanel'
 import { Dialog } from './Watchlist'
+import { toast } from './Toast'
 
 const ic = (I, s = 18) => <I set="light" size={s} primaryColor="currentColor" />
 export const GENERAL = ['از بین رفتن صف خرید', 'از بین رفتن صف فروش', 'حجم معاملات مشکوک', 'حمایت و مقاومت', 'پیام ناظر بازار', 'فیلتر پیام ناظر بازار (ویژه مشترکین)']
@@ -12,9 +13,9 @@ export const OPS = ['کوچکتر از', 'مساوی', 'بزرگتر از']
 const opts = (a) => a.map((t) => [t, t])
 export const describe = (a) => (a.type === 'general' ? a.cond : `${a.metric} ${a.op} ${a.val}`)
 
-function Switch({ on, set, label }) {
+function Switch({ on, set, label, msg }) {
   return (
-    <button onClick={() => set(!on)} className="flex items-center gap-2 text-xs text-muted">
+    <button onClick={() => { set(!on); msg && toast(`${msg} ${on ? 'غیرفعال' : 'فعال'} شد`, on ? 'info' : 'ok') }} className="flex items-center gap-2 text-xs text-muted">
       <span className={`flex h-5 w-9 items-center rounded-full p-0.5 transition-colors ${on ? 'justify-end bg-brand' : 'justify-start bg-line'}`}><motion.span layout className="h-4 w-4 rounded-full bg-white shadow" /></span>{label}
     </button>
   )
@@ -29,8 +30,8 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
   return (
     <div className="relative flex min-h-full flex-col">
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-line px-4">
-        <Switch on={ipo} set={setIpo} label="هشدار عرضه اولیه" />
-        <Switch on={sms} set={setSms} label="هشدار با پیامک" />
+        <Switch on={ipo} set={setIpo} label="هشدار عرضه اولیه" msg="هشدار عرضه اولیه" />
+        <Switch on={sms} set={setSms} label="هشدار با پیامک" msg="ارسال هشدار با پیامک" />
       </div>
       {list.length ? (
         <div className="flex-1 space-y-2 p-4">
@@ -58,7 +59,7 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
           </div>
         </div>
       )}
-      <Dialog open={del != null} title="حذف هشدار" text="آیا از حذف هشدار مطمئن هستید؟" okText="حذف" danger onOk={() => { setList(list.filter((a) => a.id !== del)); setDel(null) }} onCancel={() => setDel(null)} />
+      <Dialog open={del != null} title="حذف هشدار" text="آیا از حذف هشدار مطمئن هستید؟" okText="حذف" danger onOk={() => { const a = list.find((x) => x.id === del); setList(list.filter((x) => x.id !== del)); setDel(null); toast(`هشدار ${a?.s ?? ''} حذف شد`, 'info') }} onCancel={() => setDel(null)} />
       <div className="pointer-events-none sticky bottom-0 flex justify-end p-4">
         <motion.button whileHover={{ y: -2 }} whileTap={{ scale: .92 }} onClick={add} title="هشدار جدید" className="pointer-events-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16v-5a6 6 0 0 1 9-5.2M18 11v5l2 2H4l2-2" /><path d="M10 20a2 2 0 0 0 4 0M18 3v6M15 6h6" /></svg>
@@ -120,7 +121,7 @@ export function AlertForm({ init, onSave, onCancel }) {
       </div>
       <div className="sticky bottom-0 flex gap-2 border-t border-line bg-surface/95 p-4 backdrop-blur">
         <button onClick={onCancel} className="h-11 flex-1 rounded-xl border border-line text-sm font-medium hover:bg-surface2">انصراف</button>
-        <motion.button whileTap={{ scale: .97 }} disabled={!ok} onClick={() => onSave({ id: init?.id || Date.now(), s, type, cond, metric, op, val })}
+        <motion.button whileTap={{ scale: .97 }} disabled={!ok} onClick={() => { onSave({ id: init?.id || Date.now(), s, type, cond, metric, op, val }); toast(init ? `هشدار ${s} ویرایش شد` : `هشدار ${s} ساخته شد`) }}
           className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark text-sm font-bold text-white shadow-glow disabled:opacity-40 disabled:shadow-none">{init ? 'ویرایش هشدار' : 'ساخت هشدار'}</motion.button>
       </div>
     </div>
@@ -145,17 +146,17 @@ export function AlertHelp({ open, close }) {
   const [svc, setSvc] = useState(false), [sent, setSent] = useState(false)
   return (
     <Modal open={open} onClose={close} title="راهکار عدم نمایش هشدارها"
-      actions={<motion.button whileTap={{ scale: .97 }} onClick={close} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">دادن مجوز</motion.button>}>
+      actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { close(); toast('به تنظیمات اجرای پس‌زمینه دستگاه هدایت می‌شوید', 'info') }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">دادن مجوز</motion.button>}>
       <div className="space-y-4 text-sm leading-7">
         <p>در برخی دستگاه‌های اندرویدی، سیستم عامل اجازه کار برنامه در پس‌زمینه را نمی‌دهد و پس از بسته شدن برنامه، هشدارها در زمان مقرر دریافت نمی‌شوند. برای رفع این مشکل باید اجازه اجرا در پس‌زمینه را به تحلیل‌گر بورس بدهید.</p>
         <p className="text-xs text-muted">این تنظیمات در هر برند متفاوت است و معمولاً در بخش‌هایی مانند <span dir="ltr">Battery Optimization</span>، <span dir="ltr">Battery Saver</span> یا <span dir="ltr">Auto Start</span> قرار دارد. با دکمه «دادن مجوز» مستقیم به همان بخش می‌روید.</p>
         <div className="rounded-2xl border border-line bg-surface2/30 p-4">
           <p className="text-xs text-muted">اگر موفق نشدید، سرویس هشدار را روشن کنید تا برنامه پس از بسته شدن هم فعال بماند؛ این کار یک اعلان دائمی بالای صفحه نشان می‌دهد. می‌توانید فقط در ساعات باز بودن بازار روشنش کنید.</p>
-          <div className="mt-3 flex justify-center"><Switch on={svc} set={setSvc} label="اجرای سرویس هشدار" /></div>
+          <div className="mt-3 flex justify-center"><Switch on={svc} set={setSvc} label="اجرای سرویس هشدار" msg="سرویس هشدار" /></div>
         </div>
         <div className="text-center">
           <p className="text-xs text-muted">پس از دادن مجوز، برای اطمینان یک هشدار آزمایشی برای خود بفرستید.</p>
-          <button onClick={() => setSent(true)} className={`btn mt-3 ${sent ? 'btn-on' : ''}`}>{ic(Notification, 15)}{sent ? 'هشدار آزمایشی ارسال شد' : 'ارسال هشدار آزمایشی'}</button>
+          <button onClick={() => { setSent(true); toast('هشدار آزمایشی ارسال شد؛ چند ثانیه دیگر باید اعلان را ببینید', 'info') }} className={`btn mt-3 ${sent ? 'btn-on' : ''}`}>{ic(Notification, 15)}{sent ? 'هشدار آزمایشی ارسال شد' : 'ارسال هشدار آزمایشی'}</button>
         </div>
       </div>
     </Modal>

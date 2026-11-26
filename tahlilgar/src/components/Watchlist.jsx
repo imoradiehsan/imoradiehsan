@@ -1,4 +1,5 @@
 // دیده‌بان و پرتفوی: جدول، حالت تابلو، جابجایی ردیف‌ها، چند دیده‌بان، افزودن نماد، تنظیمات
+import { toast } from './Toast'
 import CloseIcon from './CloseIcon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence, Reorder, useDragControls } from 'framer-motion'
@@ -214,8 +215,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const setPItems = (items) => setPlists((ls) => ls.map((l) => (l.id === plist.id ? { ...l, items } : l)))
   const [board, setBoard] = useState(false)
   const [reorder, setReorder] = useState(false)
-  const [toast, setToast] = useState(null)
-  const say = (m) => { setToast(m); clearTimeout(say.t); say.t = setTimeout(() => setToast(null), 2600) }
+  const say = (m) => toast(m)
   const [del, setDel] = useState(null)   // symbol waiting for remove confirmation
   const [opts, setOpts] = useState({ chart: true, vol: true })
   const [sheet, setSheet] = useState(null) // 'lists' | 'add' | 'settings'
@@ -302,13 +302,6 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
         <ChipRail items={sub === 'watch' ? lists : plists} active={sub === 'watch' ? cur : pcur}
           pick={(id) => { (sub === 'watch' ? setCur : setPcur)(id); setReorder(false) }} manage={() => setSheet(sub === 'watch' ? 'lists' : 'plists')} />
       </div>
-
-      <AnimatePresence>{toast && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
-          className="pointer-events-none absolute inset-x-6 bottom-16 z-[90] mx-auto w-fit max-w-full text-center rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">
-          {toast}
-        </motion.div>
-      )}</AnimatePresence>
 
       <ListsSheet open={sheet === 'lists'} close={() => setSheet(null)} lists={lists} setLists={setLists} cur={cur} setCur={setCur} />
       <ListsSheet kind="پرتفوی" open={sheet === 'plists'} close={() => setSheet(null)} lists={plists} setLists={setPlists} cur={pcur} setCur={setPcur}

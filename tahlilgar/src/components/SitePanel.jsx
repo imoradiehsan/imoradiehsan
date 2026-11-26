@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { toast } from './Toast'
 import CloseIcon from './CloseIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
@@ -192,7 +193,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
                   <div className="mt-2 flex items-center gap-1.5">
                     <span className="rounded-lg border border-line px-2.5 py-1 text-xs"><b>{sym.s}</b> · {d.market}</span>
                     <span className="grid h-7 w-7 place-items-center rounded-lg bg-down/15" title="در حال معامله"><i className="h-2.5 w-2.5 animate-pulse rounded-full bg-down" /></span>
-                    <motion.button whileTap={{ scale: .7 }} onClick={() => setFav(!fav)} title="افزودن به دیده‌بان" className={`grid h-7 w-7 place-items-center rounded-lg border border-line ${fav ? 'text-amber-400' : 'text-muted hover:text-ink'}`}><Star set={fav ? 'bold' : 'light'} size={15} primaryColor="currentColor" /></motion.button>
+                    <motion.button whileTap={{ scale: .7 }} onClick={() => { setFav(!fav); toast(fav ? `${sym.s} از دیده‌بان حذف شد` : `${sym.s} به دیده‌بان اضافه شد`, fav ? 'info' : 'ok') }} title="افزودن به دیده‌بان" className={`grid h-7 w-7 place-items-center rounded-lg border border-line ${fav ? 'text-amber-400' : 'text-muted hover:text-ink'}`}><Star set={fav ? 'bold' : 'light'} size={15} primaryColor="currentColor" /></motion.button>
                     <button title="هشدار قیمت" className="grid h-7 w-7 place-items-center rounded-lg border border-line text-muted hover:text-ink">{ico(Notification, 15)}</button>
                     <button title="یادداشت" className="grid h-7 w-7 place-items-center rounded-lg border border-line text-muted hover:text-ink">{ico(EditSquare, 15)}</button>
                   </div>
