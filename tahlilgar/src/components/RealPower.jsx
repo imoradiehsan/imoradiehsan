@@ -143,7 +143,7 @@ export default function RealPower({ sym }) {
         <Pane ctx={ctx} id={2} title={`${unit === 'vol' ? 'حجم' : 'درصد'} خرید و فروش حقوقی`} h={hSub} max={vmaxL} fmt={fmtU} tip={(d) => [['حجم خرید', short(d.legal.b)], ['تعداد خرید', fa(d.legal.bn)], ['حجم فروش', short(d.legal.s)], ['تعداد فروش', fa(d.legal.sn)]]}>{(y) => bars2(y, legalV)}</Pane>
         <Pane ctx={ctx} id={3} title="سرانه حجم معامله شده حقیقی" h={hSub} max={perMax} fmt={short} tip={(d) => [['سرانه حجم خریدار', fa(Math.round(d.pb))], ['سرانه حجم فروشنده', fa(Math.round(d.ps))], ['قدرت خریدار', fa(d.pb / d.ps, 2)]]}>{(y) => bars2(y, data.map((d) => [d.pb, d.ps]))}</Pane>
         <svg width={W} height={34} className="block">
-          {ticksX.map((i) => <text key={i} x={X(i)} y={14} fontSize="10" fill="rgb(var(--muted))" textAnchor="end" transform={`rotate(-30 ${X(i)} 14)`}>{pdate(data[i].t)}</text>)}
+          {ticksX.map((i) => { const x = X(i), a = x < padL + 28 ? 'start' : x > padL + cw - 28 ? 'end' : 'middle'; return <g key={i}><line x1={x} x2={x} y1={0} y2={5} stroke="rgb(var(--line))" /><text x={x} y={21} fontSize="10" fill="rgb(var(--muted))" textAnchor={a} className="num">{pdate(data[i].t)}</text></g> })}
         </svg>
       </div>
     </div>

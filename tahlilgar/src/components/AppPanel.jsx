@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { LineChart, Line, YAxis, ResponsiveContainer } from 'recharts'
-import { Search, Notification, Category, Chart, Wallet, Plus, Delete } from 'react-iconly'
+import { Search, Notification, Category, Chart, Wallet, Plus, Delete, TimeCircle, InfoSquare } from 'react-iconly'
 import { SYMBOLS, fa } from '../data/market'
 import { Change } from './Count'
 import { useSort, SortHead } from './sort'
 import { Marquee } from './OverviewExtra'
 import Watchlist from './Watchlist'
+import { AlertsHome, AlertForm, AlertHistory, AlertHelp } from './Alerts'
 
 const TABS = [
   { k: 'watch', t: 'دیده‌بان', I: Category },
@@ -18,7 +19,9 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
   // Each rail tab has its own page stack, like a phone app: root page + pushed sub-pages
   const [stack, setStack] = useState([])
   const [dir, setDir] = useState(1)
-  const [alerts, setAlerts] = useState([{ s: 'فولاد', t: 'قیمت بالای ۶٬۵۰۰', on: true }, { s: 'فملی', t: 'حجم بیش از ۲ برابر میانگین', on: true }, { s: 'شپنا', t: 'عبور از MA20', on: false }])
+  const [alerts, setAlerts] = useState([{ id: 1, s: 'خودرو', type: 'general', cond: 'از بین رفتن صف خرید' }, { id: 2, s: 'فولاد', type: 'value', metric: 'قیمت آخرین معامله', op: 'بزرگتر از', val: '۶۵۰۰' }])
+  const [help, setHelp] = useState(false)
+  const saveAlert = (a) => { setAlerts((al) => (al.some((b) => b.id === a.id) ? al.map((b) => (b.id === a.id ? a : b)) : [...al, a])); back() }
   const push = (page) => { setDir(1); setStack((st) => [...st, page]) }
   const back = () => { setDir(-1); setStack((st) => st.slice(0, -1)) }
   const goTab = (k) => { setDir(1); setStack([]); setTab(k) }
@@ -32,7 +35,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
       {/* Side rail — like an app's nav bar, pinned to the screen edge */}
       <nav className="flex w-[60px] shrink-0 flex-col items-center gap-1 border-l border-line bg-surface py-3">
         {TABS.map(({ k, t, I }) => (
-          <button key={k} title={t} onClick={() => { if (tab === k) setCollapsed(!collapsed); else { goTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
+          <button key={k} title={t} onClick={() => { const now = Date.now(); if (tab === k) { if (now - (AppPanel.sw || 0) > 450) setCollapsed(!collapsed) } else { AppPanel.sw = now; goTab(k); setCollapsed(false) } }} className="group relative grid h-11 w-11 place-items-center">
             {tab === k && !collapsed && <motion.span layoutId="tab" className="absolute inset-0 rounded-xl bg-brand/15" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
             <span className={`relative ${tab === k && !collapsed ? 'text-brand-light' : 'text-muted group-hover:text-ink'}`}><I set={tab === k && !collapsed ? 'bold' : 'light'} size={22} primaryColor="currentColor" /></span>
             <span className="pointer-events-none absolute left-full z-20 ml-2 whitespace-nowrap rounded-lg bg-surface2 px-2 py-1 text-xs opacity-0 transition group-hover:opacity-100">{t}</span>
@@ -72,26 +75,29 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
               </motion.div>
             </AnimatePresence>
           </div>
-          {!page && tab === 'alert' && <button onClick={() => push({ k: 'newAlert', title: 'هشدار جدید' })} title="هشدار جدید" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><Plus set="light" size={20} primaryColor="currentColor" /></button>}
-          <button onClick={() => goTab('alert')} title="اعلان‌ها" className="relative grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><Notification set="light" size={20} primaryColor="currentColor" /><span className="absolute left-2 top-2 h-1.5 w-1.5 rounded-full bg-brand-light" /></button>
+          {!page && tab === 'alert' && <>
+            <button onClick={() => push({ k: 'alertHistory', title: 'سابقه هشدارها' })} title="سابقه هشدارها" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><TimeCircle set="light" size={20} primaryColor="currentColor" /></button>
+            <button onClick={() => setHelp(true)} title="راهنما" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><InfoSquare set="light" size={20} primaryColor="currentColor" /></button>
+          </>}
+          <AlertHelp open={help} close={() => setHelp(false)} />
         </div>
 
-        <AnimatePresence mode="popLayout" initial={false} custom={dir}>
-          <motion.div key={pageKey} custom={dir} className={`min-h-0 flex-1 bg-surface ${!page && (tab === 'watch' || tab === 'port') ? 'relative overflow-hidden' : 'scroll-y'}`} initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * 40 }} transition={{ duration: .22, ease: [.2, .8, .2, 1] }}>
-            {page ? (
+        <AnimatePresence mode="wait" initial={false} custom={dir}>
+          <motion.div key={pageKey} custom={dir} className={`min-h-0 flex-1 bg-surface ${!page && (tab === 'watch' || tab === 'port') ? 'relative overflow-hidden' : 'scroll-y'}`} initial={{ opacity: 0, x: dir * -40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, transition: { duration: .06 } }} transition={{ duration: .18, ease: [.2, .8, .2, 1] }}>
+            {page?.k === 'newAlert' ? <AlertForm init={page.a || (page.x && { s: page.x.s })} onSave={saveAlert} onCancel={back} />
+            : page?.k === 'alertHistory' ? <AlertHistory />
+            : page ? (
               <div className="p-4">
                 {page.k === 'symbol' && <SymbolPage x={page.x} nav={nav} />}
                                 {page.k === 'holding' && <HoldingPage h={page.h} nav={nav} />}
-                {page.k === 'newAlert' && <NewAlert x={page.x} onSave={(a) => { setAlerts((al) => [...al, a]); back() }} />}
+                
               </div>
             ) : tab === 'watch' ? (
               <Watchlist sym={sym} setSym={setSym} initial="watch" />
             ) : tab === 'port' ? (
               <Watchlist sym={sym} setSym={setSym} initial="port" />
             ) : (
-              <div className="p-4">
-                {tab === 'alert' && <Alerts al={alerts} setAl={setAlerts} add={() => push({ k: 'newAlert', title: 'هشدار جدید' })} />}
-              </div>
+              tab === 'alert' && <AlertsHome sym={sym} setSym={setSym} list={alerts} setList={setAlerts} add={() => push({ k: 'newAlert', title: 'هشدار جدید' })} edit={(i) => push({ k: 'newAlert', title: 'ویرایش هشدار', a: alerts[i] })} />
             )}
           </motion.div>
         </AnimatePresence>
@@ -159,27 +165,6 @@ function Portfolio({ open }) {
   )
 }
 
-function Alerts({ al, setAl, add }) {
-  return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        {al.map((a, k) => (
-          <div key={k} className="flex items-center gap-3 rounded-2xl border border-line/60 bg-surface2/40 p-3">
-            <div className="flex-1"><div className="font-semibold">{a.s}</div><div className="text-xs text-muted">{a.t}</div></div>
-            <button onClick={() => setAl(al.map((b, j) => (j === k ? { ...b, on: !b.on } : b)))} className={`flex h-6 w-11 items-center rounded-full p-0.5 transition-colors ${a.on ? 'justify-end bg-brand' : 'justify-start bg-line'}`}>
-              <motion.span layout className="h-5 w-5 rounded-full bg-white shadow" />
-            </button>
-            <button onClick={() => setAl(al.filter((_, j) => j !== k))} className="text-muted hover:text-down"><Delete set="light" size={18} primaryColor="currentColor" /></button>
-          </div>
-        ))}
-        <motion.button whileTap={{ scale: .97 }} onClick={add} className="flex w-full items-center justify-center gap-1 rounded-2xl border border-dashed border-line py-3 text-sm text-muted hover:text-brand-light">
-          <Plus set="light" size={18} primaryColor="currentColor" /> افزودن هشدار
-        </motion.button>
-      </div>
-    </div>
-  )
-}
-
 function SymbolPage({ x, nav }) {
   return (
     <div className="space-y-4">
@@ -218,26 +203,3 @@ function HoldingPage({ h, nav }) {
   )
 }
 
-function NewAlert({ x, onSave }) {
-  const [s, setS] = useState(x?.s || SYMBOLS[0].s)
-  const [cond, setCond] = useState('بالای')
-  const cur = SYMBOLS.find((y) => y.s === s)
-  const [price, setPrice] = useState(Math.round(cur.p * 1.05))
-  const field = 'mt-1.5 w-full rounded-2xl border border-line/70 bg-surface2/50 px-4 py-3 outline-none focus:border-brand/60'
-  return (
-    <div className="space-y-4">
-      <label className="block text-sm text-muted">نماد
-        <select value={s} onChange={(e) => { setS(e.target.value); setPrice(Math.round(SYMBOLS.find((y) => y.s === e.target.value).p * 1.05)) }} className={field + ' text-ink'}>
-          {SYMBOLS.map((y) => <option key={y.s} value={y.s}>{y.s} — {y.n}</option>)}
-        </select>
-      </label>
-      <div className="grid grid-cols-2 gap-2">
-        {['بالای', 'زیر'].map((c) => <button key={c} onClick={() => setCond(c)} className={`rounded-2xl border py-2.5 text-sm ${cond === c ? 'border-brand bg-brand/15 text-brand-light' : 'border-line/70 text-muted'}`}>قیمت {c}</button>)}
-      </div>
-      <label className="block text-sm text-muted">قیمت هدف (ریال) · قیمت فعلی <span className="num">{fa(cur.p)}</span>
-        <input type="number" value={price} onChange={(e) => setPrice(+e.target.value)} className={field + ' num text-left text-ink'} />
-      </label>
-      <motion.button whileTap={{ scale: .96 }} onClick={() => onSave({ s, t: `قیمت ${cond} ${fa(price)}`, on: true })} className="w-full rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark py-3.5 font-bold text-white shadow-glow">ذخیره هشدار</motion.button>
-    </div>
-  )
-}

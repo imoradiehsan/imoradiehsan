@@ -1,4 +1,6 @@
 // نظرات نماد: استوری‌ها، تب‌های آخرین/برگزیده/تحلیل، کارت نظر با لایک/دیس‌لایک، منو، گزارش، نوشتن نظر
+import { toast } from './Toast'
+import CloseIcon from './CloseIcon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fa } from '../data/market'
@@ -143,7 +145,7 @@ function StoryViewer({ stories, idx, setIdx, onClose, say }) {
   return (
     <AnimatePresence>{story && (
       <motion.div data-overlay className="fixed inset-0 z-[70] flex items-center justify-center gap-6 bg-[#0b0d14]/95 px-6 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-        <button onClick={onClose} aria-label="بستن" className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full text-2xl text-white hover:bg-white/10">×</button>
+        <button onClick={onClose} aria-label="بستن" className="absolute left-5 top-5 grid h-10 w-10 place-items-center rounded-full text-2xl text-white hover:bg-white/10"><CloseIcon /></button>
         <div className="flex min-w-0 flex-1 items-center justify-end gap-4 overflow-hidden">{[idx - 2, idx - 1].filter((k) => k >= 0).map((k) => <Preview key={stories[k].u} st={stories[k]} onClick={() => setIdx(k)} />)}</div>
         {idx > 0 ? <button onClick={prev} aria-label="قبلی" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/20 text-white hover:bg-white/30"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m9 6 6 6-6 6" /></svg></button> : <span className="w-9" />}
 
@@ -218,9 +220,8 @@ export default function Opinions({ sym }) {
   const [view, setView] = useState(null)
   const [menu, setMenu] = useState(null)       // { p, rect }
   const [sheet, setSheet] = useState(null)     // 'report' | 'story' | 'write'
-  const [toast, setToast] = useState(null)
   const [draft, setDraft] = useState({ t: '', kind: 'نظر' })
-  const say = (m) => { setToast(m); clearTimeout(say.t); say.t = setTimeout(() => setToast(null), 2400) }
+  const say = (m) => toast(m)
   const toggle = (id, k) => setPosts((ps) => ps.map((p) => (p.id !== id ? p : k === 'liked' ? { ...p, liked: !p.liked, disliked: false } : k === 'disliked' ? { ...p, disliked: !p.disliked, liked: false } : { ...p, [k]: !p[k] })))
   const list = posts.filter((p) => (tab === 'latest' ? p.kind === 'نظر' : tab === 'best' ? p.best : p.kind === 'تحلیل'))
   const openStory = (k) => { setView(k); setSeen((s) => [...new Set([...s, stories[k].u])]) }
@@ -326,9 +327,6 @@ export default function Opinions({ sym }) {
       </Modal>
 
       <StoryViewer stories={stories} idx={view} setIdx={openStory} onClose={() => setView(null)} say={say} />
-      <AnimatePresence>{toast && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} className="pointer-events-none fixed bottom-8 left-1/2 z-[90] -translate-x-1/2 rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">{toast}</motion.div>
-      )}</AnimatePresence>
     </div>
   )
 }

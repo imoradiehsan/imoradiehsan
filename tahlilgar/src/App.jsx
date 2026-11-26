@@ -1,3 +1,4 @@
+import { Toaster } from './components/Toast'
 import { useEffect, useRef, useState } from 'react'
 import AppPanel from './components/AppPanel'
 import SitePanel from './components/SitePanel'
@@ -73,6 +74,7 @@ export default function App() {
       </div>
 
       <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} />
+      <Toaster />
     </div>
   )
 }

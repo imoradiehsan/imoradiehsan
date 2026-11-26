@@ -1,4 +1,6 @@
 // دیده‌بان و پرتفوی: جدول، حالت تابلو، جابجایی ردیف‌ها، چند دیده‌بان، افزودن نماد، تنظیمات
+import { toast } from './Toast'
+import CloseIcon from './CloseIcon'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion, AnimatePresence, Reorder, useDragControls } from 'framer-motion'
 import { SYMBOLS, fa } from '../data/market'
@@ -58,7 +60,7 @@ function Toggle({ on, set, label }) {
 }
 
 /* ---------------- small centered dialog for name prompts and confirmations ---------------- */
-function Dialog({ open, title, text, input, value, setValue, placeholder, okText = 'ذخیره', danger, onOk, onCancel }) {
+export function Dialog({ open, title, text, input, value, setValue, placeholder, okText = 'ذخیره', danger, onOk, onCancel }) {
   return (
     <AnimatePresence>{open && (
       <div className="fixed inset-0 z-[80] grid place-items-center p-4">
@@ -87,7 +89,7 @@ function Row({ r, cols, active, reorder, onPick }) {
   const body = (
     <div onClick={() => !reorder && onPick(r)} style={{ gridTemplateColumns: cols }} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${active ? 'bg-brand/10' : ''}`}>
       <span className="flex min-w-0 items-center gap-1.5">
-        {reorder && <span onPointerDown={(e) => controls.start(e)} className="cursor-grab touch-none text-muted active:cursor-grabbing" title="جابجایی">{I.grip}</span>}
+        {reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted active:cursor-grabbing" title="جابجایی">{I.grip}</span>}
         <i className={`h-2 w-2 shrink-0 rounded-sm ${r.c >= 0 ? 'bg-up' : 'bg-down'}`} />
         <b className="truncate text-sm">{r.s}</b>
       </span>
@@ -97,7 +99,7 @@ function Row({ r, cols, active, reorder, onPick }) {
     </div>
   )
   return reorder
-    ? <Reorder.Item value={r.s} dragListener={false} dragControls={controls} className="relative" whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}>{body}</Reorder.Item>
+    ? <Reorder.Item value={r.s} dragListener={false} dragControls={controls} className="relative select-none bg-surface" whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}>{body}</Reorder.Item>
     : body
 }
 
@@ -166,14 +168,14 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
     const controls = useDragControls()
     const body = (
       <div onClick={() => !reorder && onPick(x)} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${cols} ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${!reorder && sym.s === x.s ? 'bg-brand/10' : ''}`}>
-        <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => controls.start(e)} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
+        <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
         <span className="num text-center leading-5"><span className="block font-semibold">{fa(x.price)}</span><Pct v={x.c} className="text-[10px]" /></span>
         {amtCell(x.plAmt, x.pl, x.pl >= 0)}
         {amtCell(x.val, x.w, null)}
         {!reorder && <span className="text-muted">{I.chev}</span>}
       </div>
     )
-    return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
+    return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} className="bg-surface" whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
   }
   return (
     <>
@@ -190,7 +192,7 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
         <SortHead label="سود / زیان" k="pl" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /><SortHead label="٪ از پرتفوی" k="w" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />{!reorder && <span />}
       </div>
       {reorder
-        ? <Reorder.Group axis="y" values={items} onReorder={setItems}>{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
+        ? <Reorder.Group axis="y" values={items} onReorder={setItems} className="select-none">{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
         : sorted.map((x) => <PRow key={x.s} x={x} />)}
       {!rows.length && <p className="px-4 py-10 text-center text-sm text-muted">این پرتفوی هنوز نمادی ندارد.</p>}
     </>
@@ -213,8 +215,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const setPItems = (items) => setPlists((ls) => ls.map((l) => (l.id === plist.id ? { ...l, items } : l)))
   const [board, setBoard] = useState(false)
   const [reorder, setReorder] = useState(false)
-  const [toast, setToast] = useState(null)
-  const say = (m) => { setToast(m); clearTimeout(say.t); say.t = setTimeout(() => setToast(null), 2600) }
+  const say = (m) => toast(m)
   const [del, setDel] = useState(null)   // symbol waiting for remove confirmation
   const [opts, setOpts] = useState({ chart: true, vol: true })
   const [sheet, setSheet] = useState(null) // 'lists' | 'add' | 'settings'
@@ -251,10 +252,10 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
               </motion.div>
             ) : (
               <motion.div key="tb" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }} className="flex h-12 shrink-0 items-center gap-1 border-b border-line px-3">
-                <div className="seg !h-8">{[[false, 'جدول', I.list], [true, 'تابلو', I.board]].map(([k, t, ic]) => (
+                <div className="seg !h-8">{[[false, 'جدول'], [true, 'تابلو']].map(([k, t]) => (
                   <button key={t} onClick={() => setBoard(k)} className="seg-item !px-2.5">
                     {board === k && <motion.span layoutId="wl-view" className="absolute inset-0 rounded-[10px] bg-brand/15 ring-1 ring-brand/50" />}
-                    <span className={`relative flex items-center gap-1 ${board === k ? 'font-bold text-brand-light' : ''}`}>{ic}{t}</span>
+                    <span className={`relative ${board === k ? 'font-bold text-brand-light' : ''}`}>{t}</span>
                   </button>
                 ))}</div>
                 <span className="flex-1" />
@@ -274,7 +275,7 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
                   {showChart && <SortHead label={<span className="leading-4">نمودار ۱ ماهه<br />(تقویمی)</span>} k="m" s={st} toggle={toggle} />}
                 </div>
                 {reorder ? (
-                  <Reorder.Group axis="y" values={list.items} onReorder={setItems}>
+                  <Reorder.Group axis="y" values={list.items} onReorder={setItems} className="select-none">
                     {list.items.map((s) => { const r = rows.find((x) => x.s === s); return r && <Row key={s} r={r} cols={cols} reorder active={false} onPick={setSym} /> })}
                   </Reorder.Group>
                 ) : sorted.map((r) => <Row key={r.s} r={r} cols={cols} active={sym.s === r.s} onPick={setSym} />)}
@@ -301,13 +302,6 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
         <ChipRail items={sub === 'watch' ? lists : plists} active={sub === 'watch' ? cur : pcur}
           pick={(id) => { (sub === 'watch' ? setCur : setPcur)(id); setReorder(false) }} manage={() => setSheet(sub === 'watch' ? 'lists' : 'plists')} />
       </div>
-
-      <AnimatePresence>{toast && (
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
-          className="pointer-events-none absolute inset-x-6 bottom-16 z-[90] mx-auto w-fit max-w-full text-center rounded-full bg-surface2 px-4 py-2 text-xs shadow-2xl ring-1 ring-line">
-          {toast}
-        </motion.div>
-      )}</AnimatePresence>
 
       <ListsSheet open={sheet === 'lists'} close={() => setSheet(null)} lists={lists} setLists={setLists} cur={cur} setCur={setCur} />
       <ListsSheet kind="پرتفوی" open={sheet === 'plists'} close={() => setSheet(null)} lists={plists} setLists={setPlists} cur={pcur} setCur={setPcur}
@@ -344,7 +338,7 @@ function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دید�
   return (
     <Modal open={open} title={kind === 'پرتفوی' ? 'پرتفوی‌ها' : 'دیده‌بان‌ها'} onClose={close}
       actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { setCur(pick); close() }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">تایید</motion.button>}>
-      <Reorder.Group axis="y" values={lists} onReorder={setLists} className="space-y-2">
+      <Reorder.Group axis="y" values={lists} onReorder={setLists} className="select-none space-y-2">
         {lists.map((l) => <ListRow key={l.id} l={l} on={pick === l.id} pick={() => setPick(l.id)} editing={edit === l.id}
           editField={<input autoFocus value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') { e.stopPropagation(); setEdit(null) } }} onBlur={saveEdit} className={field} />}
           onEdit={() => { setEdit(l.id); setName(l.name) }} onDelete={() => setDelId(l.id)} />)}
@@ -354,7 +348,7 @@ function ListsSheet({ open, close, lists, setLists, cur, setCur, kind = 'دید�
           <motion.div key="new" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-2 flex items-center gap-2 rounded-xl border border-brand/50 bg-brand/5 px-3 py-2">
             <input autoFocus value={newName} onChange={(e) => setNewName(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') saveNew(); if (e.key === 'Escape') { e.stopPropagation(); setAdding(false); setNewName('') } }} placeholder={`نام ${kind} جدید`} className={field} />
             <button onClick={saveNew} disabled={!newName.trim()} className="btn btn-on !h-9 disabled:opacity-40">افزودن</button>
-            <button onClick={() => { setAdding(false); setNewName('') }} aria-label="انصراف" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2">×</button>
+            <button onClick={() => { setAdding(false); setNewName('') }} aria-label="انصراف" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2"><CloseIcon /></button>
           </motion.div>
         ) : (
           <motion.button key="add" initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={() => setAdding(true)}
@@ -374,7 +368,7 @@ function ListRow({ l, on, pick, editing, editField, onEdit, onDelete }) {
   return (
     <Reorder.Item value={l} dragListener={false} dragControls={controls} whileDrag={{ scale: 1.02, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)', zIndex: 5 }}
       className={`flex items-center gap-2 rounded-xl border px-2 py-2 text-sm transition-colors ${on ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30'}`}>
-      <span onPointerDown={(e) => controls.start(e)} title="برای جابجایی بکشید" className="grid h-8 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted hover:text-ink active:cursor-grabbing">{I.grip}</span>
+      <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} title="برای جابجایی بکشید" className="grid h-8 w-6 shrink-0 cursor-grab touch-none place-items-center text-muted hover:text-ink active:cursor-grabbing">{I.grip}</span>
       {editing ? editField : (
         <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 py-1">
           <input type="radio" checked={on} onChange={pick} className="sr-only" />
