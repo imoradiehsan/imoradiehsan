@@ -149,22 +149,40 @@ export function AlertHistory({ items = [] }) {
 
 /* ---------- help sheet ---------- */
 export function AlertHelp({ open, close }) {
-  const [svc, setSvc] = useState(false), [sent, setSent] = useState(false)
+  // three clear steps instead of a wall of text: grant → test → (optional) keep-alive service
+  const [perm, setPerm] = useState(false), [sent, setSent] = useState(false), [svc, setSvc] = useState(false), [more, setMore] = useState(false)
+  const Check = <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg>
+  const step = (n, done, title, desc, action) => (
+    <div className={`flex items-center gap-3 rounded-2xl border p-3.5 transition-colors ${done ? 'border-up/40 bg-up/5' : 'border-line bg-surface2/30'}`}>
+      <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-bold transition-colors ${done ? 'bg-up text-white' : 'bg-surface2 text-muted'}`}>{done ? Check : n}</span>
+      <span className="min-w-0 flex-1"><b className="block text-sm">{title}</b><span className="text-xs text-muted">{desc}</span></span>
+      {action}
+    </div>
+  )
   return (
-    <Modal open={open} onClose={close} title="راهکار عدم نمایش هشدارها"
-      actions={<motion.button whileTap={{ scale: .97 }} onClick={() => { close(); toast('به تنظیمات اجرای پس‌زمینه دستگاه هدایت می‌شوید', 'info') }} className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark font-bold text-white shadow-glow">دادن مجوز</motion.button>}>
-      <div className="space-y-4 text-sm leading-7">
-        <p>در برخی دستگاه‌های اندرویدی، سیستم عامل اجازه کار برنامه در پس‌زمینه را نمی‌دهد و پس از بسته شدن برنامه، هشدارها در زمان مقرر دریافت نمی‌شوند. برای رفع این مشکل باید اجازه اجرا در پس‌زمینه را به تحلیل‌گر بورس بدهید.</p>
-        <p className="text-xs text-muted">این تنظیمات در هر برند متفاوت است و معمولاً در بخش‌هایی مانند <span dir="ltr">Battery Optimization</span>، <span dir="ltr">Battery Saver</span> یا <span dir="ltr">Auto Start</span> قرار دارد. با دکمه «دادن مجوز» مستقیم به همان بخش می‌روید.</p>
-        <div className="rounded-2xl border border-line bg-surface2/30 p-4">
-          <p className="text-xs text-muted">اگر موفق نشدید، سرویس هشدار را روشن کنید تا برنامه پس از بسته شدن هم فعال بماند؛ این کار یک اعلان دائمی بالای صفحه نشان می‌دهد. می‌توانید فقط در ساعات باز بودن بازار روشنش کنید.</p>
-          <div className="mt-3 flex justify-center"><Switch on={svc} set={setSvc} label="اجرای سرویس هشدار" msg="سرویس هشدار" /></div>
-        </div>
-        <div className="text-center">
-          <p className="text-xs text-muted">پس از دادن مجوز، برای اطمینان یک هشدار آزمایشی برای خود بفرستید.</p>
-          <button onClick={() => { setSent(true); toast('هشدار آزمایشی ارسال شد؛ چند ثانیه دیگر باید اعلان را ببینید', 'info') }} className={`btn mt-3 ${sent ? 'btn-on' : ''}`}>{ic(Notification, 15)}{sent ? 'هشدار آزمایشی ارسال شد' : 'ارسال هشدار آزمایشی'}</button>
-        </div>
+    <Modal open={open} onClose={close} title="هشدارها به دستم نمی‌رسد"
+      actions={<button onClick={close} className="h-11 flex-1 rounded-xl border border-line text-sm font-medium hover:bg-surface2">متوجه شدم</button>}>
+      <p className="mb-4 text-sm leading-7 text-muted">بعضی گوشی‌ها برنامه‌های بسته‌شده را متوقف می‌کنند. این سه قدم را انجام دهید:</p>
+      <div className="space-y-2.5">
+        {step('۱', perm, 'اجازه اجرا در پس‌زمینه', 'برنامه بعد از بسته شدن هم هشدار بفرستد',
+          <button onClick={() => { setPerm(true); toast('به تنظیمات اجرای پس‌زمینه دستگاه هدایت می‌شوید', 'info') }} className={`btn shrink-0 ${perm ? '' : 'btn-on'}`}>{perm ? 'دوباره' : 'دادن مجوز'}</button>)}
+        {step('۲', sent, 'ارسال هشدار آزمایشی', 'مطمئن شوید اعلان روی گوشی می‌رسد',
+          <button onClick={() => { setSent(true); toast('هشدار آزمایشی ارسال شد', 'ok') }} className="btn shrink-0">{sent ? 'ارسال دوباره' : 'ارسال'}</button>)}
+        {step('۳', svc, 'سرویس هشدار دائمی', 'اختیاری؛ فقط اگر باز هم هشدار نرسید',
+          <button onClick={() => { setSvc(!svc); toast(`سرویس هشدار ${svc ? 'غیرفعال' : 'فعال'} شد`, svc ? 'info' : 'ok') }} aria-label="اجرای سرویس هشدار" className={`flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors ${svc ? 'justify-end bg-up' : 'justify-start bg-line'}`}><motion.span layout className="h-5 w-5 rounded-full bg-white shadow" /></button>)}
       </div>
+      <button onClick={() => setMore(!more)} className="mt-4 flex items-center gap-1 text-xs text-brand-light">
+        جزئیات بیشتر
+        <motion.svg animate={{ rotate: more ? 180 : 0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
+      </button>
+      <AnimatePresence initial={false}>{more && (
+        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+          <ul className="mt-2 list-disc space-y-1.5 pr-5 text-xs leading-6 text-muted">
+            <li>این تنظیم در هر برند جای متفاوتی دارد؛ معمولاً در <span dir="ltr">Battery Optimization</span>، <span dir="ltr">Battery Saver</span> یا <span dir="ltr">Auto Start</span>.</li>
+            <li>سرویس دائمی یک اعلان ثابت بالای صفحه نشان می‌دهد؛ می‌توانید فقط در ساعات باز بودن بازار روشنش کنید.</li>
+          </ul>
+        </motion.div>
+      )}</AnimatePresence>
     </Modal>
   )
 }
