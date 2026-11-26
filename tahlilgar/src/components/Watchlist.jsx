@@ -98,6 +98,16 @@ function PortRow({ x, reorder, onPick, cols, sym, amtCell }) {
   return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} className="bg-surface" whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
 }
 
+// small styled tooltip under icon buttons (replaces the native title bubble)
+export function Tip({ text, children }) {
+  return (
+    <span className="group/tip relative inline-flex">
+      {children}
+      <span role="tooltip" className="pointer-events-none absolute left-0 top-full z-40 mt-1.5 whitespace-nowrap rounded-lg bg-ink px-2 py-1 text-[11px] font-medium text-surface opacity-0 shadow-lg transition-opacity delay-150 group-hover/tip:opacity-100">{text}</span>
+    </span>
+  )
+}
+
 /* ---------------- one table row (with drag handle in reorder mode) ---------------- */
 function Row({ r, cols, active, reorder, onPick }) {
   const controls = useDragControls()
@@ -181,14 +191,21 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
     : <span className={`num text-center font-semibold ${up == null ? 'text-muted' : up ? 'text-up' : 'text-down'}`} dir="ltr">{up == null ? fa(p, 2) + '٪' : sgn(p)}</span>
   return (
     <>
+      {reorder ? (
+        <div className="flex h-12 items-center gap-2 border-b border-brand/40 bg-brand/10 px-3 text-xs">
+          <span className="text-brand-light">{I.move}</span><span className="flex-1">ردیف‌ها را با دستگیره بکشید و جابجا کنید</span>
+          <button onClick={settings.done} className="btn btn-on !h-7">پایان</button>
+        </div>
+      ) : (
       <div className="num flex h-12 items-center gap-1 border-b border-line px-3 text-xs text-muted">
-        <button onClick={() => setPeriod(period === 'day' ? 'total' : 'day')} title="تغییر بازه بازده" className="flex items-center gap-1 rounded-lg px-1.5 py-1 hover:bg-surface2">
+        <Tip text={period === 'day' ? 'نمایش بازده کلی' : 'نمایش بازده روز'}><button onClick={() => setPeriod(period === 'day' ? 'total' : 'day')} aria-label="تغییر بازه بازده" className="flex items-center gap-1 rounded-lg px-1.5 py-1 hover:bg-surface2">
           {period === 'day' ? 'بازده روز' : 'بازده کلی'}: <b className={amt >= 0 ? 'text-up' : 'text-down'} dir="ltr">{amt >= 0 ? '+' : '−'}{big(Math.abs(amt))} ({sgn(pct)})</b><span className="text-muted">{I.chev}</span>
-        </button>
+        </button></Tip>
         <span className="flex-1" />
-        <button onClick={() => setUnit(unit === 'pct' ? 'amt' : 'pct')} title={unit === 'pct' ? 'نمایش مبلغ' : 'نمایش درصد'} className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${unit === 'amt' ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.swap}</button>
+        <Tip text={unit === 'pct' ? 'نمایش مبلغ' : 'نمایش درصد'}><button onClick={() => setUnit(unit === 'pct' ? 'amt' : 'pct')} aria-label={unit === 'pct' ? 'نمایش مبلغ' : 'نمایش درصد'} className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${unit === 'amt' ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.swap}</button></Tip>
         {settings.toolbar}
       </div>
+      )}
       <div className={`sticky top-0 z-10 grid items-center gap-2 border-b border-line bg-surface2 px-3 py-2 text-[11px] text-muted ${cols}`}>
         <SortHead label="نماد" k="s" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} align="start" /><SortHead label="آخرین قیمت" k="p" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />
         <SortHead label="سود / زیان" k="pl" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /><SortHead label="٪ از پرتفوی" k="w" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />{!reorder && <span />}
@@ -267,8 +284,8 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
                   </button>
                 ))}</div>
                 <span className="flex-1" />
-                {!board && <button onClick={startReorder} title="جابجایی ردیف‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.move}</button>}
-                <button onClick={() => setSheet('settings')} title="تنظیمات ستون‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
+                {!board && <Tip text="جابجایی ردیف‌ها"><button onClick={startReorder} aria-label="جابجایی ردیف‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.move}</button></Tip>}
+                <Tip text="تنظیمات ستون‌ها"><button onClick={() => setSheet('settings')} aria-label="تنظیمات ستون‌ها" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button></Tip>
               </motion.div>
             )}
           </AnimatePresence>
@@ -298,9 +315,9 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
         </>
       ) : (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"><Portfolio sym={sym} onPick={setSym} items={plist.items} setItems={setPItems} reorder={reorder}
-          settings={{ ...pset, toolbar: <>
-            <button onClick={startReorder} title="جابجایی ردیف‌ها" className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${reorder ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.move}</button>
-            <button onClick={() => setSheet('plists')} title="تنظیمات پرتفوی" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button>
+          settings={{ ...pset, done: startReorder, toolbar: <>
+            <Tip text="جابجایی ردیف‌ها"><button onClick={startReorder} aria-label="جابجایی ردیف‌ها" className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${reorder ? 'bg-brand/15 text-brand-light' : 'text-muted hover:bg-surface2 hover:text-ink'}`}>{I.move}</button></Tip>
+            <Tip text="تنظیمات پرتفوی"><button onClick={() => setSheet('plists')} aria-label="تنظیمات پرتفوی" className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink">{I.gear}</button></Tip>
           </> }} /></div>
       )}
 
