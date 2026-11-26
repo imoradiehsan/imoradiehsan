@@ -133,6 +133,7 @@ export default function SitePanel({ sym, dark, setDark, setSym, openApp, alertIn
       {/* Site header */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-line px-4" onClick={(e) => e.stopPropagation()}>
         <img src="./logo.png" alt="" className="h-8 w-8 rounded-lg" />
+        <span className="hidden whitespace-nowrap font-bold 2xl:block">تحلیل‌گر بورس</span>
         <button title="جست‌وجوی نماد" className="icon-btn !h-9 !w-9 shrink-0 2xl:hidden">{ico(Search, 17)}</button>
         <label className="hidden h-9 w-56 shrink-0 items-center gap-2 rounded-xl border border-line bg-surface2/40 px-3 text-sm focus-within:border-brand/60 2xl:flex">
           {ico(Search, 16)}<input placeholder="جست‌وجوی نماد" className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted" />
