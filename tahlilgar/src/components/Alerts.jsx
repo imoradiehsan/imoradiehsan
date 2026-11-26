@@ -171,34 +171,72 @@ const EXAMPLES = [
   { s: 'شپنا', type: 'general', cond: 'حجم معاملات مشکوک', t: 'حجم مشکوک در شپنا', d: 'ورود پول هوشمند را رصد کنید' },
 ]
 export function AlertIntro({ create }) {
+  // landing-style hero that always fits the panel (no scroll): copy + CTA on one side, a live demo on the other
+  const fade = (d) => ({ initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 }, transition: { delay: d, duration: .5, ease: [.2, .8, .2, 1] } })
   return (
-    <div className="scroll-y h-full">
-      <div className="mx-auto max-w-3xl px-6 py-12 text-center">
-        <motion.span initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">{ic(Notification, 36)}</motion.span>
-        <h2 className="mt-6 text-2xl font-extrabold">بازار را لحظه‌به‌لحظه نپایید؛ ما خبرتان می‌کنیم</h2>
-        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted">با هشدارها شرطی برای نماد دلخواه تعریف می‌کنید و هر وقت آن اتفاق افتاد، همان لحظه اعلان یا پیامک می‌گیرید؛ از از بین رفتن صف خرید و فروش تا عبور قیمت، حجم یا تعداد معاملات از عددی که خودتان تعیین می‌کنید.</p>
-        <motion.button whileHover={{ y: -2 }} whileTap={{ scale: .97 }} onClick={() => create()} className="mt-7 inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark px-7 font-bold text-white shadow-glow">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>ساخت اولین هشدار
-        </motion.button>
+    <div className="relative h-full overflow-hidden">
+      {/* soft animated backdrop */}
+      <motion.div aria-hidden className="pointer-events-none absolute -left-32 -top-40 h-[28rem] w-[28rem] rounded-full bg-brand/20 blur-3xl" animate={{ x: [0, 40, 0], y: [0, 30, 0] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div aria-hidden className="pointer-events-none absolute -bottom-40 right-0 h-[24rem] w-[24rem] rounded-full bg-up/10 blur-3xl" animate={{ x: [0, -30, 0], y: [0, -20, 0] }} transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }} />
+      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[.06] [background-image:linear-gradient(rgb(var(--ink))_1px,transparent_1px),linear-gradient(90deg,rgb(var(--ink))_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
 
-        <div className="mt-12 text-right">
-          <div className="mb-3 text-sm font-bold">یا با یک کلیک از نمونه‌های آماده شروع کنید</div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {EXAMPLES.map((e, i) => (
-              <motion.button key={e.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 + i * .06 }} whileHover={{ y: -2 }} onClick={() => { const { t, d, ...preset } = e; create(preset) }}
-                className="rounded-2xl border border-line bg-surface2/30 p-4 text-right transition-colors hover:border-brand/50">
-                <span className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-bold ${e.type === 'general' ? 'bg-up/15 text-up' : 'bg-brand/15 text-brand-light'}`}>{e.type === 'general' ? 'کلی' : 'مقادیر'}</span>
-                <b className="mt-2 block text-sm">{e.t}</b>
-                <span className="mt-1 block text-xs text-muted">{e.d}</span>
-              </motion.button>
-            ))}
+      <div className="relative mx-auto grid h-full max-w-6xl items-center gap-10 px-8 lg:grid-cols-[1.05fr_1fr]">
+        {/* copy */}
+        <div>
+          <motion.span {...fade(0)} className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-3 py-1 text-xs font-bold text-brand-light">
+            <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-light opacity-70" /><span className="relative inline-flex h-2 w-2 rounded-full bg-brand-light" /></span>
+            هشدار هوشمند بازار
+          </motion.span>
+          <motion.h2 {...fade(.08)} className="mt-5 text-4xl font-black leading-[1.35]">بازار را لحظه‌به‌لحظه نپایید؛<br /><span className="bg-gradient-to-l from-brand-light to-up bg-clip-text text-transparent">ما خبرتان می‌کنیم</span></motion.h2>
+          <motion.p {...fade(.16)} className="mt-4 max-w-lg text-sm leading-8 text-muted">برای هر نماد شرط دلخواهتان را بسازید؛ از بین رفتن صف، عبور قیمت از یک عدد یا حجم مشکوک. همان لحظه‌ای که اتفاق بیفتد، اعلان یا پیامک می‌گیرید.</motion.p>
+          <motion.div {...fade(.24)} className="mt-7 flex flex-wrap items-center gap-3">
+            <motion.button whileHover={{ y: -2, scale: 1.02 }} whileTap={{ scale: .97 }} onClick={() => create()} className="group inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark px-7 font-bold text-white shadow-glow">
+              ساخت اولین هشدار
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover:-translate-x-1"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>
+            </motion.button>
+            <span className="text-xs text-muted">کمتر از ۱۰ ثانیه</span>
+          </motion.div>
+          <motion.div {...fade(.32)} className="mt-8">
+            <div className="mb-2.5 text-xs text-muted">یا با یک کلیک از نمونه‌ها شروع کنید</div>
+            <div className="flex flex-wrap gap-2">
+              {EXAMPLES.map((e, i) => (
+                <motion.button key={e.s} initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .4 + i * .07 }} whileHover={{ y: -2 }} onClick={() => { const { t, d, ...preset } = e; create(preset) }}
+                  className="flex items-center gap-2 rounded-xl border border-line bg-surface2/40 px-3 py-2 text-xs transition-colors hover:border-brand/50 hover:bg-brand/10">
+                  <i className={`h-2 w-2 rounded-full ${e.type === 'general' ? 'bg-up' : 'bg-brand-light'}`} />{e.t}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* live demo */}
+        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: .2, duration: .6 }} className="relative hidden lg:block">
+          <div className="rounded-3xl border border-line bg-surface2/50 p-5 shadow-2xl backdrop-blur">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-2"><span className="grid h-9 w-9 place-items-center rounded-xl bg-white text-xs font-extrabold text-brand-dark">فو</span><span><b className="block text-sm">فولاد</b><span className="text-[11px] text-muted">فولاد مبارکه اصفهان</span></span></span>
+              <span className="rounded-lg bg-up/15 px-2 py-1 text-xs font-bold text-up">▲ ۲٫۸۴٪</span>
+            </div>
+            <svg viewBox="0 0 320 120" className="mt-4 h-36 w-full overflow-visible">
+              <defs><linearGradient id="ai-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgb(var(--up))" stopOpacity=".35" /><stop offset="1" stopColor="rgb(var(--up))" stopOpacity="0" /></linearGradient></defs>
+              <line x1="0" x2="320" y1="38" y2="38" stroke="#3C7CFF" strokeDasharray="5 5" opacity=".8" />
+              <text x="316" y="32" fontSize="10" fill="rgb(var(--muted))">هدف ۶٬۵۰۰</text>
+              <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22 L320 120 L0 120 Z" fill="url(#ai-g)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: .8 }} />
+              <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22" fill="none" stroke="rgb(var(--up))" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: .5, duration: 1.6, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2.4 }} />
+              <motion.circle cx="268" cy="38" r="6" fill="rgb(var(--up))" initial={{ scale: 0 }} animate={{ scale: [0, 1.4, 1] }} transition={{ delay: 1.75, duration: .5, repeat: Infinity, repeatDelay: 3.5 }} />
+            </svg>
           </div>
-        </div>
-
-        <div className="mt-8 grid gap-3 text-right sm:grid-cols-2">
-          <div className="rounded-2xl border border-line p-4"><b className="text-sm">هشدار کلی</b><p className="mt-1 text-xs leading-6 text-muted">رویدادهای آماده مثل از بین رفتن صف، حجم مشکوک، حمایت و مقاومت و پیام ناظر بازار.</p></div>
-          <div className="rounded-2xl border border-line p-4"><b className="text-sm">هشدار مقادیر</b><p className="mt-1 text-xs leading-6 text-muted">قیمت، درصد تغییر، حجم یا تعداد معامله را با عدد دلخواه مقایسه کنید؛ کوچکتر، مساوی یا بزرگتر.</p></div>
-        </div>
+          {/* notification popping in when the line crosses the target */}
+          <motion.div initial={{ opacity: 0, y: 20, scale: .95 }} animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -6], scale: [.95, 1, 1, .98] }} transition={{ delay: 1.8, duration: 3.4, times: [0, .12, .85, 1], repeat: Infinity, repeatDelay: .6 }}
+            className="absolute -bottom-8 -left-6 flex w-72 items-center gap-3 rounded-2xl border border-line bg-surface p-3 shadow-2xl">
+            <motion.span animate={{ rotate: [0, -14, 12, -8, 0] }} transition={{ delay: 2, duration: .6, repeat: Infinity, repeatDelay: 3.4 }} className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-light to-brand-dark text-white">{ic(Notification, 20)}</motion.span>
+            <span className="min-w-0 text-right"><b className="block text-sm">قیمت فولاد از ۶٬۵۰۰ گذشت</b><span className="text-[11px] text-muted">همین حالا · تحلیل‌گر بورس</span></span>
+          </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, y: [0, -6, 0] }} transition={{ opacity: { delay: .9 }, y: { duration: 4, repeat: Infinity, ease: 'easeInOut' } }}
+            className="absolute -right-4 -top-6 flex items-center gap-2 rounded-xl border border-line bg-surface px-3 py-2 text-xs shadow-xl">
+            <i className="h-2 w-2 rounded-full bg-up" />صف خرید خودرو از بین رفت
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   )
