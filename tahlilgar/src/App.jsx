@@ -14,6 +14,8 @@ export default function App() {
   const [rightW, setRightW] = useState(load)
   const [drag, setDrag] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [alertIntro, setAlertIntro] = useState(false)   // alert tab with no alerts → site panel shows the intro
+  const [alertReq, setAlertReq] = useState(null)         // CTA on the intro asks the app panel to open the new-alert form
   const root = useRef(null)
   const startW = useRef(DEFAULT)
   useEffect(() => { document.documentElement.classList.toggle('dark', dark) }, [dark])
@@ -50,7 +52,7 @@ export default function App() {
 
   return (
     <div ref={root} className="flex flex-col bg-bg lg:h-full lg:flex-row" style={{ '--right-w': (collapsed ? 0 : rightW) + 'px' }} data-drag={drag || undefined}>
-      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} collapsed={collapsed} setCollapsed={(c) => { if (!c && collapsed) setRightW((w) => clamp(w)); setCollapsed(c) }} />
+      <AppPanel sym={sym} setSym={setSym} tab={tab} setTab={setTab} setAlertIntro={setAlertIntro} alertReq={alertReq} collapsed={collapsed} setCollapsed={(c) => { if (!c && collapsed) setRightW((w) => clamp(w)); setCollapsed(c) }} />
 
       {/* Splitter: hover → blue, drag → resize, double-click → reset, arrows for keyboard */}
       <div
@@ -73,7 +75,7 @@ export default function App() {
         )}
       </div>
 
-      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} openApp={(t) => { setTab(t); setCollapsed(false) }} />
+      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} openApp={(t) => { setTab(t); setCollapsed(false) }} alertIntro={alertIntro} newAlert={(preset) => { setCollapsed(false); setAlertReq({ preset, n: Date.now() }) }} />
       <Toaster />
     </div>
   )
