@@ -56,8 +56,8 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
           <div>
             <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-brand/10 text-brand-light">{ic(Notification, 30)}</span>
             <p className="mt-4 text-sm text-muted">هنوز هشداری ثبت نکرده‌اید!</p>
-            <motion.button layoutId="al-add" whileTap={{ scale: .96 }} onClick={add} className="mx-auto mt-5 flex h-11 items-center gap-2 rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark px-5 text-sm font-bold text-white shadow-glow">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>هشدار جدید
+            <motion.button layoutId="al-add" whileHover={{ y: -2 }} whileTap={{ scale: .92 }} onClick={add} title="هشدار جدید" className="mx-auto mt-5 grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16v-5a6 6 0 0 1 9-5.2M18 11v5l2 2H4l2-2" /><path d="M10 20a2 2 0 0 0 4 0M18 3v6M15 6h6" /></svg>
             </motion.button>
           </div>
         </div>
