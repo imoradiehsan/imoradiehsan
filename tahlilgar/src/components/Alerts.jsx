@@ -56,15 +56,20 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
           <div>
             <span className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-brand/10 text-brand-light">{ic(Notification, 30)}</span>
             <p className="mt-4 text-sm text-muted">هنوز هشداری ثبت نکرده‌اید!</p>
+            <motion.button layoutId="al-add" whileTap={{ scale: .96 }} onClick={add} className="mx-auto mt-5 flex h-11 items-center gap-2 rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark px-5 text-sm font-bold text-white shadow-glow">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>هشدار جدید
+            </motion.button>
           </div>
         </div>
       )}
       <Dialog open={del != null} title="حذف هشدار" text="آیا از حذف هشدار مطمئن هستید؟" okText="حذف" danger onOk={() => { const a = list.find((x) => x.id === del); setList(list.filter((x) => x.id !== del)); setDel(null); toast(`هشدار ${a?.s ?? ''} حذف شد`, 'info') }} onCancel={() => setDel(null)} />
+      {list.length > 0 && (
       <div className="pointer-events-none sticky bottom-0 flex justify-end p-4">
-        <motion.button whileHover={{ y: -2 }} whileTap={{ scale: .92 }} onClick={add} title="هشدار جدید" className="pointer-events-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">
+        <motion.button layoutId="al-add" whileHover={{ y: -2 }} whileTap={{ scale: .92 }} onClick={add} title="هشدار جدید" className="pointer-events-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16v-5a6 6 0 0 1 9-5.2M18 11v5l2 2H4l2-2" /><path d="M10 20a2 2 0 0 0 4 0M18 3v6M15 6h6" /></svg>
         </motion.button>
       </div>
+      )}
     </div>
   )
 }
