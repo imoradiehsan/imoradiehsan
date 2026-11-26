@@ -316,10 +316,10 @@ function OrderBook({ d, prev, rows, cum }) {
             {data.map((r, i) => (
               <motion.tr key={i} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * .04 }} className="transition-colors hover:bg-surface2/40">
                 <td className="py-1">{fa(r.bn)}</td>
-                <Vol v={r.bq} w={((cum ? r.cb : r.bq) / mx) * 100} buy />
+                {Vol({ v: r.bq, w: ((cum ? r.cb : r.bq) / mx) * 100, buy: true })}
                 <td className="leading-tight"><b className="text-sm">{fa(r.bp)}</b><div className="text-[10px] text-up" dir="ltr">{pct(r.bp)}</div></td>
                 <td className="leading-tight"><b className="text-sm">{fa(r.ap)}</b><div className="text-[10px] text-down" dir="ltr">{pct(r.ap)}</div></td>
-                <Vol v={r.aq} w={((cum ? r.ca : r.aq) / mx) * 100} />
+                {Vol({ v: r.aq, w: ((cum ? r.ca : r.aq) / mx) * 100 })}
                 <td>{fa(r.an)}</td>
               </motion.tr>
             ))}
@@ -365,8 +365,8 @@ function Range({ sym, d }) {
           <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: .6 }} style={{ left: `${pos(d.prev)}%`, originX: 0 }} className="absolute inset-y-0 right-0 rounded-r-full bg-up" />
           <span className="absolute -left-1.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-down" />
           <span className="absolute -right-1.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-up" />
-          <Marker v={sym.p} top />
-          <Marker v={close} />
+          {Marker({ v: sym.p, top: true })}
+          {Marker({ v: close })}
         </div>
       </div>
       <div className="flex items-center gap-1.5" title="حجم معاملات نسبت به حجم مبنا">
@@ -433,12 +433,12 @@ function Fundamentals({ d }) {
         <Tip label="ارزش بازار" tip={TIPS['ارزش بازار']} />
         <b className="num text-xl">{num} <small className="text-xs font-normal text-muted">{unit}</small></b>
       </div>
-      <Cell k="P/E" />
-      <Cell k="EPS" r="sm:rounded-tl-[11px]" />
-      <Cell k="P/E گروه" r="sm:rounded-br-[11px]" />
-      <Cell k="P/S" />
-      <Cell k="سهام شناور" label="درصد شناور" r="rounded-br-[11px] sm:rounded-br-none" />
-      <Cell k="تعداد سهام" r="rounded-bl-[11px]" />
+      {Cell({ k: "P/E" })}
+      {Cell({ k: "EPS", r: "sm:rounded-tl-[11px]" })}
+      {Cell({ k: "P/E گروه", r: "sm:rounded-br-[11px]" })}
+      {Cell({ k: "P/S" })}
+      {Cell({ k: "سهام شناور", label: "درصد شناور", r: "rounded-br-[11px] sm:rounded-br-none" })}
+      {Cell({ k: "تعداد سهام", r: "rounded-bl-[11px]" })}
     </div>
   )
 }
@@ -709,8 +709,8 @@ function FullBook({ sym, prev }) {
         <tbody>
           {Array.from({ length: n }, (_, i) => { const b = bids[i], a = asks[i]; return (
             <motion.tr key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * .02 }} className="hover:bg-surface2/40">
-              {b ? <><td>{fa(b.n)}</td><Vol q={b.q} buy /><td className="leading-tight"><b>{fa(b.p)}</b>{pc(b.p)}</td></> : empty}
-              {a ? <><td className="border-r border-line leading-tight"><b>{fa(a.p)}</b>{pc(a.p)}</td><Vol q={a.q} /><td>{fa(a.n)}</td></> : <><td className="border-r border-line py-3 text-muted/50">۰</td><td className="text-muted/50">۰</td><td className="text-muted/50">۰</td></>}
+              {b ? <><td>{fa(b.n)}</td>{Vol({ q: b.q, buy: true })}<td className="leading-tight"><b>{fa(b.p)}</b>{pc(b.p)}</td></> : empty}
+              {a ? <><td className="border-r border-line leading-tight"><b>{fa(a.p)}</b>{pc(a.p)}</td>{Vol({ q: a.q })}<td>{fa(a.n)}</td></> : <><td className="border-r border-line py-3 text-muted/50">۰</td><td className="text-muted/50">۰</td><td className="text-muted/50">۰</td></>}
             </motion.tr>) })}
         </tbody>
       </table>

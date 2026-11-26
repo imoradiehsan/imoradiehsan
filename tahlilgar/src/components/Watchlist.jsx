@@ -83,6 +83,21 @@ export function Dialog({ open, title, text, input, value, setValue, placeholder,
   )
 }
 
+// portfolio row lives at top level so re-renders of the list never remount it (which replayed its animations)
+function PortRow({ x, reorder, onPick, cols, sym, amtCell }) {
+  const controls = useDragControls()
+  const body = (
+    <div onClick={() => !reorder && onPick(x)} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${cols} ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${!reorder && sym.s === x.s ? 'bg-brand/10' : ''}`}>
+      <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
+      <span className="num text-center leading-5"><span className="block font-semibold">{fa(x.price)}</span><Pct v={x.c} className="text-[10px]" /></span>
+      {amtCell(x.plAmt, x.pl, x.pl >= 0)}
+      {amtCell(x.val, x.w, null)}
+      {!reorder && <span className="text-muted">{I.chev}</span>}
+    </div>
+  )
+  return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} className="bg-surface" whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
+}
+
 /* ---------------- one table row (with drag handle in reorder mode) ---------------- */
 function Row({ r, cols, active, reorder, onPick }) {
   const controls = useDragControls()
@@ -164,19 +179,6 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
   const amtCell = (a, p, up) => unit === 'amt'
     ? <span className="num text-center leading-5" dir="ltr"><span className={`block font-semibold ${up == null ? '' : up ? 'text-up' : 'text-down'}`}>{big(Math.abs(a))}</span><span className={`text-[10px] ${up == null ? 'text-muted' : up ? 'text-up' : 'text-down'}`}>{up == null ? fa(p, 2) + '٪' : sgn(p)}</span></span>
     : <span className={`num text-center font-semibold ${up == null ? 'text-muted' : up ? 'text-up' : 'text-down'}`} dir="ltr">{up == null ? fa(p, 2) + '٪' : sgn(p)}</span>
-  const PRow = ({ x }) => {
-    const controls = useDragControls()
-    const body = (
-      <div onClick={() => !reorder && onPick(x)} className={`grid items-center gap-2 border-b border-line/60 px-3 py-2.5 text-xs transition-colors ${cols} ${reorder ? 'bg-surface' : 'cursor-pointer hover:bg-surface2/50'} ${!reorder && sym.s === x.s ? 'bg-brand/10' : ''}`}>
-        <span className="flex items-center gap-1.5">{reorder && <span onPointerDown={(e) => { e.preventDefault(); window.getSelection()?.removeAllRanges(); controls.start(e) }} className="cursor-grab touch-none text-muted">{I.grip}</span>}<i className={`h-2 w-2 rounded-sm ${x.c >= 0 ? 'bg-up' : 'bg-down'}`} /><b className="text-sm">{x.s}</b></span>
-        <span className="num text-center leading-5"><span className="block font-semibold">{fa(x.price)}</span><Pct v={x.c} className="text-[10px]" /></span>
-        {amtCell(x.plAmt, x.pl, x.pl >= 0)}
-        {amtCell(x.val, x.w, null)}
-        {!reorder && <span className="text-muted">{I.chev}</span>}
-      </div>
-    )
-    return reorder ? <Reorder.Item value={x.s} dragListener={false} dragControls={controls} className="bg-surface" whileDrag={{ scale: 1.02, zIndex: 5, boxShadow: '0 12px 30px -10px rgba(0,0,0,.5)' }}>{body}</Reorder.Item> : body
-  }
   return (
     <>
       <div className="num flex h-12 items-center gap-1 border-b border-line px-3 text-xs text-muted">
@@ -192,8 +194,8 @@ function Portfolio({ sym, onPick, items, setItems, reorder, settings }) {
         <SortHead label="سود / زیان" k="pl" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} /><SortHead label="٪ از پرتفوی" k="w" s={reorder ? null : st} toggle={reorder ? () => {} : toggle} />{!reorder && <span />}
       </div>
       {reorder
-        ? <Reorder.Group axis="y" values={items} onReorder={setItems} className="select-none">{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PRow key={s} x={x} /> })}</Reorder.Group>
-        : sorted.map((x) => <PRow key={x.s} x={x} />)}
+        ? <Reorder.Group axis="y" values={items} onReorder={setItems} className="select-none">{items.map((s) => { const x = rows.find((r) => r.s === s); return x && <PortRow key={s} x={x} reorder={reorder} onPick={onPick} cols={cols} sym={sym} amtCell={amtCell} /> })}</Reorder.Group>
+        : sorted.map((x) => <PortRow key={x.s} x={x} reorder={reorder} onPick={onPick} cols={cols} sym={sym} amtCell={amtCell} />)}
       {!rows.length && <p className="px-4 py-10 text-center text-sm text-muted">این پرتفوی هنوز نمادی ندارد.</p>}
     </>
   )
