@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Notification, TimeCircle, InfoSquare, EditSquare, Delete, Search } from 'react-iconly'
 import { SYMBOLS } from '../data/market'
@@ -21,8 +21,11 @@ function Switch({ on, set, label }) {
 }
 
 /* ---------- root: my alerts ---------- */
-export function AlertsHome({ list, setList, add, edit }) {
+export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
   const [ipo, setIpo] = useState(false), [sms, setSms] = useState(false), [del, setDel] = useState(null)
+  const pick = (code) => { const x = SYMBOLS.find((y) => y.s === code); if (x) setSym(x) }
+  // first alert's symbol is selected by default, so the left panel shows its details
+  useEffect(() => { if (list[0]) pick(list[0].s) }, [])
   return (
     <div className="relative flex min-h-full flex-col">
       <div className="flex h-12 shrink-0 items-center justify-between border-b border-line px-4">
@@ -34,13 +37,14 @@ export function AlertsHome({ list, setList, add, edit }) {
           <AnimatePresence initial={false}>{list.map((a, i) => {
             const n = SYMBOLS.find((x) => x.s === a.s)?.n
             return (
-              <motion.div key={a.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -30 }} className="flex items-center gap-3 rounded-2xl border border-line bg-surface2/30 p-3">
+              <motion.div key={a.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -30 }} onClick={() => pick(a.s)}
+                className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition-colors ${sym?.s === a.s ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30 hover:border-brand/40'}`}>
                 <div className="min-w-0 flex-1">
                   <div className="text-sm"><b className="text-brand-light">{a.s}</b>{n && <span className="mr-1 text-[11px] text-muted">({n})</span>}</div>
                   <div className="mt-1.5 flex items-center gap-2 text-xs"><i className={`h-3.5 w-0.5 rounded-full ${a.type === 'general' ? 'bg-up' : 'bg-brand-light'}`} />{describe(a)}</div>
                 </div>
-                <button onClick={() => edit(i)} title="ویرایش" className="btn-icon">{ic(EditSquare, 16)}</button>
-                <button onClick={() => setDel(a.id)} title="حذف" className="btn-icon hover:!text-down">{ic(Delete, 16)}</button>
+                <button onClick={(e) => { e.stopPropagation(); edit(i) }} title="ویرایش" className="btn-icon">{ic(EditSquare, 16)}</button>
+                <button onClick={(e) => { e.stopPropagation(); setDel(a.id) }} title="حذف" className="btn-icon hover:!text-down">{ic(Delete, 16)}</button>
               </motion.div>
             )
           })}</AnimatePresence>

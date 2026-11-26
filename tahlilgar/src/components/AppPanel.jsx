@@ -98,7 +98,7 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
             ) : tab === 'port' ? (
               <Watchlist sym={sym} setSym={setSym} initial="port" />
             ) : (
-              tab === 'alert' && <AlertsHome list={alerts} setList={setAlerts} add={() => push({ k: 'newAlert', title: 'هشدار جدید' })} edit={(i) => push({ k: 'newAlert', title: 'ویرایش هشدار', a: alerts[i] })} />
+              tab === 'alert' && <AlertsHome sym={sym} setSym={setSym} list={alerts} setList={setAlerts} add={() => push({ k: 'newAlert', title: 'هشدار جدید' })} edit={(i) => push({ k: 'newAlert', title: 'ویرایش هشدار', a: alerts[i] })} />
             )}
           </motion.div>
         </AnimatePresence>
