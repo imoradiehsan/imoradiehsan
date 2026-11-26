@@ -59,7 +59,7 @@ function Toggle({ on, set, label }) {
 }
 
 /* ---------------- small centered dialog for name prompts and confirmations ---------------- */
-function Dialog({ open, title, text, input, value, setValue, placeholder, okText = 'ذخیره', danger, onOk, onCancel }) {
+export function Dialog({ open, title, text, input, value, setValue, placeholder, okText = 'ذخیره', danger, onOk, onCancel }) {
   return (
     <AnimatePresence>{open && (
       <div className="fixed inset-0 z-[80] grid place-items-center p-4">
