@@ -38,10 +38,11 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
             const n = SYMBOLS.find((x) => x.s === a.s)?.n
             return (
               <motion.div key={a.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -30 }} onClick={() => pick(a.s)}
-                className={`flex cursor-pointer items-center gap-3 rounded-2xl border p-3 transition-colors ${sym?.s === a.s ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30 hover:border-brand/40'}`}>
+                className={`relative flex cursor-pointer items-center gap-3 overflow-hidden rounded-2xl border p-3 pr-4 transition-colors ${sym?.s === a.s ? 'border-brand/60 bg-brand/10' : 'border-line bg-surface2/30 hover:border-brand/40'}`}>
+                <i title={a.type === 'general' ? 'کلی' : 'مقادیر'} className={`absolute inset-y-3 right-0 w-1 rounded-l-full ${a.type === 'general' ? 'bg-up' : 'bg-brand-light'}`} />
                 <div className="min-w-0 flex-1">
                   <div className="text-sm"><b className="text-brand-light">{a.s}</b>{n && <span className="mr-1 text-[11px] text-muted">({n})</span>}</div>
-                  <div className="mt-1.5 flex items-center gap-2 text-xs"><i className={`h-3.5 w-0.5 rounded-full ${a.type === 'general' ? 'bg-up' : 'bg-brand-light'}`} />{describe(a)}</div>
+                  <div className="mt-1.5 text-xs">{describe(a)}</div>
                 </div>
                 <button onClick={(e) => { e.stopPropagation(); edit(i) }} title="ویرایش" className="btn-icon">{ic(EditSquare, 16)}</button>
                 <button onClick={(e) => { e.stopPropagation(); setDel(a.id) }} title="حذف" className="btn-icon hover:!text-down">{ic(Delete, 16)}</button>
