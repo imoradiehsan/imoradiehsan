@@ -83,7 +83,8 @@ function toSymbol(code) {
   return { s: code, n: code, p, c, ind, pe: 4 + (seed % 90) / 10, mc: fa(20 + seed % 300) + ' همت', vol: fa(20 + seed % 200) + ' م', spark: SYMBOLS[seed % SYMBOLS.length].spark }
 }
 
-export default function SitePanel({ sym, dark, setDark, setSym }) {
+const APP_LINKS = { alert: 'alert', watch: 'watch', vport: 'port' }   // header items that live in the app panel
+export default function SitePanel({ sym, dark, setDark, setSym, openApp }) {
   const [tab, setTab] = useState('نمای کلی')
   const [menu, setMenu] = useState(null)
   const [drawer, setDrawer] = useState(null)
@@ -145,7 +146,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
               <AnimatePresence>{menu === t && (
                 <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .15 }} className={`absolute right-0 top-11 z-50 grid gap-1 rounded-2xl border border-line bg-surface p-2 shadow-2xl ${items.length > 5 ? 'w-[560px] grid-cols-2' : 'w-72'}`}>
                   {items.map(([k, label, desc, I], n) => (
-                    <motion.button key={k} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: n * .025 }} onClick={() => { setMenu(null); k === 'option' ? (setPage(null), setDrawer('option')) : setPage(k) }}
+                    <motion.button key={k} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: n * .025 }} onClick={() => { setMenu(null); if (APP_LINKS[k]) { setPage(null); openApp?.(APP_LINKS[k]) } else if (k === 'option') { setPage(null); setDrawer('option') } else setPage(k) }}
                       className={`group flex items-start gap-3 rounded-xl p-2.5 text-right transition-colors hover:bg-surface2 ${page === k ? 'bg-surface2' : ''}`}>
                       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand-light transition-colors group-hover:bg-brand group-hover:text-white">{ico(I, 18)}</span>
                       <span className="min-w-0"><b className="block text-sm">{label}</b><span className="mt-0.5 block text-[11px] leading-5 text-muted">{desc}</span></span>

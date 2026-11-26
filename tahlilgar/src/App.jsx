@@ -73,7 +73,7 @@ export default function App() {
         )}
       </div>
 
-      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} />
+      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} openApp={(t) => { setTab(t); setCollapsed(false) }} />
       <Toaster />
     </div>
   )
