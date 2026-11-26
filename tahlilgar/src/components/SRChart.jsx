@@ -71,8 +71,8 @@ export default function SRChart({ sym, dark }) {
   return (
     <div ref={wrap} className="flex h-full flex-col bg-surface">
       <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-line/70 px-3 py-2">
-        <Seg id="sr-type" value={type} set={setType} items={[['شمعی', 'شمعی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>], ['خطی', 'خطی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>]]} />
-        <Seg id="sr-adj" value={adj} set={setAdj} items={[[false, 'بدون تعدیل'], [true, 'تعدیل افزایش سرمایه']]} />
+        {Seg({ id: "sr-type", value: type, set: setType, items: [['شمعی', 'شمعی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M7 3v4M7 17v4M17 3v6M17 17v4" /><rect x="5" y="7" width="4" height="10" rx="1" /><rect x="15" y="9" width="4" height="8" rx="1" /></svg>], ['خطی', 'خطی', <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 3v18h18" /><path d="m7 15 4-5 3 3 5-6" /></svg>]] })}
+        {Seg({ id: "sr-adj", value: adj, set: setAdj, items: [[false, 'بدون تعدیل'], [true, 'تعدیل افزایش سرمایه']] })}
         <div className="flex-1" />
         <button title="تمام صفحه" onClick={() => (document.fullscreenElement ? document.exitFullscreen() : wrap.current.requestFullscreen?.().catch(() => {}))} className="btn-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg></button>
       </div>
@@ -98,7 +98,7 @@ export default function SRChart({ sym, dark }) {
         </div>
       )}
       <div className="flex h-12 shrink-0 items-center justify-between gap-2 overflow-x-auto border-t border-line/70 px-3">
-        <Seg id="sr-range" value={range} set={setRange} items={RANGES.map(([t]) => [t, t])} />
+        {Seg({ id: "sr-range", value: range, set: setRange, items: RANGES.map(([t]) => [t, t]) })}
         <button onClick={() => setLog(!log)} className={`btn ${log ? 'btn-on' : ''}`}>log</button>
       </div>
     </div>
