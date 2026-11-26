@@ -4,8 +4,8 @@ import AppPanel from './components/AppPanel'
 import SitePanel from './components/SitePanel'
 import { SYMBOLS } from './data/market'
 
-const RAIL = 60, MIN_RIGHT = 300, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 400, SNAP = 200
-const load = () => { try { return +localStorage.getItem('rightW') || DEFAULT } catch { return DEFAULT } }
+const RAIL = 60, MIN_RIGHT = 300, MAX_RIGHT = 640, MIN_LEFT = 520, DEFAULT = 390, SNAP = 200
+const load = () => { try { return +localStorage.getItem('rightW390') || DEFAULT } catch { return DEFAULT } }
 
 export default function App() {
   const [dark, setDark] = useState(true)
@@ -42,7 +42,7 @@ export default function App() {
       document.body.style.cursor = ''; document.body.style.userSelect = ''
     }
   }, [drag])
-  useEffect(() => { try { localStorage.setItem('rightW', rightW) } catch {} }, [rightW])
+  useEffect(() => { try { localStorage.setItem('rightW390', rightW) } catch {} }, [rightW])
   useEffect(() => {
     const fit = () => setRightW((w) => clamp(w))
     window.addEventListener('resize', fit); return () => window.removeEventListener('resize', fit)
