@@ -80,7 +80,6 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
             <button onClick={() => setHelp(true)} title="راهنما" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><InfoSquare set="light" size={20} primaryColor="currentColor" /></button>
           </>}
           <AlertHelp open={help} close={() => setHelp(false)} />
-          <button onClick={() => goTab('alert')} title="اعلان‌ها" className="relative grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-surface2 hover:text-ink"><Notification set="light" size={20} primaryColor="currentColor" /><span className="absolute left-2 top-2 h-1.5 w-1.5 rounded-full bg-brand-light" /></button>
         </div>
 
         <AnimatePresence mode="popLayout" initial={false} custom={dir}>
