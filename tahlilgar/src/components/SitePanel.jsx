@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from './Toast'
+import { AlertIntro } from './Alerts'
 import CloseIcon from './CloseIcon'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, Star, Notification, EditSquare, Search, TwoUsers, Discovery, Category, InfoCircle, Graph, TimeCircle, People, Work, Chart, Paper, Activity, Chat, Show } from 'react-iconly'
@@ -84,7 +85,7 @@ function toSymbol(code) {
 }
 
 const APP_LINKS = { alert: 'alert', watch: 'watch', vport: 'port' }   // header items that live in the app panel
-export default function SitePanel({ sym, dark, setDark, setSym, openApp }) {
+export default function SitePanel({ sym, dark, setDark, setSym, openApp, alertIntro, newAlert }) {
   const [tab, setTab] = useState('نمای کلی')
   const [menu, setMenu] = useState(null)
   const [drawer, setDrawer] = useState(null)
@@ -232,6 +233,11 @@ export default function SitePanel({ sym, dark, setDark, setSym, openApp }) {
         </AnimatePresence>
       </div>
 
+      <AnimatePresence>{alertIntro && !page && (
+        <motion.div key="alert-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: .2 }} className="absolute inset-x-0 bottom-0 top-14 z-20 bg-surface">
+          <AlertIntro create={newAlert} />
+        </motion.div>
+      )}</AnimatePresence>
       <AnimatePresence>{page && (
         <motion.div key={page} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }} transition={{ duration: .2 }} className="absolute inset-x-0 bottom-0 top-14 z-30 flex flex-col bg-surface">
           {page === 'holders'

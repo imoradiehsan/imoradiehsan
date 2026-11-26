@@ -71,6 +71,7 @@ export function AlertsHome({ list, setList, add, edit, sym, setSym }) {
 
 /* ---------- new / edit ---------- */
 export function AlertForm({ init, onSave, onCancel }) {
+  const isEdit = !!init?.id
   const [s, setS] = useState(init?.s || ''), [q, setQ] = useState(init?.s || ''), [focus, setFocus] = useState(false)
   const [type, setType] = useState(init?.type || 'general')
   const [cond, setCond] = useState(init?.cond || GENERAL[0])
@@ -121,8 +122,8 @@ export function AlertForm({ init, onSave, onCancel }) {
       </div>
       <div className="sticky bottom-0 flex gap-2 border-t border-line bg-surface/95 p-4 backdrop-blur">
         <button onClick={onCancel} className="h-11 flex-1 rounded-xl border border-line text-sm font-medium hover:bg-surface2">انصراف</button>
-        <motion.button whileTap={{ scale: .97 }} disabled={!ok} onClick={() => { onSave({ id: init?.id || Date.now(), s, type, cond, metric, op, val }); toast(init ? `هشدار ${s} ویرایش شد` : `هشدار ${s} ساخته شد`) }}
-          className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark text-sm font-bold text-white shadow-glow disabled:opacity-40 disabled:shadow-none">{init ? 'ویرایش هشدار' : 'ساخت هشدار'}</motion.button>
+        <motion.button whileTap={{ scale: .97 }} disabled={!ok} onClick={() => { onSave({ id: isEdit ? init.id : Date.now(), s, type, cond, metric, op, val }); toast(isEdit ? `هشدار ${s} ویرایش شد` : `هشدار ${s} ساخته شد`) }}
+          className="h-11 flex-1 rounded-xl bg-gradient-to-l from-brand-light to-brand-dark text-sm font-bold text-white shadow-glow disabled:opacity-40 disabled:shadow-none">{isEdit ? 'ویرایش هشدار' : 'ساخت هشدار'}</motion.button>
       </div>
     </div>
   )
@@ -160,5 +161,45 @@ export function AlertHelp({ open, close }) {
         </div>
       </div>
     </Modal>
+  )
+}
+
+/* ---------- site-panel intro when there are no alerts ---------- */
+const EXAMPLES = [
+  { s: 'خودرو', type: 'general', cond: 'از بین رفتن صف خرید', t: 'صف خرید خودرو از بین رفت', d: 'قبل از ریزش، زودتر از بقیه باخبر شوید' },
+  { s: 'فولاد', type: 'value', metric: 'قیمت آخرین معامله', op: 'بزرگتر از', val: '6500', t: 'قیمت فولاد از ۶٬۵۰۰ گذشت', d: 'شکست مقاومت را از دست ندهید' },
+  { s: 'شپنا', type: 'general', cond: 'حجم معاملات مشکوک', t: 'حجم مشکوک در شپنا', d: 'ورود پول هوشمند را رصد کنید' },
+]
+export function AlertIntro({ create }) {
+  return (
+    <div className="scroll-y h-full">
+      <div className="mx-auto max-w-3xl px-6 py-12 text-center">
+        <motion.span initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-gradient-to-br from-brand-light to-brand-dark text-white shadow-glow">{ic(Notification, 36)}</motion.span>
+        <h2 className="mt-6 text-2xl font-extrabold">بازار را لحظه‌به‌لحظه نپایید؛ ما خبرتان می‌کنیم</h2>
+        <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted">با هشدارها شرطی برای نماد دلخواه تعریف می‌کنید و هر وقت آن اتفاق افتاد، همان لحظه اعلان یا پیامک می‌گیرید؛ از از بین رفتن صف خرید و فروش تا عبور قیمت، حجم یا تعداد معاملات از عددی که خودتان تعیین می‌کنید.</p>
+        <motion.button whileHover={{ y: -2 }} whileTap={{ scale: .97 }} onClick={() => create()} className="mt-7 inline-flex h-12 items-center gap-2 rounded-2xl bg-gradient-to-l from-brand-light to-brand-dark px-7 font-bold text-white shadow-glow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>ساخت اولین هشدار
+        </motion.button>
+
+        <div className="mt-12 text-right">
+          <div className="mb-3 text-sm font-bold">یا با یک کلیک از نمونه‌های آماده شروع کنید</div>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {EXAMPLES.map((e, i) => (
+              <motion.button key={e.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 + i * .06 }} whileHover={{ y: -2 }} onClick={() => { const { t, d, ...preset } = e; create(preset) }}
+                className="rounded-2xl border border-line bg-surface2/30 p-4 text-right transition-colors hover:border-brand/50">
+                <span className={`inline-block rounded-lg px-2 py-0.5 text-[10px] font-bold ${e.type === 'general' ? 'bg-up/15 text-up' : 'bg-brand/15 text-brand-light'}`}>{e.type === 'general' ? 'کلی' : 'مقادیر'}</span>
+                <b className="mt-2 block text-sm">{e.t}</b>
+                <span className="mt-1 block text-xs text-muted">{e.d}</span>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-3 text-right sm:grid-cols-2">
+          <div className="rounded-2xl border border-line p-4"><b className="text-sm">هشدار کلی</b><p className="mt-1 text-xs leading-6 text-muted">رویدادهای آماده مثل از بین رفتن صف، حجم مشکوک، حمایت و مقاومت و پیام ناظر بازار.</p></div>
+          <div className="rounded-2xl border border-line p-4"><b className="text-sm">هشدار مقادیر</b><p className="mt-1 text-xs leading-6 text-muted">قیمت، درصد تغییر، حجم یا تعداد معامله را با عدد دلخواه مقایسه کنید؛ کوچکتر، مساوی یا بزرگتر.</p></div>
+        </div>
+      </div>
+    </div>
   )
 }
