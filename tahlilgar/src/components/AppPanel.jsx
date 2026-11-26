@@ -60,18 +60,6 @@ export default function AppPanel({ sym, setSym, tab, setTab, collapsed, setColla
             <AnimatePresence mode="popLayout" initial={false} custom={dir}>
               <motion.div key={pageKey} custom={dir} initial={{ opacity: 0, x: dir * -24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * 24 }} transition={{ duration: .2 }}>
                 <div className="truncate font-bold">{page ? page.title : root}</div>
-                {stack.length > 0 && (
-                  <div className="flex items-center gap-1 truncate text-[11px] text-muted">
-                    {crumbs.map((c, i) => (
-                      <span key={i} className="flex items-center gap-1">
-                        {i > 0 && <span className="opacity-60">‹</span>}
-                        {i < crumbs.length - 1
-                          ? <button onClick={() => { setDir(-1); setStack((st) => st.slice(0, i)) }} className="hover:text-brand-light">{c}</button>
-                          : <span className="text-ink/70">{c}</span>}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </motion.div>
             </AnimatePresence>
           </div>

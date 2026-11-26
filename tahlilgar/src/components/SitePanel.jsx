@@ -181,7 +181,7 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
       <div ref={scroller} className="scroll-y min-h-0 flex-1">
         {/* Breadcrumb + symbol header */}
         <AnimatePresence mode="wait">
-          <motion.div key={sym.s} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: .22 }} className="px-5 pt-4">
+          <motion.div key="symhead" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: .22 }} className="px-5 pt-4">
             <div className="flex items-center gap-1.5 text-xs text-muted">
               <button className="hover:text-brand-light">بازار</button><span>/</span><button className="hover:text-brand-light">{sym.ind}</button><span>/</span><b className="text-ink">{sym.s}</b>
             </div>
@@ -220,12 +220,12 @@ export default function SitePanel({ sym, dark, setDark, setSym }) {
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div key={tab + sym.s} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className="space-y-4 p-5">
+          <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: .2 }} className="space-y-4 p-5">
             {tab === 'نمای کلی' && <Overview sym={sym} d={d} open={setDrawer} dark={dark} />}
             {tab === 'چارت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} /></div>}
             {tab === 'اخبار و اطلاعیه‌ها' && <News d={d} />}
             {tab === 'حمایت/مقاومت' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><SRChart sym={sym} dark={dark} /></div>}
-            {tab === 'نظرات و تحلیل‌ها' && <Opinions sym={sym} />}
+            {tab === 'نظرات و تحلیل‌ها' && <Opinions key={sym.s} sym={sym} />}
             {tab === 'تکنیکال' && <div data-chart style={{ height: cardH }} className="overflow-hidden rounded-2xl border border-line"><TVChart sym={sym} dark={dark} technical /></div>}
           </motion.div>
         </AnimatePresence>
