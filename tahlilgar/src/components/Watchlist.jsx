@@ -222,6 +222,12 @@ export default function Watchlist({ sym, setSym, initial = 'watch' }) {
   const [opts, setOpts] = useState({ chart: true, vol: true })
   const [sheet, setSheet] = useState(null) // 'lists' | 'add' | 'settings'
   const list = lists.find((l) => l.id === cur) || lists[0]
+  // entering a tab or switching lists selects its first symbol, so the site panel always shows something
+  useEffect(() => {
+    const code = (sub === 'port' ? plist : list).items[0]
+    const x = SYMBOLS.find((y) => y.s === code)
+    if (x) setSym(x)
+  }, [sub, cur, pcur])
   const rows = useMemo(() => list.items.map((s) => SYMBOLS.find((x) => x.s === s)).filter(Boolean).map(rowData), [list.items])
   const [sorted, st, toggle] = useSort(rows, { s: (r) => r.s, p: (r) => r.c, v: (r) => r.vol, m: (r) => r.m1 })
   const setItems = (items) => setLists((ls) => ls.map((l) => (l.id === list.id ? { ...l, items } : l)))
