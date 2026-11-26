@@ -413,8 +413,8 @@ BIND.amount=el=>{const r=el.querySelector('#ar'),av=el.querySelector('#av'),mn=e
 ACT.toFee=()=>go('fee');
 // operation fee
 SCR.fee=()=>`${sbar()}${abar('بررسی و پرداخت')}<div class="body pad"><div class="paycard rise"><div class="in"><img class="ill" src="${IMG('ill_opfee')}" alt=""><div class="h16" style="margin-top:16px">هزینه عملیات خرید طلا</div><div class="d14" style="margin-top:8px">این مبلغ بابت خدمات اجرایی و پردازش درخواست خرید اقساطی طلا دریافت می‌شود.</div></div></div>
- ${ticket([['نوع پرداخت','هزینه عملیات'],['مبلغ هزینه عملیات',tm(P().op)],['TOTAL',P().op]])}
- <div class="note">چنانچه خرید طلا به هر دلیلی انجام نشود، مبلغ پرداختی پس از کسر هزینهٔ عملیات به کیف پول شما برگردانده می‌شود.</div></div>
+ ${ticket([['نوع پرداخت','هزینهٔ عملیات'],['مبلغ هزینه عملیات',tm(P().op)],['TOTAL',P().op]])}
+ <div class="note">اگر خرید انجام نشد یا از ادامهٔ فرایند منصرف شدید، پس از کسر کسورات، بقیهٔ مبلغ به کیف پول شما برگردانده می‌شود.</div></div>
  <div class="cta"><button class="btn" data-a="payFee">پرداخت هزینه عملیات</button></div>`;
 ACT.payFee=()=>go('gateway',{amount:P().op,ctx:'fee',anim:'fade'});
 // gateway
@@ -422,7 +422,7 @@ SCR.gateway=o=>`${sbar()}<div class="gw"><div class="gwin"><img src="${IMG('gate
 BIND.gateway=el=>{const g=el.querySelector('.gw'),i=el.querySelector('.gwin');const f=()=>{const k=Math.min(1.25,g.clientWidth/390);i.style.transform=`scale(${k})`;i.parentNode.style.setProperty('--gh',(795*k)+'px')};f();requestAnimationFrame(f)};
 ACT.gwPay=b=>{b.innerHTML='<span class="spin"></span>';later(()=>payDone(true),1000)};ACT.gwCancel=()=>payDone(false);
 function payDone(ok){const o=cur.o;const now=['۱۶:۳۰:۱۲','۱۶:۴۷:۵۷','۱۸:۰۲:۱۴','۰۹:۱۲:۳۸'];
- if(o.ctx==='fee'){reset('rcpt',{kind:ok?'ok':'fail',title:ok?'پرداخت موفق':'پرداخت ناموفق',sub:ok?'از اینکه قسطا را انتخاب کردید، سپاسگزاریم.':'لطفاً دوباره تلاش کنید.',rows:[['نوع پرداخت','هزینه عملیات'],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت','۱۴۰۵/۰۹/۲۶'],['زمان ثبت',ok?'۱۶:۳۰:۱۲':'۱۶:۲۸:۴۰'],['کد پیگیری',ok?'۴۰۴۶۴۹۱۶۴۷۱۰۹۸۷':'۴۰۴۶۴۹۱۶۴۷۱۰۹۵۱'],['مبلغ پرداختی',tm(P().op)]],foot:ok?'تا ۵ ثانیه دیگر به برنامه برمی‌گردید':'اگر مبلغی از حساب شما کسر شده، حداکثر تا ۷۲ ساعت آینده به حسابتان برمی‌گردد.',next:'toIdentity',retry:'payFee',auto:ok});
+ if(o.ctx==='fee'){reset('rcpt',{kind:ok?'ok':'fail',title:ok?'پرداخت موفق':'پرداخت ناموفق',sub:ok?'از اینکه قسطا را انتخاب کردید، سپاسگزاریم.':'لطفاً دوباره تلاش کنید.',rows:[['نوع پرداخت','هزینهٔ عملیات'],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت','۱۴۰۵/۰۹/۲۶'],['زمان ثبت',ok?'۱۶:۳۰:۱۲':'۱۶:۲۸:۴۰'],['کد پیگیری',ok?'۴۰۴۶۴۹۱۶۴۷۱۰۹۸۷':'۴۰۴۶۴۹۱۶۴۷۱۰۹۵۱'],[ok?'مبلغ پرداختی':'مبلغ تراکنش',tm(P().op)]],foot:ok?'تا ۵ ثانیه دیگر به برنامه برمی‌گردید':'اگر مبلغی از حساب شما کسر شده، حداکثر تا ۷۲ ساعت آینده به حسابتان برمی‌گردد.',next:'toIdentity',retry:'payFee',auto:ok});
   if(ok)S.hist.push({t:'هزینهٔ عملیات',d:'۲۶ آذر ۱۴۰۵ · ۱۶:۴۰',a:-P().op,m:'آذر ۱۴۰۵',st:'پرداخت شد'});return}
  const n=o.n,p=P(),penAmt=(S.day==='penalty'&&n===S.paid)?pen(8):0,amt=p.inst+penAmt;
  if(!ok){reset('rcpt',{kind:'fail',title:'پرداخت ناموفق',sub:'لطفاً دوباره تلاش کنید.',rows:[['نوع پرداخت','قسط '+ORD[n]+' خرید طلا'],['روش پرداخت','درگاه پرداخت آنلاین'],['تاریخ ثبت',R_DATE[n]],['زمان ثبت','۱۶:۲۸:۴۰'],['کد پیگیری','۴۰۴۶۴۹۱۶۴۷۱۰۹۵۱'],['مبلغ',tm(amt)]],foot:'اگر مبلغی از حساب شما کسر شده، حداکثر تا ۷۲ ساعت آینده به حسابتان برمی‌گردد.',retry:'retryInst',backTo:'toDetails'});return}
@@ -602,7 +602,7 @@ function contractCard(o){return `<div class="card ctc rise"><div style="display:
 SCR.purchases=()=>{const p=P(),active=S.phase==='await'||S.phase==='active';let cards='';
  if(S.phase!=='none'){const st=S.phase==='await'?['orange','در انتظار پرداخت قسط اول','#FF832B',['پرداخت قسط اول تا','۳۰ آذر | '+money(p.inst)+' تومان']]:S.phase==='settled'?['green','تسویه شد','#1B9247',['تاریخ تسویه','۱ بهمن ۱۴۰۵ | طلا آزاد']]:S.day==='penalty'?['red','با جریمه دیرکرد','#F22323',['قسط معوق',DATES[S.paid]+' | '+money(p.inst+pen(8))+' تومان']]:S.day==='grace'?['orange','در انتظار پرداخت','#FF832B',['بدون جریمه تا','۵ '+DATES[S.paid].split(' ').slice(1).join(' ')+' | '+money(p.inst)+' تومان']]:['blue','در حال پرداخت','#1E6CFF',['قسط بعدی',DATES[S.paid]+' | '+money(p.inst)+' تومان']];
   cards+=contractCard({t:'قرارداد ۱۴۰۵/۰۹/۲۶',go:S.phase==='settled'?'toGold':'toDetails',a:money(p.A),g:gr(p.grams),c:st[0],s:st[1],col:st[2],d:S.paid,f:st[3]})}
- cards+=contractCard({t:'قرارداد ۱۴۰۵/۰۵/۱۰',go:'toastOld',a:money(30e6),g:gr(30e6/PRICE),c:'green',s:'تسویه شد',col:'#1B9247',d:3,f:['تاریخ تسویه','۱ مهر ۱۴۰۵ | طلا آزاد']});
+ cards+=contractCard({t:'قرارداد ۱۴۰۵/۰۵/۱۰',go:'toastOld',a:money(30e6),g:gr(30e6/24190000),c:'green',s:'تسویه شد',col:'#1B9247',d:3,f:['تاریخ تسویه','۱ مهر ۱۴۰۵ | طلا آزاد']});
  return `${sbar()}${abar('قراردادهای من','none')}<div class="body pad">${active?'<div style="background:#FFF0E3;margin:-16px -16px 16px;padding:8px 16px;font-size:12px;color:#18181B;line-height:20px">خرید جدید پس از تسویهٔ کامل اقساط خرید فعلی فعال می‌شود.</div>':''}${cards}</div><div class="cta"><button class="btn" ${active?'disabled':''} data-a="newBuy">＋ خرید طلای اقساطی جدید</button></div>`};
 ACT.toastOld=()=>toast('این قرارداد قبلاً تسویه شده است');ACT.newBuy=()=>{const ph=S.phone;S=fresh();S.phone=ph;reset('amount')};
 // home
