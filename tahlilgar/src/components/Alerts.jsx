@@ -106,14 +106,14 @@ export function AlertForm({ init, onSave, onCancel }) {
             ))}</div>
           </div>
           <div className="space-y-3 border-t border-line p-4">
-            <div className="flex items-center justify-between gap-3">
+            <div className="space-y-2">
               <span className="text-sm font-bold">شرط هشدار</span>
-              {type === 'general' ? <Dropdown value={cond} options={opts(GENERAL)} onChange={setCond} /> : <Dropdown value={metric} options={opts(METRICS)} onChange={setMetric} />}
+              {type === 'general' ? <Dropdown full value={cond} options={opts(GENERAL)} onChange={setCond} /> : <Dropdown full value={metric} options={opts(METRICS)} onChange={setMetric} />}
             </div>
             <AnimatePresence initial={false}>{type === 'value' && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex items-center gap-2">
-                <Dropdown value={op} options={opts(OPS)} onChange={setOp} />
-                <input value={val} onChange={(e) => setVal(e.target.value.replace(/[^\d.۰-۹٫]/g, ''))} inputMode="decimal" placeholder="مقدار را وارد کنید…" className={field + ' num !h-8 flex-1'} />
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="flex items-start gap-2">
+                <div className="w-36 shrink-0"><Dropdown full value={op} options={opts(OPS)} onChange={setOp} /></div>
+                <input value={val} onChange={(e) => setVal(e.target.value.replace(/[^\d.۰-۹٫]/g, ''))} inputMode="decimal" placeholder="مقدار را وارد کنید…" className={field + ' num !h-10 flex-1'} />
               </motion.div>
             )}</AnimatePresence>
           </div>
