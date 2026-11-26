@@ -575,17 +575,17 @@ function peerRows(sym) {
       eps, pe: eps > 0 ? p / eps : null, ps: r() > .5 ? .5 + r() * 4 : null, mc: Math.round((1 + r() * 600) * 1e12), r1m: (r() - .25) * 40, r1y: (r() - .1) * 400 }
   })
 }
-export function Dropdown({ value, options, onChange, up = false }) {
+export function Dropdown({ value, options, onChange, up = false, full = false }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="relative">
-      <button onClick={() => setOpen(!open)} className={`btn min-w-[120px] justify-between ${open ? 'btn-on' : ''}`}>
+    <div className={`relative ${full ? 'w-full' : ''}`}>
+      <button onClick={() => setOpen(!open)} className={`btn min-w-[120px] justify-between ${full ? '!h-10 w-full' : ''} ${open ? 'btn-on' : ''}`}>
         {options.find((o) => o[0] === value)[1]}
         <motion.svg animate={{ rotate: open ? 180 : 0 }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="m6 9 6 6 6-6" /></motion.svg>
       </button>
       <AnimatePresence>{open && (
         <motion.div initial={{ opacity: 0, y: up ? 6 : -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: up ? 6 : -6 }} transition={{ duration: .15 }}
-          className={`absolute z-30 max-h-64 ${up ? 'bottom-10 left-0' : 'top-10 right-0'} w-full min-w-[11rem] overflow-y-auto rounded-xl border border-line bg-surface p-1 shadow-2xl`} >
+          className={`absolute z-30 max-h-64 ${full ? (up ? 'bottom-12 inset-x-0' : 'top-12 inset-x-0') : up ? 'bottom-10 left-0' : 'top-10 right-0'} w-full ${full ? '' : 'min-w-[11rem]'} overflow-y-auto rounded-xl border border-line bg-surface p-1 shadow-2xl`} >
           {options.map(([k, t]) => (
             <button key={String(k)} onClick={() => { onChange(k); setOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-right text-sm hover:bg-surface2 ${k === value ? 'text-brand-light' : ''}`}>
               {t}{k === value && <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="m5 12 5 5 9-10" /></svg>}
