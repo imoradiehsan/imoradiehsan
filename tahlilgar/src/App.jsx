@@ -75,7 +75,7 @@ export default function App() {
         )}
       </div>
 
-      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} openApp={(t) => { setTab(t); setCollapsed(false) }} alertIntro={alertIntro} newAlert={(preset) => { setCollapsed(false); setAlertReq({ preset, n: Date.now() }) }} />
+      <SitePanel sym={sym} dark={dark} setDark={setDark} setSym={setSym} openApp={(t) => { setTab(t); setCollapsed(false) }} alertIntro={alertIntro} newAlert={(preset) => { setTab('alert'); setCollapsed(false); setAlertReq({ preset, n: Date.now() }) }} />
       <Toaster />
     </div>
   )
