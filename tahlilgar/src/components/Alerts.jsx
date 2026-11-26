@@ -240,14 +240,15 @@ export function AlertIntro({ create }) {
               <span className="rounded-lg bg-up/15 px-2 py-1 text-xs font-bold text-up">▲ ۲٫۸۴٪</span>
             </div>
             <div className="relative mt-4">
+            <motion.span className="absolute z-10 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-up ring-4 ring-up/25" style={{ left: '83.75%', top: '31.67%' }} initial={{ scale: 0 }} animate={{ scale: [0, 1.4, 1] }} transition={{ delay: 1.75, duration: .5, repeat: Infinity, repeatDelay: 3.5 }} />
             <span className="absolute left-0 top-[18px] z-10 rounded-md bg-brand px-2 py-0.5 text-[10px] font-bold text-white shadow">هدف ۶٬۵۰۰</span>
             <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="h-36 w-full overflow-visible">
               <defs><linearGradient id="ai-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgb(var(--up))" stopOpacity=".35" /><stop offset="1" stopColor="rgb(var(--up))" stopOpacity="0" /></linearGradient></defs>
-              <line x1="0" x2="320" y1="38" y2="38" stroke="#3C7CFF" strokeDasharray="5 5" opacity=".8" />
+              <line x1="0" x2="320" y1="38" y2="38" stroke="#3C7CFF" strokeDasharray="5 5" vectorEffect="non-scaling-stroke" opacity=".8" />
               <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22 L320 120 L0 120 Z" fill="url(#ai-g)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: .8 }} />
-              <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22" fill="none" stroke="rgb(var(--up))" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+              <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22" fill="none" stroke="rgb(var(--up))" strokeWidth="2.5" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: .5, duration: 1.6, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2.4 }} />
-              <motion.circle cx="268" cy="38" r="6" fill="rgb(var(--up))" initial={{ scale: 0 }} animate={{ scale: [0, 1.4, 1] }} transition={{ delay: 1.75, duration: .5, repeat: Infinity, repeatDelay: 3.5 }} />
+              
             </svg>
             </div>
           </div>
