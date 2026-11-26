@@ -239,15 +239,17 @@ export function AlertIntro({ create }) {
               <span className="flex items-center gap-2"><span className="grid h-9 w-9 place-items-center rounded-xl bg-white text-xs font-extrabold text-brand-dark">فو</span><span><b className="block text-sm">فولاد</b><span className="text-[11px] text-muted">فولاد مبارکه اصفهان</span></span></span>
               <span className="rounded-lg bg-up/15 px-2 py-1 text-xs font-bold text-up">▲ ۲٫۸۴٪</span>
             </div>
-            <svg viewBox="0 0 320 120" className="mt-4 h-36 w-full overflow-visible">
+            <div className="relative mt-4">
+            <span className="absolute left-0 top-[18px] z-10 rounded-md bg-brand px-2 py-0.5 text-[10px] font-bold text-white shadow">هدف ۶٬۵۰۰</span>
+            <svg viewBox="0 0 320 120" preserveAspectRatio="none" className="h-36 w-full overflow-visible">
               <defs><linearGradient id="ai-g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stopColor="rgb(var(--up))" stopOpacity=".35" /><stop offset="1" stopColor="rgb(var(--up))" stopOpacity="0" /></linearGradient></defs>
               <line x1="0" x2="320" y1="38" y2="38" stroke="#3C7CFF" strokeDasharray="5 5" opacity=".8" />
-              <text x="316" y="32" fontSize="10" fill="rgb(var(--muted))">هدف ۶٬۵۰۰</text>
               <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22 L320 120 L0 120 Z" fill="url(#ai-g)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: .8 }} />
               <motion.path d="M0 100 L40 92 L80 96 L120 78 L160 82 L200 60 L240 52 L280 30 L320 22" fill="none" stroke="rgb(var(--up))" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
                 initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: .5, duration: 1.6, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2.4 }} />
               <motion.circle cx="268" cy="38" r="6" fill="rgb(var(--up))" initial={{ scale: 0 }} animate={{ scale: [0, 1.4, 1] }} transition={{ delay: 1.75, duration: .5, repeat: Infinity, repeatDelay: 3.5 }} />
             </svg>
+            </div>
           </div>
           {/* notification popping in when the line crosses the target */}
           <motion.div initial={{ opacity: 0, y: 20, scale: .95 }} animate={{ opacity: [0, 1, 1, 0], y: [20, 0, 0, -6], scale: [.95, 1, 1, .98] }} transition={{ delay: 1.8, duration: 3.4, times: [0, .12, .85, 1], repeat: Infinity, repeatDelay: .6 }}
